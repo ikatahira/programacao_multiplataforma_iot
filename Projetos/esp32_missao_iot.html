@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32 — Missão IoT | 2 2 ADS-AMS-AMS 1º Semestre 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060a0f;
+  --surface: #0d1520;
+  --surface2: #111d2e;
+  --surface3: #162234;
+  --border: #1a2d42;
+  --border2: #1e3550;
+  --green: #00ff88;
+  --green2: #00cc6a;
+  --cyan: #00d4ff;
+  --orange: #ff6b35;
+  --yellow: #ffd700;
+  --red: #ff3355;
+  --purple: #9b59ff;
+  --text: #ccd6f6;
+  --muted: #4a6080;
+  --muted2: #6a80a0;
+  --pin-digital: #00ff88;
+  --pin-analog: #ff6b35;
+  --pin-power: #ff3355;
+  --pin-gnd: #888;
+  --pin-touch: #9b59ff;
+  --pin-uart: #00d4ff;
+  --pin-i2c: #ffd700;
+  --pin-spi: #ff9500;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SCANLINES overlay */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,0.015) 2px, rgba(0,255,136,0.015) 4px);
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* ── HERO ─────────────────────── */
+.hero {
+  position:relative;
+  min-height: 420px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding: 60px 20px 50px;
+  overflow:hidden;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0,255,136,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 80%, rgba(0,212,255,0.06) 0%, transparent 50%),
+              var(--bg);
+}
+
+.hero-circuit {
+  position:absolute;
+  inset:0;
+  opacity:0.12;
+  background-image:
+    linear-gradient(var(--green) 1px, transparent 1px),
+    linear-gradient(90deg, var(--green) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: -1px -1px;
+}
+.hero-circuit::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 50% 50%, transparent 30%, var(--bg) 80%);
+}
+
+.hero-chip {
+  position:relative;
+  width: 120px;
+  height: 80px;
+  background: var(--surface2);
+  border: 2px solid var(--green);
+  border-radius: 8px;
+  margin-bottom: 28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: 0 0 30px rgba(0,255,136,0.3), inset 0 0 20px rgba(0,255,136,0.05);
+  animation: chipPulse 3s ease-in-out infinite;
+}
+@keyframes chipPulse {
+  0%,100%{ box-shadow:0 0 20px rgba(0,255,136,0.3), inset 0 0 15px rgba(0,255,136,0.05); }
+  50%{ box-shadow:0 0 50px rgba(0,255,136,0.6), inset 0 0 25px rgba(0,255,136,0.1); }
+}
+.hero-chip-pins {
+  position:absolute;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.hero-chip-pins.left { left:-10px; }
+.hero-chip-pins.right { right:-10px; }
+.hero-chip-pin {
+  width:8px; height:3px;
+  background: var(--green);
+  border-radius:1px;
+  box-shadow: 0 0 4px var(--green);
+}
+.hero-chip-label {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.65em;
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:1px;
+}
+
+.hero h1 {
+  font-family:'Orbitron',sans-serif;
+  font-size: clamp(2em, 5vw, 3.5em);
+  font-weight:900;
+  color: #fff;
+  text-align:center;
+  letter-spacing:2px;
+  position:relative;
+  text-shadow: 0 0 40px rgba(0,255,136,0.4);
+  margin-bottom:12px;
+}
+.hero h1 span { color: var(--green); }
+.hero-sub {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.88em;
+  color: var(--muted2);
+  text-align:center;
+  margin-bottom:8px;
+  letter-spacing:1px;
+}
+.hero-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background: rgba(0,255,136,0.08);
+  border:1px solid rgba(0,255,136,0.3);
+  border-radius:100px;
+  padding:6px 18px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.78em;
+  color:var(--green);
+  margin-bottom:36px;
+  letter-spacing:1px;
+}
+.hero-badge::before { content:'●'; animation:blink 1.2s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* XP SYSTEM */
+.xp-hud {
+  width:100%;
+  max-width:640px;
+  background: rgba(13,21,32,0.9);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:20px 24px;
+  position:relative;
+}
+.xp-hud::before {
+  content:'// STATUS';
+  position:absolute;
+  top:-11px; left:20px;
+  background:var(--bg);
+  padding:0 10px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.7em;
+  color:var(--green);
+  letter-spacing:2px;
+}
+.xp-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.xp-level { font-family:'Orbitron',sans-serif; font-size:0.8em; color:var(--green); font-weight:700; letter-spacing:1px; }
+.xp-pts { font-family:'IBM Plex Mono',monospace; font-size:0.82em; color:var(--muted2); }
+.xp-track {
+  background: rgba(0,255,136,0.06);
+  border:1px solid rgba(0,255,136,0.15);
+  height:10px; border-radius:100px;
+  overflow:hidden; margin-bottom:16px;
+}
+.xp-bar {
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, var(--green2), var(--green));
+  border-radius:100px;
+  transition:width 1.2s ease;
+  box-shadow:0 0 12px rgba(0,255,136,0.6);
+}
+.xp-stats { display:flex; gap:24px; justify-content:center; }
+.xp-stat { text-align:center; }
+.xp-stat .v { font-family:'Orbitron',monospace; font-size:1.6em; font-weight:700; color:var(--green); }
+.xp-stat .l { font-family:'IBM Plex Mono',monospace; font-size:0.68em; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+
+/* ── MAIN ─────────────────────── */
+.main { max-width:1140px; margin:0 auto; padding:40px 20px 100px; }
+
+/* ── PHASE NAV ─────────────────── */
+.phase-nav {
+  display:flex;
+  gap:4px;
+  margin-bottom:40px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:6px;
+  overflow-x:auto;
+}
+.pbtn {
+  flex-shrink:0;
+  padding:10px 18px;
+  border-radius:8px;
+  background:transparent;
+  border:1px solid transparent;
+  color:var(--muted2);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.8em;
+  cursor:pointer;
+  transition:all 0.2s;
+  white-space:nowrap;
+  letter-spacing:0.5px;
+}
+.pbtn:hover { color:var(--green); border-color:rgba(0,255,136,0.2); }
+.pbtn.active {
+  background: rgba(0,255,136,0.1);
+  border-color: rgba(0,255,136,0.4);
+  color: var(--green);
+  box-shadow: 0 0 12px rgba(0,255,136,0.15);
+}
+.pbtn.locked { opacity:0.35; cursor:not-allowed; }
+.pbtn.done { color:var(--green2); border-color:rgba(0,255,136,0.2); }
+
+/* ── SECTIONS ──────────────────── */
+.phase-sec { display:none; animation:fadeUp 0.35s ease; }
+.phase-sec.visible { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── SECTION HEADER ─────────────── */
+.sec-hdr { display:flex; align-items:center; gap:16px; margin-bottom:32px; }
+.sec-icon {
+  width:52px; height:52px;
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.5em;
+  border:1px solid;
+  flex-shrink:0;
+}
+.si-green { background:rgba(0,255,136,0.08); border-color:rgba(0,255,136,0.3); }
+.si-cyan  { background:rgba(0,212,255,0.08); border-color:rgba(0,212,255,0.3); }
+.si-orange{ background:rgba(255,107,53,0.08); border-color:rgba(255,107,53,0.3); }
+.si-yellow{ background:rgba(255,215,0,0.08); border-color:rgba(255,215,0,0.3); }
+.si-purple{ background:rgba(155,89,255,0.08); border-color:rgba(155,89,255,0.3); }
+.sec-hdr h2 { font-family:'Orbitron',sans-serif; font-size:1.5em; font-weight:700; color:#fff; letter-spacing:1px; }
+.sec-hdr p { color:var(--muted2); font-size:0.88em; margin-top:5px; font-family:'IBM Plex Mono',monospace; }
+
+/* ── CARD ────────────────────────── */
+.card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:28px;
+  margin-bottom:24px;
+  position:relative;
+  transition:border-color 0.2s;
+}
+.card:hover { border-color:var(--border2); }
+.card-title {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.95em;
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:1px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.card-title::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,var(--border2),transparent);
+}
+.card p { color:#8899bb; line-height:1.75; margin-bottom:10px; font-size:0.95em; }
+.card p:last-child { margin-bottom:0; }
+
+/* ── HIGHLIGHT BOX ─────────────────── */
+.hl {
+  background:rgba(0,255,136,0.04);
+  border-left:3px solid var(--green);
+  border-radius:0 8px 8px 0;
+  padding:14px 18px;
+  margin:14px 0;
+  font-size:0.9em;
+  color:#8899bb;
+  line-height:1.7;
+}
+.hl strong { color:var(--green); }
+.hl.cyan { border-color:var(--cyan); background:rgba(0,212,255,0.04); }
+.hl.cyan strong { color:var(--cyan); }
+.hl.orange { border-color:var(--orange); background:rgba(255,107,53,0.04); }
+.hl.orange strong { color:var(--orange); }
+.hl.yellow { border-color:var(--yellow); background:rgba(255,215,0,0.04); }
+.hl.yellow strong { color:var(--yellow); }
+
+/* ── SPEC TABLE ──────────────────── */
+.spec-table { width:100%; border-collapse:collapse; margin:16px 0; font-size:0.88em; }
+.spec-table th {
+  text-align:left; padding:10px 14px;
+  background:var(--surface2);
+  color:var(--green);
+  font-family:'IBM Plex Mono',monospace;
+  font-weight:600;
+  letter-spacing:1px;
+  border-bottom:2px solid var(--border2);
+  font-size:0.8em;
+  text-transform:uppercase;
+}
+.spec-table td {
+  padding:10px 14px;
+  border-bottom:1px solid var(--border);
+  color:#8899bb;
+  vertical-align:top;
+  line-height:1.5;
+}
+.spec-table td:first-child { color:var(--text); font-weight:500; white-space:nowrap; }
+.spec-table tr:hover td { background:var(--surface2); }
+.val-green { color:var(--green); font-family:'IBM Plex Mono',monospace; font-weight:600; }
+.val-cyan { color:var(--cyan); font-family:'IBM Plex Mono',monospace; font-weight:600; }
+.val-orange { color:var(--orange); font-family:'IBM Plex Mono',monospace; font-weight:600; }
+
+/* ── CHIP GRID ────────────────────── */
+.chip-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:18px 0; }
+.chip-card {
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:18px;
+  transition:all 0.2s;
+  border-top:3px solid;
+}
+.chip-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.3); }
+.chip-card.g { border-top-color:var(--green); }
+.chip-card.c { border-top-color:var(--cyan); }
+.chip-card.o { border-top-color:var(--orange); }
+.chip-card.y { border-top-color:var(--yellow); }
+.chip-card.p { border-top-color:var(--purple); }
+.chip-card.r { border-top-color:var(--red); }
+.chip-card h4 { font-family:'Orbitron',sans-serif; font-size:0.78em; font-weight:700; letter-spacing:1px; margin-bottom:8px; }
+.chip-card.g h4{color:var(--green)} .chip-card.c h4{color:var(--cyan)}
+.chip-card.o h4{color:var(--orange)} .chip-card.y h4{color:var(--yellow)}
+.chip-card.p h4{color:var(--purple)} .chip-card.r h4{color:var(--red)}
+.chip-card p { font-size:0.85em; color:#6a80a0; margin:0; line-height:1.5; }
+.chip-card .num { font-family:'Orbitron',monospace; font-size:1.6em; font-weight:900; margin-bottom:4px; }
+
+/* ── PINOUT VISUAL ──────────────────── */
+.pinout-wrapper {
+  display:flex;
+  gap:20px;
+  align-items:flex-start;
+  overflow-x:auto;
+  padding:10px 0;
+}
+.pinout-board {
+  flex-shrink:0;
+  background: var(--surface2);
+  border:2px solid var(--border2);
+  border-radius:10px;
+  padding:16px 12px;
+  display:grid;
+  grid-template-columns: auto 140px auto;
+  gap:4px;
+  align-items:center;
+  box-shadow: 0 0 30px rgba(0,255,136,0.08);
+}
+.pin-row {
+  display:contents;
+}
+.pin-num {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.7em;
+  color:var(--muted);
+  text-align:center;
+  padding:2px 4px;
+}
+.pin-label {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.68em;
+  font-weight:600;
+  padding:3px 8px;
+  border-radius:4px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  white-space:nowrap;
+  border:1px solid;
+}
+.pin-label:hover { filter:brightness(1.3); transform:scaleX(1.05); }
+.pin-d  { color:var(--pin-digital); border-color:rgba(0,255,136,0.3); background:rgba(0,255,136,0.06); }
+.pin-a  { color:var(--pin-analog);  border-color:rgba(255,107,53,0.3); background:rgba(255,107,53,0.06); }
+.pin-p  { color:var(--pin-power);   border-color:rgba(255,51,85,0.4);  background:rgba(255,51,85,0.08); }
+.pin-g  { color:var(--pin-gnd);     border-color:rgba(136,136,136,0.3);background:rgba(136,136,136,0.06);}
+.pin-t  { color:var(--pin-touch);   border-color:rgba(155,89,255,0.3); background:rgba(155,89,255,0.06);}
+.pin-u  { color:var(--pin-uart);    border-color:rgba(0,212,255,0.3);  background:rgba(0,212,255,0.06); }
+.pin-i  { color:var(--pin-i2c);     border-color:rgba(255,215,0,0.3);  background:rgba(255,215,0,0.06); }
+.pin-s  { color:var(--pin-spi);     border-color:rgba(255,149,0,0.3);  background:rgba(255,149,0,0.06); }
+.esp-body {
+  background:linear-gradient(135deg,#1a2a3a,#0d1520);
+  border:1px solid var(--border2);
+  border-radius:6px;
+  min-height:500px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:6px;
+  padding:16px;
+}
+.esp-body-label {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.65em;
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:2px;
+  text-align:center;
+}
+.esp-module {
+  width:60px; height:30px;
+  background:var(--surface3);
+  border:1px solid var(--border2);
+  border-radius:3px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.5em;
+  color:var(--muted2);
+}
+.wifi-icon { color:var(--cyan); font-size:1.4em; animation:wifiPulse 2s ease-in-out infinite; }
+@keyframes wifiPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* PIN LEGEND */
+.pin-legend {
+  display:flex; flex-wrap:wrap; gap:8px; margin:16px 0;
+}
+.legend-item {
+  display:flex; align-items:center; gap:6px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.75em;
+}
+.legend-dot { width:10px; height:10px; border-radius:2px; }
+
+/* PIN TOOLTIP */
+.pin-tooltip {
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:16px;
+  flex:1;
+  min-width:220px;
+  min-height:100px;
+  transition:all 0.3s;
+}
+.pin-tooltip h4 {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.82em;
+  font-weight:700;
+  color:var(--green);
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+.pin-tooltip p { font-size:0.85em; color:#6a80a0; line-height:1.6; }
+.pin-tooltip .pt-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
+.pin-tooltip .pt-tag {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.72em;
+  padding:2px 8px;
+  border-radius:4px;
+  background:rgba(0,255,136,0.1);
+  color:var(--green);
+  border:1px solid rgba(0,255,136,0.2);
+}
+
+/* ── QUIZ ─────────────────────── */
+.quiz-wrap { margin:28px 0; }
+.qcard {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:28px;
+  margin-bottom:16px;
+  display:none;
+}
+.qcard.active { display:block; }
+.q-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+.q-num { font-family:'IBM Plex Mono',monospace; font-size:0.8em; color:var(--muted2); letter-spacing:1px; }
+.q-xp {
+  font-family:'Orbitron',monospace; font-size:0.78em; font-weight:700;
+  background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.3);
+  color:var(--green); padding:4px 12px; border-radius:100px;
+}
+.q-text { font-size:1.08em; font-weight:500; line-height:1.55; margin-bottom:20px; color:var(--text); }
+.q-opts { display:grid; gap:8px; }
+.qopt {
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  padding:12px 16px;
+  cursor:pointer;
+  font-family:'IBM Plex Sans',sans-serif;
+  font-size:0.92em;
+  color:var(--text);
+  text-align:left;
+  transition:all 0.2s;
+  display:flex; align-items:center; gap:12px;
+}
+.qopt::before {
+  content:attr(data-letter);
+  font-family:'Orbitron',monospace;
+  font-size:0.75em;
+  font-weight:700;
+  color:var(--muted);
+  flex-shrink:0;
+  width:20px;
+}
+.qopt:hover:not(:disabled) { border-color:rgba(0,255,136,0.4); color:var(--green); background:rgba(0,255,136,0.04); }
+.qopt.correct { border-color:var(--green)!important; background:rgba(0,255,136,0.08)!important; color:var(--green)!important; }
+.qopt.wrong   { border-color:var(--red)!important; background:rgba(255,51,85,0.06)!important; color:var(--red)!important; }
+.q-fb {
+  margin-top:14px; padding:12px 16px; border-radius:8px;
+  font-size:0.88em; line-height:1.6; display:none;
+  font-family:'IBM Plex Mono',monospace;
+}
+.q-fb.show { display:block; }
+.q-fb.ok { background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.25); color:#6ee7b7; }
+.q-fb.fail { background:rgba(255,51,85,0.06); border:1px solid rgba(255,51,85,0.25); color:#fca5a5; }
+.q-next {
+  margin-top:14px; padding:10px 24px;
+  background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.4);
+  border-radius:8px; color:var(--green);
+  font-family:'IBM Plex Mono',monospace; font-size:0.85em; font-weight:600;
+  cursor:pointer; display:none; letter-spacing:1px;
+  transition:all 0.2s;
+}
+.q-next.show { display:inline-block; }
+.q-next:hover { background:rgba(0,255,136,0.18); }
+.q-progress { display:flex; gap:5px; margin-bottom:24px; }
+.qp-seg {
+  flex:1; height:4px; border-radius:100px;
+  background:var(--border2); transition:background 0.3s;
+}
+.qp-seg.active { background:var(--green); box-shadow:0 0 6px var(--green); }
+.qp-seg.done { background:var(--green2); }
+.qp-seg.wrong-s { background:var(--red); }
+.q-result {
+  text-align:center; padding:50px 20px; display:none;
+}
+.q-result.show { display:block; }
+.q-result .score { font-family:'Orbitron',sans-serif; font-size:4em; font-weight:900; color:var(--green); text-shadow:0 0 30px rgba(0,255,136,0.5); }
+.q-result .score-msg { font-family:'IBM Plex Mono',monospace; color:var(--muted2); margin:12px 0 28px; font-size:0.9em; }
+.restart-btn {
+  padding:10px 28px; background:var(--surface2); border:1px solid var(--border2);
+  border-radius:8px; color:var(--text); font-family:'IBM Plex Mono',monospace;
+  font-size:0.85em; cursor:pointer; letter-spacing:1px; transition:all 0.2s;
+}
+.restart-btn:hover { border-color:var(--green); color:var(--green); }
+
+/* ── DND CHALLENGE ──────────────── */
+.dnd-pool {
+  display:flex; flex-wrap:wrap; gap:8px; padding:16px;
+  background:var(--surface2); border:2px dashed var(--border2); border-radius:10px;
+  min-height:60px; margin-bottom:20px;
+}
+.dchip {
+  background:var(--surface);
+  border:1px solid var(--cyan);
+  color:var(--cyan);
+  padding:6px 14px; border-radius:6px;
+  font-family:'IBM Plex Mono',monospace; font-size:0.8em; font-weight:600;
+  cursor:grab; user-select:none; transition:all 0.2s;
+  letter-spacing:0.5px;
+}
+.dchip:hover { background:rgba(0,212,255,0.08); }
+.dchip.dragging { opacity:0.3; }
+.dnd-zones { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.dnd-zone {
+  background:var(--surface2); border:2px dashed var(--border2);
+  border-radius:10px; padding:14px; min-height:100px; transition:all 0.2s;
+}
+.dnd-zone.over { border-color:var(--green); background:rgba(0,255,136,0.04); }
+.dnd-zone h5 {
+  font-family:'IBM Plex Mono',monospace; font-size:0.72em;
+  text-transform:uppercase; letter-spacing:2px; color:var(--muted2);
+  margin-bottom:10px;
+}
+.dnd-zone.z-digital h5 { color:var(--pin-digital); }
+.dnd-zone.z-analog h5 { color:var(--pin-analog); }
+.dnd-zone.z-protocol h5 { color:var(--cyan); }
+.dnd-zone.z-power h5 { color:var(--red); }
+.dropped { display:flex; flex-wrap:wrap; gap:6px; min-height:36px; }
+.dnd-check {
+  margin-top:14px; padding:10px 28px;
+  background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.4);
+  border-radius:8px; color:var(--green);
+  font-family:'IBM Plex Mono',monospace; font-size:0.85em; font-weight:600;
+  cursor:pointer; letter-spacing:1px; transition:all 0.2s;
+}
+.dnd-check:hover { background:rgba(0,255,136,0.18); }
+.dnd-res { margin-top:12px; padding:12px 16px; border-radius:8px; font-family:'IBM Plex Mono',monospace; font-size:0.85em; display:none; }
+.dnd-res.ok  { background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.25); color:#6ee7b7; display:block; }
+.dnd-res.bad { background:rgba(255,51,85,0.06); border:1px solid rgba(255,51,85,0.25); color:#fca5a5; display:block; }
+
+/* ── CODE CHALLENGES ─────────────── */
+.challenge-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:28px;
+  margin-bottom:24px;
+}
+.ch-header { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.ch-title { font-family:'Orbitron',sans-serif; font-size:0.9em; font-weight:700; color:var(--cyan); letter-spacing:1px; }
+.diff { padding:4px 12px; border-radius:100px; font-family:'IBM Plex Mono',monospace; font-size:0.72em; font-weight:600; flex-shrink:0; }
+.diff-e { background:rgba(0,255,136,0.1); color:var(--green); border:1px solid rgba(0,255,136,0.3); }
+.diff-m { background:rgba(255,215,0,0.1); color:var(--yellow); border:1px solid rgba(255,215,0,0.3); }
+.diff-h { background:rgba(255,51,85,0.1); color:var(--red); border:1px solid rgba(255,51,85,0.3); }
+.ch-desc { color:#6a80a0; font-size:0.9em; line-height:1.7; margin-bottom:14px; }
+.ch-ctx {
+  background:var(--surface2); border-radius:8px; padding:14px;
+  border-left:3px solid var(--orange); margin-bottom:14px;
+}
+.ch-ctx p { font-size:0.85em; color:#6a80a0; margin-bottom:5px; font-family:'IBM Plex Mono',monospace; }
+.ch-ctx p:last-child { margin:0; }
+.ch-ctx strong { color:var(--orange); }
+.code-ed {
+  width:100%; min-height:200px;
+  background:#020810;
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:16px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.85em; color:#ccd6f6;
+  resize:vertical; outline:none;
+  line-height:1.65;
+  transition:border-color 0.2s;
+}
+.code-ed:focus { border-color:rgba(0,255,136,0.4); box-shadow:0 0 12px rgba(0,255,136,0.08); }
+.ed-actions { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+.run-btn {
+  padding:9px 22px;
+  background:var(--green);
+  border:none; border-radius:8px;
+  color:#000; font-family:'IBM Plex Mono',monospace;
+  font-size:0.82em; font-weight:700; cursor:pointer;
+  letter-spacing:1px; transition:opacity 0.2s;
+}
+.run-btn:hover { opacity:0.85; }
+.hint-btn {
+  padding:9px 22px;
+  background:transparent; border:1px solid var(--border2);
+  border-radius:8px; color:var(--muted2);
+  font-family:'IBM Plex Mono',monospace; font-size:0.82em;
+  cursor:pointer; letter-spacing:1px; transition:all 0.2s;
+}
+.hint-btn:hover { border-color:var(--yellow); color:var(--yellow); }
+.sol-btn {
+  padding:9px 22px;
+  background:transparent; border:1px solid rgba(155,89,255,0.3);
+  border-radius:8px; color:var(--purple);
+  font-family:'IBM Plex Mono',monospace; font-size:0.82em;
+  cursor:pointer; letter-spacing:1px; transition:all 0.2s;
+}
+.sol-btn:hover { background:rgba(155,89,255,0.08); }
+.hint-box {
+  background:rgba(255,215,0,0.05); border:1px solid rgba(255,215,0,0.2);
+  border-radius:8px; padding:12px 16px; margin-top:10px;
+  font-family:'IBM Plex Mono',monospace; font-size:0.82em; color:#fde68a;
+  line-height:1.6; display:none;
+}
+.hint-box.show { display:block; }
+.sol-box {
+  background:#020810;
+  border:1px solid var(--border2);
+  border-radius:10px; padding:18px; margin-top:10px;
+  font-family:'IBM Plex Mono',monospace; font-size:0.82em;
+  line-height:1.65; white-space:pre; overflow-x:auto;
+  display:none;
+}
+.sol-box.show { display:block; }
+.sol-box .kw  { color:#c792ea; }
+.sol-box .fn  { color:#82aaff; }
+.sol-box .str { color:#c3e88d; }
+.sol-box .num { color:#f78c6c; }
+.sol-box .cm  { color:#546e7a; font-style:italic; }
+.sol-box .pin { color:var(--green); font-weight:600; }
+
+/* ── ACHIEVEMENTS ─────────────── */
+.ach-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin:20px 0; }
+.ach {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:12px; padding:18px; text-align:center;
+  transition:all 0.3s; filter:grayscale(100%) opacity(0.35);
+}
+.ach.unlocked {
+  filter:none;
+  border-color:rgba(255,215,0,0.5);
+  box-shadow:0 0 20px rgba(255,215,0,0.15);
+  animation:achGlow 2s ease-in-out infinite;
+}
+@keyframes achGlow { 0%,100%{box-shadow:0 0 15px rgba(255,215,0,0.1)} 50%{box-shadow:0 0 30px rgba(255,215,0,0.3)} }
+.ach-icon { font-size:2.2em; margin-bottom:8px; }
+.ach-name { font-family:'Orbitron',sans-serif; font-size:0.7em; font-weight:700; color:var(--text); letter-spacing:1px; }
+.ach-desc { font-size:0.72em; color:var(--muted2); margin-top:4px; font-family:'IBM Plex Mono',monospace; }
+
+/* ── BOTTOM NAV ─────────────────── */
+.bot-nav { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-top:40px; padding-top:24px; border-top:1px solid var(--border); }
+.bnav-btn {
+  padding:12px 24px; border-radius:10px;
+  font-family:'IBM Plex Mono',monospace; font-size:0.85em; font-weight:600;
+  cursor:pointer; text-decoration:none; transition:all 0.2s; letter-spacing:1px;
+}
+.bnav-ghost {
+  background:var(--surface); border:1px solid var(--border); color:var(--muted2);
+}
+.bnav-ghost:hover { border-color:var(--green); color:var(--green); }
+.bnav-primary {
+  background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.4);
+  color:var(--green);
+}
+.bnav-primary:hover { background:rgba(0,255,136,0.18); }
+
+/* ── TOAST ────────────────────── */
+.toast {
+  position:fixed; top:20px; right:20px;
+  background:var(--surface);
+  border:1px solid rgba(0,255,136,0.4);
+  border-radius:12px; padding:14px 18px;
+  font-family:'IBM Plex Mono',monospace; font-size:0.85em;
+  color:var(--green); z-index:10000;
+  transform:translateX(120%); transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+  max-width:300px;
+  box-shadow: 0 0 20px rgba(0,255,136,0.15);
+}
+.toast.show { transform:translateX(0); }
+.t-title { font-weight:600; margin-bottom:4px; }
+.t-msg { color:var(--muted2); font-size:0.9em; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+/* ── FINAL SCORE ─────────────── */
+.final-score-box {
+  background:var(--surface2);
+  border:1px solid rgba(0,255,136,0.3);
+  border-radius:12px;
+  padding:30px;
+  text-align:center;
+  margin-top:24px;
+}
+.final-xp {
+  font-family:'Orbitron',sans-serif;
+  font-size:3em; font-weight:900;
+  color:var(--green);
+  text-shadow:0 0 30px rgba(0,255,136,0.4);
+}
+.code-inline {
+  font-family:'IBM Plex Mono',monospace;
+  background:rgba(0,255,136,0.08);
+  border:1px solid rgba(0,255,136,0.2);
+  color:var(--green);
+  padding:1px 6px; border-radius:4px;
+  font-size:0.92em;
+}
+
+@media(max-width:640px){
+  .dnd-zones { grid-template-columns:1fr; }
+  .chip-grid  { grid-template-columns:1fr; }
+  .pinout-wrapper { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">
+  <div class="t-title" id="t-title">⚡ XP!</div>
+  <div class="t-msg" id="t-msg"></div>
+</div>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-circuit"></div>
+
+  <div class="hero-chip">
+    <div class="hero-chip-pins left">
+      <div class="hero-chip-pin"></div><div class="hero-chip-pin"></div>
+      <div class="hero-chip-pin"></div><div class="hero-chip-pin"></div>
+      <div class="hero-chip-pin"></div><div class="hero-chip-pin"></div>
+    </div>
+    <div class="hero-chip-label">ESP32</div>
+    <div class="hero-chip-pins right">
+      <div class="hero-chip-pin"></div><div class="hero-chip-pin"></div>
+      <div class="hero-chip-pin"></div><div class="hero-chip-pin"></div>
+      <div class="hero-chip-pin"></div><div class="hero-chip-pin"></div>
+    </div>
+  </div>
+
+  <div class="hero-badge">MISSÃO IOT · 2 ADS-AMS 1º SEMESTRE 2026</div>
+  <h1>Conheça o <span>ESP32</span></h1>
+  <p class="hero-sub">// hardware → GPIOs → protocolos → firmware → IoT</p>
+
+  <div class="xp-hud">
+    <div class="xp-row">
+      <span class="xp-level" id="xp-level">BOOT — LEVEL 0</span>
+      <span class="xp-pts" id="xp-pts">0 / 400 XP</span>
+    </div>
+    <div class="xp-track"><div class="xp-bar" id="xp-bar"></div></div>
+    <div class="xp-stats">
+      <div class="xp-stat"><div class="v" id="s-xp">0</div><div class="l">XP Total</div></div>
+      <div class="xp-stat"><div class="v" id="s-streak">0</div><div class="l">Streak</div></div>
+      <div class="xp-stat"><div class="v" id="s-ach">0</div><div class="l">Badges</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- PHASE NAV -->
+<div class="phase-nav">
+  <button class="pbtn active" id="pb0" onclick="goPhase(0)">01 · Hardware</button>
+  <button class="pbtn locked" id="pb1" onclick="goPhase(1)">02 · Pinout</button>
+  <button class="pbtn locked" id="pb2" onclick="goPhase(2)">03 · GPIOs</button>
+  <button class="pbtn locked" id="pb3" onclick="goPhase(3)">04 · Protocolos</button>
+  <button class="pbtn locked" id="pb4" onclick="goPhase(4)">05 · Quiz</button>
+  <button class="pbtn locked" id="pb5" onclick="goPhase(5)">06 · Código</button>
+  <button class="pbtn locked" id="pb6" onclick="goPhase(6)">07 · Missão Final</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FASE 1: HARDWARE                            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="phase-sec visible" id="ph-0">
+  <div class="sec-hdr">
+    <div class="sec-icon si-green">🔬</div>
+    <div>
+      <h2>Anatomia do ESP32</h2>
+      <p>// especificações técnicas, arquitetura e posição no ecossistema IoT</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">O QUE É O ESP32?</div>
+    <p>O <strong style="color:var(--green)">ESP32</strong> é um microcontrolador de duplo núcleo desenvolvido pela <strong style="color:var(--cyan)">Espressif Systems</strong> (China). Lançado em 2016, tornou-se o chip mais popular do mundo para projetos IoT por uma razão simples: ele tem <strong style="color:var(--orange)">Wi-Fi + Bluetooth integrados</strong> no próprio chip — algo que antes exigia módulos externos caros.</p>
+    <p>No contexto da disciplina de 2 ADS-AMS, o ESP32 é a porta de entrada para a <strong style="color:var(--yellow)">integração com dispositivos IoT</strong>, capturando dados de sensores que alimentam seus sistemas distribuídos com backends, brokers MQTT e data streaming.</p>
+    <div class="hl">
+      <strong>Analogia:</strong> pense no ESP32 como um computador minúsculo — ele tem processador, memória, conectividade de rede e pinos para interagir com o mundo físico, tudo em um chip do tamanho de uma moeda de R$0,50.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ESPECIFICAÇÕES TÉCNICAS COMPLETAS</div>
+    <table class="spec-table">
+      <tr><th>Componente</th><th>Especificação</th><th>O que significa?</th></tr>
+      <tr><td>Processador</td><td><span class="val-green">Xtensa LX6 Dual-Core</span></td><td>2 núcleos de 32-bit — um para sua aplicação, outro para Wi-Fi/BT</td></tr>
+      <tr><td>Clock</td><td><span class="val-green">até 240 MHz</span></td><td>Velocidade de processamento (Arduino UNO: 16 MHz). ESP32 é ~15x mais rápido</td></tr>
+      <tr><td>RAM (SRAM)</td><td><span class="val-cyan">520 KB</span></td><td>Memória de trabalho para variáveis e pilha de execução</td></tr>
+      <tr><td>Flash (ROM)</td><td><span class="val-cyan">4 MB (típico)</span></td><td>Armazena o firmware/programa (até 16 MB com chip externo)</td></tr>
+      <tr><td>RTC Memory</td><td><span class="val-cyan">16 KB SRAM</span></td><td>Persiste em Deep Sleep — ideal para acordar com dados preservados</td></tr>
+      <tr><td>Wi-Fi</td><td><span class="val-orange">802.11 b/g/n (2.4 GHz)</span></td><td>Conecta em redes domésticas/industriais. Suporta WPA2</td></tr>
+      <tr><td>Bluetooth</td><td><span class="val-orange">BT Classic + BLE 4.2</span></td><td>Classic para áudio; BLE para sensores de baixo consumo</td></tr>
+      <tr><td>GPIO Totais</td><td><span class="val-green">34 pinos</span></td><td>Pinos de I/O programáveis (nem todos disponíveis no módulo físico)</td></tr>
+      <tr><td>ADC</td><td><span class="val-orange">18 canais, 12-bit</span></td><td>Lê tensões analógicas (0–3.3V) com resolução de 4096 valores</td></tr>
+      <tr><td>DAC</td><td><span class="val-orange">2 canais, 8-bit</span></td><td>Gera tensão analógica de saída (GPIO 25 e 26)</td></tr>
+      <tr><td>PWM</td><td><span class="val-green">16 canais independentes</span></td><td>Controla LEDs, motores, servos com sinal modulado</td></tr>
+      <tr><td>UART</td><td><span class="val-cyan">3 interfaces</span></td><td>Comunicação serial (monitoramento, GPS, sensores)</td></tr>
+      <tr><td>I2C</td><td><span class="val-cyan">2 interfaces</span></td><td>Barramento para sensores (SDA + SCL)</td></tr>
+      <tr><td>SPI</td><td><span class="val-cyan">4 interfaces</span></td><td>Alta velocidade: displays, cartões SD, RF</td></tr>
+      <tr><td>Touch</td><td><span class="val-green">10 pinos capacitivos</span></td><td>Detecta toque sem nenhum hardware extra</td></tr>
+      <tr><td>Hall Sensor</td><td><span class="val-green">Integrado</span></td><td>Detecta campos magnéticos (sensor embutido no chip)</td></tr>
+      <tr><td>Tensão de operação</td><td><span class="val-orange">3.3V (I/O) — 5V (Vin)</span></td><td>⚠️ Os pinos GPIO são 3.3V — NÃO conecte 5V diretamente!</td></tr>
+      <tr><td>Corrente máx. por GPIO</td><td><span class="val-orange">40 mA</span></td><td>Use resistores ou transistores para cargas maiores</td></tr>
+      <tr><td>Consumo ativo</td><td><span class="val-cyan">~240 mA</span></td><td>Wi-Fi transmitindo; 20–50 mA sem Wi-Fi</td></tr>
+      <tr><td>Consumo Deep Sleep</td><td><span class="val-green">10 µA</span></td><td>Modo hibernação — para projetos a bateria</td></tr>
+      <tr><td>Temperatura</td><td><span class="val-cyan">-40°C a 85°C</span></td><td>Apto para ambientes industriais</td></tr>
+      <tr><td>Co-processador</td><td><span class="val-green">ULP (Ultra-Low Power)</span></td><td>Processa sensores enquanto o núcleo principal dorme</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ARQUITETURA INTERNA</div>
+    <div class="chip-grid">
+      <div class="chip-card g"><div class="num" style="color:var(--green)">2</div><h4>NÚCLEOS CPU</h4><p>Core 0: protocolo Wi-Fi/BT (PRO_CPU). Core 1: sua aplicação (APP_CPU). Pode usar os dois com FreeRTOS tasks.</p></div>
+      <div class="chip-card c"><div class="num" style="color:var(--cyan)">520KB</div><h4>SRAM INTERNA</h4><p>Dividida: IRAM (instruções), DRAM (dados), RTC SRAM. Acesso por DMA para periféricos.</p></div>
+      <div class="chip-card o"><div class="num" style="color:var(--orange)">2.4GHz</div><h4>RF INTEGRADO</h4><p>Antena PCB ou conector U.FL. Suporte simultâneo Wi-Fi + BT. Stack TCP/IP LwIP integrado.</p></div>
+      <div class="chip-card y"><div class="num" style="color:var(--yellow)">FreeRTOS</div><h4>SISTEMA OPERACIONAL</h4><p>SO de tempo real embutido. Gerencia tasks, filas, semáforos, timers. Base do ESP-IDF e Arduino.</p></div>
+      <div class="chip-card p"><div class="num" style="color:var(--purple)">AES/RSA</div><h4>CRIPTOGRAFIA</h4><p>Acelerador de hardware para AES, SHA, RSA, ECC. HTTPS/TLS sem custo de CPU.</p></div>
+      <div class="chip-card r"><div class="num" style="color:var(--red)">ULP</div><h4>CO-PROCESSADOR</h4><p>Ultra-Low Power Core. Lê sensores enquanto o chip principal fica em deep sleep (10µA).</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">ESP32 vs CONCORRENTES</div>
+    <table class="spec-table">
+      <tr><th>Placa</th><th>CPU</th><th>RAM</th><th>Wi-Fi</th><th>BT</th><th>Preço</th></tr>
+      <tr><td>Arduino UNO R3</td><td>16 MHz, 1 core</td><td>2 KB</td><td>❌</td><td>❌</td><td>~R$60</td></tr>
+      <tr><td>Arduino Nano</td><td>16 MHz, 1 core</td><td>2 KB</td><td>❌</td><td>❌</td><td>~R$40</td></tr>
+      <tr><td>ESP8266</td><td>80 MHz, 1 core</td><td>80 KB</td><td>✅</td><td>❌</td><td>~R$15</td></tr>
+      <tr><td><strong style="color:var(--green)">ESP32</strong></td><td><strong style="color:var(--green)">240 MHz, 2 cores</strong></td><td><strong style="color:var(--green)">520 KB</strong></td><td><strong style="color:var(--green)">✅</strong></td><td><strong style="color:var(--green)">✅</strong></td><td><strong style="color:var(--green)">~R$25</strong></td></tr>
+      <tr><td>Raspberry Pi Pico W</td><td>133 MHz, 2 cores</td><td>264 KB</td><td>✅</td><td>✅</td><td>~R$45</td></tr>
+      <tr><td>Raspberry Pi Zero 2</td><td>1 GHz, 4 cores</td><td>512 MB</td><td>✅</td><td>✅</td><td>~R$120</td></tr>
+    </table>
+    <div class="hl cyan">
+      <strong>Conclusão:</strong> Para projetos IoT com conectividade e custo reduzido, o ESP32 é o melhor custo-benefício do mercado. Por isso domina o mercado de protótipos e produtos comerciais.
+    </div>
+  </div>
+
+  <div style="text-align:right;margin-top:8px">
+    <button class="bnav-btn bnav-primary" onclick="completePhase(0)">CONCLUIR FASE 01 → GANHAR XP ⚡</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FASE 2: PINOUT INTERATIVO                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="phase-sec" id="ph-1">
+  <div class="sec-hdr">
+    <div class="sec-icon si-cyan">📌</div>
+    <div>
+      <h2>Pinout Interativo</h2>
+      <p>// clique em cada pino para ver sua função — passe o mouse para explorar</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">MAPA DE PINOS — ESP32 (38 pinos)</div>
+    <div class="pin-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pin-digital)"></div>Digital I/O</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pin-analog)"></div>ADC (analógico)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pin-power)"></div>Alimentação</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pin-gnd)"></div>GND</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pin-touch)"></div>Touch</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pin-uart)"></div>UART</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pin-i2c)"></div>I2C</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--pin-spi)"></div>SPI</div>
+    </div>
+
+    <div class="pinout-wrapper">
+      <!-- BOARD VISUAL -->
+      <div class="pinout-board" id="pinout-board">
+        <!-- Pinos lado ESQUERDO (numerados de cima) -->
+        <!-- Col: num | label | [corpo] -->
+      </div>
+
+      <!-- TOOLTIP -->
+      <div class="pin-tooltip" id="pin-tooltip">
+        <h4 id="pt-name">← Clique em um pino</h4>
+        <p id="pt-desc">Passe o mouse sobre qualquer pino do ESP32 para ver seus detalhes, funções e casos de uso.</p>
+        <div class="pt-tags" id="pt-tags"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">PINOS DE ATENÇÃO ESPECIAL</div>
+    <table class="spec-table">
+      <tr><th>Pino</th><th>Peculiaridade</th><th>Impacto</th></tr>
+      <tr><td>GPIO 0</td><td>Boot mode: LOW = modo flash, HIGH = normal</td><td>Não usar como output — pode travar o boot</td></tr>
+      <tr><td>GPIO 1 (TX0)</td><td>Serial de debug do USB</td><td>Evitar como GPIO — gera ruído no monitor serial</td></tr>
+      <tr><td>GPIO 3 (RX0)</td><td>Serial de debug do USB</td><td>Mesmo problema do TX0</td></tr>
+      <tr><td>GPIO 6–11</td><td>Conectados à Flash SPI interna</td><td>⛔ NUNCA use — trava o chip imediatamente</td></tr>
+      <tr><td>GPIO 34–39</td><td>Input-only — sem pull-up/down interno</td><td>Só para leitura; ADC2 (32–39) problemático com Wi-Fi</td></tr>
+      <tr><td>GPIO 25, 26</td><td>DAC — saída analógica real</td><td>Únicos pinos que geram tensão analógica (áudio, controle)</td></tr>
+      <tr><td>GPIO 21, 22</td><td>I2C padrão (SDA, SCL)</td><td>Padrão para sensores I2C; pode usar outros com Wire.begin()</td></tr>
+      <tr><td>GPIO 2</td><td>LED interno na maioria das placas DevKit</td><td>Piscar = teste clássico "Hello World" de hardware</td></tr>
+    </table>
+    <div class="hl orange">
+      <strong>Regra de ouro:</strong> Evite GPIO 6–11 (Flash interna), GPIO 34–39 para output, e tome cuidado com GPIO 0 durante o boot. Os "seguros" para uso geral são: 4, 5, 12–19, 21–23, 25–27, 32–33.
+    </div>
+  </div>
+
+  <div style="text-align:right;margin-top:8px">
+    <button class="bnav-btn bnav-primary" onclick="completePhase(1)">AVANÇAR PARA GPIOs →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FASE 3: GPIO PROFUNDO                      -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="phase-sec" id="ph-2">
+  <div class="sec-hdr">
+    <div class="sec-icon si-orange">⚡</div>
+    <div>
+      <h2>GPIO em Profundidade</h2>
+      <p>// digital, analógico, PWM, interrupções e modos de operação</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1. GPIO DIGITAL — SAÍDA E ENTRADA</div>
+    <p>GPIO significa <strong style="color:var(--green)">General Purpose Input/Output</strong> — pino de propósito geral que pode ser configurado como entrada ou saída digital. Opera com lógica 3.3V (HIGH = 3.3V, LOW = 0V).</p>
+    <div class="chip-grid">
+      <div class="chip-card g">
+        <h4>OUTPUT (Saída)</h4>
+        <p>Controla LEDs, relés, buzzers, motores (via transistor). O ESP32 fornece corrente para o circuito externo. Max: 40mA por pino, 1200mA total.</p>
+      </div>
+      <div class="chip-card c">
+        <h4>INPUT (Entrada)</h4>
+        <p>Lê botões, sensores digitais (PIR, ultrassom), chaves. Pode ter resistor pull-up ou pull-down interno ativado por software.</p>
+      </div>
+      <div class="chip-card y">
+        <h4>INPUT_PULLUP</h4>
+        <p>Resistor interno de ~45kΩ ligado ao 3.3V. Botão conectado ao GND — lê HIGH em repouso, LOW quando pressionado.</p>
+      </div>
+      <div class="chip-card o">
+        <h4>INPUT_PULLDOWN</h4>
+        <p>Resistor interno ligado ao GND. Lê LOW em repouso, HIGH quando ativo. Menos comum, mas disponível.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2. ADC — CONVERSOR ANALÓGICO-DIGITAL</div>
+    <p>O ADC (Analog-to-Digital Converter) converte tensão analógica (0–3.3V) em número inteiro. Com resolução de <strong style="color:var(--orange)">12 bits</strong>, temos 4096 valores possíveis (0 a 4095).</p>
+    <div class="hl">
+      <strong>Fórmula:</strong> Tensão = (leitura / 4095) × 3.3V &nbsp;|&nbsp; Leitura = (tensão / 3.3) × 4095
+    </div>
+    <table class="spec-table">
+      <tr><th>Canal</th><th>Pinos</th><th>Disponível com Wi-Fi?</th><th>Uso recomendado</th></tr>
+      <tr><td>ADC1</td><td>GPIO 32–39</td><td><span class="val-green">SIM ✅</span></td><td>Sensores analógicos em projetos IoT</td></tr>
+      <tr><td>ADC2</td><td>GPIO 0,2,4,12–15,25–27</td><td><span class="val-orange">NÃO ⚠️</span></td><td>Apenas sem Wi-Fi ativo — evitar em IoT</td></tr>
+    </table>
+    <div class="hl orange">
+      <strong>Problema do ADC2:</strong> quando o Wi-Fi está ativo, o ADC2 fica inutilizável — a antena usa os mesmos circuitos. Para projetos IoT, use sempre ADC1 (GPIO 32–39).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">3. PWM — MODULAÇÃO POR LARGURA DE PULSO</div>
+    <p>PWM simula uma saída analógica usando pulsos digitais rápidos. O ESP32 tem um controlador LEDC (<em>LED Control</em>) com <strong style="color:var(--green)">16 canais PWM independentes</strong>, podendo usar qualquer GPIO como saída PWM.</p>
+    <div class="chip-grid">
+      <div class="chip-card g"><h4>Duty Cycle</h4><p>% do tempo em HIGH. 0% = sempre LOW, 50% = metade do tempo HIGH, 100% = sempre HIGH. Controla brilho de LED.</p></div>
+      <div class="chip-card c"><h4>Frequência</h4><p>Velocidade dos pulsos. LEDs: 1-5 kHz. Servos: 50 Hz. Motores DC: 1-20 kHz. Configura por canal.</p></div>
+      <div class="chip-card o"><h4>Resolução</h4><p>Bits de precisão do duty. 8-bit = 256 níveis. 16-bit = 65536 níveis. Maior resolução = controle mais fino.</p></div>
+      <div class="chip-card y"><h4>Fade / Respiração</h4><p>Hardware fade — o ESP32 altera o duty automaticamente sem ocupar CPU. Perfeito para LEDs "respirando".</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">4. INTERRUPÇÕES (ISR — Interrupt Service Routine)</div>
+    <p>Em vez de ficar verificando um pino em loop, você registra uma <strong style="color:var(--green)">interrupção</strong>: quando o pino muda de estado, o ESP32 para o que está fazendo e chama sua função automaticamente.</p>
+    <div class="chip-grid">
+      <div class="chip-card g"><h4>RISING</h4><p>Dispara na borda de subida: quando o pino vai de LOW → HIGH. Ex: botão liberado com pull-down.</p></div>
+      <div class="chip-card c"><h4>FALLING</h4><p>Dispara na borda de descida: LOW → HIGH → LOW. Ex: botão pressionado com pull-up.</p></div>
+      <div class="chip-card o"><h4>CHANGE</h4><p>Dispara em qualquer mudança. Ex: encoder rotativo, que muda estado continuamente.</p></div>
+      <div class="chip-card p"><h4>IRAM_ATTR</h4><p>Obrigatório no ESP32: funções ISR devem ter este atributo — armazena na RAM interna para acesso rápido.</p></div>
+    </div>
+    <div class="hl">
+      <strong>Regra ISR:</strong> mantenha a função de interrupção ultra-rápida. Não use Serial.print(), delay(), ou funções bloqueantes dentro de uma ISR. Use flags e processe no loop().
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">5. TOUCH — SENSOR CAPACITIVO SEM HARDWARE</div>
+    <p>O ESP32 tem <strong style="color:var(--purple)">10 pinos touch capacitivos</strong> — detectam presença do dedo sem nenhum componente adicional. Internamente medem a capacitância do pino: quando você toca, a capacitância aumenta.</p>
+    <table class="spec-table">
+      <tr><th>Touch</th><th>GPIO</th><th>Disponível no DevKit</th></tr>
+      <tr><td>T0</td><td>GPIO 4</td><td>✅</td></tr>
+      <tr><td>T1</td><td>GPIO 0</td><td>⚠️ (boot pin)</td></tr>
+      <tr><td>T2</td><td>GPIO 2</td><td>✅</td></tr>
+      <tr><td>T3</td><td>GPIO 15</td><td>✅</td></tr>
+      <tr><td>T4</td><td>GPIO 13</td><td>✅</td></tr>
+      <tr><td>T5</td><td>GPIO 12</td><td>⚠️ (boot pin)</td></tr>
+      <tr><td>T6</td><td>GPIO 14</td><td>✅</td></tr>
+      <tr><td>T7</td><td>GPIO 27</td><td>✅</td></tr>
+      <tr><td>T8</td><td>GPIO 33</td><td>✅</td></tr>
+      <tr><td>T9</td><td>GPIO 32</td><td>✅</td></tr>
+    </table>
+  </div>
+
+  <div style="text-align:right;margin-top:8px">
+    <button class="bnav-btn bnav-primary" onclick="completePhase(2)">AVANÇAR PARA PROTOCOLOS →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FASE 4: PROTOCOLOS DE COMUNICAÇÃO          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="phase-sec" id="ph-3">
+  <div class="sec-hdr">
+    <div class="sec-icon si-yellow">📡</div>
+    <div>
+      <h2>Protocolos de Comunicação</h2>
+      <p>// UART · I2C · SPI · Wi-Fi · BLE · MQTT — conectando o ESP32 ao mundo</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">UART — COMUNICAÇÃO SERIAL ASSÍNCRONA</div>
+    <p>O protocolo mais simples: dois fios (TX e RX), sem clock compartilhado. O ESP32 tem <strong style="color:var(--cyan)">3 UARTs</strong>.</p>
+    <table class="spec-table">
+      <tr><th>UART</th><th>TX / RX padrão</th><th>Uso típico</th></tr>
+      <tr><td>UART0</td><td>GPIO 1 / GPIO 3</td><td>Debug serial (USB) — evitar para outros usos</td></tr>
+      <tr><td>UART1</td><td>GPIO 10 / GPIO 9</td><td>Flash SPI — remapeável para outros GPIOs</td></tr>
+      <tr><td>UART2</td><td>GPIO 17 / GPIO 16</td><td>Sensores: GPS, GSM, módulos externos</td></tr>
+    </table>
+    <div class="hl cyan">
+      <strong>Velocidades comuns (baud rate):</strong> 9600, 115200, 921600 bps. Arduino IDE usa 115200 por padrão. GPS usa 9600. ESP-IDF logging usa 115200.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">I2C — BARRAMENTO SERIAL SÍNCRONO (2 FIOS)</div>
+    <p>I2C usa apenas 2 fios (<strong style="color:var(--yellow)">SDA + SCL</strong>) e suporta múltiplos dispositivos no mesmo barramento, cada um com endereço único de 7 bits (até 127 dispositivos!).</p>
+    <div class="chip-grid">
+      <div class="chip-card y"><h4>SDA (Data)</h4><p>Linha de dados bidirecional. GPIO 21 por padrão. Pull-up de 4.7kΩ necessário.</p></div>
+      <div class="chip-card y"><h4>SCL (Clock)</h4><p>Sinal de sincronismo gerado pelo master. GPIO 22 por padrão. Pull-up de 4.7kΩ necessário.</p></div>
+      <div class="chip-card c"><h4>Velocidades</h4><p>Standard: 100kHz. Fast: 400kHz. Fast+: 1MHz. Suficiente para a maioria dos sensores.</p></div>
+      <div class="chip-card g"><h4>Sensores I2C comuns</h4><p>DHT — temperatura/umidade. MPU6050 — acelerômetro. BMP280 — pressão. OLED SSD1306. RTC DS3231.</p></div>
+    </div>
+    <div class="hl yellow">
+      <strong>Endereços:</strong> cada dispositivo I2C tem endereço fixo (ex: BMP280 = 0x76 ou 0x77). Use o <em>I2C Scanner</em> para descobrir dispositivos conectados.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">SPI — BARRAMENTO SERIAL DE ALTA VELOCIDADE (4 FIOS)</div>
+    <p>SPI é mais rápido que I2C mas usa 4 fios e suporta múltiplos dispositivos via pinos CS separados. Ideal para comunicação de alta taxa.</p>
+    <table class="spec-table">
+      <tr><th>Sinal</th><th>Função</th><th>GPIO padrão</th></tr>
+      <tr><td>MOSI</td><td>Master Out, Slave In (dados do ESP para dispositivo)</td><td>GPIO 23</td></tr>
+      <tr><td>MISO</td><td>Master In, Slave Out (dados do dispositivo para ESP)</td><td>GPIO 19</td></tr>
+      <tr><td>SCLK</td><td>Clock (sincronismo)</td><td>GPIO 18</td></tr>
+      <tr><td>CS/SS</td><td>Chip Select (seleciona qual dispositivo falar)</td><td>GPIO 5 (ou qualquer GPIO)</td></tr>
+    </table>
+    <div class="hl">
+      <strong>Quando usar SPI?</strong> Cartões SD (leitura de arquivos), displays TFT/ILI9341, módulos RF (nRF24L01, LoRa), leitor RFID/NFC (MFRC522).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Wi-Fi + MQTT — A CONEXÃO IOT</div>
+    <p>O ESP32 suporta Wi-Fi nativo e o protocolo <strong style="color:var(--green)">MQTT</strong> (Message Queuing Telemetry Transport) é o padrão da indústria para IoT — leve, eficiente, funciona em redes instáveis.</p>
+    <div class="chip-grid">
+      <div class="chip-card g"><h4>Station (STA)</h4><p>ESP32 conecta à sua rede Wi-Fi. Modo mais comum — acessa internet, MQTT broker, APIs REST.</p></div>
+      <div class="chip-card c"><h4>Access Point (AP)</h4><p>ESP32 cria sua própria rede. Útil para configuração inicial sem roteador.</p></div>
+      <div class="chip-card o"><h4>STA + AP</h4><p>Modo simultâneo — conectado à internet E criando hotspot local. Útil para gateways IoT.</p></div>
+      <div class="chip-card y"><h4>MQTT Broker</h4><p>Servidor de mensagens (Mosquitto, HiveMQ, broker público). ESP32 publica dados; backend Python/Node assina.</p></div>
+    </div>
+    <div class="hl cyan">
+      <strong>Fluxo IoT completo:</strong> Sensor → ESP32 → Wi-Fi → MQTT Broker (Mosquitto) → Backend Python → Banco de Dados → Dashboard Web. Exatamente o que a ementa da disciplina pede!
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">DEEP SLEEP — OTIMIZAÇÃO PARA BATERIA</div>
+    <p>Para projetos alimentados por bateria, o Deep Sleep é fundamental: o ESP32 consome apenas <strong style="color:var(--green)">10 µA</strong> dormindo, contra 240 mA acordado com Wi-Fi.</p>
+    <div class="chip-grid">
+      <div class="chip-card g"><h4>Timer Wakeup</h4><p>Acorda após X microssegundos. Ex: sensor que envia temperatura a cada 5 minutos.</p></div>
+      <div class="chip-card c"><h4>GPIO Wakeup</h4><p>Acorda quando pino muda de estado. Ex: sensor de movimento que só acorda com detecção.</p></div>
+      <div class="chip-card o"><h4>Touch Wakeup</h4><p>Acorda ao tocar pino capacitivo. Ex: dispositivo wearable que acorda com toque.</p></div>
+      <div class="chip-card p"><h4>ULP Wakeup</h4><p>Co-processador ULP monitora sensores e acorda o chip principal apenas se necessário.</p></div>
+    </div>
+  </div>
+
+  <div style="text-align:right;margin-top:8px">
+    <button class="bnav-btn bnav-primary" onclick="completePhase(3)">AVANÇAR PARA O QUIZ ⚡</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FASE 5: QUIZ                               -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="phase-sec" id="ph-4">
+  <div class="sec-hdr">
+    <div class="sec-icon si-green">🎯</div>
+    <div>
+      <h2>Quiz de Diagnóstico</h2>
+      <p>// 10 questões progressivas — responda, erre, aprenda e ganhe XP</p>
+    </div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="q-progress" id="q-prog"></div>
+
+    <div class="qcard active" id="qc-0">
+      <div class="q-meta"><span class="q-num">QUESTÃO 01 / 10</span><span class="q-xp">+15 XP</span></div>
+      <div class="q-text">O ESP32 possui dois núcleos de processamento. Qual a função principal de cada um no framework Arduino/ESP-IDF?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(0,0,2)">Core 0 para matemática pesada; Core 1 para I/O</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(0,1,2)">Core 0 para gráficos; Core 1 para rede</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(0,2,2)">Core 0 (PRO_CPU) gerencia Wi-Fi/BT; Core 1 (APP_CPU) executa sua aplicação (loop/tasks)</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(0,3,2)">Os dois núcleos fazem a mesma coisa — redundância para confiabilidade</button>
+      </div>
+      <div class="q-fb" id="qfb-0"></div>
+      <button class="q-next" id="qnx-0" onclick="nextQ(1)">PRÓXIMO →</button>
+    </div>
+
+    <div class="qcard" id="qc-1">
+      <div class="q-meta"><span class="q-num">QUESTÃO 02 / 10</span><span class="q-xp">+15 XP</span></div>
+      <div class="q-text">Você quer ler um sensor analógico de temperatura (LM35) em um projeto ESP32 com Wi-Fi ativo. Qual canal ADC você deve usar?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(1,0,0)">ADC1 — GPIOs 32 a 39 (único canal funcional com Wi-Fi ativo)</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(1,1,0)">ADC2 — GPIOs 25 e 26, que são os mais precisos</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(1,2,0)">Qualquer GPIO pode ler analógico no ESP32</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(1,3,0)">Não é possível usar ADC com Wi-Fi — desligue antes de ler</button>
+      </div>
+      <div class="q-fb" id="qfb-1"></div>
+      <button class="q-next" id="qnx-1" onclick="nextQ(2)">PRÓXIMO →</button>
+    </div>
+
+    <div class="qcard" id="qc-2">
+      <div class="q-meta"><span class="q-num">QUESTÃO 03 / 10</span><span class="q-xp">+15 XP</span></div>
+      <div class="q-text">Por que os GPIOs 6 a 11 do ESP32 NUNCA devem ser usados na sua aplicação?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(2,0,1)">São pinos de 5V e podem danificar sensores de 3.3V</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(2,1,1)">Estão conectados internamente ao barramento SPI da Flash — usar trava ou corrompe o programa</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(2,2,1)">São reservados para uso futuro pela Espressif</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(2,3,1)">Esses pinos não existem no ESP32 — é uma numeração interna</button>
+      </div>
+      <div class="q-fb" id="qfb-2"></div>
+      <button class="q-next" id="qnx-2" onclick="nextQ(3)">PRÓXIMO →</button>
+    </div>
+
+    <div class="qcard" id="qc-3">
+      <div class="q-meta"><span class="q-num">QUESTÃO 04 / 10</span><span class="q-xp">+20 XP</span></div>
+      <div class="q-text">Você quer conectar 5 sensores I2C (BMP280, MPU6050, RTC DS3231, OLED, HDC1080) ao ESP32. Quantos GPIOs serão necessários?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(3,0,1)">10 GPIOs — 2 por sensor</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(3,1,1)">Apenas 2 GPIOs (SDA e SCL) — todos compartilham o mesmo barramento I2C com endereços únicos</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(3,2,1)">5 GPIOs — 1 pino de seleção por sensor</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(3,3,1)">4 GPIOs — I2C e SPI combinados</button>
+      </div>
+      <div class="q-fb" id="qfb-3"></div>
+      <button class="q-next" id="qnx-3" onclick="nextQ(4)">PRÓXIMO →</button>
+    </div>
+
+    <div class="qcard" id="qc-4">
+      <div class="q-meta"><span class="q-num">QUESTÃO 05 / 10</span><span class="q-xp">+20 XP</span></div>
+      <div class="q-text">Um projeto IoT deve enviar temperatura a cada 5 minutos e funcionar a bateria por meses. Qual estratégia de energia usar?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(4,0,2)">Reduzir o clock para 80 MHz e manter Wi-Fi sempre ligado</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(4,1,2)">Usar somente BLE para economizar energia</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(4,2,2)">Deep Sleep com Timer Wakeup de 5 minutos: acorda, lê sensor, conecta Wi-Fi, envia MQTT, volta a dormir (10µA dormindo)</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(4,3,2)">Comprar um ESP32 com módulo de bateria especial</button>
+      </div>
+      <div class="q-fb" id="qfb-4"></div>
+      <button class="q-next" id="qnx-4" onclick="nextQ(5)">PRÓXIMO →</button>
+    </div>
+
+    <div class="qcard" id="qc-5">
+      <div class="q-meta"><span class="q-num">QUESTÃO 06 / 10</span><span class="q-xp">+20 XP</span></div>
+      <div class="q-text">Qual protocolo de comunicação é mais adequado para conectar o ESP32 a um leitor de cartão SD para gravar logs de sensor?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(5,0,2)">I2C — pois usa menos fios</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(5,1,2)">UART — protocolo padrão para armazenamento</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(5,2,2)">SPI — alta velocidade de transferência, padrão para cartões SD</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(5,3,2)">Wi-Fi — envia direto para servidor, sem cartão SD</button>
+      </div>
+      <div class="q-fb" id="qfb-5"></div>
+      <button class="q-next" id="qnx-5" onclick="nextQ(6)">PRÓXIMO →</button>
+    </div>
+
+    <div class="qcard" id="qc-6">
+      <div class="q-meta"><span class="q-num">QUESTÃO 07 / 10</span><span class="q-xp">+20 XP</span></div>
+      <div class="q-text">O que é PWM e para que serve o módulo LEDC do ESP32?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(6,0,3)">PWM é um protocolo de rede sem fio; LEDC é o stack TCP/IP</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(6,1,3)">PWM é um tipo de memória RAM; LEDC gerencia cache</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(6,2,3)">PWM é modulação por largura de pulso para simular analógico; LEDC tem 16 canais para controlar LEDs, servos e motores</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(6,3,3)">PWM é abreviação de Power Wi-Fi Module — módulo de energia sem fio</button>
+      </div>
+      <div class="q-fb" id="qfb-6"></div>
+      <button class="q-next" id="qnx-6" onclick="nextQ(7)">PRÓXIMO →</button>
+    </div>
+
+    <div class="qcard" id="qc-7">
+      <div class="q-meta"><span class="q-num">QUESTÃO 08 / 10</span><span class="q-xp">+25 XP</span></div>
+      <div class="q-text">Na ementa da disciplina há "Protocolos de Mensageria para intercomunicação de sistemas" e "Brokers de recepção de dados". Qual tecnologia do ESP32 se conecta diretamente a esse objetivo?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(7,0,1)">SPI — envia dados em alta velocidade para o broker</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(7,1,1)">Wi-Fi + MQTT: ESP32 publica dados via MQTT para um broker (Mosquitto/HiveMQ) que distribui para backend, apps e dashboards</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(7,2,1)">Touch capacitivo — interface de entrada de dados para o broker</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(7,3,1)">Deep Sleep — permite que o broker dorme enquanto aguarda dados</button>
+      </div>
+      <div class="q-fb" id="qfb-7"></div>
+      <button class="q-next" id="qnx-7" onclick="nextQ(8)">PRÓXIMO →</button>
+    </div>
+
+    <div class="qcard" id="qc-8">
+      <div class="q-meta"><span class="q-num">QUESTÃO 09 / 10</span><span class="q-xp">+25 XP</span></div>
+      <div class="q-text">Você escreveu uma função para ser chamada quando um botão é pressionado (interrupção). O ESP32 trava ao executar. Qual erro mais provável?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(8,0,2)">O pino de interrupção não existe no ESP32</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(8,1,2)">O botão precisa de resistor de 100kΩ para funcionar</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(8,2,2)">A função ISR usa Serial.print() ou delay() — funções bloqueantes proibidas em ISR. Faltou o atributo IRAM_ATTR.</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(8,3,2)">Interrupções só funcionam com pull-down, não pull-up</button>
+      </div>
+      <div class="q-fb" id="qfb-8"></div>
+      <button class="q-next" id="qnx-8" onclick="nextQ(9)">PRÓXIMO →</button>
+    </div>
+
+    <div class="qcard" id="qc-9">
+      <div class="q-meta"><span class="q-num">QUESTÃO 10 / 10</span><span class="q-xp">+25 XP</span></div>
+      <div class="q-text">Para o projeto final da disciplina (captura IoT → backend → dashboard), qual seria o fluxo arquitetural correto com ESP32?</div>
+      <div class="q-opts">
+        <button class="qopt" data-letter="A" onclick="ansQ(9,0,2)">ESP32 → Bluetooth → Celular → API REST → Dashboard</button>
+        <button class="qopt" data-letter="B" onclick="ansQ(9,1,2)">Sensor → ESP32 → UART → PC → banco de dados</button>
+        <button class="qopt" data-letter="C" onclick="ansQ(9,2,2)">Sensor → ESP32 (ADC/GPIO) → Wi-Fi → MQTT Broker → Backend (Python/Node) → DB (InfluxDB/PostgreSQL) → Dashboard (Grafana/Web)</button>
+        <button class="qopt" data-letter="D" onclick="ansQ(9,3,2)">Sensor → ESP32 → cartão SD → USB → servidor</button>
+      </div>
+      <div class="q-fb" id="qfb-9"></div>
+      <button class="q-next" id="qnx-9" onclick="showResult()">VER RESULTADO →</button>
+    </div>
+
+    <div class="q-result" id="q-result">
+      <div class="score" id="q-score">0/10</div>
+      <div class="score-msg" id="q-msg"></div>
+      <div style="margin-bottom:28px"><span id="q-xp-r" style="font-family:'Orbitron',sans-serif;font-size:1.5em;font-weight:700;color:var(--green)"></span></div>
+      <button class="restart-btn" onclick="restartQ()">↺ REINICIAR QUIZ</button>
+      <button class="bnav-btn bnav-primary" style="margin-left:12px" onclick="completePhase(4)">AVANÇAR PARA CÓDIGO →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FASE 6: CÓDIGO                             -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="phase-sec" id="ph-5">
+  <div class="sec-hdr">
+    <div class="sec-icon si-purple">💻</div>
+    <div>
+      <h2>Código na Prática</h2>
+      <p>// 4 desafios progressivos em C++ (Arduino Framework) para o ESP32</p>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:rgba(0,255,136,0.2);background:rgba(0,255,136,0.02)">
+    <div class="card-title">AMBIENTE DE DESENVOLVIMENTO</div>
+    <div class="chip-grid">
+      <div class="chip-card g"><h4>Arduino IDE 2.x</h4><p>Mais simples. Adicione "ESP32 by Espressif" no Board Manager. Linguagem: C++ simplificado.</p></div>
+      <div class="chip-card c"><h4>VS Code + PlatformIO</h4><p>Profissional. Melhor autocomplete, múltiplos frameworks, controle de versão integrado. Recomendado.</p></div>
+      <div class="chip-card o"><h4>ESP-IDF</h4><p>Framework oficial Espressif. Máxima flexibilidade. FreeRTOS nativo. Ideal para produção.</p></div>
+      <div class="chip-card y"><h4>MicroPython</h4><p>Python no ESP32! Mais lento, mas Python puro. Ótimo para protótipos rápidos de IoT.</p></div>
+    </div>
+  </div>
+
+  <!-- DESAFIO 1 -->
+  <div class="challenge-card">
+    <div class="ch-header">
+      <div class="ch-title">🔵 DESAFIO 1 — Blink Avançado com Millis()</div>
+      <span class="diff diff-e">FÁCIL · +30 XP</span>
+    </div>
+    <p class="ch-desc">O "Hello World" do hardware. Pisque o LED interno sem usar delay() — use millis() para não bloquear o loop e poder fazer outras tarefas simultaneamente.</p>
+    <div class="ch-ctx">
+      <p><strong>Por que evitar delay()?</strong></p>
+      <p>delay(1000) trava o ESP32 por 1 segundo inteiro — nenhum sensor lê, nenhuma comunicação acontece.</p>
+      <p>millis() retorna o tempo desde o boot (ms) — você checa se passou tempo suficiente sem bloquear.</p>
+    </div>
+    <textarea class="code-ed" id="ed-1" placeholder="// Complete o código abaixo:
+
+const int LED_PIN = 2;        // LED interno do DevKit
+const long INTERVALO = 500;   // 500ms = 0.5 segundo
+
+unsigned long ultimoTempo = 0;
+bool ledEstado = false;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED_PIN, ???);  // configure o pino
+  Serial.println('ESP32 iniciado!');
+}
+
+void loop() {
+  unsigned long agora = millis();
+  
+  if (agora - ultimoTempo >= INTERVALO) {
+    ultimoTempo = agora;
+    ledEstado = !ledEstado;
+    digitalWrite(LED_PIN, ???);  // escreva o estado
+    Serial.printf('LED: %s\n', ledEstado ? 'ON' : 'OFF');
+  }
+  
+  // Outras tarefas podem rodar aqui sem travar!
+}"></textarea>
+    <div class="ed-actions">
+      <button class="run-btn" onclick="validateCh(1)">▶ VERIFICAR</button>
+      <button class="hint-btn" onclick="toggleHint(1)">💡 DICA</button>
+      <button class="sol-btn" onclick="toggleSol(1)">👁 SOLUÇÃO</button>
+    </div>
+    <div class="hint-box" id="hint-1">💡 <code>pinMode(LED_PIN, OUTPUT)</code> para saída. <code>digitalWrite(LED_PIN, ledEstado)</code> para escrever. ledEstado é booleano: true = HIGH, false = LOW.</div>
+    <div class="sol-box" id="sol-1"><span class="cm">// ✅ SOLUÇÃO — Blink sem delay() com millis()
+</span>
+<span class="kw">const int</span> LED_PIN = <span class="num">2</span>;
+<span class="kw">const long</span> INTERVALO = <span class="num">500</span>;
+
+<span class="kw">unsigned long</span> ultimoTempo = <span class="num">0</span>;
+<span class="kw">bool</span> ledEstado = <span class="kw">false</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="num">115200</span>);
+  <span class="fn">pinMode</span>(<span class="pin">LED_PIN</span>, OUTPUT);
+  Serial.<span class="fn">println</span>(<span class="str">"ESP32 iniciado — Blink sem delay!"</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">unsigned long</span> agora = <span class="fn">millis</span>();
+  
+  <span class="kw">if</span> (agora - ultimoTempo >= INTERVALO) {
+    ultimoTempo = agora;
+    ledEstado = !ledEstado;
+    <span class="fn">digitalWrite</span>(<span class="pin">LED_PIN</span>, ledEstado);
+    Serial.<span class="fn">printf</span>(<span class="str">"LED: %s\n"</span>, ledEstado ? <span class="str">"ON"</span> : <span class="str">"OFF"</span>);
+  }
+  
+  <span class="cm">// Aqui: leia sensores, processe MQTT, etc. sem travar!</span>
+}</div>
+  </div>
+
+  <!-- DESAFIO 2 -->
+  <div class="challenge-card">
+    <div class="ch-header">
+      <div class="ch-title">🟡 DESAFIO 2 — Leitura de Sensor Analógico com ADC</div>
+      <span class="diff diff-m">MÉDIO · +40 XP</span>
+    </div>
+    <p class="ch-desc">Leia um potenciômetro (ou sensor LM35) via ADC1 e converta para tensão real. Exiba no Monitor Serial e mapeie o valor para controlar o brilho de um LED via PWM.</p>
+    <div class="ch-ctx">
+      <p><strong>Hardware simulado:</strong> potenciômetro no GPIO 34 (ADC1_CH6)</p>
+      <p><strong>LED PWM:</strong> GPIO 5, canal LEDC 0, frequência 5kHz, resolução 8-bit</p>
+      <p><strong>Conversão:</strong> ADC lê 0–4095 → mapear para 0–255 para PWM → calcular tensão em V</p>
+    </div>
+    <textarea class="code-ed" id="ed-2" style="min-height:240px" placeholder="// Leitura ADC + controle PWM
+const int ADC_PIN = 34;   // ADC1 — funciona com Wi-Fi
+const int LED_PIN = 5;    // LED para PWM
+const int PWM_CANAL = 0;
+const int PWM_FREQ  = 5000;
+const int PWM_BITS  = 8;  // 0-255
+
+void setup() {
+  Serial.begin(115200);
+  // Inicialize o canal PWM:
+  ledcSetup(PWM_CANAL, PWM_FREQ, ???);
+  ledcAttachPin(???, PWM_CANAL);
+}
+
+void loop() {
+  int leitura = analogRead(???);           // leia o ADC
+  float tensao = (leitura / 4095.0) * ???; // converta para volts
+  int brilho   = map(leitura, 0, 4095, ???, 255); // mapeie para PWM
+  
+  ledcWrite(PWM_CANAL, brilho);
+  Serial.printf('ADC: %d | Tensão: %.2fV | PWM: %d\n', leitura, tensao, brilho);
+  delay(100);
+}"></textarea>
+    <div class="ed-actions">
+      <button class="run-btn" onclick="validateCh(2)">▶ VERIFICAR</button>
+      <button class="hint-btn" onclick="toggleHint(2)">💡 DICA</button>
+      <button class="sol-btn" onclick="toggleSol(2)">👁 SOLUÇÃO</button>
+    </div>
+    <div class="hint-box" id="hint-2">💡 <code>ledcSetup(canal, freq, bits)</code> configura o canal PWM. Tensão máxima no ESP32 = 3.3V. Para map(): o primeiro valor mapeado é 0 (LED apagado quando ADC = 0).</div>
+    <div class="sol-box" id="sol-2"><span class="cm">// ✅ SOLUÇÃO — ADC + PWM completo
+</span>
+<span class="kw">const int</span> ADC_PIN  = <span class="num">34</span>;
+<span class="kw">const int</span> LED_PIN  = <span class="num">5</span>;
+<span class="kw">const int</span> PWM_CANAL = <span class="num">0</span>;
+<span class="kw">const int</span> PWM_FREQ  = <span class="num">5000</span>;
+<span class="kw">const int</span> PWM_BITS  = <span class="num">8</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="num">115200</span>);
+  <span class="fn">ledcSetup</span>(PWM_CANAL, PWM_FREQ, PWM_BITS);  <span class="cm">// 8 bits = 0-255</span>
+  <span class="fn">ledcAttachPin</span>(<span class="pin">LED_PIN</span>, PWM_CANAL);
+  Serial.<span class="fn">println</span>(<span class="str">"ADC + PWM prontos!"</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> leitura = <span class="fn">analogRead</span>(<span class="pin">ADC_PIN</span>);
+  <span class="kw">float</span> tensao = (leitura / <span class="num">4095.0</span>) * <span class="num">3.3</span>;
+  <span class="kw">int</span> brilho   = <span class="fn">map</span>(leitura, <span class="num">0</span>, <span class="num">4095</span>, <span class="num">0</span>, <span class="num">255</span>);
+  
+  <span class="fn">ledcWrite</span>(PWM_CANAL, brilho);
+  Serial.<span class="fn">printf</span>(<span class="str">"ADC: %4d | Tensão: %.3fV | PWM: %3d\n"</span>, leitura, tensao, brilho);
+  <span class="fn">delay</span>(<span class="num">100</span>);
+}</div>
+  </div>
+
+  <!-- DESAFIO 3 -->
+  <div class="challenge-card">
+    <div class="ch-header">
+      <div class="ch-title">🔴 DESAFIO 3 — Publicar dados no MQTT via Wi-Fi</div>
+      <span class="diff diff-h">DIFÍCIL · +50 XP</span>
+    </div>
+    <p class="ch-desc">O coração do projeto IoT da disciplina: conectar o ESP32 à rede Wi-Fi e publicar dados de sensor em um broker MQTT. Use a biblioteca <code class="code-inline">PubSubClient</code>.</p>
+    <div class="ch-ctx">
+      <p><strong>Instale no Arduino IDE / PlatformIO:</strong> PubSubClient by Nick O'Leary</p>
+      <p><strong>Broker público para testes:</strong> broker.hivemq.com (porta 1883)</p>
+      <p><strong>Tópico sugerido:</strong> 2 ADS-AMS/esp32/temperatura</p>
+      <p><strong>Fluxo:</strong> conecta Wi-Fi → conecta MQTT → lê sensor → publica JSON → aguarda 5s → repete</p>
+    </div>
+    <textarea class="code-ed" id="ed-3" style="min-height:300px" placeholder='#include <WiFi.h>
+#include <PubSubClient.h>
+
+const char* SSID     = "SuaRede";
+const char* SENHA    = "SuaSenha";
+const char* BROKER   = "broker.hivemq.com";
+const int   PORTA    = 1883;
+const char* TOPICO   = "2 ADS-AMS/esp32/temperatura";
+
+WiFiClient   wifiClient;
+PubSubClient mqttClient(wifiClient);
+
+void conectarWiFi() {
+  WiFi.begin(???, ???);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500); Serial.print(".");
+  }
+  Serial.println(WiFi.localIP());
+}
+
+void conectarMQTT() {
+  while (!mqttClient.connected()) {
+    if (mqttClient.connect("ESP32_2 ADS-AMS")) {
+      Serial.println("MQTT conectado!");
+    }
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  conectarWiFi();
+  mqttClient.setServer(???, ???);
+}
+
+void loop() {
+  if (!mqttClient.connected()) conectarMQTT();
+  mqttClient.loop();
+  
+  float temperatura = random(200, 350) / 10.0; // simulado
+  char payload[64];
+  // Monte o JSON e publique:
+  snprintf(payload, sizeof(payload), ???);
+  mqttClient.publish(???, payload);
+  delay(5000);
+}'></textarea>
+    <div class="ed-actions">
+      <button class="run-btn" onclick="validateCh(3)">▶ VERIFICAR</button>
+      <button class="hint-btn" onclick="toggleHint(3)">💡 DICA</button>
+      <button class="sol-btn" onclick="toggleSol(3)">👁 SOLUÇÃO</button>
+    </div>
+    <div class="hint-box" id="hint-3">💡 <code>WiFi.begin(SSID, SENHA)</code> para conectar. <code>mqttClient.setServer(BROKER, PORTA)</code> para configurar. O payload JSON: <code>{"temp": 25.3, "device": "ESP32"}</code>. Use <code>snprintf(payload, sizeof(payload), "{\"temp\":%.1f}", temperatura)</code>.</div>
+    <div class="sol-box" id="sol-3"><span class="cm">// ✅ SOLUÇÃO — ESP32 + Wi-Fi + MQTT completo
+</span>
+#include &lt;WiFi.h&gt;
+#include &lt;PubSubClient.h&gt;
+
+<span class="kw">const char</span>* SSID   = <span class="str">"SuaRede"</span>;
+<span class="kw">const char</span>* SENHA  = <span class="str">"SuaSenha"</span>;
+<span class="kw">const char</span>* BROKER = <span class="str">"broker.hivemq.com"</span>;
+<span class="kw">const int</span>   PORTA  = <span class="num">1883</span>;
+<span class="kw">const char</span>* TOPICO = <span class="str">"2 ADS-AMS/esp32/temperatura"</span>;
+
+WiFiClient   wifiClient;
+PubSubClient mqttClient(wifiClient);
+<span class="kw">unsigned long</span> ultimoEnvio = <span class="num">0</span>;
+
+<span class="kw">void</span> <span class="fn">conectarWiFi</span>() {
+  Serial.<span class="fn">printf</span>(<span class="str">"\nConectando a %s"</span>, SSID);
+  WiFi.<span class="fn">begin</span>(SSID, SENHA);
+  <span class="kw">while</span> (WiFi.<span class="fn">status</span>() != WL_CONNECTED) {
+    <span class="fn">delay</span>(<span class="num">500</span>); Serial.<span class="fn">print</span>(<span class="str">"."</span>);
+  }
+  Serial.<span class="fn">printf</span>(<span class="str">"\nConectado! IP: %s\n"</span>, WiFi.<span class="fn">localIP</span>().<span class="fn">toString</span>().<span class="fn">c_str</span>());
+}
+
+<span class="kw">void</span> <span class="fn">conectarMQTT</span>() {
+  <span class="kw">while</span> (!mqttClient.<span class="fn">connected</span>()) {
+    Serial.<span class="fn">print</span>(<span class="str">"Conectando MQTT..."</span>);
+    <span class="kw">if</span> (mqttClient.<span class="fn">connect</span>(<span class="str">"ESP32_2 ADS-AMS_2026"</span>)) {
+      Serial.<span class="fn">println</span>(<span class="str">" conectado!"</span>);
+      <span class="cm">// Assinar tópico de comandos (opcional):</span>
+      mqttClient.<span class="fn">subscribe</span>(<span class="str">"2 ADS-AMS/esp32/cmd"</span>);
+    } <span class="kw">else</span> {
+      Serial.<span class="fn">printf</span>(<span class="str">" falha rc=%d\n"</span>, mqttClient.<span class="fn">state</span>());
+      <span class="fn">delay</span>(<span class="num">2000</span>);
+    }
+  }
+}
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="num">115200</span>);
+  <span class="fn">conectarWiFi</span>();
+  mqttClient.<span class="fn">setServer</span>(BROKER, PORTA);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (!mqttClient.<span class="fn">connected</span>()) <span class="fn">conectarMQTT</span>();
+  mqttClient.<span class="fn">loop</span>();  <span class="cm">// manter conexão viva</span>
+  
+  <span class="kw">if</span> (<span class="fn">millis</span>() - ultimoEnvio >= <span class="num">5000</span>) {
+    ultimoEnvio = <span class="fn">millis</span>();
+    <span class="kw">float</span> temperatura = random(<span class="num">200</span>, <span class="num">350</span>) / <span class="num">10.0</span>;  <span class="cm">// substitua por sensor real</span>
+    <span class="kw">char</span> payload[<span class="num">128</span>];
+    <span class="fn">snprintf</span>(payload, <span class="kw">sizeof</span>(payload),
+      <span class="str">"{\"device\":\"ESP32\",\"temp\":%.1f,\"ts\":%lu}"</span>,
+      temperatura, <span class="fn">millis</span>());
+    <span class="kw">bool</span> ok = mqttClient.<span class="fn">publish</span>(TOPICO, payload);
+    Serial.<span class="fn">printf</span>(<span class="str">"Publicado [%s]: %s (%s)\n"</span>,
+      TOPICO, payload, ok ? <span class="str">"OK"</span> : <span class="str">"FALHA"</span>);
+  }
+}</div>
+  </div>
+
+  <!-- DESAFIO 4 -->
+  <div class="challenge-card">
+    <div class="ch-header">
+      <div class="ch-title">⚡ DESAFIO 4 — Deep Sleep com envio MQTT</div>
+      <span class="diff diff-h">EXPERT · +60 XP</span>
+    </div>
+    <p class="ch-desc">Implemente o ciclo completo de um nó IoT a bateria: acorda do deep sleep, lê sensor, conecta Wi-Fi, publica MQTT, volta a dormir. Use RTC Memory para contar ciclos.</p>
+    <div class="ch-ctx">
+      <p><strong>RTC_DATA_ATTR:</strong> variáveis com esse atributo sobrevivem ao deep sleep</p>
+      <p><strong>Ciclo:</strong> boot → setup() → publica → esp_deep_sleep_start() → repete após SLEEP_US</p>
+      <p><strong>Dica:</strong> No deep sleep, não há loop() — tudo vai no setup()</p>
+    </div>
+    <textarea class="code-ed" id="ed-4" style="min-height:260px" placeholder='#include <WiFi.h>
+#include <PubSubClient.h>
+
+#define SLEEP_US (5 * 60 * 1000000ULL) // 5 minutos em microsegundos
+
+// Variável que sobrevive ao deep sleep:
+RTC_DATA_ATTR int numeroCiclos = 0;
+
+// ... (credenciais Wi-Fi e MQTT como no desafio anterior)
+
+void setup() {
+  Serial.begin(115200);
+  numeroCiclos++;
+  Serial.printf("Ciclo #%d iniciando...\n", numeroCiclos);
+  
+  // 1. Conectar Wi-Fi
+  // 2. Conectar MQTT  
+  // 3. Ler sensor (simulado)
+  // 4. Publicar payload com ciclo e timestamp
+  // 5. Desconectar e dormir
+  
+  Serial.println("Indo dormir...");
+  esp_deep_sleep_start(); // ← substitui o loop()!
+}'></textarea>
+    <div class="ed-actions">
+      <button class="run-btn" onclick="validateCh(4)">▶ VERIFICAR</button>
+      <button class="hint-btn" onclick="toggleHint(4)">💡 DICA</button>
+      <button class="sol-btn" onclick="toggleSol(4)">👁 SOLUÇÃO</button>
+    </div>
+    <div class="hint-box" id="hint-4">💡 Configure o timer ANTES de dormir: <code>esp_sleep_enable_timer_wakeup(SLEEP_US)</code>. Depois chame <code>esp_deep_sleep_start()</code>. WiFi.disconnect(true) e delay(100) antes de dormir garante desconexão limpa.</div>
+    <div class="sol-box" id="sol-4"><span class="cm">// ✅ SOLUÇÃO — Deep Sleep + MQTT completo (modo produção IoT)
+</span>
+#include &lt;WiFi.h&gt;
+#include &lt;PubSubClient.h&gt;
+
+#define SLEEP_US (<span class="num">5</span> * <span class="num">60</span> * <span class="num">1000000ULL</span>)
+
+<span class="kw">const char</span>* SSID   = <span class="str">"SuaRede"</span>;
+<span class="kw">const char</span>* SENHA  = <span class="str">"SuaSenha"</span>;
+<span class="kw">const char</span>* BROKER = <span class="str">"broker.hivemq.com"</span>;
+<span class="kw">const char</span>* TOPICO = <span class="str">"2 ADS-AMS/esp32/dados"</span>;
+
+RTC_DATA_ATTR <span class="kw">int</span> numeroCiclos = <span class="num">0</span>;  <span class="cm">// persiste no RTC memory</span>
+
+WiFiClient   wifiClient;
+PubSubClient mqttClient(wifiClient);
+
+<span class="kw">bool</span> <span class="fn">conectar</span>() {
+  WiFi.<span class="fn">begin</span>(SSID, SENHA);
+  <span class="kw">int</span> tentativas = <span class="num">0</span>;
+  <span class="kw">while</span> (WiFi.<span class="fn">status</span>() != WL_CONNECTED && tentativas < <span class="num">20</span>) {
+    <span class="fn">delay</span>(<span class="num">500</span>); tentativas++;
+  }
+  <span class="kw">if</span> (WiFi.<span class="fn">status</span>() != WL_CONNECTED) <span class="kw">return false</span>;
+  
+  mqttClient.<span class="fn">setServer</span>(BROKER, <span class="num">1883</span>);
+  <span class="kw">return</span> mqttClient.<span class="fn">connect</span>(<span class="str">"ESP32_DeepSleep"</span>);
+}
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="num">115200</span>);
+  numeroCiclos++;
+  
+  Serial.<span class="fn">printf</span>(<span class="str">"\n=== CICLO #%d ===\n"</span>, numeroCiclos);
+  
+  <span class="kw">float</span> temperatura = random(<span class="num">200</span>, <span class="num">350</span>) / <span class="num">10.0</span>;
+  <span class="kw">float</span> umidade     = random(<span class="num">400</span>, <span class="num">900</span>) / <span class="num">10.0</span>;
+  
+  <span class="kw">if</span> (<span class="fn">conectar</span>()) {
+    <span class="kw">char</span> payload[<span class="num">200</span>];
+    <span class="fn">snprintf</span>(payload, <span class="kw">sizeof</span>(payload),
+      <span class="str">"{\"ciclo\":%d,\"temp\":%.1f,\"umidade\":%.1f,\"uptime\":%lu}"</span>,
+      numeroCiclos, temperatura, umidade, <span class="fn">millis</span>());
+    
+    mqttClient.<span class="fn">publish</span>(TOPICO, payload, <span class="kw">true</span>);  <span class="cm">// retain=true</span>
+    Serial.<span class="fn">printf</span>(<span class="str">"Publicado: %s\n"</span>, payload);
+    <span class="fn">delay</span>(<span class="num">500</span>);  <span class="cm">// garante envio antes de dormir</span>
+  } <span class="kw">else</span> {
+    Serial.<span class="fn">println</span>(<span class="str">"Falha na conexão — dormindo assim mesmo"</span>);
+  }
+  
+  WiFi.<span class="fn">disconnect</span>(<span class="kw">true</span>);
+  WiFi.<span class="fn">mode</span>(WIFI_OFF);
+  
+  <span class="fn">esp_sleep_enable_timer_wakeup</span>(SLEEP_US);
+  Serial.<span class="fn">printf</span>(<span class="str">"Dormindo por 5 minutos...\nConsumo: ~10µA\n"</span>);
+  <span class="fn">delay</span>(<span class="num">100</span>);
+  <span class="fn">esp_deep_sleep_start</span>();
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() { <span class="cm">/* nunca chamado no deep sleep mode */</span> }</div>
+  </div>
+
+  <div style="text-align:right;margin-top:8px">
+    <button class="bnav-btn bnav-primary" onclick="completePhase(5)">VER MISSÃO FINAL 🚀</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FASE 7: MISSÃO FINAL + CONQUISTAS          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="phase-sec" id="ph-6">
+  <div class="sec-hdr">
+    <div class="sec-icon si-yellow">🚀</div>
+    <div>
+      <h2>Missão Final + Conquistas</h2>
+      <p>// projeto integrador IoT alinhado com a ementa da disciplina</p>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:rgba(0,255,136,0.3)">
+    <div class="card-title">🎯 PROJETO INTEGRADOR — SISTEMA IOT COMPLETO</div>
+    <p>Com o que você aprendeu sobre ESP32, projete a <strong style="color:var(--green)">arquitetura completa</strong> de um sistema que capture dados de sensores e os apresente em dashboard web, atendendo todos os itens da ementa:</p>
+    <table class="spec-table">
+      <tr><th>Item da Ementa</th><th>Como o ESP32 se encaixa</th></tr>
+      <tr><td>Integração com dispositivos IoT</td><td><span class="val-green">ESP32 + sensores (DHT22, BMP280, PIR...)</span></td></tr>
+      <tr><td>Protocolos de Mensageria</td><td><span class="val-cyan">MQTT sobre Wi-Fi (publish/subscribe)</span></td></tr>
+      <tr><td>Brokers de recepção de dados</td><td><span class="val-cyan">Mosquitto / HiveMQ / AWS IoT Core</span></td></tr>
+      <tr><td>Sistemas Distribuídos</td><td><span class="val-orange">Múltiplos ESP32 → broker central → múltiplos consumers</span></td></tr>
+      <tr><td>Armazenamento em grande escala</td><td><span class="val-orange">InfluxDB / TimescaleDB para time-series</span></td></tr>
+      <tr><td>Data Streaming em tempo real</td><td><span class="val-green">Broker → Kafka → consumidor Python → DB → Dashboard</span></td></tr>
+      <tr><td>APIs</td><td><span class="val-cyan">Backend FastAPI/Node.js expõe dados dos sensores via REST</span></td></tr>
+      <tr><td>TDD</td><td><span class="val-orange">Testes unitários no firmware com Unity / backend com pytest</span></td></tr>
+      <tr><td>Controle de versionamento</td><td><span class="val-green">Git + GitHub: firmware e backend no mesmo repositório</span></td></tr>
+    </table>
+    <div class="hl cyan">
+      <strong>Arquitetura sugerida para o TCC:</strong><br>
+      [ESP32 + Sensores] → Wi-Fi → [Mosquitto Broker] → [Python consumer] → [InfluxDB] → [Grafana Dashboard]<br>
+      ↳ [FastAPI REST] → [App Mobile React Native] + [Web React]
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏆 CONQUISTAS DESBLOQUEADAS</div>
+    <div class="ach-grid" id="ach-grid">
+      <div class="ach" id="a-boot"><div class="ach-icon">🔌</div><div class="ach-name">FIRST BOOT</div><div class="ach-desc">Fase 1 concluída</div></div>
+      <div class="ach" id="a-pinout"><div class="ach-icon">📌</div><div class="ach-name">PINOUT PRO</div><div class="ach-desc">Explorou os pinos</div></div>
+      <div class="ach" id="a-gpio"><div class="ach-icon">⚡</div><div class="ach-name">GPIO MASTER</div><div class="ach-desc">Dominou GPIOs</div></div>
+      <div class="ach" id="a-protocol"><div class="ach-icon">📡</div><div class="ach-name">PROTOCOLO</div><div class="ach-desc">Aprendeu I2C/SPI/UART</div></div>
+      <div class="ach" id="a-quiz7"><div class="ach-icon">🎯</div><div class="ach-name">SHARP SHOOTER</div><div class="ach-desc">7+ acertos no quiz</div></div>
+      <div class="ach" id="a-perfect"><div class="ach-icon">💎</div><div class="ach-name">PERFECT CODE</div><div class="ach-desc">Quiz 10/10</div></div>
+      <div class="ach" id="a-coder"><div class="ach-icon">💻</div><div class="ach-name">FIRMWARE DEV</div><div class="ach-desc">Desafio 1 completo</div></div>
+      <div class="ach" id="a-iot"><div class="ach-icon">🌐</div><div class="ach-name">IOT ENGINEER</div><div class="ach-desc">MQTT + Wi-Fi</div></div>
+      <div class="ach" id="a-sleep"><div class="ach-icon">😴</div><div class="ach-name">DEEP SLEEPER</div><div class="ach-desc">Deep Sleep expert</div></div>
+      <div class="ach" id="a-full"><div class="ach-icon">🚀</div><div class="ach-name">MISSION COMPLETE</div><div class="ach-desc">Todas as fases!</div></div>
+    </div>
+  </div>
+
+  <div class="final-score-box">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.8em;color:var(--muted2);letter-spacing:2px;margin-bottom:8px">// XP TOTAL CONQUISTADO</div>
+    <div class="final-xp" id="final-xp">0 XP</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:0.8em;color:var(--muted2);margin-top:8px">MISSÃO IOT — 2 ADS-AMS 1º SEMESTRE 2026</div>
+  </div>
+
+  <div class="bot-nav">
+    <a href="semana02.html" class="bnav-btn bnav-ghost">← SEMANA 02</a>
+    <a href="index.html" class="bnav-btn bnav-ghost">⌂ ÍNDICE</a>
+    <a href="semana04.html" class="bnav-btn bnav-primary">SEMANA 04 →</a>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ── STATE ──────────────────────────────────
+let xp = 0, streak = 0, achCount = 0;
+let phaseDone = Array(7).fill(false);
+let qCorrect = 0, qAnswers = {};
+let chDone = [false,false,false,false];
+
+// ── XP / TOAST ─────────────────────────────
+function addXP(amount, msg) {
+  xp += amount;
+  updateHUD();
+  toast(`⚡ +${amount} XP`, msg);
+  document.getElementById('final-xp').textContent = xp + ' XP';
+}
+function updateHUD() {
+  const MAX = 400;
+  document.getElementById('xp-bar').style.width = Math.min(xp/MAX*100,100)+'%';
+  document.getElementById('xp-pts').textContent = `${xp} / ${MAX} XP`;
+  document.getElementById('s-xp').textContent = xp;
+  document.getElementById('s-streak').textContent = streak;
+  document.getElementById('s-ach').textContent = achCount;
+  const lvls = ['BOOT — LEVEL 0','LEVEL 1 · Iniciante','LEVEL 2 · Aprendiz','LEVEL 3 · Desenvolvedor','LEVEL 4 · IoT Engineer'];
+  const idx = xp>=320?4:xp>=200?3:xp>=100?2:xp>=40?1:0;
+  document.getElementById('xp-level').textContent = lvls[idx];
+}
+function toast(title, msg) {
+  document.getElementById('t-title').textContent = title;
+  document.getElementById('t-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── ACHIEVEMENTS ───────────────────────────
+function unlock(id, name) {
+  const el = document.getElementById('a-'+id);
+  if (el && !el.classList.contains('unlocked')) {
+    el.classList.add('unlocked');
+    achCount++;
+    updateHUD();
+    toast('🏆 Badge desbloqueado!', name);
+  }
+}
+
+// ── PHASES ─────────────────────────────────
+function goPhase(i) {
+  if (i > 0 && !phaseDone[i-1] && i < 6) {
+    toast('🔒 Bloqueado', 'Conclua a fase anterior primeiro!'); return;
+  }
+  document.querySelectorAll('.phase-sec').forEach(s=>s.classList.remove('visible'));
+  document.querySelectorAll('.pbtn').forEach((b,j)=>{
+    b.classList.remove('active');
+    if(phaseDone[j]) b.classList.add('done');
+  });
+  document.getElementById('ph-'+i).classList.add('visible');
+  document.getElementById('pb'+i).classList.add('active');
+}
+function completePhase(i) {
+  phaseDone[i] = true;
+  const nb = document.getElementById('pb'+(i+1));
+  if(nb){ nb.classList.remove('locked'); }
+  const achs = ['boot','pinout','gpio','protocol',null,null,null];
+  const xps  = [25,20,25,25,0,0,0];
+  const msgs = ['Hardware explorado!','Pinout dominado!','GPIOs no sangue!','Protocolos aprendidos!','','',''];
+  if(achs[i]) unlock(achs[i], achs[i].toUpperCase());
+  if(xps[i]) addXP(xps[i], msgs[i]);
+  if(i===5){ unlock('full','Mission Complete 🚀'); addXP(50,'Todas as fases completas!'); }
+  goPhase(i+1);
+}
+
+// ── QUIZ ───────────────────────────────────
+const QFB = [
+  {c:2, ok:'✅ Correto! Core 0 (PRO_CPU) cuida do stack Wi-Fi/BT — garante que a comunicação seja tratada em tempo real. Core 1 (APP_CPU) roda seu loop() e tasks do FreeRTOS.'},
+  {c:0, ok:'✅ Exato! ADC2 é bloqueado quando o Wi-Fi usa o rádio. Sempre use ADC1 (GPIOs 32–39) em projetos IoT com Wi-Fi.'},
+  {c:1, ok:'✅ Perfeito! GPIOs 6–11 são os pinos do barramento SPI que liga o ESP32 à sua memória Flash. Usá-los corrompe o programa instantaneamente.'},
+  {c:1, ok:'✅ I2C usa apenas SDA + SCL para qualquer número de dispositivos — cada um com endereço único de 7 bits. Econômico e prático!'},
+  {c:2, ok:'✅ Deep Sleep é a solução correta. 10µA vs 240mA = 24.000x menos consumo. Com bateria de 2000mAh, isso pode durar meses vs horas.'},
+  {c:2, ok:'✅ SPI é o padrão de fato para cartões SD. Alta velocidade, suporte nativo nas bibliotecas SD.h e SD_MMC.h do ESP32.'},
+  {c:2, ok:'✅ LEDC (LED Control) tem 16 canais PWM independentes, frequência e resolução configuráveis por canal. Muito mais poderoso que o PWM do Arduino UNO.'},
+  {c:1, ok:'✅ Perfeito! Wi-Fi + MQTT é o pilar central de IoT. O broker distribui mensagens para N consumidores — backends, apps, dashboards — sem acoplamento.'},
+  {c:2, ok:'✅ ISR tem regras rígidas: sem funções bloqueantes, sem alocação de heap, sem Serial.print. Use flags + volatile variables e processe no loop(). IRAM_ATTR é obrigatório.'},
+  {c:2, ok:'✅ Esse é o fluxo canônico de IoT moderno! Sensor → ESP32 → MQTT Broker → Backend → DB → Dashboard. Cada componente independente e escalável.'},
+];
+
+function initQProg() {
+  const c = document.getElementById('q-prog');
+  c.innerHTML = '';
+  for(let i=0;i<10;i++){
+    const d=document.createElement('div');
+    d.className='qp-seg'+(i===0?' active':'');
+    d.id='qs'+i; c.appendChild(d);
+  }
+}
+function ansQ(qi, oi, ci) {
+  const opts = document.querySelectorAll(`#qc-${qi} .qopt`);
+  opts.forEach(o=>o.disabled=true);
+  const fb = document.getElementById(`qfb-${qi}`);
+  const nx = document.getElementById(`qnx-${qi}`);
+  const xps=[15,15,15,20,20,20,20,25,25,25];
+  const ok = oi===ci;
+  opts[oi].classList.add(ok?'correct':'wrong');
+  if(!ok) opts[ci].classList.add('correct');
+  fb.textContent = ok ? QFB[qi].ok : `❌ Incorreto. ${QFB[qi].ok}`;
+  fb.className = 'q-fb show '+(ok?'ok':'fail');
+  nx.classList.add('show');
+  if(ok){
+    qCorrect++;
+    addXP(xps[qi],'Resposta correta!');
+    streak++;
+    const s=document.getElementById('qs'+qi);
+    if(s)s.classList.add('done');
+  } else {
+    streak=0;
+    const s=document.getElementById('qs'+qi);
+    if(s)s.classList.add('wrong-s');
+  }
+  updateHUD();
+  qAnswers[qi]=ok;
+}
+function nextQ(n) {
+  document.getElementById('qc-'+(n-1)).classList.remove('active');
+  document.getElementById('qc-'+n).classList.add('active');
+  const s=document.getElementById('qs'+n); if(s)s.classList.add('active');
+}
+function showResult() {
+  document.getElementById('qc-9').classList.remove('active');
+  const r = document.getElementById('q-result');
+  r.classList.add('show');
+  document.getElementById('q-score').textContent = qCorrect+'/10';
+  const msgs=['Não desanime! Revise as fases anteriores.','Progredindo! Alguns conceitos precisam de revisão.','Bom trabalho! Você está entendendo o ESP32.','🎉 Excelente! Domínio sólido do ESP32!','💎 Perfeição! Você é um ESP32 Expert!'];
+  document.getElementById('q-msg').textContent = msgs[Math.min(Math.floor(qCorrect/2),4)];
+  if(qCorrect>=7) unlock('quiz7','Sharp Shooter 🎯');
+  if(qCorrect===10) unlock('perfect','Perfect Code 💎');
+  phaseDone[4]=true;
+}
+function restartQ() {
+  qCorrect=0; qAnswers={};
+  document.getElementById('q-result').classList.remove('show');
+  document.querySelectorAll('.qcard').forEach((c,i)=>{
+    c.classList.toggle('active',i===0);
+    c.querySelectorAll('.qopt').forEach(o=>{o.disabled=false;o.classList.remove('correct','wrong');});
+    const fb=c.querySelector('.q-fb'); if(fb){fb.classList.remove('show','ok','fail');fb.textContent='';}
+    const nx=c.querySelector('.q-next'); if(nx)nx.classList.remove('show');
+  });
+  initQProg();
+}
+
+// ── CODE CHALLENGES ─────────────────────────
+function toggleHint(n){document.getElementById('hint-'+n).classList.toggle('show');}
+function toggleSol(n){document.getElementById('sol-'+n).classList.toggle('show');}
+function validateCh(n) {
+  const code = (document.getElementById('ed-'+n)||{}).value||'';
+  if(code.trim().length < 40){ toast('⚠️','Escreva mais código antes!'); return; }
+  const checks={
+    1:['pinMode','OUTPUT','millis','digitalWrite','ledEstado'],
+    2:['ledcSetup','ledcAttachPin','analogRead','ledcWrite','3.3'],
+    3:['WiFi.begin','mqttClient','publish','conectarWiFi','payload'],
+    4:['RTC_DATA_ATTR','esp_deep_sleep_start','esp_sleep_enable_timer','disconnect'],
+  };
+  const passed = checks[n].every(k=>code.includes(k));
+  const xps={1:30,2:40,3:50,4:60};
+  const achs={1:'coder',3:'iot',4:'sleep'};
+  if(passed && !chDone[n-1]) {
+    chDone[n-1]=true;
+    addXP(xps[n],`Desafio ${n} aprovado!`);
+    if(achs[n]) unlock(achs[n], 'Badge desbloqueado!');
+  } else if(passed) {
+    toast('✅','Código verificado! XP já contabilizado.');
+  } else {
+    const miss = checks[n].find(k=>!code.includes(k));
+    toast('❌ Faltando algo',`Dica: inclua "${miss}" no código.`);
+  }
+}
+
+// ── PINOUT ─────────────────────────────────
+const PINS = [
+  // [label, class, name, desc, tags[]]
+  ['3V3',   'pin-p', '3.3V — Alimentação','Saída regulada de 3.3V. Corrente máx ~600mA. Alimenta sensores I2C, módulos BLE externos.',['POWER','3.3V OUT']],
+  ['EN',    'pin-p', 'EN — Enable/Reset','Pino de enable do chip. LOW = reset. Usar botão de reset externo aqui.',['RESET','ACTIVE HIGH']],
+  ['VP',    'pin-a', 'GPIO 36 — ADC1_CH0','Input-only. ADC1 Canal 0. Ideal para sensores analógicos com Wi-Fi.',['INPUT ONLY','ADC1','NO PULLUP']],
+  ['VN',    'pin-a', 'GPIO 39 — ADC1_CH3','Input-only. ADC1 Canal 3. Sem pull-up interno.',['INPUT ONLY','ADC1','NO PULLUP']],
+  ['IO34',  'pin-a', 'GPIO 34 — ADC1_CH6','Input-only. ADC1 Canal 6. Muito usado para sensores analógicos em IoT.',['INPUT ONLY','ADC1']],
+  ['IO35',  'pin-a', 'GPIO 35 — ADC1_CH7','Input-only. ADC1 Canal 7.',['INPUT ONLY','ADC1']],
+  ['IO32',  'pin-d', 'GPIO 32 — ADC1_CH4 / Touch9','I/O digital. ADC1 (funciona com Wi-Fi). Touch capacitivo T9.',['IN/OUT','ADC1','TOUCH9']],
+  ['IO33',  'pin-d', 'GPIO 33 — ADC1_CH5 / Touch8','I/O digital. ADC1. Touch capacitivo T8.',['IN/OUT','ADC1','TOUCH8']],
+  ['IO25',  'pin-d', 'GPIO 25 — DAC1 / ADC2','DAC Canal 1 — saída analógica real (0–3.3V, 8 bits). ADC2 (sem Wi-Fi).',['IN/OUT','DAC1','ADC2']],
+  ['IO26',  'pin-d', 'GPIO 26 — DAC2 / ADC2','DAC Canal 2 — saída analógica. Ideal para áudio e controle analógico.',['IN/OUT','DAC2','ADC2']],
+  ['IO27',  'pin-t', 'GPIO 27 — ADC2 / Touch7','I/O digital com touch capacitivo. ADC2.',['IN/OUT','ADC2','TOUCH7']],
+  ['IO14',  'pin-s', 'GPIO 14 — SPI CLK / ADC2 / Touch6','SPI Clock alternativo. Touch T6. Boot: gera clock PWM no boot.',['IN/OUT','SPI_CLK','TOUCH6','BOOT NOISE']],
+  ['IO12',  'pin-d', 'GPIO 12 — SPI MISO / ADC2 / Touch5','⚠️ Pino de boot! Se HIGH no boot → tensão de flash errada → trava. Usar com cuidado.',['IN/OUT','BOOT SENSITIVE','TOUCH5']],
+  ['GND',   'pin-g', 'GND — Terra','Referência de terra comum. Conectar ao GND de todos os componentes.',['GROUND','REFERENCE']],
+  ['IO13',  'pin-d', 'GPIO 13 — SPI MOSI / ADC2 / Touch4','I/O digital, SPI MOSI alternativo, Touch T4.',['IN/OUT','SPI_MOSI','TOUCH4']],
+  ['SD2',   'pin-s', 'GPIO 9 — SD2 (Flash SPI)','⛔ PROIBIDO! Conectado à Flash SPI interna. Usar TRAVA o chip.',['⛔ FLASH SPI','NÃO USE']],
+  ['SD3',   'pin-s', 'GPIO 10 — SD3 (Flash SPI)','⛔ PROIBIDO! Flash SPI interna. Nunca use como GPIO.',['⛔ FLASH SPI','NÃO USE']],
+  ['CMD',   'pin-s', 'CMD — Flash SPI','⛔ PROIBIDO! Parte do barramento Flash.',['⛔ FLASH SPI','NÃO USE']],
+  ['5V',    'pin-p', '5V — Alimentação USB','Saída 5V via USB (quando USB conectado). Pode alimentar circuitos 5V via regulador externo.',['POWER','5V','USB ONLY']],
+  // Lado direito (de baixo pra cima)
+  ['GND2',  'pin-g', 'GND — Terra (2)','Segundo pino de terra. Ideal para circuitos que precisam de terra próximo ao lado direito.',['GROUND']],
+  ['IO23',  'pin-s', 'GPIO 23 — SPI MOSI','SPI MOSI padrão da biblioteca Arduino. Também I2S e UART.',['IN/OUT','SPI_MOSI','I2S']],
+  ['IO22',  'pin-i', 'GPIO 22 — I2C SCL','Clock I2C padrão. Requer pull-up externo de 4.7kΩ para 3.3V.',['IN/OUT','I2C_SCL','PULL-UP REQUIRED']],
+  ['TX',    'pin-u', 'GPIO 1 — UART0 TX','Transmissão serial para USB (debug). ⚠️ Ruído no Monitor Serial se usar como GPIO.',['UART0_TX','DEBUG','⚠️ CAREFUL']],
+  ['RX',    'pin-u', 'GPIO 3 — UART0 RX','Recepção serial via USB. Mesmo cuidado do TX.',['UART0_RX','DEBUG','⚠️ CAREFUL']],
+  ['IO21',  'pin-i', 'GPIO 21 — I2C SDA','Dados I2C padrão. Requer pull-up 4.7kΩ. Suporta I2S simultaneamente.',['IN/OUT','I2C_SDA','PULL-UP REQUIRED']],
+  ['IO19',  'pin-s', 'GPIO 19 — SPI MISO','SPI MISO padrão. Dados do dispositivo para o ESP32.',['IN/OUT','SPI_MISO']],
+  ['IO18',  'pin-s', 'GPIO 18 — SPI CLK','SPI Clock padrão (18 MHz max).',['IN/OUT','SPI_CLK']],
+  ['IO5',   'pin-d', 'GPIO 5 — SPI CS / PWM','Chip Select SPI padrão. ⚠️ Gera sinal PWM durante boot.',['IN/OUT','SPI_CS','BOOT NOISE']],
+  ['IO17',  'pin-u', 'GPIO 17 — UART2 TX','Transmissão da UART2. Ideal para módulos GPS, GSM, ou sensores seriais.',['IN/OUT','UART2_TX']],
+  ['IO16',  'pin-u', 'GPIO 16 — UART2 RX','Recepção da UART2.',['IN/OUT','UART2_RX']],
+  ['IO4',   'pin-t', 'GPIO 4 — ADC2 / Touch0','Touch capacitivo T0. ADC2 (sem Wi-Fi). I/O digital geral.',['IN/OUT','ADC2','TOUCH0']],
+  ['IO0',   'pin-d', 'GPIO 0 — Boot Mode / Touch1','⚠️ Boot pin! LOW no boot = modo flash. Não conectar a GND permanentemente.',['BOOT PIN','TOUCH1','⚠️ CAREFUL']],
+  ['IO2',   'pin-d', 'GPIO 2 — LED interno / ADC2 / Touch2','LED azul interno do DevKit! Boot-sensitive. ADC2. Touch T2.',['IN/OUT','LED INTERNO','TOUCH2','BOOT SENSITIVE']],
+  ['IO15',  'pin-d', 'GPIO 15 — ADC2 / Touch3','⚠️ Boot pin! Gera log UART no boot se LOW. Touch T3. ADC2.',['IN/OUT','BOOT NOISE','TOUCH3']],
+  ['SD1',   'pin-s', 'GPIO 8 — SD1 (Flash SPI)','⛔ PROIBIDO! Flash SPI interna.',['⛔ FLASH SPI','NÃO USE']],
+  ['SD0',   'pin-s', 'GPIO 7 — SD0 (Flash SPI)','⛔ PROIBIDO! Flash SPI interna.',['⛔ FLASH SPI','NÃO USE']],
+  ['CLK',   'pin-s', 'CLK — Flash SPI Clock','⛔ PROIBIDO! Flash SPI interna.',['⛔ FLASH SPI','NÃO USE']],
+  ['GND3',  'pin-g', 'GND — Terra (3)','Terceiro pino de terra.',['GROUND']],
+  ['VIN',   'pin-p', 'VIN — Tensão de entrada (5V)','Entrada 5V para alimentar o ESP32 sem USB. Passa pelo regulador onboard para 3.3V.',['POWER','5V INPUT']],
+];
+
+function buildPinout() {
+  const board = document.getElementById('pinout-board');
+  if(!board) return;
+  const half = Math.ceil(PINS.length/2);
+  const left = PINS.slice(0,half);
+  const right = PINS.slice(half);
+
+  board.innerHTML = '';
+  // Left side
+  left.forEach((p,i)=>{
+    const num=document.createElement('div');
+    num.className='pin-num'; num.textContent=(i+1);
+
+    const lbl=document.createElement('div');
+    lbl.className='pin-label '+p[1];
+    lbl.textContent=p[0];
+    lbl.onclick=()=>showPinInfo(p);
+
+    if(i===0){
+      // body placeholder spans left and right together
+      const esp=document.createElement('div');
+      esp.className='esp-body';
+      esp.style='grid-row: 1 / '+(half+1)+'; grid-column: 2;';
+      esp.innerHTML=`<div class="wifi-icon">〜WiFi〜</div><div class="esp-body-label">ESP32<br>DEVKIT</div><div class="esp-module">Xtensa LX6 x2</div><div class="esp-module">240MHz · 520KB</div>`;
+      board.appendChild(esp);
+    }
+    board.appendChild(num);
+    board.appendChild(lbl);
+  });
+
+  // Right side labels (reversed to go top-to-bottom)
+  right.forEach((p,i)=>{
+    const lbl=document.createElement('div');
+    lbl.className='pin-label '+p[1];
+    lbl.style='text-align:right';
+    lbl.textContent=p[0];
+    lbl.onclick=()=>showPinInfo(p);
+
+    const num=document.createElement('div');
+    num.className='pin-num'; num.textContent=(half+i+1);
+    board.appendChild(lbl);
+    board.appendChild(num);
+  });
+}
+
+function showPinInfo(p) {
+  document.getElementById('pt-name').textContent = p[2];
+  document.getElementById('pt-desc').textContent = p[3];
+  const tg = document.getElementById('pt-tags');
+  tg.innerHTML = p[4].map(t=>`<span class="pt-tag">${t}</span>`).join('');
+}
+
+// ── INIT ───────────────────────────────────
+buildPinout();
+initQProg();
+updateHUD();
+</script>
+</body>
+</html>

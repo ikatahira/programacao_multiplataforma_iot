@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUIA DO PROFESSOR - Semana 06 | ISW044</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color: white; padding: 40px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .alert { background: #fff3cd; border-left: 5px solid #ffc107; padding: 20px; margin: 20px 40px; border-radius: 8px; }
+        .alert strong { color: #856404; }
+        .content { padding: 40px; }
+        .section { margin: 40px 0; }
+        .section h2 { color: #2c3e50; font-size: 2em; margin-bottom: 20px; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        table th, table td { border: 1px solid #ddd; padding: 14px; text-align: left; }
+        table th { background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color: white; font-weight: bold; }
+        table tr:nth-child(even) { background-color: #f8f9fa; }
+        .resolution { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 30px; border-radius: 10px; margin: 20px 0; border-left: 5px solid #28a745; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        .resolution h3 { color: #28a745; margin-bottom: 15px; }
+        .resolution h4 { color: #2c3e50; margin: 15px 0 10px 0; }
+        .resolution p { margin: 10px 0; line-height: 1.8; }
+        .resolution pre { background: #2d3436; color: #00ff00; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        .tip { background: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .tip strong { color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👨‍🏫 GUIA DO PROFESSOR</h1>
+            <h2>Semana 06 - Setup React Native e Expo</h2>
+            <p>MÓDULO 2: React Native Básico</p>
+        </div>
+
+        <div class="alert">
+            <strong>⚠️ MATERIAL CONFIDENCIAL</strong><br>
+            Este guia contém resoluções completas das atividades e orientações pedagógicas.
+            Não compartilhar com os alunos.
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>📋 Planejamento de Aula (4 horas)</h2>
+                <table>
+                    <tr>
+                        <th>Horário</th>
+                        <th>Atividade</th>
+                        <th>Duração</th>
+                        <th>Recursos</th>
+                    </tr>
+                    <tr>
+                        <td>19:00-19:15</td>
+                        <td>Revisão da semana anterior + Introdução ao tema</td>
+                        <td>15 min</td>
+                        <td>Slides, Projetor</td>
+                    </tr>
+                    <tr>
+                        <td>19:15-20:15</td>
+                        <td>Aula expositiva: Setup React Native e Expo</td>
+                        <td>60 min</td>
+                        <td>Slides, Live Coding</td>
+                    </tr>
+                    <tr>
+                        <td>20:15-20:30</td>
+                        <td>Intervalo</td>
+                        <td>15 min</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>20:30-21:30</td>
+                        <td>Laboratório prático: Atividade 1 e 2</td>
+                        <td>60 min</td>
+                        <td>Computadores, IDEs</td>
+                    </tr>
+                    <tr>
+                        <td>21:30-22:20</td>
+                        <td>Discussão em grupo: Atividade 3</td>
+                        <td>50 min</td>
+                        <td>Flip chart, Post-its</td>
+                    </tr>
+                    <tr>
+                        <td>22:20-22:30</td>
+                        <td>Conclusão e orientações para próxima aula</td>
+                        <td>10 min</td>
+                        <td>-</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>🎯 Objetivos Pedagógicos (Taxonomia de Bloom)</h2>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li><strong>Lembrar:</strong> Reconhecer conceitos e terminologia fundamental</li>
+                    <li><strong>Entender:</strong> Explicar princípios e funcionamento</li>
+                    <li><strong>Aplicar:</strong> Usar ferramentas em exercícios práticos</li>
+                    <li><strong>Analisar:</strong> Comparar diferentes abordagens</li>
+                    <li><strong>Avaliar:</strong> Julgar qualidade de código e soluções</li>
+                    <li><strong>Criar:</strong> Desenvolver aplicações originais</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>✅ Resoluções das Atividades</h2>
+                
+                <div class="resolution">
+                    <h3>Atividade 1: Resolução Modelo</h3>
+                    <h4>Exemplos de Apps para Análise:</h4>
+                    <ul>
+                        <li><strong>Instagram:</strong> React Native - Performance, UX fluida</li>
+                        <li><strong>Alibaba:</strong> Flutter - Multiplataforma consistente</li>
+                        <li><strong>Tesla:</strong> React Native - Interface moderna</li>
+                    </ul>
+                    
+                    <h4>Estrutura do Relatório:</h4>
+                    <p>1. Introdução (explicar tecnologia escolhida)</p>
+                    <p>2. Análise de cada app (funcionalidades, pontos fortes/fracos)</p>
+                    <p>3. Comparação entre os apps</p>
+                    <p>4. Conclusões e aprendizados</p>
+                    
+                    <div class="tip">
+                        <strong>💡 Dica Pedagógica:</strong> Incentive os alunos a testarem os apps 
+                        em diferentes dispositivos e anotarem diferenças de comportamento.
+                    </div>
+                </div>
+
+                <div class="resolution">
+                    <h3>Atividade 2: Resolução Modelo</h3>
+                    <h4>Exemplo de Código Base:</h4>
+                    <pre>
+// Estrutura básica do projeto
+src/
+  components/
+    Header.js
+    Footer.js
+  screens/
+    HomeScreen.js
+    AboutScreen.js
+  navigation/
+    AppNavigator.js
+  App.js
+                    </pre>
+                    
+                    <p>O código deve incluir: componentes funcionais, hooks, navegação básica e estilização.</p>
+                    
+                    <div class="tip">
+                        <strong>💡 Dica Pedagógica:</strong> Forneça um template inicial para alunos 
+                        com dificuldades, mas incentive todos a personalizarem completamente.
+                    </div>
+                </div>
+
+                <div class="resolution">
+                    <h3>Atividade 3: Resolução Modelo</h3>
+                    <h4>Pontos para Discussão em Grupo:</h4>
+                    <ul>
+                        <li>Vantagens: código único, redução de custos, time to market</li>
+                        <li>Desvantagens: performance, acesso a APIs nativas, tamanho do app</li>
+                        <li>Quando usar: MVPs, apps simples, projetos com budget limitado</li>
+                        <li>Quando evitar: apps com requisitos nativos específicos, jogos pesados</li>
+                    </ul>
+                    
+                    <div class="tip">
+                        <strong>💡 Dica Pedagógica:</strong> Modere a discussão garantindo que todos 
+                        participem. Use técnicas como "round robin" para dar voz a todos.
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📊 Rubrica de Avaliação</h2>
+                <table>
+                    <tr>
+                        <th>Critério</th>
+                        <th>Insuficiente (0-5)</th>
+                        <th>Regular (6-7)</th>
+                        <th>Bom (8-9)</th>
+                        <th>Excelente (10)</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Compreensão</strong></td>
+                        <td>Não compreendeu</td>
+                        <td>Compreensão parcial</td>
+                        <td>Boa compreensão</td>
+                        <td>Domínio completo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Aplicação</strong></td>
+                        <td>Não aplicou</td>
+                        <td>Aplicação com erros</td>
+                        <td>Aplicação correta</td>
+                        <td>Aplicação exemplar</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Qualidade</strong></td>
+                        <td>Muito baixa</td>
+                        <td>Satisfatória</td>
+                        <td>Boa qualidade</td>
+                        <td>Qualidade profissional</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Documentação</strong></td>
+                        <td>Ausente</td>
+                        <td>Básica</td>
+                        <td>Completa</td>
+                        <td>Profissional</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>🎓 Recursos para o Professor</h2>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>📊 Slides PowerPoint (disponível no Moodle)</li>
+                    <li>💻 Repositório GitHub com código de exemplo</li>
+                    <li>📁 Datasets e assets para as atividades</li>
+                    <li>📋 Banco de exercícios extras</li>
+                    <li>🎬 Vídeos tutoriais complementares</li>
+                    <li>📚 Bibliografia atualizada</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>💡 Dicas Adicionais</h2>
+                <div class="tip">
+                    <strong>🔧 Setup do Ambiente:</strong> Reserve 15min extras na primeira aula do módulo 
+                    para ajudar alunos com problemas de instalação.
+                </div>
+                <div class="tip">
+                    <strong>👥 Trabalho em Dupla:</strong> Atividades de coding funcionam melhor em duplas 
+                    (pair programming) para troca de conhecimento.
+                </div>
+                <div class="tip">
+                    <strong>📱 Dispositivos:</strong> Tenha alguns dispositivos físicos disponíveis para 
+                    testes, além dos emuladores.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

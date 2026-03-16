@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Ensino - Gestão de Sistemas Operacionais I</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #2a5298;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .info-item {
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .info-item strong {
+            color: #1e3c72;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: #1e3c72;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2a5298;
+        }
+
+        .competencias-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .competencias-list li {
+            padding: 12px;
+            margin: 8px 0;
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            border-radius: 4px;
+        }
+
+        .competencias-list li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .week-number {
+            background-color: #2a5298;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .avaliacao-box {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .avaliacao-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .observacao {
+            background-color: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 0 0 10px 10px;
+            margin-top: 30px;
+            color: #666;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            table {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Plano de Ensino - 2026</h1>
+            <p>Gestão de Sistemas Operacionais I</p>
+            <p style="margin-top: 10px; font-size: 1.1em;">Professor: Isaque Katahira</p>
+        </div>
+
+        <div class="info-box">
+            <h3 style="color: #1e3c72; margin-bottom: 15px;">Informações do Componente Curricular</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Curso:</strong>
+                    Técnico em Informática
+                </div>
+                <div class="info-item">
+                    <strong>Módulo:</strong>
+                    I - Qualificação Profissional Técnica de Nível Médio de Auxiliar em Informática
+                </div>
+                <div class="info-item">
+                    <strong>Componente Curricular:</strong>
+                    I.4 – Gestão de Sistemas Operacionais I
+                </div>
+                <div class="info-item">
+                    <strong>Carga Horária:</strong>
+                    60 horas-aula (50 horas em 2,5)
+                </div>
+                <div class="info-item">
+                    <strong>Prática Profissional:</strong>
+                    60 horas-aula
+                </div>
+                <div class="info-item">
+                    <strong>Período:</strong>
+                    1º Semestre de 2026
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">1. Ementa</h2>
+            <p>Estudo dos conceitos fundamentais de sistemas operacionais proprietários para estações de trabalho. Exploração dos serviços e funções dos sistemas operacionais, incluindo gerenciamento de processos, memória, arquivos e recursos do sistema. Configuração e utilização de ferramentas administrativas. Introdução ao PowerShell para automatização de tarefas. Otimização de desempenho e solução de problemas básicos em ambientes Windows.</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">2. Competências Profissionais</h2>
+            <ul class="competencias-list">
+                <li>Analisar os serviços e funções de sistemas operacionais proprietários destinados a estações de trabalho, utilizando ferramentas e recursos em atividades de configuração e manipulação de arquivos.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">3. Habilidades</h2>
+            <ul class="competencias-list">
+                <li>Utilizar os recursos dos sistemas operacionais proprietários de acordo com a necessidade do usuário.</li>
+                <li>Efetuar configurações nos sistemas operacionais proprietários para otimizar recursos e proporcionar maior desempenho.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">4. Bases Tecnológicas</h2>
+            
+            <h3 style="color: #2a5298; margin-top: 20px; margin-bottom: 10px;">4.1 Conceitos de Sistemas Operacionais</h3>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Funções e características</li>
+                <li>Tipos: monotarefa, multitarefa e multiprocessado</li>
+                <li>Estrutura: modos de acesso e arquitetura</li>
+                <li>Gerenciamento de processos</li>
+                <li>Utilização e versões de diferentes sistemas operacionais proprietários</li>
+            </ul>
+
+            <h3 style="color: #2a5298; margin-top: 20px; margin-bottom: 10px;">4.2 PowerShell</h3>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Introdução ao PowerShell</li>
+                <li>Comandos de gerenciamento de diretórios e arquivos</li>
+                <li>Comandos de configuração de ambiente</li>
+                <li>PowerShell Remoting</li>
+                <li>PowerShell cmdlets</li>
+            </ul>
+
+            <h3 style="color: #2a5298; margin-top: 20px; margin-bottom: 10px;">4.3 Área de Trabalho</h3>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Ícones, Barras e Botão Iniciar</li>
+                <li>Gerenciamento de Janelas</li>
+                <li>Personalização do Ambiente</li>
+            </ul>
+
+            <h3 style="color: #2a5298; margin-top: 20px; margin-bottom: 10px;">4.4 Ferramentas de Gestão</h3>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Gerenciamento de pastas e arquivos (características, compactação)</li>
+                <li>Aplicativos básicos do sistema</li>
+                <li>Gerenciamento de serviços: memória, processos, agendador de tarefas</li>
+                <li>Ferramentas de manutenção: desfragmentador, verificador de disco, limpeza</li>
+                <li>Informações e restauração do sistema</li>
+                <li>Ferramentas de acessibilidade</li>
+                <li>Segurança e atualizações</li>
+                <li>Editor de registro</li>
+                <li>Configuração de inicialização</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">5. Cronograma de Atividades</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%">Semana</th>
+                        <th style="width: 40%">Conteúdo</th>
+                        <th style="width: 45%">Atividades</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="week-number">Semana 1-2</span></td>
+                        <td>
+                            <strong>Introdução aos Sistemas Operacionais</strong><br>
+                            • Funções e características<br>
+                            • Tipos de SO: monotarefa, multitarefa, multiprocessado<br>
+                            • Estrutura e arquitetura
+                        </td>
+                        <td>
+                            • Apresentação da disciplina e plano de ensino<br>
+                            • Aula expositiva com recursos multimídia<br>
+                            • Laboratório: Identificação de versões do Windows<br>
+                            • Atividade prática: Exploração da interface
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="week-number">Semana 3-4</span></td>
+                        <td>
+                            <strong>Área de Trabalho e Interface</strong><br>
+                            • Ícones, barras e botão iniciar<br>
+                            • Gerenciamento de janelas<br>
+                            • Personalização do ambiente<br>
+                            • Configurações básicas
+                        </td>
+                        <td>
+                            • Demonstração prática de recursos da área de trabalho<br>
+                            • Laboratório: Personalização completa do ambiente<br>
+                            • Atividade: Criação de perfis de usuário customizados<br>
+                            • Exercícios de fixação
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="week-number">Semana 5-7</span></td>
+                        <td>
+                            <strong>Gerenciamento de Arquivos e Pastas</strong><br>
+                            • Características dos arquivos<br>
+                            • Técnicas de compactação<br>
+                            • Organização de diretórios<br>
+                            • Permissões e atributos
+                        </td>
+                        <td>
+                            • Aula prática: Explorador de arquivos avançado<br>
+                            • Laboratório: Compactação e descompactação<br>
+                            • Exercícios com permissões de arquivos<br>
+                            • Atividade avaliativa: Organização de estrutura de pastas<br>
+                            • <strong>Avaliação 1: Prática (15%)</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="week-number">Semana 8-10</span></td>
+                        <td>
+                            <strong>Introdução ao PowerShell</strong><br>
+                            • Conceitos fundamentais<br>
+                            • Cmdlets básicos<br>
+                            • Gerenciamento de diretórios e arquivos<br>
+                            • Comandos de configuração
+                        </td>
+                        <td>
+                            • Aula expositiva: História e importância do PowerShell<br>
+                            • Laboratório: Primeiros comandos no PowerShell<br>
+                            • Prática: Navegação e manipulação de arquivos via CLI<br>
+                            • Exercícios de automatização básica<br>
+                            • Criação de scripts simples
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="week-number">Semana 11-12</span></td>
+                        <td>
+                            <strong>PowerShell Avançado</strong><br>
+                            • PowerShell Remoting<br>
+                            • Cmdlets avançados<br>
+                            • Scripts de automatização<br>
+                            • Gerenciamento remoto
+                        </td>
+                        <td>
+                            • Demonstração de conexões remotas<br>
+                            • Laboratório: Configuração de PowerShell Remoting<br>
+                            • Prática: Criação de scripts para tarefas administrativas<br>
+                            • <strong>Avaliação 2: Scripts PowerShell (20%)</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="week-number">Semana 13-14</span></td>
+                        <td>
+                            <strong>Gerenciamento de Processos e Serviços</strong><br>
+                            • Gerenciador de tarefas<br>
+                            • Processos e aplicativos<br>
+                            • Gerenciamento de memória<br>
+                            • Serviços do Windows
+                        </td>
+                        <td>
+                            • Aula prática: Análise do Gerenciador de Tarefas<br>
+                            • Laboratório: Monitoramento de recursos<br>
+                            • Atividade: Identificação e solução de problemas de desempenho<br>
+                            • Exercícios com gerenciamento de serviços
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="week-number">Semana 15-16</span></td>
+                        <td>
+                            <strong>Ferramentas de Manutenção</strong><br>
+                            • Agendador de tarefas<br>
+                            • Desfragmentador de disco<br>
+                            • Verificador de falhas<br>
+                            • Limpeza de disco<br>
+                            • Informações e restauração do sistema
+                        </td>
+                        <td>
+                            • Demonstração de ferramentas de manutenção<br>
+                            • Laboratório: Otimização de sistema<br>
+                            • Prática: Criação de pontos de restauração<br>
+                            • Atividade: Agendamento de tarefas automatizadas<br>
+                            • <strong>Avaliação 3: Manutenção (15%)</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="week-number">Semana 17-18</span></td>
+                        <td>
+                            <strong>Segurança e Atualizações</strong><br>
+                            • Windows Update<br>
+                            • Configurações de segurança<br>
+                            • Editor de registro<br>
+                            • Configuração de inicialização<br>
+                            • Modo de segurança
+                        </td>
+                        <td>
+                            • Aula sobre políticas de segurança<br>
+                            • Laboratório: Configuração do Windows Update<br>
+                            • Prática guiada: Editor de registro (cuidados e aplicações)<br>
+                            • Exercícios com opções de inicialização<br>
+                            • Simulação de solução de problemas de boot
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="week-number">Semana 19</span></td>
+                        <td>
+                            <strong>Ferramentas de Acessibilidade</strong><br>
+                            • Lupa<br>
+                            • Narrador<br>
+                            • Teclado virtual<br>
+                            • Outras ferramentas de acessibilidade
+                        </td>
+                        <td>
+                            • Demonstração de recursos de acessibilidade<br>
+                            • Laboratório: Configuração para diferentes necessidades<br>
+                            • Discussão sobre inclusão digital<br>
+                            • Atividade prática de configuração
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="week-number">Semana 20</span></td>
+                        <td>
+                            <strong>Revisão e Avaliação Final</strong><br>
+                            • Revisão geral dos conteúdos<br>
+                            • Resolução de dúvidas<br>
+                            • Avaliação prática integrada
+                        </td>
+                        <td>
+                            • Revisão participativa dos principais tópicos<br>
+                            • Simulados e exercícios de fixação<br>
+                            • Laboratório: Resolução de casos práticos<br>
+                            • <strong>Avaliação Final: Prática Integrada (30%)</strong><br>
+                            • <strong>Projeto Integrador (20%)</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">6. Metodologia de Ensino</h2>
+            
+            <h3 style="color: #2a5298; margin-bottom: 10px;">6.1 Estratégias Didáticas</h3>
+            <ul style="margin-left: 20px; margin-bottom: 20px;">
+                <li><strong>Aulas Expositivas Dialogadas:</strong> Apresentação de conceitos teóricos com participação ativa dos alunos através de questionamentos e discussões</li>
+                <li><strong>Aulas Práticas em Laboratório:</strong> Atividades hands-on para consolidação dos conhecimentos através da prática</li>
+                <li><strong>Estudos de Caso:</strong> Análise de situações reais do ambiente corporativo</li>
+                <li><strong>Aprendizagem Baseada em Problemas:</strong> Resolução de problemas práticos relacionados à administração de sistemas operacionais</li>
+                <li><strong>Projetos Práticos:</strong> Desenvolvimento de soluções completas integrando diversos conhecimentos</li>
+                <li><strong>Demonstrações Práticas:</strong> Apresentação de procedimentos pelo professor com posterior prática pelos alunos</li>
+            </ul>
+
+            <h3 style="color: #2a5298; margin-bottom: 10px;">6.2 Recursos Didáticos</h3>
+            <ul style="margin-left: 20px;">
+                <li>Laboratório de Informática com estações Windows</li>
+                <li>Projetor multimídia e sistema de áudio</li>
+                <li>Plataforma de ensino virtual (Moodle/Teams)</li>
+                <li>Apostilas e materiais de apoio digitais</li>
+                <li>Vídeos tutoriais e demonstrativos</li>
+                <li>Documentação oficial Microsoft</li>
+                <li>Simuladores e ambientes virtualizados</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">7. Avaliação</h2>
+            
+            <h3 style="color: #2a5298; margin-bottom: 15px;">7.1 Instrumentos de Avaliação</h3>
+            
+            <div class="avaliacao-box">
+                <h4>Avaliação 1 - Prática de Gerenciamento de Arquivos (15%)</h4>
+                <p><strong>Período:</strong> Semana 7</p>
+                <p><strong>Formato:</strong> Atividade prática individual em laboratório</p>
+                <p><strong>Descrição:</strong> Os alunos deverão criar uma estrutura organizacional de pastas e arquivos, aplicar permissões, realizar compactações e demonstrar domínio das técnicas de gerenciamento.</p>
+            </div>
+
+            <div class="avaliacao-box">
+                <h4>Avaliação 2 - Scripts PowerShell (20%)</h4>
+                <p><strong>Período:</strong> Semana 12</p>
+                <p><strong>Formato:</strong> Desenvolvimento de scripts</p>
+                <p><strong>Descrição:</strong> Criação de scripts PowerShell para automatizar tarefas administrativas, incluindo manipulação de arquivos, gerenciamento de usuários e configuração de sistema.</p>
+            </div>
+
+            <div class="avaliacao-box">
+                <h4>Avaliação 3 - Ferramentas de Manutenção (15%)</h4>
+                <p><strong>Período:</strong> Semana 16</p>
+                <p><strong>Formato:</strong> Atividade prática de otimização</p>
+                <p><strong>Descrição:</strong> Execução de procedimentos completos de manutenção preventiva, incluindo limpeza, desfragmentação, agendamento de tarefas e criação de pontos de restauração.</p>
+            </div>
+
+            <div class="avaliacao-box">
+                <h4>Avaliação Final - Prática Integrada (30%)</h4>
+                <p><strong>Período:</strong> Semana 20</p>
+                <p><strong>Formato:</strong> Avaliação prática abrangente</p>
+                <p><strong>Descrição:</strong> Resolução de casos práticos que integram todos os conhecimentos adquiridos: configuração, gerenciamento, otimização e solução de problemas em sistemas Windows.</p>
+            </div>
+
+            <div class="avaliacao-box">
+                <h4>Projeto Integrador (20%)</h4>
+                <p><strong>Período:</strong> Desenvolvimento ao longo do semestre, entrega na Semana 20</p>
+                <p><strong>Formato:</strong> Projeto prático em equipe</p>
+                <p><strong>Descrição:</strong> Desenvolvimento de um manual de boas práticas para administração de estações de trabalho Windows, incluindo procedimentos de instalação, configuração, manutenção, segurança e solução de problemas. Apresentação do projeto para a turma.</p>
+            </div>
+
+            <div class="avaliacao-box" style="background-color: #e8f5e9; border: 2px solid #4caf50;">
+                <h4>Avaliação de Observação Direta - Contínua (Sem peso adicional, mas influencia na menção final)</h4>
+                <p><strong>Período:</strong> Durante todo o semestre</p>
+                <p><strong>Formato:</strong> Observação contínua do comportamento e atitudes</p>
+                <p><strong>Descrição:</strong> Avaliação do comportamento, participação, comprometimento, trabalho em equipe, pontualidade, respeito às normas e colegas, e postura profissional em sala de aula e no laboratório. Esta avaliação é considerada na composição da menção final (MB, B, R ou I).</p>
+                <p><strong>Critérios observados:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Participação ativa nas aulas teóricas e práticas</li>
+                    <li>Pontualidade e assiduidade</li>
+                    <li>Respeito às normas do laboratório e às orientações do professor</li>
+                    <li>Colaboração com colegas e trabalho em equipe</li>
+                    <li>Postura ética e profissional</li>
+                    <li>Cuidado com equipamentos e materiais</li>
+                    <li>Comprometimento com as atividades propostas</li>
+                    <li>Busca por aprendizado contínuo e autonomia</li>
+                </ul>
+            </div>
+
+            <h3 style="color: #2a5298; margin-top: 25px; margin-bottom: 15px;">7.2 Critérios de Avaliação</h3>
+            <ul style="margin-left: 20px; margin-bottom: 20px;">
+                <li>Domínio dos conceitos teóricos de sistemas operacionais</li>
+                <li>Capacidade de executar procedimentos práticos de configuração e gerenciamento</li>
+                <li>Habilidade em utilizar PowerShell para automatização</li>
+                <li>Competência na solução de problemas</li>
+                <li>Organização e documentação dos trabalhos</li>
+                <li>Participação e envolvimento nas atividades</li>
+                <li>Assiduidade e pontualidade</li>
+                <li><strong>Comportamento e atitudes em sala de aula (Observação Direta)</strong></li>
+                <li><strong>Postura profissional e ética</strong></li>
+                <li><strong>Trabalho em equipe e colaboração</strong></li>
+            </ul>
+
+            <h3 style="color: #2a5298; margin-bottom: 15px;">7.3 Composição da Nota Final</h3>
+            <table style="width: 60%; margin: 20px auto;">
+                <tr>
+                    <th>Instrumento de Avaliação</th>
+                    <th style="text-align: center;">Peso</th>
+                </tr>
+                <tr>
+                    <td>Avaliação 1 - Gerenciamento de Arquivos</td>
+                    <td style="text-align: center;">15%</td>
+                </tr>
+                <tr>
+                    <td>Avaliação 2 - Scripts PowerShell</td>
+                    <td style="text-align: center;">20%</td>
+                </tr>
+                <tr>
+                    <td>Avaliação 3 - Manutenção</td>
+                    <td style="text-align: center;">15%</td>
+                </tr>
+                <tr>
+                    <td>Avaliação Final - Prática Integrada</td>
+                    <td style="text-align: center;">30%</td>
+                </tr>
+                <tr>
+                    <td>Projeto Integrador</td>
+                    <td style="text-align: center;">20%</td>
+                </tr>
+                <tr style="background-color: #f0f0f0; font-weight: bold;">
+                    <td>TOTAL</td>
+                    <td style="text-align: center;">100%</td>
+                </tr>
+                <tr style="background-color: #e8f5e9;">
+                    <td colspan="2" style="text-align: center; font-size: 0.9em; padding: 10px;">
+                        <strong>+ Avaliação de Observação Direta</strong> (contínua, influencia a menção final)
+                    </td>
+                </tr>
+            </table>
+
+            <div class="observacao">
+                <strong>Critérios de Aprovação:</strong><br>
+                • Frequência mínima: 75% das aulas<br>
+                • Nota mínima para aprovação: MB (Muito Bom), B (Bom) ou R (Regular)<br>
+                • Menção I (Insatisfatório) implica em reprovação no componente curricular<br>
+                • A <strong>Avaliação de Observação Direta</strong> é considerada pelo professor na definição da menção final, podendo influenciar positiva ou negativamente o conceito atribuído ao aluno
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">8. Bibliografia</h2>
+            
+            <h3 style="color: #2a5298; margin-bottom: 10px;">8.1 Bibliografia Básica</h3>
+            <ul style="margin-left: 20px; margin-bottom: 20px; line-height: 1.8;">
+                <li>SANTOS, Gilberto Carniatto dos. <strong>Windows 11</strong>. São Paulo: Clube dos Autores, 2023. ISBN: 978-6500552249</li>
+                <li>MICROSOFT. <strong>Documentação Oficial do Windows</strong>. Disponível em: https://docs.microsoft.com/windows/</li>
+                <li>MICROSOFT. <strong>Documentação do PowerShell</strong>. Disponível em: https://docs.microsoft.com/powershell/</li>
+            </ul>
+
+            <h3 style="color: #2a5298; margin-bottom: 10px;">8.2 Bibliografia Complementar</h3>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li>SILBERSCHATZ, Abraham; GALVIN, Peter B.; GAGNE, Greg. <strong>Fundamentos de Sistemas Operacionais</strong>. 9ª ed. Rio de Janeiro: LTC, 2015.</li>
+                <li>TANENBAUM, Andrew S. <strong>Sistemas Operacionais Modernos</strong>. 4ª ed. São Paulo: Pearson, 2016.</li>
+                <li>MICROSOFT. <strong>Windows Server Administration Fundamentals</strong>. Microsoft Press, 2019.</li>
+                <li>Artigos e tutoriais em sites especializados (TechNet, Microsoft Learn)</li>
+                <li>Vídeos educacionais e cursos online (Microsoft Virtual Academy, YouTube EDU)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">9. Atribuições e Responsabilidades</h2>
+            
+            <h3 style="color: #2a5298; margin-bottom: 10px;">9.1 Do Professor</h3>
+            <ul style="margin-left: 20px; margin-bottom: 20px;">
+                <li>Ministrar as aulas conforme o cronograma estabelecido</li>
+                <li>Disponibilizar materiais didáticos com antecedência</li>
+                <li>Realizar atendimento aos alunos em horários previamente agendados</li>
+                <li>Avaliar o desempenho dos alunos de forma contínua e formativa</li>
+                <li>Manter registro atualizado de frequência e notas</li>
+                <li>Proporcionar feedback construtivo sobre o desempenho dos alunos</li>
+            </ul>
+
+            <h3 style="color: #2a5298; margin-bottom: 10px;">9.2 Do Aluno</h3>
+            <ul style="margin-left: 20px;">
+                <li>Comparecer pontualmente às aulas teóricas e práticas</li>
+                <li>Participar ativamente das atividades propostas</li>
+                <li>Realizar as leituras e atividades extraclasse indicadas</li>
+                <li>Entregar os trabalhos e avaliações nos prazos estabelecidos</li>
+                <li>Zelar pelos equipamentos e instalações do laboratório</li>
+                <li>Manter postura ética e profissional</li>
+                <li>Buscar auxílio do professor quando tiver dúvidas</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">10. Valores e Atitudes</h2>
+            <ul class="competencias-list">
+                <li>Estimular o interesse na resolução de situações-problema</li>
+                <li>Promover ações que considerem o respeito às normas estabelecidas</li>
+                <li>Demonstrar capacidade de lidar com situações novas e inusitadas</li>
+                <li>Desenvolver capacidade de adotar em tempo hábil a solução mais adequada entre possíveis alternativas</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">11. Competências Socioemocionais</h2>
+            <ul class="competencias-list">
+                <li>Evidenciar autonomia na tomada de decisões</li>
+                <li>Demonstrar capacidade de análise e tomada de decisão</li>
+                <li>Revelar habilidade para escutar atentamente seu interlocutor</li>
+                <li>Demonstrar capacidade de lidar com situações novas e inusitadas</li>
+                <li>Evidenciar iniciativa e flexibilidade para adaptar-se a novas dinâmicas</li>
+                <li>Demonstrar autoconfiança na execução de procedimentos que envolvam duração</li>
+                <li>Demonstrar capacidade de adotar em tempo hábil a solução mais adequada entre possíveis alternativas</li>
+            </ul>
+        </div>
+
+        <div class="observacao">
+            <strong>Observações Importantes:</strong><br>
+            • Este plano de ensino poderá sofrer ajustes ao longo do semestre, conforme necessidades pedagógicas identificadas<br>
+            • As datas das avaliações poderão ser alteradas mediante comunicação prévia<br>
+            • O laboratório de informática deverá ser reservado com antecedência para as aulas práticas<br>
+            • Recomenda-se que os alunos pratiquem os conteúdos em computadores pessoais quando possível<br>
+            • A divisão de classes em turmas está prevista para todos os encontros práticos
+        </div>
+
+        <div class="footer">
+            <p><strong>Plano de Ensino - Gestão de Sistemas Operacionais I</strong></p>
+            <p>Curso Técnico em Informática - Módulo I</p>
+            <p>Centro Estadual de Educação Tecnológica Paula Souza</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">1º Semestre de 2026</p>
+        </div>
+    </div>
+</body>
+</html>

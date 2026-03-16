@@ -1,0 +1,121 @@
+================================================================================
+ISW044 - PROGRAMAÇÃO MULTIPLATAFORMA
+================================================================================
+
+Disciplina: ISW044 - Programação Multiplataforma
+Código: ISW044
+Carga Horária: 160 horas (40 semanas x 4 horas)
+Modalidade: Presencial
+Curso: Análise e Desenvolvimento de Sistemas (ADS)
+Instituição: FATEC Ourinhos - Centro Paula Souza
+
+================================================================================
+EMENTA DA DISCIPLINA
+================================================================================
+
+Desenvolvimento de aplicações multiplataforma utilizando frameworks modernos.
+Aborda React Native, Flutter, PWA, Ionic e outras tecnologias para criar
+aplicações que rodam em múltiplas plataformas (iOS, Android, Web, Desktop)
+com uma única base de código.
+
+================================================================================
+OBJETIVOS
+================================================================================
+
+- Desenvolver aplicações mobile nativas e híbridas
+- Criar Progressive Web Apps (PWA)
+- Utilizar frameworks como React Native e Flutter
+- Implementar design responsivo e adaptativo
+- Integrar com APIs e serviços backend
+- Publicar aplicações nas lojas (App Store, Play Store)
+- Aplicar princípios de UX/UI em apps mobile
+- Otimizar performance em diferentes plataformas
+
+================================================================================
+TECNOLOGIAS ABORDADAS
+================================================================================
+
+Mobile:
+- React Native (JavaScript/TypeScript)
+- Flutter (Dart)
+- Ionic (Angular/React/Vue)
+- Kotlin Multiplatform
+- Xamarin
+
+Web:
+- Progressive Web Apps (PWA)
+- Responsive Design
+- Service Workers
+- Web APIs
+
+Desktop:
+- Electron
+- Tauri
+- Flutter Desktop
+
+Backend:
+- Firebase
+- REST APIs
+- GraphQL
+- WebSockets
+
+================================================================================
+ESTRUTURA DO CURSO - 8 MÓDULOS
+================================================================================
+
+MÓDULO 1: Fundamentos (Semanas 1-5)
+- Introdução ao desenvolvimento multiplataforma
+- Conceitos de mobile-first e responsive design
+- HTML5, CSS3 e JavaScript moderno
+- TypeScript fundamentals
+- Git e versionamento
+
+MÓDULO 2: React Native Básico (Semanas 6-10)
+- Setup e ambiente de desenvolvimento
+- Componentes e Props
+- State e Lifecycle
+- Navegação (React Navigation)
+- Estilização (StyleSheet, Flexbox)
+
+MÓDULO 3: React Native Avançado (Semanas 11-15)
+- Hooks (useState, useEffect, useContext)
+- Redux e gerenciamento de estado
+- Integração com APIs
+- Async Storage e persistência
+- Animações e gestos
+
+MÓDULO 4: Flutter (Semanas 16-20)
+- Introdução ao Dart
+- Widgets e composição
+- State Management (Provider, Bloc)
+- Navegação e roteamento
+- Material Design e Cupertino
+
+MÓDULO 5: Progressive Web Apps (Semanas 21-25)
+- Service Workers
+- App Manifest
+- Cache Strategies
+- Notificações Push
+- Instalação e offline-first
+
+MÓDULO 6: Ionic e Híbridos (Semanas 26-30)
+- Ionic Framework
+- Capacitor
+- Plugins nativos
+- Performance otimization
+- Build e deploy
+
+MÓDULO 7: Tópicos Avançados (Semanas 31-35)
+- Electron e apps desktop
+- Firebase (Auth, Firestore, Storage)
+- CI/CD para mobile
+- Testes (Jest, Detox, Flutter Test)
+- Performance e otimização
+
+MÓDULO 8: Projeto Final (Semanas 36-40)
+- Planejamento de aplicativo completo
+- Arquitetura e design
+- Implementação multiplataforma
+- Testes e QA
+- Publicação nas lojas
+

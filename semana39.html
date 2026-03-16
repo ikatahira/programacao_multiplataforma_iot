@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semana 39 - Projeto Final - Testes e QA | ISW044</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 40px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .header .module { font-size: 1.2em; opacity: 0.95; margin-bottom: 5px; }
+        .header .week { font-size: 1.1em; opacity: 0.9; }
+        .content { padding: 40px; }
+        .section { margin: 40px 0; }
+        .section h2 { color: #11998e; font-size: 2em; margin-bottom: 20px; border-bottom: 3px solid #38ef7d; padding-bottom: 10px; }
+        .objetivos { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 30px; border-radius: 15px; margin-bottom: 40px; border-left: 5px solid #11998e; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .objetivos h2 { color: #11998e; margin-bottom: 20px; }
+        .objetivos ul { list-style-position: inside; }
+        .objetivos li { margin: 12px 0; font-size: 1.1em; padding-left: 10px; }
+        .teoria { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .teoria h3 { color: #11998e; margin: 25px 0 15px 0; font-size: 1.6em; }
+        .teoria h4 { color: #38ef7d; margin: 20px 0 10px 0; font-size: 1.3em; }
+        .teoria p { margin: 15px 0; text-align: justify; line-height: 1.8; }
+        .teoria ul, .teoria ol { margin: 15px 0 15px 30px; }
+        .teoria li { margin: 10px 0; line-height: 1.8; }
+        .teoria strong { color: #11998e; font-weight: 600; }
+        .teoria code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; color: #e74c3c; }
+        .teoria pre { background: #2d3436; color: #00ff00; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; }
+        .videos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .video-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s; color: white; }
+        .video-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .video-number { background: rgba(255,255,255,0.3); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em; margin-bottom: 15px; }
+        .video-card h4 { color: white; margin-bottom: 12px; font-size: 1.2em; }
+        .video-card p { color: rgba(255,255,255,0.9); margin: 8px 0; font-size: 0.95em; }
+        .video-link { display: inline-block; margin-top: 15px; padding: 12px 25px; background: white; color: #f5576c; text-decoration: none; border-radius: 8px; font-weight: bold; transition: all 0.3s; }
+        .video-link:hover { background: #fff; transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,255,255,0.4); }
+        .activity-card { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 15px; padding: 30px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border-left: 6px solid #ff6b6b; }
+        .activity-card h3 { color: #c23616; margin-bottom: 15px; font-size: 1.5em; }
+        .activity-desc { color: #555; font-size: 1.1em; margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+        .activity-card h4 { color: #ff6b6b; margin: 20px 0 12px 0; font-size: 1.2em; }
+        .instructions { background: white; padding: 20px 20px 20px 40px; border-radius: 8px; margin: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .instructions li { margin: 12px 0; line-height: 1.7; }
+        .deliverable { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 18px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #2196f3; }
+        .deliverable strong { color: #1976d2; }
+        .criteria { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 18px 18px 18px 40px; border-radius: 8px; margin: 12px 0; border-left: 5px solid #4caf50; }
+        .criteria li { margin: 10px 0; color: #2e7d32; }
+        .materials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .material-card { background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); transition: transform 0.3s; border-top: 5px solid #f39c12; }
+        .material-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .material-card h4 { color: #d35400; margin-bottom: 12px; font-size: 1.2em; }
+        .material-card p { color: #555; margin: 8px 0; font-size: 0.95em; }
+        .material-link { display: inline-block; margin-top: 15px; padding: 12px 25px; background: #e67e22; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; transition: all 0.3s; }
+        .material-link:hover { background: #d35400; transform: scale(1.05); }
+        .navigation { display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        .nav-button { padding: 15px 30px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 1.05em; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .nav-button:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(17, 153, 142, 0.4); }
+        .nav-button.prev:hover { transform: translateX(-5px) translateY(-3px); }
+        .nav-button.next:hover { transform: translateX(5px) translateY(-3px); }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .content { padding: 20px; }
+            .videos-grid, .materials-grid { grid-template-columns: 1fr; }
+            .navigation { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="module">📱 MÓDULO 8: Projeto Final</div>
+            <div class="week">Semana 39</div>
+            <h1>Projeto Final - Testes e QA</h1>
+        </div>
+
+        <div class="content">
+            <div class="objetivos">
+                <h2>🎯 Objetivos de Aprendizagem</h2>
+                <ul>
+                    <li>Compreender os conceitos fundamentais de <strong>projeto final - testes e qa</strong></li>
+                    <li>Aplicar técnicas práticas em projetos reais</li>
+                    <li>Desenvolver habilidades hands-on com as ferramentas</li>
+                    <li>Criar aplicações funcionais e bem estruturadas</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>📚 Conteúdo Teórico</h2>
+                <div class="teoria">
+                    <h3>Introdução</h3>
+                    <p>Nesta semana, você aprenderá sobre <strong>Projeto Final - Testes e QA</strong>, um tópico fundamental para o desenvolvimento multiplataforma moderno.</p>
+                    
+                    <p>O desenvolvimento multiplataforma permite criar aplicações que funcionam em múltiplas plataformas (iOS, Android, Web, Desktop) com uma única base de código, reduzindo tempo e custos de desenvolvimento.</p>
+
+                    <h3>Conceitos Principais</h3>
+                    <p>Os principais conceitos abordados incluem:</p>
+                    <ul>
+                        <li><strong>Componentização:</strong> Divisão da UI em componentes reutilizáveis</li>
+                        <li><strong>Estado:</strong> Gerenciamento de dados dinâmicos da aplicação</li>
+                        <li><strong>Navegação:</strong> Fluxo entre diferentes telas</li>
+                        <li><strong>Integração:</strong> Comunicação com APIs e serviços</li>
+                        <li><strong>Performance:</strong> Otimizações para experiência fluida</li>
+                    </ul>
+
+                    <h3>Aplicações Práticas</h3>
+                    <p>Este conhecimento é aplicado em:</p>
+                    <ul>
+                        <li>Desenvolvimento de apps mobile nativos</li>
+                        <li>Criação de Progressive Web Apps</li>
+                        <li>Aplicações desktop multiplataforma</li>
+                        <li>Sistemas híbridos integrados</li>
+                    </ul>
+
+                    <h4>Exemplo de Código</h4>
+                    <pre>
+// Exemplo React Native
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+const MeuComponente = () => {
+  return (
+    &lt;View style={styles.container}&gt;
+      &lt;Text style={styles.texto}&gt;
+        Olá, Multiplataforma!
+      &lt;/Text&gt;
+    &lt;/View&gt;
+  );
+};
+
+const styles = StyleSheet.create({
+  container: { flex: 1, justifyContent: 'center' },
+  texto: { fontSize: 20, color: '#333' }
+});
+
+export default MeuComponente;
+                    </pre>
+
+                    <p><em>Nota: O conteúdo teórico completo será disponibilizado em aula e no material complementar.</em></p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎬 Vídeos Recomendados</h2>
+                <div class="videos-grid">
+                    <div class="video-card">
+                        <div class="video-number">1</div>
+                        <h4>Tutorial Introdutório</h4>
+                        <p><strong>Canal:</strong> Cod3r Cursos</p>
+                        <p><strong>Duração:</strong> 15:30</p>
+                        <a href="#" class="video-link" target="_blank">▶️ Assistir Vídeo</a>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-number">2</div>
+                        <h4>Conceitos Fundamentais</h4>
+                        <p><strong>Canal:</strong> Rocketseat</p>
+                        <p><strong>Duração:</strong> 22:45</p>
+                        <a href="#" class="video-link" target="_blank">▶️ Assistir Vídeo</a>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-number">3</div>
+                        <h4>Projeto Prático</h4>
+                        <p><strong>Canal:</strong> Programador BR</p>
+                        <p><strong>Duração:</strong> 35:20</p>
+                        <a href="#" class="video-link" target="_blank">▶️ Assistir Vídeo</a>
+                    </div>
+                    <div class="video-card">
+                        <div class="video-number">4</div>
+                        <h4>Dicas e Best Practices</h4>
+                        <p><strong>Canal:</strong> DevDojo</p>
+                        <p><strong>Duração:</strong> 18:15</p>
+                        <a href="#" class="video-link" target="_blank">▶️ Assistir Vídeo</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>✏️ Atividades Práticas</h2>
+                
+                <div class="activity-card">
+                    <h3>📝 Atividade 1: Pesquisa e Análise</h3>
+                    <p class="activity-desc">Pesquise e analise cases reais de aplicações que utilizam os conceitos estudados.</p>
+                    
+                    <h4>📋 Instruções:</h4>
+                    <ol class="instructions">
+                        <li>Pesquise 3 aplicativos famosos desenvolvidos com a tecnologia estudada</li>
+                        <li>Analise as funcionalidades principais de cada um</li>
+                        <li>Identifique pontos fortes e áreas de melhoria</li>
+                        <li>Compare performance e experiência do usuário</li>
+                        <li>Documente os resultados em um relatório</li>
+                        <li>Prepare uma apresentação de 5 minutos</li>
+                    </ol>
+                    
+                    <div class="deliverable">
+                        <strong>📦 Entregável:</strong> Relatório em PDF (3-5 páginas) + Apresentação em slides
+                    </div>
+                    
+                    <h4>✅ Critérios de Avaliação:</h4>
+                    <ul class="criteria">
+                        <li>Profundidade da análise dos apps escolhidos</li>
+                        <li>Qualidade da pesquisa e fontes utilizadas</li>
+                        <li>Clareza e organização do relatório</li>
+                        <li>Apresentação visual e comunicação</li>
+                    </ul>
+                </div>
+
+                <div class="activity-card">
+                    <h3>💻 Atividade 2: Desenvolvimento Prático</h3>
+                    <p class="activity-desc">Desenvolva uma aplicação simples aplicando os conceitos aprendidos.</p>
+                    
+                    <h4>📋 Instruções:</h4>
+                    <ol class="instructions">
+                        <li>Configure o ambiente de desenvolvimento</li>
+                        <li>Crie um projeto novo com as ferramentas estudadas</li>
+                        <li>Implemente as funcionalidades básicas solicitadas</li>
+                        <li>Teste em diferentes dispositivos/plataformas</li>
+                        <li>Documente o código com comentários</li>
+                        <li>Faça commit no GitHub com README</li>
+                    </ol>
+                    
+                    <div class="deliverable">
+                        <strong>📦 Entregável:</strong> Repositório GitHub + APK/Build + Documentação
+                    </div>
+                    
+                    <h4>✅ Critérios de Avaliação:</h4>
+                    <ul class="criteria">
+                        <li>Qualidade e organização do código</li>
+                        <li>Funcionalidade completa da aplicação</li>
+                        <li>Responsividade e design</li>
+                        <li>Documentação clara e README completo</li>
+                    </ul>
+                </div>
+
+                <div class="activity-card">
+                    <h3>👥 Atividade 3: Discussão em Grupo</h3>
+                    <p class="activity-desc">Participe de uma discussão colaborativa sobre o tema da semana.</p>
+                    
+                    <h4>📋 Instruções:</h4>
+                    <ol class="instructions">
+                        <li>Forme grupos de 4-5 alunos</li>
+                        <li>Discuta as vantagens e desvantagens da tecnologia</li>
+                        <li>Compartilhe experiências práticas</li>
+                        <li>Identifique desafios comuns</li>
+                        <li>Elabore soluções colaborativas</li>
+                        <li>Apresente as conclusões do grupo</li>
+                    </ol>
+                    
+                    <div class="deliverable">
+                        <strong>📦 Entregável:</strong> Documento colaborativo + Apresentação oral
+                    </div>
+                    
+                    <h4>✅ Critérios de Avaliação:</h4>
+                    <ul class="criteria">
+                        <li>Participação ativa de todos os membros</li>
+                        <li>Qualidade das discussões e insights</li>
+                        <li>Organização das conclusões</li>
+                        <li>Clareza na apresentação</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📖 Materiais Complementares</h2>
+                <div class="materials-grid">
+                    <div class="material-card">
+                        <h4>📚 Documentação Oficial</h4>
+                        <p><strong>Tipo:</strong> Documentação</p>
+                        <p><strong>Fonte:</strong> Site oficial</p>
+                        <a href="#" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>🎓 Tutorial Completo</h4>
+                        <p><strong>Tipo:</strong> Tutorial</p>
+                        <p><strong>Fonte:</strong> Plataforma de ensino</p>
+                        <a href="#" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>📄 Artigo Técnico</h4>
+                        <p><strong>Tipo:</strong> Artigo</p>
+                        <p><strong>Fonte:</strong> Medium/Dev.to</p>
+                        <a href="#" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>💻 Repositório de Exemplos</h4>
+                        <p><strong>Tipo:</strong> Código</p>
+                        <p><strong>Fonte:</strong> GitHub</p>
+                        <a href="#" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>🛠️ Ferramentas Úteis</h4>
+                        <p><strong>Tipo:</strong> Toolkit</p>
+                        <p><strong>Fonte:</strong> Comunidade</p>
+                        <a href="#" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>📖 Livro Recomendado</h4>
+                        <p><strong>Tipo:</strong> Livro</p>
+                        <p><strong>Fonte:</strong> Editora especializada</p>
+                        <a href="#" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="semana38.html" class="nav-button prev">⬅️ Semana Anterior</a>
+            <a href="index.html" class="nav-button">🏠 Início</a>
+            <a href="semana40.html" class="nav-button next">Próxima Semana ➡️</a>
+        </div>
+    </div>
+</body>
+</html>
