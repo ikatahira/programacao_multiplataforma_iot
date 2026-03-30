@@ -244,9 +244,8 @@
     <nav class="topbar-nav">
       <a href="#ementa">Ementa</a>
       <a href="#modulos">Módulos</a>
-      <a href="#m1">Fundamentos</a>
-      <a href="#m2">Arduino</a>
-      <a href="#m3">ESP32</a>
+      <a href="#m1">Arduino</a>
+      <a href="#m2">ESP32</a>
       <a href="#recursos">Recursos</a>
     </nav>
   </nav>
@@ -325,40 +324,17 @@
       <div class="section-tag">// Estrutura do Curso</div>
       <h2 class="section-title">Módulos da Disciplina</h2>
       <p class="section-desc">
-        40 semanas em 9 módulos — dos fundamentos de desenvolvimento até hardware físico com Arduino, ESP32 e o projeto final integrador multiplataforma com IoT.
+        40 semanas em 9 módulos — do hardware físico com Arduino até o projeto final integrador multiplataforma com IoT.
       </p>
     </div>
 
     <div class="modules-grid">
 
-      <!-- M1 — Fundamentos -->
-      <div class="mod-card" id="m1">
-        <div class="mod-accent a3"></div>
-        <div class="mod-body">
-          <div class="mod-number">MÓDULO 01 · SEMANAS 01–05</div>
-          <div class="mod-title">⚙️ Fundamentos & Nivelamento</div>
-          <div class="mod-desc">Bases essenciais para o desenvolvimento multiplataforma: controle de versão com Git, JavaScript moderno, TypeScript e arquiteturas de software.</div>
-          <div class="mod-tags">
-            <span class="tag">Git / GitHub</span>
-            <span class="tag">JS ES6+</span>
-            <span class="tag">TypeScript</span>
-            <span class="tag">Arquiteturas</span>
-          </div>
-          <ul class="week-list">
-            <li><a href="semana01.html"><span class="wk">S·01</span> Metodologias e Ambiente de Desenvolvimento<span class="ico">→</span></a></li>
-            <li><a href="semana02.html"><span class="wk">S·02</span> Git, GitHub e Controle de Versão<span class="ico">→</span></a></li>
-            <li><a href="semana03.html"><span class="wk">S·03</span> JavaScript ES6+ e TypeScript<span class="ico">→</span></a></li>
-            <li><a href="semana04.html"><span class="wk">S·04</span> Arquiteturas Multiplataforma<span class="ico">→</span></a></li>
-            <li><a href="semana05.html"><span class="wk">S·05</span> Fundamentos de Redes e Protocolos<span class="ico">→</span></a></li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- M2 — Arduino -->
-      <div class="mod-card iot-card" id="m2">
+      <!-- M1 — Arduino -->
+      <div class="mod-card iot-card" id="m1">
         <div class="mod-accent a1"></div>
         <div class="mod-body">
-          <div class="mod-number">MÓDULO 02 · SEMANAS 06–10</div>
+          <div class="mod-number">MÓDULO 01 · SEMANAS 01–05</div>
           <div class="iot-badge">Arduino · Sensores · Atuadores</div>
           <div class="mod-title">🔌 Hardware Embarcado: Arduino & Sensores</div>
           <div class="mod-desc">Primeiro contato com eletrônica embarcada: Arduino UNO, protoboard, sensores analógicos/digitais, atuadores e lógica em C/C++. Base física indispensável para o ecossistema IoT.</div>
@@ -370,20 +346,20 @@
             <span class="tag iot">Protoboard</span>
           </div>
           <ul class="week-list">
-            <li><a href="semana06.html" class="iot-link"><span class="wk">S·06</span> Arduino — IDE, pinagem e primeiro sketch<span class="ico">→</span></a></li>
-            <li><a href="semana07.html" class="iot-link"><span class="wk">S·07</span> Saídas digitais — LEDs, buzzer e relé<span class="ico">→</span></a></li>
-            <li><a href="semana08.html" class="iot-link"><span class="wk">S·08</span> Entradas digitais — botões e pull-up/down<span class="ico">→</span></a></li>
-            <li><a href="semana09.html" class="iot-link"><span class="wk">S·09</span> Sensores analógicos — temperatura, luz e umidade<span class="ico">→</span></a></li>
-            <li><a href="semana10.html" class="iot-link"><span class="wk">S·10</span> Projeto: sistema de monitoramento com display<span class="ico">→</span></a></li>
+            <li><a href="semana01.html" class="iot-link"><span class="wk">S·01</span> Arduino — IDE, pinagem e primeiro sketch<span class="ico">→</span></a></li>
+            <li><a href="semana02.html" class="iot-link"><span class="wk">S·02</span> Saídas digitais — LEDs, buzzer e relé<span class="ico">→</span></a></li>
+            <li><a href="semana03.html" class="iot-link"><span class="wk">S·03</span> Entradas digitais — botões e pull-up/down<span class="ico">→</span></a></li>
+            <li><a href="semana04.html" class="iot-link"><span class="wk">S·04</span> Sensores analógicos — temperatura, luz e umidade<span class="ico">→</span></a></li>
+            <li><a href="semana05.html" class="iot-link"><span class="wk">S·05</span> Projeto: sistema de monitoramento com display<span class="ico">→</span></a></li>
           </ul>
         </div>
       </div>
 
-      <!-- M3 — ESP32 -->
-      <div class="mod-card iot-card" id="m3">
+      <!-- M2 — ESP32 -->
+      <div class="mod-card iot-card" id="m2">
         <div class="mod-accent a2"></div>
         <div class="mod-body">
-          <div class="mod-number">MÓDULO 03 · SEMANAS 11–17</div>
+          <div class="mod-number">MÓDULO 02 · SEMANAS 06–12</div>
           <div class="iot-badge">IoT · ESP32 · Wi-Fi · MQTT</div>
           <div class="mod-title">📡 Internet das Coisas com ESP32</div>
           <div class="mod-desc">Evolução do Arduino para o ESP32: Wi-Fi nativo, protocolo MQTT, brokers e integração de dados capturados com as camadas web e mobile.</div>
@@ -395,13 +371,36 @@
             <span class="tag iot">Arduino IDE</span>
           </div>
           <ul class="week-list">
-            <li><a href="esp32_missao_iot.html" class="iot-link"><span class="wk">S·11</span> ESP32 — Missão IoT: Pinagem e Ambiente<span class="ico">→</span></a></li>
-            <li><a href="esp32_missao_iot_v2.html" class="iot-link"><span class="wk">S·12</span> ESP32 — GPIO, Sensores e Atuadores<span class="ico">→</span></a></li>
-            <li><a href="projetosemana_02_esp32.html" class="iot-link"><span class="wk">S·13</span> Projeto: Conversor Decimal → Binário (LEDs)<span class="ico">→</span></a></li>
-            <li><a href="semana14.html" class="iot-link"><span class="wk">S·14</span> Comunicação Wi-Fi e HTTP com ESP32<span class="ico">→</span></a></li>
-            <li><a href="semana15.html" class="iot-link"><span class="wk">S·15</span> Protocolo MQTT e Brokers (Mosquitto)<span class="ico">→</span></a></li>
-            <li><a href="iot_embalagens_tutorial__2_.html" class="iot-link"><span class="wk">S·16</span> Maker Lab: 9 Projetos — Redução de Embalagens<span class="ico">→</span></a></li>
-            <li><a href="semana17.html" class="iot-link"><span class="wk">S·17</span> Integração IoT &harr; Backend / API REST<span class="ico">→</span></a></li>
+            <li><a href="esp32_missao_iot.html" class="iot-link"><span class="wk">S·06</span> ESP32 — Missão IoT: Pinagem e Ambiente<span class="ico">→</span></a></li>
+            <li><a href="esp32_missao_iot_v2.html" class="iot-link"><span class="wk">S·07</span> ESP32 — GPIO, Sensores e Atuadores<span class="ico">→</span></a></li>
+            <li><a href="projetosemana_02_esp32.html" class="iot-link"><span class="wk">S·08</span> Projeto: Conversor Decimal → Binário (LEDs)<span class="ico">→</span></a></li>
+            <li><a href="semana09.html" class="iot-link"><span class="wk">S·09</span> Comunicação Wi-Fi e HTTP com ESP32<span class="ico">→</span></a></li>
+            <li><a href="semana10.html" class="iot-link"><span class="wk">S·10</span> Protocolo MQTT e Brokers (Mosquitto)<span class="ico">→</span></a></li>
+            <li><a href="iot_embalagens_tutorial__2_.html" class="iot-link"><span class="wk">S·11</span> Maker Lab: 9 Projetos — Redução de Embalagens<span class="ico">→</span></a></li>
+            <li><a href="semana12.html" class="iot-link"><span class="wk">S·12</span> Integração IoT &harr; Backend / API REST<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M3 — Fundamentos -->
+      <div class="mod-card">
+        <div class="mod-accent a3"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 03 · SEMANAS 13–17</div>
+          <div class="mod-title">⚙️ Fundamentos & Nivelamento</div>
+          <div class="mod-desc">Bases essenciais para o desenvolvimento multiplataforma: controle de versão com Git, JavaScript moderno, TypeScript e arquiteturas de software.</div>
+          <div class="mod-tags">
+            <span class="tag">Git / GitHub</span>
+            <span class="tag">JS ES6+</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Arquiteturas</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="semana13.html"><span class="wk">S·13</span> Metodologias e Ambiente de Desenvolvimento<span class="ico">→</span></a></li>
+            <li><a href="semana14.html"><span class="wk">S·14</span> Git, GitHub e Controle de Versão<span class="ico">→</span></a></li>
+            <li><a href="semana15.html"><span class="wk">S·15</span> JavaScript ES6+ e TypeScript<span class="ico">→</span></a></li>
+            <li><a href="semana16.html"><span class="wk">S·16</span> Arquiteturas Multiplataforma<span class="ico">→</span></a></li>
+            <li><a href="semana17.html"><span class="wk">S·17</span> Fundamentos de Redes e Protocolos<span class="ico">→</span></a></li>
           </ul>
         </div>
       </div>
