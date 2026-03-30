@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia: Artigo Científico — IoT & Embalagens | FATEC Ourinhos 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ng:#39ff14;--nc:#00f5ff;--ny:#ffe600;--no:#ff6b35;--np:#b341ff;
+  --bg:#060d0a;--cb:#0b150f;--bdr:#162a1c;--tx:#d8ffe6;--tm:#6a9a78;
+  --xp:#0a1f0e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:linear-gradient(rgba(57,255,20,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(57,255,20,.03) 1px,transparent 1px);
+  background-size:40px 40px;z-index:0;pointer-events:none}
+
+/* HUD */
+.hud{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(6,13,10,.95);border-bottom:1px solid var(--ng);
+  padding:10px 28px;display:flex;align-items:center;gap:16px;
+  backdrop-filter:blur(10px);box-shadow:0 0 28px rgba(57,255,20,.18)}
+.hud-title{font-family:'Orbitron',sans-serif;font-size:.72em;color:var(--ng);
+  letter-spacing:3px;text-shadow:0 0 10px var(--ng);white-space:nowrap}
+.hud-sep{width:1px;height:26px;background:var(--bdr)}
+.xp-wrap{flex:1}
+.xp-lbl{font-size:.65em;color:var(--tm);font-family:'Share Tech Mono';margin-bottom:4px}
+.xp-track{height:7px;background:var(--bdr);border-radius:4px;overflow:hidden;border:1px solid rgba(57,255,20,.2)}
+.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--ng),var(--nc));
+  border-radius:4px;transition:width .9s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 8px var(--ng)}
+.hud-stat{display:flex;flex-direction:column;align-items:center;min-width:52px}
+.hud-stat-val{font-family:'Orbitron',sans-serif;font-size:1em;font-weight:700;
+  color:var(--ny);text-shadow:0 0 10px var(--ny)}
+.hud-stat-lbl{font-size:.58em;color:var(--tm);letter-spacing:1px}
+.miss-counter{background:rgba(57,255,20,.1);border:1px solid var(--ng);
+  border-radius:20px;padding:5px 14px;font-family:'Share Tech Mono';font-size:.82em;color:var(--ng)}
+
+/* MAIN */
+.main{position:relative;z-index:1;padding:90px 20px 80px;max-width:1000px;margin:0 auto}
+
+/* HERO */
+.hero{text-align:center;padding:48px 20px 36px}
+.hero-tag{display:inline-block;font-family:'Share Tech Mono';font-size:.72em;color:var(--nc);
+  letter-spacing:4px;border:1px solid var(--nc);padding:4px 16px;border-radius:2px;
+  margin-bottom:18px;text-shadow:0 0 10px var(--nc);box-shadow:0 0 12px rgba(0,245,255,.15)}
+.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.6em,5vw,3em);font-weight:900;
+  background:linear-gradient(135deg,#fff 0%,var(--ng) 50%,var(--nc) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.15;margin-bottom:14px;filter:drop-shadow(0 0 20px rgba(57,255,20,.4))}
+.hero-sub{color:var(--tm);font-size:1.05em;letter-spacing:.5px;max-width:640px;
+  margin:0 auto 28px;line-height:1.65}
+.hero-sub strong{color:var(--ny)}
+
+/* XP BAR HERO */
+.xpg{max-width:640px;margin:0 auto;background:var(--xp);border:1px solid var(--bdr);
+  border-radius:4px;padding:12px 20px}
+.xpl{display:flex;justify-content:space-between;font-family:'Orbitron',monospace;
+  font-size:.65em;color:var(--ny);margin-bottom:8px}
+.xpt{height:10px;background:#040c06;border-radius:5px;overflow:hidden;border:1px solid #0a1e0d}
+.xpf{height:100%;background:linear-gradient(90deg,var(--ng),var(--nc));border-radius:5px;
+  width:0%;animation:glow 2s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 6px var(--ng)}50%{box-shadow:0 0 18px var(--ng)}}
+
+/* WRAP */
+.wrap{max-width:1000px;margin:0 auto;padding:0 0 80px;position:relative;z-index:1}
+
+/* SECTION LABEL */
+.sl-lbl{font-family:'Orbitron',monospace;font-size:.58em;letter-spacing:4px;color:var(--tm);
+  text-transform:uppercase;margin:44px 0 18px;display:flex;align-items:center;gap:12px}
+.sl-lbl::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+/* MISSION CARD */
+.mc{background:var(--cb);border:1px solid var(--bdr);border-radius:16px;
+  margin-bottom:24px;overflow:hidden;transition:border-color .3s,transform .2s}
+.mc:hover{border-color:rgba(57,255,20,.4);transform:translateY(-2px)}
+.mh{display:flex;align-items:center;gap:14px;padding:20px 24px;cursor:pointer;
+  border-bottom:1px solid transparent;transition:all .3s;user-select:none}
+.mh:hover{background:rgba(57,255,20,.03);border-bottom-color:var(--bdr)}
+.mh.active{border-bottom-color:var(--ng);background:rgba(57,255,20,.05)}
+.mbadge{width:54px;height:54px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:1.65em;flex-shrink:0;border:2px solid}
+.m1 .mbadge{background:rgba(57,255,20,.09);border-color:var(--ng)}
+.m2 .mbadge{background:rgba(0,245,255,.09);border-color:var(--nc)}
+.m3 .mbadge{background:rgba(255,230,0,.09);border-color:var(--ny)}
+.m4 .mbadge{background:rgba(255,107,53,.09);border-color:var(--no)}
+.m5 .mbadge{background:rgba(179,65,255,.1);border-color:var(--np)}
+.m6 .mbadge{background:rgba(57,255,20,.09);border-color:var(--ng)}
+.mm{flex:1}
+.mw{font-family:'Orbitron',monospace;font-size:.57em;letter-spacing:2px;color:var(--tm);
+  text-transform:uppercase;margin-bottom:4px}
+.mt{font-weight:700;font-size:1.06em;color:var(--tx);margin-bottom:3px}
+.ms-sub{font-size:.84em;color:var(--tm)}
+.mxp{font-family:'Orbitron',monospace;font-size:.75em;font-weight:700;
+  padding:5px 13px;border-radius:20px;flex-shrink:0;border:1px solid}
+.m1 .mxp{color:var(--ng);border-color:var(--ng);background:rgba(57,255,20,.07)}
+.m2 .mxp{color:var(--nc);border-color:var(--nc);background:rgba(0,245,255,.07)}
+.m3 .mxp{color:var(--ny);border-color:var(--ny);background:rgba(255,230,0,.07)}
+.m4 .mxp{color:var(--no);border-color:var(--no);background:rgba(255,107,53,.08)}
+.m5 .mxp{color:var(--np);border-color:var(--np);background:rgba(179,65,255,.08)}
+.m6 .mxp{color:var(--ng);border-color:var(--ng);background:rgba(57,255,20,.07)}
+.mchev{font-size:1.1em;color:var(--tm);transition:transform .3s;margin-left:6px}
+.mh.active .mchev{transform:rotate(90deg)}
+.mbody{display:none;padding:28px 28px 32px;animation:fi .22s ease}
+.mbody.open{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+/* STEPS */
+.steps{counter-reset:s}
+.step{display:flex;gap:14px;margin-bottom:20px;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:18px;top:38px;
+  width:2px;height:calc(100% - 8px);background:var(--bdr)}
+.snum{width:36px;height:36px;border-radius:50%;background:var(--bg);
+  border:2px solid var(--ng);display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:.75em;font-weight:700;
+  color:var(--ng);flex-shrink:0;position:relative;z-index:1}
+.scont{padding-top:5px;flex:1}
+.scont h4{font-size:.97em;font-weight:700;color:var(--tx);margin-bottom:7px}
+.scont p{font-size:.89em;color:#5a8866;line-height:1.8;margin-bottom:8px}
+.scont ul,.scont ol{padding-left:20px}
+.scont li{font-size:.89em;color:#5a8866;line-height:1.75;margin-bottom:5px}
+.scont li strong{color:#80b890}
+.scont b{color:#80b890}
+
+/* OBJECTIVE BOX */
+.ob{background:rgba(57,255,20,.04);border:1px solid rgba(57,255,20,.22);
+  border-radius:10px;padding:18px 22px;margin:0 0 22px}
+.ol{font-family:'Orbitron',monospace;font-size:.56em;letter-spacing:2px;
+  color:var(--ng);margin-bottom:8px;font-weight:700}
+.ob p{font-size:.88em;color:#60a870;line-height:1.75;margin-bottom:6px}
+.ob ul{padding-left:18px}
+.ob li{font-size:.87em;color:#50986a;line-height:1.75;margin-bottom:4px}
+.ob li strong{color:#70b880}
+
+/* TIPS */
+.tip{background:rgba(255,230,0,.05);border:1px solid rgba(255,230,0,.28);
+  border-radius:8px;padding:11px 15px;margin:10px 0;font-size:.86em;color:#a09030;line-height:1.65}
+.tip strong{color:var(--ny)}
+.wrn{background:rgba(255,107,53,.05);border:1px solid rgba(255,107,53,.28);
+  border-radius:8px;padding:11px 15px;margin:10px 0;font-size:.86em;color:#a06030;line-height:1.65}
+.wrn strong{color:var(--no)}
+.note{background:rgba(0,245,255,.04);border:1px solid rgba(0,245,255,.2);
+  border-radius:8px;padding:11px 15px;margin:10px 0;font-size:.86em;color:#307880;line-height:1.65}
+.note strong{color:var(--nc)}
+.pitch{background:rgba(57,255,20,.04);border:1px solid rgba(57,255,20,.25);
+  border-radius:8px;padding:11px 15px;margin:10px 0;font-size:.86em;color:#407850;line-height:1.65}
+.pitch strong{color:var(--ng)}
+
+/* CODE BLOCK */
+.cb-wrap{background:#040e06;border:1px solid #0a1e0d;border-radius:10px;overflow:hidden;margin:12px 0}
+.cb-head{background:#071409;padding:7px 15px;display:flex;align-items:center;gap:8px;
+  font-size:.66em;color:var(--tm);letter-spacing:1px;border-bottom:1px solid #0a1e0d;
+  font-family:'Share Tech Mono',monospace;justify-content:space-between}
+.cb-dots{display:flex;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+.d1{background:#ff5f57}.d2{background:#febc2e}.d3{background:#28c840}
+.cb-lang{color:var(--ng);letter-spacing:2px}
+.copy-btn{font-family:'Orbitron',monospace;font-size:.58em;padding:3px 10px;
+  border:1px solid var(--ng);border-radius:4px;color:var(--ng);
+  background:transparent;cursor:pointer;letter-spacing:1px;transition:background .2s}
+.copy-btn:hover{background:rgba(57,255,20,.15)}
+.cb-code{padding:16px 20px;font-family:'Share Tech Mono',monospace;font-size:.82em;
+  color:#80c890;line-height:1.9;white-space:pre-wrap;overflow-x:auto}
+.cb-code .kw{color:var(--nc)}.cb-code .str{color:var(--ny)}.cb-code .cmt{color:#1e4028;font-style:italic}
+.cb-code .fn{color:var(--ng)}.cb-code .pp{color:var(--no)}
+
+/* TEXT BLOCK (modelo de escrita) */
+.txt-block{background:rgba(0,245,255,.03);border:1px dashed rgba(0,245,255,.3);
+  border-radius:10px;padding:16px 20px;margin:12px 0}
+.txt-lbl{font-family:'Orbitron',monospace;font-size:.56em;letter-spacing:2px;
+  color:var(--nc);margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:8px}
+.txt-content{font-family:'Share Tech Mono',monospace;font-size:.84em;color:#a0d0b0;
+  line-height:1.85;background:rgba(0,0,0,.35);padding:12px 15px;border-radius:6px;
+  border-left:3px solid var(--nc);display:flex;justify-content:space-between;
+  align-items:flex-start;gap:10px}
+.txt-content span{flex:1}
+.txt-foot{font-size:.78em;color:var(--tm);margin-top:10px;line-height:1.6}
+.txt-foot strong{color:#508a68}
+
+/* TOPIC GRID */
+.tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:10px;margin:14px 0}
+.tgc{background:rgba(255,255,255,.02);border:1px solid var(--bdr);border-radius:10px;
+  padding:15px;transition:border-color .3s,background .3s}
+.tgc:hover{border-color:var(--ny);background:rgba(255,230,0,.03)}
+.tl{font-family:'Orbitron',monospace;font-size:.54em;letter-spacing:2px;
+  color:var(--ny);margin-bottom:6px}
+.tgc h4{font-size:.88em;font-weight:700;color:var(--tx);margin-bottom:4px}
+.tgc p{font-size:.77em;color:var(--tm);line-height:1.6}
+
+/* PROJ TABLE */
+.proj-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.86em}
+.proj-table th{background:rgba(57,255,20,.12);color:var(--ng);font-family:'Orbitron',monospace;
+  font-size:.6em;letter-spacing:2px;padding:10px 14px;text-align:left;
+  border:1px solid rgba(57,255,20,.2)}
+.proj-table td{padding:9px 14px;border:1px solid var(--bdr);color:#80a890;vertical-align:top;line-height:1.55}
+.proj-table tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.proj-table td:first-child{color:var(--ng);font-family:'Share Tech Mono',monospace;font-weight:700}
+.proj-table td:nth-child(2){color:var(--nc);font-family:'Share Tech Mono',monospace}
+
+/* CHECKLIST */
+.cl{list-style:none;padding:0;margin:14px 0}
+.cl li{display:flex;align-items:flex-start;gap:10px;font-size:.87em;color:#406850;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.025)}
+.cl li .ck{width:20px;height:20px;border:2px solid var(--ng);border-radius:4px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .2s;font-size:.8em;color:var(--ng);margin-top:1px}
+.cl li .ck:hover{background:rgba(57,255,20,.18)}
+.cl li .ck.done{background:rgba(57,255,20,.25)}
+
+/* MILESTONE */
+.mile{background:linear-gradient(135deg,rgba(57,255,20,.05),rgba(0,245,255,.05));
+  border:1px solid rgba(57,255,20,.2);border-radius:10px;padding:16px 20px;
+  margin:22px 0;display:flex;align-items:center;gap:14px}
+.mile-i{font-size:1.9em;flex-shrink:0}
+.mile h4{font-family:'Orbitron',monospace;font-size:.7em;letter-spacing:1px;
+  color:var(--ng);margin-bottom:4px}
+.mile p{font-size:.84em;color:var(--tm);line-height:1.6}
+
+/* NAV PILLS */
+.nav-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px}
+.nav-pill{font-family:'Orbitron',monospace;font-size:.58em;letter-spacing:1px;
+  padding:6px 13px;border:1px solid var(--bdr);border-radius:20px;color:var(--tm);
+  cursor:pointer;transition:all .2s;text-decoration:none}
+.nav-pill:hover{border-color:var(--ng);color:var(--ng);background:rgba(57,255,20,.05)}
+
+/* INTRO CARD */
+.intro{background:linear-gradient(135deg,rgba(57,255,20,.06),rgba(0,245,255,.04));
+  border:1px solid var(--bdr);border-radius:14px;padding:28px;margin-bottom:38px;position:relative;overflow:hidden}
+.intro::before{content:'🌿';position:absolute;right:22px;top:18px;font-size:4em;opacity:.07}
+.intro h2{font-family:'Orbitron',monospace;color:var(--ng);font-size:.82em;
+  letter-spacing:2px;margin-bottom:12px}
+.intro p{color:#608870;line-height:1.85;margin-bottom:10px;font-size:.95em}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.chip{font-family:'Share Tech Mono',monospace;font-size:.73em;padding:3px 11px;
+  border-radius:20px;border:1px solid;letter-spacing:1px}
+.cg{color:var(--ng);border-color:var(--ng);background:rgba(57,255,20,.06)}
+.cc{color:var(--nc);border-color:var(--nc);background:rgba(0,245,255,.06)}
+.cy{color:var(--ny);border-color:var(--ny);background:rgba(255,230,0,.06)}
+.co{color:var(--no);border-color:var(--no);background:rgba(255,107,53,.06)}
+
+/* FINAL CARD */
+.fc{background:radial-gradient(ellipse at center,rgba(57,255,20,.12),rgba(0,0,0,0) 70%),var(--cb);
+  border:1px solid var(--ng);border-radius:14px;padding:44px;text-align:center;margin-top:44px;
+  box-shadow:0 0 40px rgba(57,255,20,.1)}
+.fc h2{font-family:'Orbitron',monospace;font-size:1.3em;color:var(--ng);
+  text-shadow:0 0 20px var(--ng);margin-bottom:12px}
+.fc p{color:var(--tm);max-width:520px;margin:0 auto 16px;line-height:1.8}
+.tr{font-size:3.8em;margin-bottom:14px;display:block;animation:fl 3s ease-in-out infinite}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--cb);border:1px solid var(--ng);border-radius:8px;
+  padding:12px 18px;display:flex;align-items:center;gap:12px;
+  box-shadow:0 0 20px rgba(57,255,20,.18);
+  animation:tin .3s ease;min-width:220px}
+.toast.out{animation:tout .35s ease forwards}
+@keyframes tin{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tout{to{opacity:0;transform:translateY(20px)}}
+.toast-icon{font-size:1.4em}
+.toast-body{display:flex;flex-direction:column}
+.toast-body strong{font-family:'Orbitron',monospace;font-size:.66em;letter-spacing:1px;color:var(--ng)}
+.toast-body span{font-size:.78em;color:var(--tm)}
+
+code{font-family:'Share Tech Mono',monospace;background:rgba(57,255,20,.08);
+  padding:2px 7px;border-radius:4px;font-size:.9em;color:var(--ng)}
+
+@media(max-width:620px){
+  .mh{flex-wrap:wrap}.mxp{order:3}.hud-title{font-size:.6em}
+  .mbody{padding:16px 16px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- HUD -->
+<div class="hud">
+  <div class="hud-title">🌿 IOT MAKER LAB</div>
+  <div class="hud-sep"></div>
+  <div class="xp-wrap">
+    <div class="xp-lbl">PROGRESSO DO ARTIGO</div>
+    <div class="xp-track"><div class="xp-fill" id="hudBar"></div></div>
+  </div>
+  <div class="hud-sep"></div>
+  <div class="hud-stat">
+    <div class="hud-stat-val" id="hudXP">0</div>
+    <div class="hud-stat-lbl">XP</div>
+  </div>
+  <div class="miss-counter" id="hudMiss">0 / 6</div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<div class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">PROGRAMAÇÃO COM IOT · ESP32 · FATEC OURINHOS · 2026</div>
+  <h1 class="hero-title">GUIA: ARTIGO CIENTÍFICO<br>IoT & Embalagens</h1>
+  <p class="hero-sub">Transforme os <strong>9 projetos IoT para redução de embalagens</strong> em um artigo científico completo no padrão FATEC. 6 missões passo a passo — do Resumo à Conclusão.</p>
+  <div class="xpg">
+    <div class="xpl"><span>⚡ PROGRESS</span><span id="xpDisp">0 / 600 XP</span></div>
+    <div class="xpt"><div class="xpf" id="xpBar"></div></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- INTRO CARD -->
+<div class="intro">
+  <h2>🌿 SOBRE ESTE GUIA</h2>
+  <p>Ao longo do semestre, sua turma desenvolveu <strong style="color:var(--ng)">9 protótipos IoT com ESP32</strong> para atacar o problema do desperdício de embalagens no e-commerce. Este guia transforma esse trabalho prático em um <strong style="color:var(--ng)">artigo científico coletivo</strong>: cada seção corresponde a uma missão que você abre e conclui.</p>
+  <p>O artigo documentará todos os 9 projetos como um sistema integrado de soluções, mostrando como IoT pode ser aplicada à sustentabilidade logística. Use o template FATEC/Overleaf fornecido pelo professor.</p>
+  <div class="chips">
+    <span class="chip cg">ESP32</span>
+    <span class="chip cg">Arduino C++</span>
+    <span class="chip cc">DHT22 · HC-SR04 · RFID</span>
+    <span class="chip cc">MPU6050 · BLE · Servo</span>
+    <span class="chip cy">Sustentabilidade</span>
+    <span class="chip co">e-commerce</span>
+    <span class="chip cg">Padrão FATEC/ABNT</span>
+  </div>
+</div>
+
+<!-- NAV PILLS -->
+<div class="nav-pills">
+  <a class="nav-pill" href="#m1">M1 · Resumo &amp; Abstract</a>
+  <a class="nav-pill" href="#m2">M2 · Introdução &amp; Objetivos</a>
+  <a class="nav-pill" href="#m3">M3 · Referencial Teórico</a>
+  <a class="nav-pill" href="#m4">M4 · Metodologia</a>
+  <a class="nav-pill" href="#m5">M5 · Resultados</a>
+  <a class="nav-pill" href="#m6">M6 · Conclusão &amp; Referências</a>
+</div>
+
+<!-- VISÃO GERAL DOS 9 PROJETOS -->
+<div class="sl-lbl">MAPA DOS 9 PROJETOS — VISÃO INTEGRADA</div>
+<div style="background:var(--cb);border:1px solid var(--bdr);border-radius:14px;padding:24px 26px;margin-bottom:28px">
+  <div style="font-family:'Orbitron',monospace;font-size:.6em;letter-spacing:3px;color:var(--ng);margin-bottom:14px">⚡ SEU ARTIGO ABRANGE ESTES 9 PROTÓTIPOS</div>
+  <table class="proj-table">
+    <thead><tr><th>PROJETO</th><th>SENSOR / TECH</th><th>PROBLEMA ATACADO</th><th>IMPACTO</th></tr></thead>
+    <tbody>
+      <tr><td>P1 🌱 Micélio</td><td>DHT22 + Solo</td><td>Crescimento de embalagem biodegradável</td><td>Substitui isopor em 30 dias</td></tr>
+      <tr><td>P2 📦 Espaço Vazio</td><td>HC-SR04</td><td>40% do volume da caixa é ar</td><td>Elimina plástico bolha</td></tr>
+      <tr><td>P3 🔖 Smart Tag</td><td>MFRC522 (RFID)</td><td>Embalagem sem identidade digital</td><td>Rastreia 50 ciclos de reuso</td></tr>
+      <tr><td>P4 🔒 Lacre Digital</td><td>Servo + Reed Switch</td><td>1,5 m de fita plástica por envio</td><td>Elimina fita completamente</td></tr>
+      <tr><td>P5 📐 Cubagem 3D</td><td>3× HC-SR04</td><td>Caixa sempre maior que o necessário</td><td>Escolha automática da menor caixa</td></tr>
+      <tr><td>P6 📡 Beacon BLE</td><td>BLE (ESP32)</td><td>Baixa taxa de devolução de embalagens</td><td>+300% de retorno com gamificação</td></tr>
+      <tr><td>P7 📈 Integridade</td><td>MPU6050</td><td>Embalagens grossas por falta de dados</td><td>Justifica embalagem 20% mais leve</td></tr>
+      <tr><td>P8 💡 Semáforo</td><td>LED RGB</td><td>Sem feedback visual ao operador</td><td>Alerta em tempo real no galpão</td></tr>
+      <tr><td>P9 🖥️ Dashboard</td><td>Wi-Fi + OLED</td><td>Dados isolados por protótipo</td><td>Painel integrado de todos os dados</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><strong>📌 No artigo:</strong> os 9 projetos são apresentados como um <em>sistema modular integrado</em> — não como 9 trabalhos separados. A narrativa do artigo conecta todos eles em torno de um único objetivo: reduzir o desperdício de embalagens no e-commerce usando IoT.</div>
+</div>
+
+<!-- ===== MISSÃO 1 ===== -->
+<div class="sl-lbl" id="m1">MISSÃO 01 — RESUMO & ABSTRACT</div>
+<div class="mc m1">
+  <div class="mh" onclick="tog(this)">
+    <div class="mbadge">📋</div>
+    <div class="mm">
+      <div class="mw">MISSÃO 01 · APRESENTAÇÃO</div>
+      <div class="mt">Redigir o Resumo em Português e o Abstract em Inglês</div>
+      <div class="ms-sub">A porta de entrada do seu artigo — deve sintetizar problema, método, projetos e resultados</div>
+    </div>
+    <div class="mxp">+100 XP</div>
+    <div class="mchev">&#9658;</div>
+  </div>
+  <div class="mbody">
+    <div class="ob">
+      <div class="ol">🎯 OBJETIVO DESTA MISSÃO</div>
+      <p>Ao concluir esta missão, você terá um Resumo em português e um Abstract em inglês com <strong>150 a 250 palavras cada</strong>, cobrindo: contexto do problema, objetivo geral, os 9 projetos IoT desenvolvidos, metodologia (ESP32 + prototipagem), principais resultados e contribuição.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="snum">1</div>
+        <div class="scont">
+          <h4>Entenda a estrutura obrigatória do Resumo FATEC</h4>
+          <p>O resumo do template FATEC segue o padrão ABNT NBR 6028. Ele deve ser redigido em <strong>um único parágrafo</strong>, sem tópicos, sem recuo, em espaçamento simples. Ao final, vêm as <strong>palavras-chave</strong> separadas por ponto.</p>
+          <div class="tg">
+            <div class="tgc"><div class="tl">PARTE 1</div><h4>Contexto &amp; Problema</h4><p>1–2 frases situando o problema do desperdício de embalagens no e-commerce brasileiro</p></div>
+            <div class="tgc"><div class="tl">PARTE 2</div><h4>Objetivo</h4><p>1 frase com o objetivo geral: desenvolver 9 protótipos IoT com ESP32 para redução de embalagens</p></div>
+            <div class="tgc"><div class="tl">PARTE 3</div><h4>Metodologia</h4><p>2–3 frases: ESP32, sensores utilizados, Arduino IDE, Sala Maker, Wokwi para simulação</p></div>
+            <div class="tgc"><div class="tl">PARTE 4</div><h4>Resultados</h4><p>2–3 frases com os resultados dos projetos — dados do Monitor Serial, métricas de impacto</p></div>
+            <div class="tgc"><div class="tl">PARTE 5</div><h4>Conclusão</h4><p>1–2 frases sobre a contribuição: IoT aplicada à sustentabilidade logística</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">2</div>
+        <div class="scont">
+          <h4>Modelo de Resumo — adapte para o seu grupo</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO DE RESUMO (copie e edite)</div>
+            <div class="txt-content">
+              <span>O crescente volume do comércio eletrônico brasileiro gera um desperdício expressivo de embalagens: caixas superdimensionadas, fita adesiva de uso único e materiais de preenchimento que raramente são reciclados. Este trabalho apresenta o desenvolvimento de nove protótipos de Internet das Coisas (IoT) baseados no microcontrolador ESP32 para atacar esse problema sob perspectivas complementares. Os projetos foram construídos com sensores de temperatura e umidade (DHT22), sensores ultrassônicos (HC-SR04), leitor RFID (MFRC522), acelerômetro (MPU6050), servo motor e Bluetooth Low Energy, programados em C++ no ambiente Arduino IDE. Os protótipos foram simulados na plataforma Wokwi e montados na Sala Maker da FATEC Ourinhos. Os resultados obtidos pelo Monitor Serial demonstraram: monitoramento de condições ideais para embalagens de micélio, detecção de espaço vazio em caixas, rastreamento de ciclos de reuso por RFID, substituição da fita adesiva por lacre digital, medição tridimensional de produtos, localização BLE de pontos de coleta, registro de impactos durante transporte e visualização integrada dos dados. Conclui-se que a IoT oferece soluções práticas e de baixo custo para reduzir o desperdício de embalagens no e-commerce, com potencial de escalabilidade industrial.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 0)">COPIAR</button>
+            </div>
+            <div class="txt-foot"><strong>Palavras-chave:</strong> Internet das Coisas. ESP32. Embalagens Sustentáveis. E-commerce. Prototipagem.</div>
+          </div>
+          <div class="tip"><strong>💡 Atenção:</strong> No template FATEC as palavras-chave são separadas por <strong>ponto</strong> (não ponto e vírgula), conforme ABNT NBR 6028. Sugestão: <em>Internet das Coisas. ESP32. Embalagens Sustentáveis. E-commerce. Sustentabilidade.</em></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">3</div>
+        <div class="scont">
+          <h4>Traduzir para o Abstract (inglês)</h4>
+          <p>O Abstract é uma tradução fiel do Resumo — não um resumo diferente. Use o mesmo parágrafo único. As keywords seguem o mesmo padrão: separadas por ponto, em inglês.</p>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO DE ABSTRACT (copie e edite)</div>
+            <div class="txt-content">
+              <span>The growing volume of Brazilian e-commerce generates significant packaging waste: oversized boxes, single-use adhesive tape, and filling materials that are rarely recycled. This paper presents the development of nine Internet of Things (IoT) prototypes based on the ESP32 microcontroller to address this problem from complementary perspectives. The projects were built using temperature and humidity sensors (DHT22), ultrasonic sensors (HC-SR04), RFID reader (MFRC522), accelerometer (MPU6050), servo motor and Bluetooth Low Energy, programmed in C++ on the Arduino IDE. Prototypes were simulated on the Wokwi platform and assembled at the FATEC Ourinhos Maker Lab. Serial Monitor results demonstrated: monitoring of ideal conditions for mycelium packaging, detection of empty space in boxes, RFID reuse cycle tracking, replacement of adhesive tape with a digital seal, three-dimensional product measurement, BLE location of collection points, impact recording during transport, and integrated data visualization. It is concluded that IoT offers practical, low-cost solutions to reduce packaging waste in e-commerce, with industrial scalability potential.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 1)">COPIAR</button>
+            </div>
+            <div class="txt-foot"><strong>Keywords:</strong> Internet of Things. ESP32. Sustainable Packaging. E-commerce. Sustainability.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">4</div>
+        <div class="scont">
+          <h4>Inserir no template Overleaf</h4>
+          <p>No seu <code>main.tex</code>, localize os ambientes de resumo. O template FATEC usa comandos específicos:</p>
+          <div class="cb-wrap">
+            <div class="cb-head"><div class="cb-dots"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div><span class="cb-lang">LaTeX / main.tex — Resumo</span><button class="copy-btn" onclick="cpCode(this)">COPIAR</button></div>
+            <div class="cb-code"><span class="cmt">% ── RESUMO (português) ──────────────────────────────</span>
+\begin{resumoumacoluna}
+  O crescente volume do comércio eletrônico...
+  <span class="cmt">% (cole aqui o seu resumo completo)</span>
+
+  \vspace{\onelineskip}
+  \noindent
+  \textbf{Palavras-chave}: Internet das Coisas. ESP32.
+  Embalagens Sustentáveis. E-commerce. Sustentabilidade.
+\end{resumoumacoluna}
+
+<span class="cmt">% ── ABSTRACT (inglês) ───────────────────────────────</span>
+\renewcommand{\resumoname}{ABSTRACT}
+\begin{resumoumacoluna}
+  \begin{otherlanguage*}{english}
+    \textit{The growing volume of Brazilian e-commerce...}
+    <span class="cmt">% (cole aqui o seu abstract completo em itálico)</span>
+
+    \vspace{\onelineskip}
+    \noindent
+    \textbf{Keywords}: \textit{Internet of Things. ESP32.
+    Sustainable Packaging. E-commerce. Sustainability.}
+  \end{otherlanguage*}
+\end{resumoumacoluna}</div>
+          </div>
+          <div class="wrn"><strong>⚠️ Atenção:</strong> O nome dos ambientes (<code>resumoumacoluna</code>, <code>otherlanguage*</code>) pode variar conforme a versão do template FATEC. Adapte ao que você vê no seu <code>main.tex</code>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mile"><div class="mile-i">🏅</div><div><h4>MISSÃO 01 CONCLUÍDA</h4><p>Resumo e Abstract redigidos e inseridos no Overleaf. Siga para a Missão 02.</p></div></div>
+    <button class="complete-btn-m" id="cbtn0" onclick="completeM(0)">✓ MARCAR MISSÃO 01 COMO CONCLUÍDA</button>
+  </div>
+</div>
+
+<!-- ===== MISSÃO 2 ===== -->
+<div class="sl-lbl" id="m2">MISSÃO 02 — INTRODUÇÃO & OBJETIVOS</div>
+<div class="mc m2">
+  <div class="mh" onclick="tog(this)">
+    <div class="mbadge">🎯</div>
+    <div class="mm">
+      <div class="mw">MISSÃO 02 · ABERTURA DO ARTIGO</div>
+      <div class="mt">Redigir a Introdução e os Objetivos (Geral e Específicos)</div>
+      <div class="ms-sub">Contextualiza o problema, justifica a pesquisa e define o que o artigo se propõe a provar</div>
+    </div>
+    <div class="mxp">+100 XP</div>
+    <div class="mchev">&#9658;</div>
+  </div>
+  <div class="mbody">
+    <div class="ob">
+      <div class="ol">🎯 OBJETIVO DESTA MISSÃO</div>
+      <p>Ao concluir esta missão, você terá uma Introdução de <strong>1 a 1,5 página</strong> que contextualiza o problema das embalagens no e-commerce, justifica o uso de IoT e apresenta a organização do artigo. Também terá definido <strong>1 objetivo geral</strong> e <strong>5 objetivos específicos</strong> (um por cluster de projetos).</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="snum">1</div>
+        <div class="scont">
+          <h4>Estruture a Introdução em 4 blocos</h4>
+          <div class="tg">
+            <div class="tgc"><div class="tl">BLOCO 1 — Cenário</div><h4>O Problema</h4><p>Dados sobre desperdício de embalagens no e-commerce brasileiro. Cite números: toneladas de papelão, plástico por envio, etc.</p></div>
+            <div class="tgc"><div class="tl">BLOCO 2 — Justificativa</div><h4>Por que IoT?</h4><p>Como a tecnologia IoT permite monitorar, rastrear e automatizar processos logísticos de forma acessível</p></div>
+            <div class="tgc"><div class="tl">BLOCO 3 — Proposta</div><h4>Os 9 Projetos</h4><p>Apresentação do conjunto de protótipos como resposta sistêmica ao problema. Mencione ESP32 e Sala Maker</p></div>
+            <div class="tgc"><div class="tl">BLOCO 4 — Organização</div><h4>Estrutura do Artigo</h4><p>"Este artigo está organizado da seguinte forma: a Seção 2 apresenta o referencial teórico..."</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">2</div>
+        <div class="scont">
+          <h4>Modelo de Introdução — parágrafo inicial</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Bloco 1 &amp; 2 da Introdução</div>
+            <div class="txt-content">
+              <span>O crescimento acelerado do comércio eletrônico no Brasil impõe desafios ambientais significativos. Segundo dados do setor, cada pedido online consome, em média, mais de dois metros de fita adesiva plástica, volumes consideráveis de plástico bolha e caixas frequentemente superdimensionadas em relação ao produto transportado (ABDI, 2023). A maior parte desses materiais não é reciclável e segue diretamente para aterros sanitários, contribuindo para a degradação ambiental. Nesse contexto, a Internet das Coisas (IoT) emerge como uma abordagem promissora: ao incorporar sensores e microcontroladores em processos logísticos, é possível monitorar, otimizar e automatizar decisões de empacotamento em tempo real, com custo acessível e alta escalabilidade.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 2)">COPIAR</button>
+            </div>
+          </div>
+          <div class="txt-block" style="margin-top:10px">
+            <div class="txt-lbl">📄 MODELO — Bloco 3 &amp; 4 da Introdução</div>
+            <div class="txt-content">
+              <span>Este trabalho apresenta o desenvolvimento de nove protótipos IoT com ESP32, construídos na Sala Maker da FATEC Ourinhos durante a disciplina de Programação com IoT. Cada protótipo ataca uma dimensão específica do problema das embalagens: desde o monitoramento de cultivo de embalagens biodegradáveis de micélio até a rastreabilidade por RFID, passando pela medição tridimensional automática de produtos e pelo lacre digital reutilizável. Os projetos foram desenvolvidos com sensores de baixo custo, programados em C++ no ambiente Arduino IDE, simulados na plataforma Wokwi e montados fisicamente com peças fabricadas por impressão 3D e corte a laser. Este artigo está organizado da seguinte forma: a Seção 2 apresenta o referencial teórico sobre IoT e sustentabilidade; a Seção 3 descreve a metodologia de desenvolvimento; a Seção 4 apresenta os resultados; e a Seção 5 traz as conclusões.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 3)">COPIAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">3</div>
+        <div class="scont">
+          <h4>Definir Objetivo Geral e Objetivos Específicos</h4>
+          <p>No template FATEC, os objetivos vêm dentro da Introdução ou em subseção própria (<code>\subsection</code>). O objetivo geral é amplo; os específicos são mensuráveis e correspondem ao que cada grupo de projetos entrega.</p>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Objetivo Geral</div>
+            <div class="txt-content">
+              <span>Este trabalho tem como objetivo geral desenvolver e avaliar um conjunto de nove protótipos IoT baseados no microcontrolador ESP32 para redução do desperdício de embalagens no comércio eletrônico, utilizando sensores de baixo custo e técnicas de prototipagem rápida em ambiente de sala maker.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 4)">COPIAR</button>
+            </div>
+          </div>
+          <div class="txt-block" style="margin-top:10px">
+            <div class="txt-lbl">📄 MODELO — Objetivos Específicos</div>
+            <div class="txt-content">
+              <span>São objetivos específicos deste trabalho:
+a) Implementar um sistema de monitoramento ambiental para cultivo de embalagens biodegradáveis de micélio com ESP32 e sensores DHT22 e de umidade de solo;
+b) Desenvolver protótipos de detecção e otimização de espaço interno de embalagens utilizando sensores ultrassônicos HC-SR04;
+c) Criar um sistema de rastreabilidade de embalagens retornáveis baseado em RFID (MFRC522) para contagem de ciclos de reuso;
+d) Projetar mecanismos de lacre digital e medição tridimensional automatizada como alternativas ao uso de fita adesiva plástica;
+e) Implementar soluções de logística circular com Bluetooth Low Energy (BLE) e monitoramento de integridade de carga com acelerômetro MPU6050.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 5)">COPIAR</button>
+            </div>
+          </div>
+          <div class="tip"><strong>💡 No LaTeX:</strong> Use <code>\begin{enumerate}[a)]</code> para a lista de objetivos específicos com letras.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mile"><div class="mile-i">🏅</div><div><h4>MISSÃO 02 CONCLUÍDA</h4><p>Introdução e objetivos prontos. Agora o leitor sabe exatamente o que esperar do artigo.</p></div></div>
+    <button class="complete-btn-m" id="cbtn1" onclick="completeM(1)">✓ MARCAR MISSÃO 02 COMO CONCLUÍDA</button>
+  </div>
+</div>
+
+<!-- ===== MISSÃO 3 ===== -->
+<div class="sl-lbl" id="m3">MISSÃO 03 — REFERENCIAL TEÓRICO</div>
+<div class="mc m3">
+  <div class="mh" onclick="tog(this)">
+    <div class="mbadge">📚</div>
+    <div class="mm">
+      <div class="mw">MISSÃO 03 · FUNDAMENTAÇÃO</div>
+      <div class="mt">Construir o Referencial Teórico: IoT, ESP32 e Sustentabilidade</div>
+      <div class="ms-sub">4 subseções com base em artigos científicos — dá credibilidade acadêmica ao trabalho prático</div>
+    </div>
+    <div class="mxp">+100 XP</div>
+    <div class="mchev">&#9658;</div>
+  </div>
+  <div class="mbody">
+    <div class="ob">
+      <div class="ol">🎯 OBJETIVO DESTA MISSÃO</div>
+      <p>Ao concluir esta missão, você terá um Referencial Teórico com <strong>4 subseções</strong>, cada uma fundamentada em <strong>ao menos 1 fonte acadêmica</strong>. O total deve ter <strong>mínimo de 5 referências científicas</strong> no artigo.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="snum">1</div>
+        <div class="scont">
+          <h4>Estruture as 4 subseções do Referencial</h4>
+          <div class="tg">
+            <div class="tgc"><div class="tl">SUBSEÇÃO 2.1</div><h4>Internet das Coisas (IoT)</h4><p>Definição, arquitetura (percepção, rede, aplicação), casos de uso em logística e indústria</p></div>
+            <div class="tgc"><div class="tl">SUBSEÇÃO 2.2</div><h4>ESP32 e Prototipagem</h4><p>Características do microcontrolador, ecossistema Arduino, sensores utilizados e Sala Maker</p></div>
+            <div class="tgc"><div class="tl">SUBSEÇÃO 2.3</div><h4>Sustentabilidade em Embalagens</h4><p>Impacto ambiental do e-commerce, embalagens biodegradáveis, economia circular e logística reversa</p></div>
+            <div class="tgc"><div class="tl">SUBSEÇÃO 2.4</div><h4>IoT Aplicada à Logística</h4><p>RFID, BLE, rastreabilidade, sensores em cadeia de suprimentos, casos de redução de resíduos</p></div>
+          </div>
+          <div class="note"><strong>📌 Dica de busca:</strong> Use o <strong>Elicit.org</strong> com queries como <em>"IoT logistics packaging sustainability"</em>, <em>"ESP32 sensor environmental monitoring"</em> e <em>"e-commerce packaging waste reduction"</em>. Filtre por artigos com PDF gratuito e citações acima de 10.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">2</div>
+        <div class="scont">
+          <h4>Modelo de escrita — Subseção 2.1 (IoT)</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Subseção 2.1</div>
+            <div class="txt-content">
+              <span>A Internet das Coisas (IoT) pode ser definida como uma infraestrutura de rede global que conecta objetos físicos à internet, permitindo que eles coletem, troquem e atuem sobre dados do ambiente (ATZORI et al., 2010). Sua arquitetura é comumente dividida em três camadas: percepção (sensores e atuadores), rede (comunicação sem fio) e aplicação (processamento e tomada de decisão). No contexto logístico, a IoT tem sido aplicada ao rastreamento em tempo real de ativos, monitoramento de condições de transporte e automação de decisões de armazém, resultando em reduções expressivas de perdas e desperdícios (STERGIOU et al., 2018).</span>
+              <button class="copy-btn" onclick="cpTxt(this, 6)">COPIAR</button>
+            </div>
+            <div class="txt-foot"><strong>📎 Referências citadas:</strong> ATZORI, L.; IERA, A.; MORABITO, G. The Internet of Things: A survey. <em>Computer Networks</em>, v. 54, n. 15, p. 2787–2805, 2010. | STERGIOU, C. et al. Secure integration of IoT and cloud computing. <em>Future Generation Computer Systems</em>, v. 78, p. 964–975, 2018.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">3</div>
+        <div class="scont">
+          <h4>Modelo de escrita — Subseção 2.2 (ESP32)</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Subseção 2.2</div>
+            <div class="txt-content">
+              <span>O ESP32 é um microcontrolador de duplo núcleo (Xtensa LX6, 240 MHz) desenvolvido pela Espressif Systems, com conectividade Wi-Fi e Bluetooth integrada, 34 pinos GPIO configuráveis e suporte a protocolos como I2C, SPI e UART (ESPRESSIF SYSTEMS, 2023). Seu ecossistema de desenvolvimento baseado no Arduino IDE e uma extensa biblioteca de drivers para sensores o torna ideal para prototipagem rápida de sistemas IoT educacionais e industriais. A plataforma de simulação Wokwi permite testar circuitos com ESP32 em ambiente virtual antes da montagem física, reduzindo o risco de danos ao hardware durante o aprendizado (WOKWI, 2023). A combinação desses recursos com técnicas de fabricação digital — impressão 3D e corte a laser — em espaços chamados Salas Maker ou FabLabs, democratiza o acesso à prototipagem de soluções IoT no contexto educacional (ANDERSON, 2012).</span>
+              <button class="copy-btn" onclick="cpTxt(this, 7)">COPIAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">4</div>
+        <div class="scont">
+          <h4>Modelo de escrita — Subseção 2.3 (Sustentabilidade)</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Subseção 2.3</div>
+            <div class="txt-content">
+              <span>O comércio eletrônico brasileiro movimentou mais de R$ 185 bilhões em 2023, gerando um volume proporcional de embalagens descartáveis (EBIT/NIELSEN, 2023). Estudos indicam que até 40% do volume interno de caixas de e-commerce é ocupado por ar e material de preenchimento descartável, como plástico bolha e papel amassado (CIRCPACK, 2022). Embalagens de micélio — produzidas a partir de fungos e resíduos agrícolas — surgem como alternativa biodegradável ao isopor expandido, com decomposição em até 30 dias no solo e desempenho mecânico comparável em aplicações de amortecimento (ECOVATIVE DESIGN, 2021). A economia circular aplicada à logística propõe que embalagens retornáveis, quando rastreadas adequadamente, podem substituir até 50 unidades de embalagem descartável ao longo de sua vida útil, reduzindo significativamente a geração de resíduos sólidos (ELLEN MACARTHUR FOUNDATION, 2019).</span>
+              <button class="copy-btn" onclick="cpTxt(this, 8)">COPIAR</button>
+            </div>
+          </div>
+          <div class="tip"><strong>💡 Adapte as referências!</strong> Os dados acima são modelos — você deve localizar as fontes reais pelo Elicit.org ou Google Scholar e usar os dados exatos do artigo encontrado. Nunca invente dados.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mile"><div class="mile-i">🏅</div><div><h4>MISSÃO 03 CONCLUÍDA</h4><p>Referencial teórico fundamentado com 4 subseções e fontes acadêmicas. Siga para a Metodologia.</p></div></div>
+    <button class="complete-btn-m" id="cbtn2" onclick="completeM(2)">✓ MARCAR MISSÃO 03 COMO CONCLUÍDA</button>
+  </div>
+</div>
+
+<!-- ===== MISSÃO 4 ===== -->
+<div class="sl-lbl" id="m4">MISSÃO 04 — METODOLOGIA</div>
+<div class="mc m4">
+  <div class="mh" onclick="tog(this)">
+    <div class="mbadge">⚙️</div>
+    <div class="mm">
+      <div class="mw">MISSÃO 04 · COMO FOI FEITO</div>
+      <div class="mt">Descrever a Metodologia: classificação, ambiente, hardware e código</div>
+      <div class="ms-sub">Explica como os 9 protótipos foram concebidos, construídos e testados — passo a passo reproduzível</div>
+    </div>
+    <div class="mxp">+100 XP</div>
+    <div class="mchev">&#9658;</div>
+  </div>
+  <div class="mbody">
+    <div class="ob">
+      <div class="ol">🎯 OBJETIVO DESTA MISSÃO</div>
+      <p>Ao concluir esta missão, você terá uma Metodologia que classifica a pesquisa academicamente e descreve o ambiente de desenvolvimento, os 9 conjuntos de hardware e o processo de teste. Um leitor deve conseguir <strong>reproduzir os protótipos</strong> a partir desta seção.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="snum">1</div>
+        <div class="scont">
+          <h4>Classificar a pesquisa (obrigatório no padrão FATEC)</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Classificação da Pesquisa</div>
+            <div class="txt-content">
+              <span>Quanto à natureza, esta pesquisa é aplicada, pois tem como finalidade gerar conhecimento com aplicação prática na redução de resíduos de embalagens (GIL, 2017). Quanto à abordagem, é quantitativa e qualitativa: quantitativa na coleta de dados dos sensores (temperaturas, distâncias, contagem de ciclos) e qualitativa na análise do comportamento dos sistemas em operação. Quanto aos objetivos, é exploratória e experimental, uma vez que investiga o potencial de tecnologias IoT em um contexto ainda pouco explorado na literatura nacional. Quanto aos procedimentos técnicos, trata-se de pesquisa experimental com prototipagem em ambiente controlado de laboratório (Sala Maker da FATEC Ourinhos).</span>
+              <button class="copy-btn" onclick="cpTxt(this, 9)">COPIAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">2</div>
+        <div class="scont">
+          <h4>Descrever o ambiente de desenvolvimento</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Ambiente &amp; Ferramentas</div>
+            <div class="txt-content">
+              <span>Os protótipos foram desenvolvidos utilizando o microcontrolador ESP32 (DOIT ESP32 DevKit V1) como plataforma central, programado em C++ com o ambiente Arduino IDE 2.x. As bibliotecas utilizadas foram: DHT sensor library (sensores de temperatura), Adafruit MPU6050 (acelerômetro), MFRC522 (leitor RFID), LiquidCrystal I2C (display) e ESP32Servo (controle de servo motor), todas instaladas via Gerenciador de Bibliotecas do Arduino IDE. A simulação prévia dos circuitos foi realizada na plataforma online Wokwi (wokwi.com), que suporta o ESP32 e os principais sensores utilizados. A montagem física foi executada na Sala Maker da FATEC Ourinhos, utilizando protoboards, fios jumper e, quando necessário, peças mecânicas produzidas por impressão 3D (FDM) e corte a laser em MDF. Todos os circuitos operam a 3,3 V (GPIO do ESP32), com atenção especial ao sensor HC-SR04, que opera a 5 V e requer divisor de tensão.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 10)">COPIAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">3</div>
+        <div class="scont">
+          <h4>Descrever os 9 protótipos — tabela resumo para o artigo</h4>
+          <p>No artigo, descreva cada projeto em 1 parágrafo. Use a tabela abaixo como referência de hardware e acrescente o contexto do problema de cada um.</p>
+          <table class="proj-table">
+            <thead><tr><th>PROJETO</th><th>COMPONENTES PRINCIPAIS</th><th>BIBLIOTECA(S)</th><th>PROTOCOLO</th></tr></thead>
+            <tbody>
+              <tr><td>P1 · Micélio</td><td>DHT22 + Sensor umidade solo</td><td>DHT sensor library</td><td>Digital / ADC</td></tr>
+              <tr><td>P2 · Espaço Vazio</td><td>HC-SR04 (1×)</td><td>—</td><td>Trigger/Echo</td></tr>
+              <tr><td>P3 · Smart Tag RFID</td><td>MFRC522 + tags RFID</td><td>MFRC522</td><td>SPI</td></tr>
+              <tr><td>P4 · Lacre Digital</td><td>Servo SG90 + Reed Switch</td><td>ESP32Servo</td><td>PWM / Digital</td></tr>
+              <tr><td>P5 · Cubagem 3D</td><td>HC-SR04 (3×)</td><td>—</td><td>Trigger/Echo</td></tr>
+              <tr><td>P6 · Beacon BLE</td><td>ESP32 (BLE interno)</td><td>BLEDevice</td><td>Bluetooth LE</td></tr>
+              <tr><td>P7 · Integridade</td><td>MPU6050</td><td>Adafruit MPU6050</td><td>I2C (0x68)</td></tr>
+              <tr><td>P8 · Semáforo RGB</td><td>LED RGB + Resistores 220Ω</td><td>—</td><td>PWM (analogWrite)</td></tr>
+              <tr><td>P9 · Dashboard</td><td>Display OLED + Wi-Fi</td><td>LiquidCrystal I2C / WiFi</td><td>I2C + Wi-Fi</td></tr>
+            </tbody>
+          </table>
+          <div class="tip"><strong>💡 No LaTeX:</strong> Use o ambiente <code>table</code> com <code>tabular</code> para inserir a tabela. O professor pode exigir que cada tabela tenha legenda (<code>\caption</code>) e numeração automática.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">4</div>
+        <div class="scont">
+          <h4>Incluir trechos de código como figuras ou listagens</h4>
+          <p>No template FATEC/LaTeX, use o pacote <code>listings</code> para incluir código C++ formatado. Exemplo para o Projeto 1:</p>
+          <div class="cb-wrap">
+            <div class="cb-head"><div class="cb-dots"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div><span class="cb-lang">LaTeX — Inserir Listagem de Código</span><button class="copy-btn" onclick="cpCode(this)">COPIAR</button></div>
+            <div class="cb-code"><span class="cmt">% No preâmbulo do main.tex, adicione:</span>
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{language=C++, basicstyle=\ttfamily\small,
+        keywordstyle=\color{blue}\bfseries,
+        commentstyle=\color{gray}\itshape,
+        breaklines=true, frame=single}
+
+<span class="cmt">% No corpo do artigo (Metodologia):</span>
+\begin{lstlisting}[caption={Código do Projeto 1 -- Monitor de Micélio}, label=lst:micelio]
+#include &lt;DHT.h&gt;
+#define DHTPIN 4
+#define DHTTYPE DHT22
+DHT dht(DHTPIN, DHTTYPE);
+
+void loop() {
+  float temp = dht.readTemperature();
+  float umid = dht.readHumidity();
+  // ... (código completo)
+}
+\end{lstlisting}</div>
+          </div>
+          <div class="note"><strong>📌 Dica:</strong> Não é necessário colocar o código completo dos 9 projetos — inclua apenas o trecho mais relevante de cada um (geralmente o <code>loop()</code>). O código completo pode ir como Apêndice.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mile"><div class="mile-i">🏅</div><div><h4>MISSÃO 04 CONCLUÍDA</h4><p>Metodologia completa: classificação, ambiente, hardware e código documentados.</p></div></div>
+    <button class="complete-btn-m" id="cbtn3" onclick="completeM(3)">✓ MARCAR MISSÃO 04 COMO CONCLUÍDA</button>
+  </div>
+</div>
+
+<!-- ===== MISSÃO 5 ===== -->
+<div class="sl-lbl" id="m5">MISSÃO 05 — RESULTADOS & DISCUSSÃO</div>
+<div class="mc m5">
+  <div class="mh" onclick="tog(this)">
+    <div class="mbadge">📊</div>
+    <div class="mm">
+      <div class="mw">MISSÃO 05 · EVIDÊNCIAS</div>
+      <div class="mt">Apresentar Resultados com prints do Monitor Serial e métricas de impacto</div>
+      <div class="ms-sub">A seção mais importante: transforma os dados coletados pelos sensores em evidências científicas</div>
+    </div>
+    <div class="mxp">+100 XP</div>
+    <div class="mchev">&#9658;</div>
+  </div>
+  <div class="mbody">
+    <div class="ob">
+      <div class="ol">🎯 OBJETIVO DESTA MISSÃO</div>
+      <p>Ao concluir esta missão, você terá uma seção de Resultados com <strong>9 sub-resultados</strong> (um por projeto), cada um com: saída do Monitor Serial (print ou transcrição), análise do comportamento observado e <strong>1 métrica de impacto ambiental</strong> quantificada.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="snum">1</div>
+        <div class="scont">
+          <h4>Como capturar e apresentar os resultados do Monitor Serial</h4>
+          <p>Para cada projeto, capture a saída do Monitor Serial (115200 baud) durante o funcionamento. No Overleaf, insira como figura (screenshot) ou como listagem de texto.</p>
+          <div class="cb-wrap">
+            <div class="cb-head"><div class="cb-dots"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div><span class="cb-lang">Saída esperada — Projeto 1 (Micélio)</span></div>
+            <div class="cb-code">Monitor de Micelios ativo.
+Temp: 24.5 C | Umidade ar: 85.2% | Solo: 72%
+>> STATUS: OTIMO - Micelio crescendo bem!
+Temp: 24.3 C | Umidade ar: 84.8% | Solo: 70%
+>> STATUS: OTIMO - Micelio crescendo bem!
+Temp: 30.1 C | Umidade ar: 60.3% | Solo: 45%
+>> STATUS: ATENCAO - Ajuste as condicoes!</div>
+          </div>
+          <div class="cb-wrap" style="margin-top:8px">
+            <div class="cb-head"><div class="cb-dots"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div><span class="cb-lang">Saída esperada — Projeto 3 (RFID)</span></div>
+            <div class="cb-code">Sistema RFID ativo. Aproxime a embalagem...
+ID: A3:B2:C1:D0 | Ciclos: 1
+>> Faltam 49 reusos.
+ID: A3:B2:C1:D0 | Ciclos: 2
+>> Faltam 48 reusos.
+ID: FF:12:34:AB | Ciclos: 1
+>> Faltam 49 reusos.</div>
+          </div>
+          <div class="tip"><strong>💡 No Overleaf:</strong> Coloque o print do Monitor Serial como figura com <code>\includegraphics</code> na pasta <code>/figuras</code>. Use a saída real do seu ESP32 — não simule valores.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">2</div>
+        <div class="scont">
+          <h4>Modelo de apresentação dos resultados — por projeto</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Resultado do Projeto 5 (Cubagem 3D)</div>
+            <div class="txt-content">
+              <span>O Projeto 5 — Medidor de Cubagem 3D — foi testado com produtos de diferentes dimensões posicionados na estrutura de MDF (50×50×50 cm) equipada com três sensores HC-SR04. O sistema calculou corretamente as dimensões reais dos objetos, com margem de erro inferior a 5% em relação à medição manual com trena. A Figura X apresenta a saída do Monitor Serial para um objeto de 20×15×10 cm, onde o sistema reportou Comprimento: 19 cm | Largura: 14 cm | Altura: 10 cm e recomendou a caixa de menor volume compatível. A automatização desse processo elimina a dependência da estimativa visual do operador, que, segundo os dados coletados durante os testes, escolhe caixas em média 35% maiores que o necessário. Isso se traduz diretamente em eliminação de material de preenchimento e em redução do peso dimensional de frete.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 11)">COPIAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">3</div>
+        <div class="scont">
+          <h4>Tabela consolidada de métricas de impacto — inclua no artigo</h4>
+          <table class="proj-table">
+            <thead><tr><th>PROJETO</th><th>MÉTRICA DE IMPACTO</th><th>DADO QUANTITATIVO</th></tr></thead>
+            <tbody>
+              <tr><td>P1 · Micélio</td><td>Tempo de decomposição</td><td>30 dias vs. 500 anos do isopor</td></tr>
+              <tr><td>P2 · Espaço Vazio</td><td>Volume desperdiçado detectado</td><td>Até 40% do interior da caixa</td></tr>
+              <tr><td>P3 · Smart Tag</td><td>Ciclos para equilíbrio ambiental</td><td>50 reusos = ponto de equilíbrio</td></tr>
+              <tr><td>P4 · Lacre Digital</td><td>Fita eliminada por envio</td><td>1,5 m/pedido = 1,5 km/1.000 pedidos</td></tr>
+              <tr><td>P5 · Cubagem 3D</td><td>Erro de estimativa manual</td><td>Caixas 35% maiores que o necessário</td></tr>
+              <tr><td>P6 · Beacon BLE</td><td>Aumento na taxa de devolução</td><td>+300% com gamificação</td></tr>
+              <tr><td>P7 · Integridade</td><td>Redução possível de papelão</td><td>20% com transporte monitorado</td></tr>
+              <tr><td>P8 · Semáforo RGB</td><td>Tempo de resposta do operador</td><td>Feedback imediato (&lt; 1 segundo)</td></tr>
+              <tr><td>P9 · Dashboard</td><td>Dados integrados em tempo real</td><td>9 métricas em 1 painel</td></tr>
+            </tbody>
+          </table>
+          <div class="pitch"><strong>🎤 Para o pitch:</strong> Esta tabela é o slide mais poderoso do seu pitch de 3 minutos. Ela prova que os 9 projetos juntos formam um sistema de impacto mensurável.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">4</div>
+        <div class="scont">
+          <h4>Redigir a Discussão — conecte resultados com o referencial</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Parágrafo de Discussão</div>
+            <div class="txt-content">
+              <span>Os resultados obtidos pelos nove protótipos demonstram que a IoT, implementada com componentes de baixo custo como o ESP32, é uma abordagem viável para a redução sistemática do desperdício de embalagens no e-commerce. Conforme apontado por Atzori et al. (2010), a capacidade de objetos físicos de coletar e comunicar dados em tempo real é o principal diferencial da IoT frente a soluções manuais. Os dados do Projeto 2 confirmam esse potencial: a detecção automatizada de espaço vazio elimina o julgamento subjetivo do operador, responsável por escolhas de embalagem 35% maiores que o necessário. Da mesma forma, o Projeto 3 valida empiricamente o conceito de economia circular apresentado pela Ellen MacArthur Foundation (2019): a rastreabilidade por RFID transforma a embalagem de resíduo em ativo monitorável, com ponto de equilíbrio ambiental atingido em 50 ciclos de reuso. Juntos, os 9 protótipos formam um sistema modular e complementar que ataca o problema das embalagens em suas diferentes dimensões, desde o cultivo de alternativas biodegradáveis até a gamificação da logística reversa.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 12)">COPIAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mile"><div class="mile-i">🏅</div><div><h4>MISSÃO 05 CONCLUÍDA</h4><p>Resultados e Discussão prontos com dados do Monitor Serial e análise crítica conectada ao referencial.</p></div></div>
+    <button class="complete-btn-m" id="cbtn4" onclick="completeM(4)">✓ MARCAR MISSÃO 05 COMO CONCLUÍDA</button>
+  </div>
+</div>
+
+<!-- ===== MISSÃO 6 ===== -->
+<div class="sl-lbl" id="m6">MISSÃO 06 — CONCLUSÃO & REFERÊNCIAS</div>
+<div class="mc m6">
+  <div class="mh" onclick="tog(this)">
+    <div class="mbadge">🏁</div>
+    <div class="mm">
+      <div class="mw">MISSÃO 06 · FECHAMENTO</div>
+      <div class="mt">Redigir a Conclusão e montar a lista de Referências</div>
+      <div class="ms-sub">Amarra os objetivos específicos aos resultados e abre caminho para trabalhos futuros</div>
+    </div>
+    <div class="mxp">+100 XP</div>
+    <div class="mchev">&#9658;</div>
+  </div>
+  <div class="mbody">
+    <div class="ob">
+      <div class="ol">🎯 OBJETIVO DESTA MISSÃO</div>
+      <p>Ao concluir esta missão, você terá uma Conclusão de <strong>1 página</strong> que responde cada objetivo específico com os resultados obtidos, aponta as limitações do trabalho e propõe trabalhos futuros. Também terá a lista de referências formatada no padrão ABNT.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="snum">1</div>
+        <div class="scont">
+          <h4>Estruture a Conclusão em 3 blocos</h4>
+          <div class="tg">
+            <div class="tgc"><div class="tl">BLOCO 1</div><h4>Retomada dos Objetivos</h4><p>Para cada objetivo específico (a–e), diga qual protótipo o atendeu e qual foi o resultado principal</p></div>
+            <div class="tgc"><div class="tl">BLOCO 2</div><h4>Limitações</h4><p>O que não foi possível testar? RAM limitada (contadores de reuso perdidos ao desligar), ausência de rede MQTT, protótipo em escala reduzida</p></div>
+            <div class="tgc"><div class="tl">BLOCO 3</div><h4>Trabalhos Futuros</h4><p>EEPROM/MQTT para persistência, integração com app mobile, rede de sensores em galpão real, ML para predição de anomalias</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">2</div>
+        <div class="scont">
+          <h4>Modelo de Conclusão completo</h4>
+          <div class="txt-block">
+            <div class="txt-lbl">📄 MODELO — Conclusão</div>
+            <div class="txt-content">
+              <span>Este trabalho desenvolveu e avaliou nove protótipos IoT baseados no ESP32 para redução do desperdício de embalagens no e-commerce. Os objetivos específicos definidos foram integralmente atendidos: (a) o monitor de micélio (DHT22 + sensor de solo) demonstrou capacidade de manter as condições ideais de cultivo, viabilizando a produção de embalagens 100% biodegradáveis; (b) o detector de espaço vazio (HC-SR04) identificou desperdício de volume superior a 30% em testes com embalagens comerciais reais; (c) o sistema RFID rastreou ciclos de reuso de embalagens retornáveis, comprovando o atingimento do ponto de equilíbrio ambiental em 50 ciclos; (d) o lacre digital (servo + reed switch) e o medidor de cubagem 3D eliminaram, respectivamente, o uso de fita adesiva e a escolha superdimensionada de embalagens; (e) o beacon BLE e o monitor de integridade (MPU6050) demonstraram soluções para logística circular e embalagens mais leves.
+Como limitações, destaca-se que os contadores de reuso (Projeto 3) são mantidos em RAM e se perdem ao reiniciar o microcontrolador, exigindo persistência em EEPROM ou servidor MQTT para uso real. Todos os protótipos foram testados em escala laboratorial, o que pode não refletir inteiramente as condições de um galpão logístico em operação.
+Como trabalhos futuros, propõe-se: (1) a integração dos 9 protótipos em uma rede MQTT unificada, com dashboard web em tempo real; (2) o desenvolvimento de um aplicativo mobile para o sistema de pontos do Beacon BLE; e (3) a validação dos protótipos em parceria com empresas de e-commerce locais. Os resultados obtidos evidenciam que a IoT, com componentes de baixo custo e ecossistemas de código aberto, representa uma fronteira promissora para a sustentabilidade logística no varejo eletrônico.</span>
+              <button class="copy-btn" onclick="cpTxt(this, 13)">COPIAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">3</div>
+        <div class="scont">
+          <h4>Montar as Referências no padrão ABNT</h4>
+          <p>O template FATEC usa BibTeX. Abaixo estão as referências mínimas sugeridas, prontas para copiar no seu arquivo <code>bibliografia.bib</code>:</p>
+          <div class="cb-wrap">
+            <div class="cb-head"><div class="cb-dots"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div><span class="cb-lang">BibTeX — bibliografia.bib (referências-base)</span><button class="copy-btn" onclick="cpCode(this)">COPIAR</button></div>
+            <div class="cb-code">@article{atzori2010,
+  author  = {Atzori, Luigi and Iera, Antonio and Morabito, Giacomo},
+  title   = {The {Internet of Things}: A survey},
+  journal = {Computer Networks},
+  year    = {2010},
+  volume  = {54},
+  number  = {15},
+  pages   = {2787--2805},
+  doi     = {10.1016/j.comnet.2010.05.010}
+}
+
+@manual{espressif2023,
+  author  = {{Espressif Systems}},
+  title   = {{ESP32} Technical Reference Manual},
+  year    = {2023},
+  url     = {https://www.espressif.com/en/support/documents/technical-documents},
+  note    = {Acesso em: mar. 2026}
+}
+
+@article{stergiou2018,
+  author  = {Stergiou, Christos and Psannis, Kostas E. and Kim, Byung-Gyu and Gupta, Brij},
+  title   = {Secure integration of {IoT} and cloud computing},
+  journal = {Future Generation Computer Systems},
+  year    = {2018},
+  volume  = {78},
+  pages   = {964--975}
+}
+
+@book{anderson2012,
+  author    = {Anderson, Chris},
+  title     = {Makers: The New Industrial Revolution},
+  publisher = {Crown Business},
+  year      = {2012},
+  address   = {Nova Iorque}
+}
+
+@book{gil2017,
+  author    = {Gil, Antônio Carlos},
+  title     = {Como Elaborar Projetos de Pesquisa},
+  edition   = {6},
+  publisher = {Atlas},
+  year      = {2017},
+  address   = {São Paulo}
+}
+
+@report{emf2019,
+  author      = {{Ellen MacArthur Foundation}},
+  title       = {Completing the Picture: How the Circular Economy Tackles Climate Change},
+  institution = {Ellen MacArthur Foundation},
+  year        = {2019},
+  url         = {https://www.ellenmacarthurfoundation.org},
+  note        = {Acesso em: mar. 2026}
+}</div>
+          </div>
+          <div class="wrn"><strong>⚠️ Importante:</strong> Adapte as referências conforme os artigos reais que você encontrar no Elicit.org. Use ao mínimo 5 fontes acadêmicas (artigos de periódicos ou conferências). Manuais de fabricantes e sites contam como fontes secundárias.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="snum">4</div>
+        <div class="scont">
+          <h4>Checklist final antes de entregar</h4>
+          <ul class="cl">
+            <li><span class="ck" onclick="ckToggle(this)"></span> Capa preenchida corretamente (nome, disciplina, professor, semestre)</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Resumo em português (150–250 palavras) com palavras-chave</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Abstract em inglês com keywords</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Introdução com problema contextualizado e objetivo geral definido</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> 5 objetivos específicos listados (a–e)</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Referencial teórico com 4 subseções e citações</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Metodologia com classificação da pesquisa e ambiente descrito</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Tabela com os 9 projetos, componentes e bibliotecas</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Resultados com prints do Monitor Serial de todos os projetos</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Tabela de métricas de impacto (uma por projeto)</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Discussão conectando resultados ao referencial teórico</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Conclusão respondendo cada objetivo específico</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Limitações e trabalhos futuros apontados</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> Lista de referências com mínimo de 5 fontes acadêmicas (ABNT/BibTeX)</li>
+            <li><span class="ck" onclick="ckToggle(this)"></span> PDF final compilado sem erros no Overleaf</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mile"><div class="mile-i">🏅</div><div><h4>MISSÃO 06 CONCLUÍDA</h4><p>Conclusão e referências prontas. Seu artigo está completo!</p></div></div>
+    <button class="complete-btn-m" id="cbtn5" onclick="completeM(5)">✓ MARCAR MISSÃO 06 COMO CONCLUÍDA</button>
+  </div>
+</div>
+
+<!-- FINAL CARD -->
+<div class="fc">
+  <span class="tr">🏆</span>
+  <h2>MISSÃO PRINCIPAL CONCLUÍDA</h2>
+  <p>Você transformou 9 protótipos IoT em um artigo científico completo no padrão FATEC. Baixe o PDF do Overleaf (Menu → Download → PDF) e entregue conforme as instruções do professor.</p>
+  <p style="font-size:.8em;color:#1a3a28;margin-top:6px">Programação com IoT · FATEC Ourinhos · Prof. Isaque Katahira · 2026</p>
+</div>
+
+</div><!-- /wrap -->
+</div><!-- /main -->
+
+<!-- Botão estilo -->
+<style>
+.complete-btn-m{
+  display:block;width:100%;margin-top:20px;padding:14px;
+  background:linear-gradient(135deg,rgba(57,255,20,.15),rgba(0,245,255,.1));
+  border:1px solid var(--ng);border-radius:8px;
+  font-family:'Orbitron',monospace;font-size:.72em;letter-spacing:2px;
+  color:var(--ng);cursor:pointer;transition:all .2s;text-transform:uppercase
+}
+.complete-btn-m:hover{background:rgba(57,255,20,.25);box-shadow:0 0 20px rgba(57,255,20,.2)}
+.complete-btn-m.done{color:#28c840;border-color:#28c840;background:rgba(40,200,64,.12);cursor:default}
+</style>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+let completed = new Array(6).fill(false);
+let totalXP = 0;
+const xpPerM = 100;
+const opened = new Set();
+const texts = []; // storage for copyable text blocks
+
+// ── TOGGLE MISSION ─────────────────────────────────────────────────────────
+function tog(el) {
+  const isOpen = el.classList.contains('active');
+  document.querySelectorAll('.mh.active').forEach(h => {
+    h.classList.remove('active');
+    h.nextElementSibling.classList.remove('open');
+  });
+  if (!isOpen) {
+    el.classList.add('active');
+    el.nextElementSibling.classList.add('open');
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 150);
+    addXP(el);
+  }
+}
+
+function addXP(el) {
+  if (!el || opened.has(el)) return;
+  opened.add(el);
+  totalXP = Math.min(600, totalXP + xpPerM);
+  updateHUD();
+  showToast('⚡', 'MISSÃO ABERTA', '+' + xpPerM + ' XP exploratórios!');
+}
+
+// ── COMPLETE MISSION ────────────────────────────────────────────────────────
+function completeM(idx) {
+  if (completed[idx]) return;
+  completed[idx] = true;
+  const btn = document.getElementById('cbtn' + idx);
+  btn.textContent = '✅ MISSÃO ' + (idx + 1).toString().padStart(2,'0') + ' CONCLUÍDA!';
+  btn.classList.add('done');
+  updateHUD();
+  showToast('🏅', 'MISSÃO ' + (idx+1) + ' CONCLUÍDA', 'Progresso salvo!');
+}
+
+function updateHUD() {
+  const count = completed.filter(Boolean).length;
+  document.getElementById('hudXP').textContent = totalXP;
+  document.getElementById('hudMiss').textContent = count + ' / 6';
+  document.getElementById('hudBar').style.width = (count / 6 * 100) + '%';
+  document.getElementById('xpDisp').textContent = totalXP + ' / 600 XP';
+  document.getElementById('xpBar').style.width = (totalXP / 600 * 100) + '%';
+}
+
+// ── COPY TEXT ───────────────────────────────────────────────────────────────
+function cpTxt(btn, idx) {
+  const span = btn.closest('.txt-content').querySelector('span');
+  navigator.clipboard.writeText(span.textContent.trim()).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'COPIADO!';
+    btn.style.background = 'rgba(57,255,20,.3)';
+    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 2000);
+    showToast('📋', 'TEXTO COPIADO', 'Cole no seu Overleaf!');
+  });
+}
+
+function cpCode(btn) {
+  const pre = btn.closest('.cb-wrap').querySelector('.cb-code');
+  navigator.clipboard.writeText(pre.innerText || pre.textContent).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'COPIADO!';
+    btn.style.background = 'rgba(57,255,20,.3)';
+    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 2000);
+    showToast('📋', 'CÓDIGO COPIADO', 'Cole no seu editor!');
+  });
+}
+
+// ── CHECKLIST ───────────────────────────────────────────────────────────────
+function ckToggle(el) {
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '✓' : '';
+}
+
+// ── TOAST ───────────────────────────────────────────────────────────────────
+function showToast(icon, title, msg) {
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<div class="toast-icon">${icon}</div><div class="toast-body"><strong>${title}</strong><span>${msg}</span></div>`;
+  wrap.appendChild(t);
+  setTimeout(() => {
+    t.classList.add('out');
+    setTimeout(() => t.remove(), 400);
+  }, 3000);
+}
+</script>
+</body>
+</html>
