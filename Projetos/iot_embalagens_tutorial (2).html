@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Maker Lab — 9 Projetos para Redução de Embalagens</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon-green:  #39ff14;
+      --neon-cyan:   #00f5ff;
+      --neon-yellow: #ffe600;
+      --neon-orange: #ff6b35;
+      --neon-purple: #b341ff;
+      --neon-pink:   #ff3fa4;
+      --dark-bg:     #060d0a;
+      --card-bg:     #0b150f;
+      --card-border: #162a1c;
+      --text-main:   #d8ffe6;
+      --text-muted:  #6a9a78;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* GRID BACKGROUND */
+    body::before {
+      content: '';
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image:
+        linear-gradient(rgba(57,255,20,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57,255,20,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* PARTICLE CANVAS */
+    #particles { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+    /* HUD TOP */
+    .hud-top {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(6,13,10,0.93);
+      border-bottom: 1px solid var(--neon-green);
+      padding: 10px 30px;
+      display: flex; align-items: center; gap: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(57,255,20,0.2);
+    }
+    .hud-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75em; color: var(--neon-green); letter-spacing: 3px;
+      text-shadow: 0 0 10px var(--neon-green);
+      white-space: nowrap;
+    }
+    .hud-sep { width: 1px; height: 28px; background: var(--card-border); }
+    .xp-container { flex: 1; }
+    .xp-label { font-size: 0.7em; color: var(--text-muted); font-family: 'Share Tech Mono'; margin-bottom: 4px; }
+    .xp-bar-track { height: 7px; background: var(--card-border); border-radius: 4px; overflow: hidden; border: 1px solid rgba(57,255,20,0.2); }
+    .xp-bar-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+      border-radius: 4px;
+      transition: width 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 8px var(--neon-green);
+    }
+    .hud-stat { display: flex; flex-direction: column; align-items: center; min-width: 55px; }
+    .hud-stat-val { font-family: 'Orbitron', sans-serif; font-size: 1em; font-weight: 700; color: var(--neon-yellow); text-shadow: 0 0 10px var(--neon-yellow); }
+    .hud-stat-label { font-size: 0.6em; color: var(--text-muted); letter-spacing: 1px; }
+    .proj-counter {
+      background: rgba(57,255,20,0.1); border: 1px solid var(--neon-green);
+      border-radius: 20px; padding: 5px 14px;
+      font-family: 'Share Tech Mono'; font-size: 0.85em; color: var(--neon-green);
+    }
+
+    /* MAIN */
+    .main { position: relative; z-index: 1; padding: 90px 20px 60px; max-width: 1050px; margin: 0 auto; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 50px 20px 40px; }
+    .hero-tag {
+      display: inline-block;
+      font-family: 'Share Tech Mono'; font-size: 0.75em; color: var(--neon-cyan);
+      letter-spacing: 4px; border: 1px solid var(--neon-cyan); padding: 4px 16px;
+      border-radius: 2px; margin-bottom: 20px;
+      text-shadow: 0 0 10px var(--neon-cyan); box-shadow: 0 0 10px rgba(0,245,255,0.15);
+    }
+    .hero-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.8em, 5vw, 3.2em);
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff 0%, var(--neon-green) 50%, var(--neon-cyan) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.15; margin-bottom: 15px;
+      filter: drop-shadow(0 0 20px rgba(57,255,20,0.4));
+    }
+    .hero-sub { color: var(--text-muted); font-size: 1.1em; letter-spacing: 1px; max-width: 620px; margin: 0 auto 30px; line-height: 1.6; }
+
+    /* MISSION BOX */
+    .mission-box {
+      background: var(--card-bg); border: 1px solid rgba(0,245,255,0.3);
+      border-radius: 14px; padding: 28px 32px; margin: 30px 0;
+      position: relative; overflow: hidden;
+    }
+    .mission-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+    }
+    .mission-label { font-family: 'Share Tech Mono'; color: var(--neon-cyan); font-size: 0.75em; letter-spacing: 3px; margin-bottom: 12px; }
+    .mission-box p { font-size: 1.05em; line-height: 1.75; color: var(--text-main); }
+    .mission-box em { color: var(--neon-yellow); font-style: normal; font-weight: 700; }
+    .mission-box strong { color: var(--neon-green); }
+
+    /* BEFORE START */
+    .before-card {
+      background: var(--card-bg); border: 1px solid rgba(255,230,0,0.3);
+      border-radius: 14px; padding: 28px 32px; margin: 30px 0;
+      position: relative; overflow: hidden;
+    }
+    .before-card::before {
+      content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+      background: linear-gradient(180deg, var(--neon-yellow), var(--neon-orange));
+    }
+    .before-title {
+      font-family: 'Orbitron', sans-serif; font-size: 1em;
+      color: var(--neon-yellow); margin-bottom: 18px;
+      text-shadow: 0 0 10px rgba(255,230,0,0.4);
+    }
+    .before-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .before-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 12px 14px; border-radius: 8px;
+      background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
+    }
+    .before-num {
+      width: 28px; height: 28px; min-width: 28px; border-radius: 50%;
+      background: rgba(255,230,0,0.15); border: 1px solid rgba(255,230,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Orbitron', sans-serif; font-size: 0.75em; font-weight: 700;
+      color: var(--neon-yellow);
+    }
+    .before-text { font-size: 0.95em; line-height: 1.5; }
+    .before-text strong { color: var(--neon-cyan); }
+    .lib-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .lib-chip {
+      background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.3);
+      color: var(--neon-green); border-radius: 4px;
+      font-family: 'Share Tech Mono'; font-size: 0.78em; padding: 3px 9px;
+    }
+
+    /* PROGRESS PATH */
+    .progress-path {
+      display: flex; align-items: center; margin: 30px 0; padding: 10px 0;
+      overflow-x: auto; gap: 0;
+    }
+    .path-node { display: flex; flex-direction: column; align-items: center; position: relative; min-width: 90px; }
+    .path-node:not(:last-child)::after {
+      content: ''; position: absolute; right: -45%; top: 18px;
+      width: 90%; height: 2px; background: var(--card-border); z-index: 0;
+    }
+    .path-node.done:not(:last-child)::after { background: var(--neon-green); }
+    .path-circle {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1em; z-index: 1; cursor: pointer; transition: all 0.3s;
+    }
+    .path-circle.locked { background: var(--card-bg); border: 2px solid var(--card-border); color: var(--text-muted); }
+    .path-circle.active { background: rgba(57,255,20,0.15); border: 2px solid var(--neon-green); box-shadow: 0 0 15px rgba(57,255,20,0.4); }
+    .path-circle.complete { background: var(--neon-green); border: 2px solid var(--neon-green); filter: drop-shadow(0 0 8px var(--neon-green)); }
+    .path-label { font-size: 0.65em; color: var(--text-muted); margin-top: 6px; text-align: center; font-family: 'Share Tech Mono'; }
+
+    /* PROJECT CARD */
+    .project-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px; padding: 0;
+      margin: 30px 0;
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .project-card.active-proj {
+      border-color: rgba(57,255,20,0.5);
+      box-shadow: 0 0 30px rgba(57,255,20,0.1);
+    }
+    .project-card.complete-proj {
+      border-color: rgba(57,255,20,0.3);
+    }
+    .project-card::before {
+      content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+      background: linear-gradient(180deg, var(--neon-green), var(--neon-cyan));
+    }
+
+    .proj-header {
+      display: flex; align-items: center; gap: 16px;
+      padding: 24px 30px 20px 36px;
+      border-bottom: 1px solid var(--card-border);
+      cursor: pointer; user-select: none;
+    }
+    .proj-badge {
+      background: rgba(57,255,20,0.15); border: 1px solid rgba(57,255,20,0.4);
+      border-radius: 10px; width: 52px; height: 52px; min-width: 52px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6em;
+      box-shadow: 0 0 12px rgba(57,255,20,0.15);
+    }
+    .proj-header-info { flex: 1; }
+    .proj-num { font-family: 'Share Tech Mono'; font-size: 0.72em; color: var(--neon-green); letter-spacing: 2px; }
+    .proj-name { font-family: 'Orbitron', sans-serif; font-size: 1.1em; color: var(--text-main); margin-top: 2px; }
+    .proj-tagline { font-size: 0.88em; color: var(--text-muted); margin-top: 3px; }
+    .proj-status {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+    }
+    .proj-xp {
+      font-family: 'Share Tech Mono'; font-size: 0.8em; color: var(--neon-yellow);
+      background: rgba(255,230,0,0.1); border: 1px solid rgba(255,230,0,0.3);
+      padding: 4px 12px; border-radius: 20px;
+    }
+    .proj-chevron {
+      font-size: 1.2em; color: var(--text-muted); transition: transform 0.3s;
+    }
+    .proj-card-open .proj-chevron { transform: rotate(180deg); }
+
+    .proj-body { display: none; padding: 28px 30px 28px 36px; }
+    .proj-body.open { display: block; }
+
+    /* STEPS INSIDE PROJECT */
+    .steps-list { display: flex; flex-direction: column; gap: 22px; margin-top: 10px; }
+    .step-item {
+      display: flex; gap: 18px; padding: 18px; border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: rgba(255,255,255,0.01);
+      transition: all 0.3s;
+    }
+    .step-item:hover { border-color: rgba(57,255,20,0.2); }
+    .step-marker {
+      display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 36px;
+    }
+    .step-num-circle {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(57,255,20,0.1); border: 2px solid rgba(57,255,20,0.35);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Orbitron', sans-serif; font-size: 0.8em; font-weight: 700;
+      color: var(--neon-green); min-width: 36px;
+    }
+    .step-line { flex: 1; width: 2px; background: rgba(57,255,20,0.15); margin: 4px 0; min-height: 20px; }
+    .step-content { flex: 1; }
+    .step-title { font-size: 1em; font-weight: 700; color: var(--neon-cyan); margin-bottom: 6px; }
+    .step-text { font-size: 0.92em; line-height: 1.65; color: var(--text-main); }
+    .step-text strong { color: var(--neon-yellow); }
+    .step-text em { color: var(--neon-green); font-style: normal; }
+    .step-text a { color: var(--neon-cyan); text-decoration: none; }
+
+    /* HARDWARE TABLE */
+    .hw-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.9em; }
+    .hw-table th {
+      font-family: 'Share Tech Mono'; font-size: 0.72em; letter-spacing: 2px;
+      color: var(--text-muted); padding: 8px 12px; text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .hw-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .hw-table tr:last-child td { border-bottom: none; }
+    .hw-table .comp-name { color: var(--neon-cyan); font-weight: 600; font-family: 'Share Tech Mono'; }
+    .hw-table .comp-pin { color: var(--neon-yellow); font-family: 'Share Tech Mono'; font-size: 0.88em; }
+    .hw-table .comp-func { color: var(--text-muted); font-size: 0.88em; }
+
+    /* PIN DIAGRAM */
+    .pin-diagram {
+      background: rgba(0,0,0,0.35); border: 1px solid rgba(57,255,20,0.2);
+      border-radius: 10px; padding: 16px 20px; margin: 14px 0;
+      font-family: 'Share Tech Mono'; font-size: 0.82em;
+    }
+    .pin-diagram-title { color: var(--neon-green); font-size: 0.78em; letter-spacing: 2px; margin-bottom: 12px; }
+    .pin-row { display: flex; align-items: center; gap: 10px; margin: 5px 0; flex-wrap: wrap; }
+    .pin-sensor { color: var(--neon-cyan); }
+    .pin-arrow { color: var(--text-muted); }
+    .pin-gpio { background: rgba(255,230,0,0.12); border: 1px solid rgba(255,230,0,0.3); color: var(--neon-yellow); padding: 2px 8px; border-radius: 4px; font-size: 0.9em; }
+    .pin-note { color: var(--text-muted); font-size: 0.85em; }
+
+    /* CODE BLOCK */
+    .code-block {
+      background: #030a05; border: 1px solid rgba(57,255,20,0.2);
+      border-radius: 10px; margin: 16px 0; overflow: hidden;
+    }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; background: rgba(57,255,20,0.05);
+      border-bottom: 1px solid rgba(57,255,20,0.15);
+    }
+    .code-lang { font-family: 'Share Tech Mono'; font-size: 0.75em; color: var(--neon-green); letter-spacing: 2px; }
+    .copy-btn {
+      background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.3);
+      color: var(--neon-green); font-family: 'Share Tech Mono'; font-size: 0.75em;
+      padding: 4px 12px; border-radius: 5px; cursor: pointer;
+      transition: all 0.2s; letter-spacing: 1px;
+    }
+    .copy-btn:hover { background: rgba(57,255,20,0.2); box-shadow: 0 0 10px rgba(57,255,20,0.2); }
+    pre {
+      padding: 18px 20px; overflow-x: auto; font-family: 'Share Tech Mono';
+      font-size: 0.83em; line-height: 1.7; color: #c8f5d4;
+    }
+    pre .kw  { color: #b341ff; }
+    pre .fn  { color: #00f5ff; }
+    pre .str { color: #ffe600; }
+    pre .num { color: #ff6b35; }
+    pre .cmt { color: #3a6b48; font-style: italic; }
+    pre .pp  { color: #ff3fa4; }
+
+    /* ALERT BOXES */
+    .alert {
+      border-radius: 8px; padding: 14px 18px; margin: 14px 0;
+      display: flex; gap: 12px; align-items: flex-start; font-size: 0.9em; line-height: 1.55;
+    }
+    .alert-icon { font-size: 1.2em; min-width: 22px; }
+    .alert-warn { background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.35); color: #ffb38a; }
+    .alert-tip  { background: rgba(0,245,255,0.07); border: 1px solid rgba(0,245,255,0.3); color: #a0f0ff; }
+    .alert-info { background: rgba(57,255,20,0.06); border: 1px solid rgba(57,255,20,0.25); color: #a0ffb4; }
+    .alert-pitch{ background: rgba(179,65,255,0.08); border: 1px solid rgba(179,65,255,0.35); color: #d8a8ff; }
+
+    /* IMPACT METRIC */
+    .impact-metric {
+      display: flex; gap: 10px; align-items: center;
+      background: rgba(57,255,20,0.06); border: 1px solid rgba(57,255,20,0.25);
+      border-radius: 8px; padding: 12px 16px; margin: 12px 0;
+    }
+    .metric-val { font-family: 'Orbitron', sans-serif; font-size: 1.5em; font-weight: 900; color: var(--neon-green); white-space: nowrap; }
+    .metric-desc { font-size: 0.88em; color: var(--text-muted); line-height: 1.4; }
+
+    /* COMPLETE BUTTON */
+    .complete-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 14px; margin-top: 22px;
+      background: rgba(57,255,20,0.1); border: 1px solid rgba(57,255,20,0.4);
+      color: var(--neon-green); font-family: 'Orbitron', sans-serif;
+      font-size: 0.85em; font-weight: 700; letter-spacing: 2px;
+      border-radius: 8px; cursor: pointer; transition: all 0.25s;
+    }
+    .complete-btn:hover { background: rgba(57,255,20,0.2); box-shadow: 0 0 20px rgba(57,255,20,0.3); transform: translateY(-2px); }
+    .complete-btn.done-btn { background: rgba(57,255,20,0.2); border-color: var(--neon-green); cursor: default; }
+    .complete-btn.done-btn:hover { transform: none; }
+
+    /* FINAL SECTION */
+    .final-card {
+      background: var(--card-bg); border: 1px solid rgba(179,65,255,0.4);
+      border-radius: 18px; padding: 40px; margin: 40px 0; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .final-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center top, rgba(179,65,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .final-title { font-family: 'Orbitron', sans-serif; font-size: 1.6em; color: var(--neon-yellow); margin-bottom: 12px; text-shadow: 0 0 20px rgba(255,230,0,0.4); }
+    .final-sub { color: var(--text-muted); margin-bottom: 30px; font-size: 1em; }
+    .pitch-tips { list-style: none; display: flex; flex-direction: column; gap: 12px; text-align: left; }
+    .pitch-tip {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px; border-radius: 8px;
+      background: rgba(179,65,255,0.05); border: 1px solid rgba(179,65,255,0.15);
+    }
+    .pitch-tip-icon { font-size: 1.3em; }
+    .pitch-tip-text { font-size: 0.93em; line-height: 1.55; }
+    .pitch-tip-text strong { color: var(--neon-purple); }
+
+    /* TOAST */
+    .toast-wrap { position: fixed; top: 80px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: var(--card-bg); border-radius: 10px; padding: 14px 18px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+      animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      border-left: 4px solid;
+    }
+    @keyframes toastIn { from { transform: translateX(120%); opacity:0; } to { transform: translateX(0); opacity:1; } }
+    @keyframes toastOut { from { transform: translateX(0); opacity:1; } to { transform: translateX(120%); opacity:0; } }
+    .toast.out { animation: toastOut 0.3s ease forwards; }
+    .toast.ok { border-color: var(--neon-green); }
+    .toast.xp { border-color: var(--neon-yellow); }
+    .toast-icon { font-size: 1.5em; }
+    .toast-body strong { display: block; font-family: 'Orbitron', sans-serif; font-size: 0.82em; }
+    .toast-body span { font-size: 0.85em; color: var(--text-muted); }
+
+    /* RESPONSIVE */
+    @media(max-width:640px) {
+      .hud-top { padding: 8px 14px; gap: 10px; }
+      .hud-title { font-size: 0.65em; letter-spacing: 1px; }
+      .proj-header { padding: 18px 16px 16px 22px; }
+      .proj-body { padding: 20px 16px 20px 22px; }
+      pre { font-size: 0.75em; }
+      .match-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- HUD -->
+<div class="hud-top">
+  <div class="hud-title">🌿 IOT MAKER LAB</div>
+  <div class="hud-sep"></div>
+  <div class="xp-container">
+    <div class="xp-label">PROGRESSO GERAL</div>
+    <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBar"></div></div>
+  </div>
+  <div class="hud-sep"></div>
+  <div class="hud-stat">
+    <div class="hud-stat-val" id="xpVal">0</div>
+    <div class="hud-stat-label">XP</div>
+  </div>
+  <div class="proj-counter" id="projCounter">0 / 9</div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">SALA MAKER · ESP32 · SUSTENTABILIDADE</div>
+    <h1 class="hero-title">9 Projetos IoT para<br>Redução de Embalagens</h1>
+    <p class="hero-sub">Um guia passo a passo completo para construir soluções reais de hardware que atacam o problema de desperdício de embalagens no comércio eletrônico. Do conceito ao protótipo funcional.</p>
+  </div>
+
+  <!-- MISSÃO -->
+  <div class="mission-box">
+    <div class="mission-label">▸ OBJETIVO DA MISSÃO</div>
+    <p>O comércio eletrônico gera um <em>enorme desperdício de embalagens</em>: caixas grandes demais, plástico bolha excessivo, fita adesiva de uso único, papelão que vai direto para o lixo. Sua missão é usar <strong>IoT com ESP32</strong> para atacar esse problema de frentes diferentes — desde monitorar o crescimento de embalagens biodegradáveis até criar sistemas de reuso rastreado. Ao final deste tutorial, você terá <strong>9 protótipos funcionais</strong> e argumentos concretos para o pitch de 3 minutos.</p>
+  </div>
+
+  <!-- ANTES DE COMEÇAR -->
+  <div class="before-card">
+    <div class="before-title">🟢 ANTES DE COMEÇAR — Kit Base (todos os grupos)</div>
+    <ul class="before-list">
+      <li class="before-item">
+        <div class="before-num">1</div>
+        <div class="before-text">
+          <strong>Instalar Bibliotecas no Arduino IDE</strong> — Acesse <em>Ferramentas → Gerenciar Bibliotecas</em> e instale:
+          <div class="lib-chips">
+            <span class="lib-chip">DHT sensor library</span>
+            <span class="lib-chip">Adafruit MPU6050</span>
+            <span class="lib-chip">MFRC522</span>
+            <span class="lib-chip">LiquidCrystal I2C</span>
+            <span class="lib-chip">ESP32Servo</span>
+          </div>
+        </div>
+      </li>
+      <li class="before-item">
+        <div class="before-num">2</div>
+        <div class="before-text"><strong>Configurar a Placa</strong> — Em <em>Ferramentas → Placa → Gerenciador de Placas</em>, pesquise <em>esp32</em> e instale. Depois selecione <strong>"DOIT ESP32 DEVKIT V1"</strong>.</div>
+      </li>
+      <li class="before-item">
+        <div class="before-num">3</div>
+        <div class="before-text"><strong>Atenção à Voltagem</strong> — O ESP32 opera a <strong style="color:var(--neon-orange)">3.3V</strong>. Sensores como HC-SR04 funcionam melhor com 5V — use um divisor de tensão ou módulo de nível lógico se necessário. Nunca conecte 5V direto nos pinos GPIO do ESP32.</div>
+      </li>
+      <li class="before-item">
+        <div class="before-num">4</div>
+        <div class="before-text"><strong>Monitor Serial</strong> — Sempre configure a velocidade para <strong style="color:var(--neon-green)">115200 baud</strong> tanto no código quanto no Monitor Serial. Velocidade errada = caracteres estranhos.</div>
+      </li>
+      <li class="before-item">
+        <div class="before-num">5</div>
+        <div class="before-text"><strong>Simule antes de montar</strong> — Use o site <a href="https://wokwi.com" target="_blank">wokwi.com</a> para simular circuitos com ESP32 no navegador, antes de conectar os componentes físicos. Economiza tempo e evita queimar peças.</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PROGRESS PATH -->
+  <div class="progress-path" id="progressPath">
+    <div class="path-node" id="pn0"><div class="path-circle active" onclick="scrollToProj(0)">🌱</div><div class="path-label">P1</div></div>
+    <div class="path-node" id="pn1"><div class="path-circle locked" onclick="scrollToProj(1)">📦</div><div class="path-label">P2</div></div>
+    <div class="path-node" id="pn2"><div class="path-circle locked" onclick="scrollToProj(2)">🔖</div><div class="path-label">P3</div></div>
+    <div class="path-node" id="pn3"><div class="path-circle locked" onclick="scrollToProj(3)">🔒</div><div class="path-label">P4</div></div>
+    <div class="path-node" id="pn4"><div class="path-circle locked" onclick="scrollToProj(4)">📐</div><div class="path-label">P5</div></div>
+    <div class="path-node" id="pn5"><div class="path-circle locked" onclick="scrollToProj(5)">📡</div><div class="path-label">P6</div></div>
+    <div class="path-node" id="pn6"><div class="path-circle locked" onclick="scrollToProj(6)">📈</div><div class="path-label">P7</div></div>
+    <div class="path-node" id="pn7"><div class="path-circle locked" onclick="scrollToProj(7)">💡</div><div class="path-label">P8</div></div>
+    <div class="path-node" id="pn8"><div class="path-circle locked" onclick="scrollToProj(8)">🖥️</div><div class="path-label">P9</div></div>
+  </div>
+
+  <!-- ===== PROJETO 1 ===== -->
+  <div class="project-card active-proj" id="proj0">
+    <div class="proj-header" onclick="toggleProj(0)">
+      <div class="proj-badge">🌱</div>
+      <div class="proj-header-info">
+        <div class="proj-num">PROJETO 01 · BIODEGRADÁVEL</div>
+        <div class="proj-name">Monitor de Saúde da "Embalagem Viva" (Micélio)</div>
+        <div class="proj-tagline">Garante que o substituto biodegradável do isopor cresça com as condições ideais</div>
+      </div>
+      <div class="proj-status">
+        <div class="proj-xp">+120 XP</div>
+        <div class="proj-chevron">▼</div>
+      </div>
+    </div>
+    <div class="proj-body open" id="body0">
+
+      <div class="mission-box" style="margin-top:0">
+        <div class="mission-label">▸ CONTEXTO DO PROBLEMA</div>
+        <p>O isopor (poliestireno expandido) é um dos maiores vilões das embalagens de e-commerce — <em>leva centenas de anos para se decompor</em> e raramente é reciclado. A solução? <strong>Embalagens de micélio</strong> (fungos + substrato agrícola) que são 100% compostáveis. Mas para crescer corretamente, o micélio precisa de temperatura e umidade específicas. Sem monitoramento, o material cresce mal e vira desperdício de matéria-prima.</p>
+      </div>
+
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Entenda o Hardware</div>
+            <div class="step-text">
+              Você vai usar 3 componentes principais:
+              <table class="hw-table" style="margin-top:12px">
+                <thead><tr><th>COMPONENTE</th><th>PINO ESP32</th><th>FUNÇÃO</th></tr></thead>
+                <tbody>
+                  <tr><td class="comp-name">ESP32</td><td class="comp-pin">—</td><td class="comp-func">Microcontrolador principal</td></tr>
+                  <tr><td class="comp-name">DHT22</td><td class="comp-pin">GPIO 4</td><td class="comp-func">Temperatura e Umidade do ar</td></tr>
+                  <tr><td class="comp-name">Sensor Umidade Solo</td><td class="comp-pin">GPIO 34 (ADC)</td><td class="comp-func">Umidade do substrato de fungos</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Monte as Conexões (Pinout)</div>
+            <div class="pin-diagram">
+              <div class="pin-diagram-title">▸ DIAGRAMA DE PINOS</div>
+              <div class="pin-row"><span class="pin-sensor">DHT22 DATA</span><span class="pin-arrow">──────→</span><span class="pin-gpio">GPIO 4</span></div>
+              <div class="pin-row"><span class="pin-sensor">DHT22 VCC</span><span class="pin-arrow">──────→</span><span class="pin-gpio">3.3V</span></div>
+              <div class="pin-row"><span class="pin-sensor">DHT22 GND</span><span class="pin-arrow">──────→</span><span class="pin-gpio">GND</span></div>
+              <div class="pin-row" style="margin-top:8px"><span class="pin-sensor">Sensor Solo AO</span><span class="pin-arrow">──────→</span><span class="pin-gpio">GPIO 34</span><span class="pin-note">&nbsp;(entrada analógica)</span></div>
+              <div class="pin-row"><span class="pin-sensor">Sensor Solo VCC</span><span class="pin-arrow">──────→</span><span class="pin-gpio">3.3V</span></div>
+              <div class="pin-row"><span class="pin-sensor">Sensor Solo GND</span><span class="pin-arrow">──────→</span><span class="pin-gpio">GND</span></div>
+            </div>
+            <div class="alert alert-warn"><div class="alert-icon">⚠️</div><div>O GPIO 34 do ESP32 é somente entrada (input-only) e não tem resistor pull-up interno. Use-o apenas para leitura analógica.</div></div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">3</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Carregue o Código no ESP32</div>
+            <div class="alert alert-tip"><div class="alert-icon">💡</div><div>Cole o código abaixo no Arduino IDE. Verifique se a biblioteca <strong>DHT sensor library (Adafruit)</strong> está instalada antes de compilar.</div></div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">C++ / ARDUINO</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+              <pre><span class="pp">#include</span> <span class="str">"DHT.h"</span>
+
+<span class="cmt">// Definição dos pinos</span>
+<span class="pp">#define</span> DHTPIN    4
+<span class="pp">#define</span> SOLOPIN  34
+<span class="pp">#define</span> DHTTYPE  DHT22
+
+DHT dht(DHTPIN, DHTTYPE);
+
+<span class="cmt">// Faixas ideais para crescimento do micélio</span>
+<span class="kw">const float</span> UMID_AR_MIN  = 80.0;
+<span class="kw">const float</span> UMID_AR_MAX  = 95.0;
+<span class="kw">const float</span> TEMP_MIN     = 20.0;
+<span class="kw">const float</span> TEMP_MAX     = 26.0;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(115200);
+  dht.<span class="fn">begin</span>();
+  Serial.<span class="fn">println</span>(<span class="str">"Monitor de Micélio iniciado..."</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">float</span> umidadeAr   = dht.<span class="fn">readHumidity</span>();
+  <span class="kw">float</span> temperatura = dht.<span class="fn">readTemperature</span>();
+  <span class="kw">int</span>   umidadeSolo = <span class="fn">analogRead</span>(SOLOPIN); <span class="cmt">// 0-4095</span>
+
+  <span class="cmt">// Verificar se a leitura é válida</span>
+  <span class="kw">if</span> (<span class="fn">isnan</span>(umidadeAr) || <span class="fn">isnan</span>(temperatura)) {
+    Serial.<span class="fn">println</span>(<span class="str">"ERRO: Falha na leitura do DHT22!"</span>);
+    <span class="fn">delay</span>(2000);
+    <span class="kw">return</span>;
+  }
+
+  Serial.<span class="fn">println</span>(<span class="str">"=== MONITOR MICÉLIO ==="</span>);
+  Serial.<span class="fn">printf</span>(<span class="str">"Temp:     %.1f°C  [Ideal: 20-26°C]\n"</span>, temperatura);
+  Serial.<span class="fn">printf</span>(<span class="str">"Umid. Ar: %.1f%%   [Ideal: 80-95%%]\n"</span>, umidadeAr);
+  Serial.<span class="fn">printf</span>(<span class="str">"Solo:     %d/4095  [Úmido se > 2000]\n"</span>, umidadeSolo);
+
+  <span class="cmt">// Alertas de fora do range ideal</span>
+  <span class="kw">if</span> (temperatura < TEMP_MIN || temperatura > TEMP_MAX)
+    Serial.<span class="fn">println</span>(<span class="str">"⚠ ALERTA: Temperatura fora do ideal! Ajuste ventilação."</span>);
+  <span class="kw">if</span> (umidadeAr < UMID_AR_MIN)
+    Serial.<span class="fn">println</span>(<span class="str">"⚠ ALERTA: Ar muito seco! Borrife água no substrato."</span>);
+  <span class="kw">if</span> (umidadeSolo < 1000)
+    Serial.<span class="fn">println</span>(<span class="str">"⚠ ALERTA: Solo seco! Umidifique o substrato."</span>);
+
+  Serial.<span class="fn">println</span>();
+  <span class="fn">delay</span>(2000);
+}</pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">4</div></div>
+          <div class="step-content">
+            <div class="step-title">Interprete os Resultados</div>
+            <div class="step-text">Abra o Monitor Serial (115200 baud). Você verá os dados em tempo real. O sensor de solo retorna valores de <em>0 a 4095</em>: quanto maior o valor, mais úmido o substrato. <strong>Valores abaixo de 1000 indicam solo seco</strong> — hora de umidificar. Temperatura ideal é entre 20–26°C.</div>
+            <div class="impact-metric"><div class="metric-val">~100%</div><div class="metric-desc">de substituição do isopor é possível com micélio bem cultivado — embalagem compostável em 45 dias.</div></div>
+            <div class="alert alert-pitch"><div class="alert-icon">🎤</div><div><strong>No Pitch:</strong> "Nossa tecnologia garante a viabilidade de embalagens 100% compostáveis, eliminando o plástico bolha. Com o sensor monitorando em tempo real, reduzimos a taxa de falha no cultivo do micélio de ~40% para menos de 5%."</div></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="complete-btn" id="btn0" onclick="completeProj(0)">✓ MARCAR PROJETO 1 COMO CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- ===== PROJETO 2 ===== -->
+  <div class="project-card" id="proj1">
+    <div class="proj-header" onclick="toggleProj(1)">
+      <div class="proj-badge">📦</div>
+      <div class="proj-header-info">
+        <div class="proj-num">PROJETO 02 · ANTI-DESPERDÍCIO</div>
+        <div class="proj-name">Otimizador de Enchimento (Anti-Espaço Vazio)</div>
+        <div class="proj-tagline">Alerta quando a caixa escolhida é grande demais para o produto — elimina o uso de enchimento</div>
+      </div>
+      <div class="proj-status">
+        <div class="proj-xp">+100 XP</div>
+        <div class="proj-chevron">▼</div>
+      </div>
+    </div>
+    <div class="proj-body" id="body1">
+      <div class="mission-box" style="margin-top:0">
+        <div class="mission-label">▸ CONTEXTO DO PROBLEMA</div>
+        <p>Um estudo mostrou que <em>até 40% do volume de uma caixa de e-commerce é ar</em>. Esse espaço vazio é preenchido com plástico bolha, papel amassado ou isopor — material que vai direto para o lixo. A solução: um sensor que mede o espaço livre dentro da caixa antes de fechar e <strong>alerta se a caixa está grande demais</strong> para o produto.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Hardware Necessário</div>
+            <table class="hw-table">
+              <thead><tr><th>COMPONENTE</th><th>PINO ESP32</th><th>FUNÇÃO</th></tr></thead>
+              <tbody>
+                <tr><td class="comp-name">HC-SR04 (Ultrassônico)</td><td class="comp-pin">TRIG: GPIO 5 · ECHO: GPIO 18</td><td class="comp-func">Mede distância até o produto</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Monte as Conexões</div>
+            <div class="pin-diagram">
+              <div class="pin-diagram-title">▸ DIAGRAMA DE PINOS — HC-SR04</div>
+              <div class="pin-row"><span class="pin-sensor">VCC</span><span class="pin-arrow">──→</span><span class="pin-gpio">5V</span><span class="pin-note">&nbsp;(use pino VIN ou fonte externa 5V)</span></div>
+              <div class="pin-row"><span class="pin-sensor">TRIG</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 5</span></div>
+              <div class="pin-row"><span class="pin-sensor">ECHO</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 18</span><span class="pin-note">&nbsp;via divisor de tensão (1kΩ + 2kΩ)</span></div>
+              <div class="pin-row"><span class="pin-sensor">GND</span><span class="pin-arrow">──→</span><span class="pin-gpio">GND</span></div>
+            </div>
+            <div class="alert alert-warn"><div class="alert-icon">⚠️</div><div>O HC-SR04 opera a 5V e o pino ECHO retorna 5V — conectar direto no GPIO do ESP32 (3.3V) pode danificá-lo. Use um divisor de tensão: R1=1kΩ entre ECHO e GPIO, R2=2kΩ entre GPIO e GND.</div></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">3</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Código do Projeto</div>
+            <div class="alert alert-tip"><div class="alert-icon">💡</div><div>Posicione o sensor HC-SR04 na <strong>tampa da caixa</strong>, apontando para baixo. A distância lida = espaço vazio acima do produto. Defina um limite máximo aceitável (ex: 15 cm).</div></div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">C++ / ARDUINO</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+              <pre><span class="cmt">// Projeto 2 — Otimizador de Enchimento</span>
+<span class="kw">const int</span> TRIG = 5;
+<span class="kw">const int</span> ECHO = 18;
+<span class="kw">const int</span> LIMITE_VAZIO_CM = 15; <span class="cmt">// Máximo de espaço aceitável</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(115200);
+  <span class="fn">pinMode</span>(TRIG, OUTPUT);
+  <span class="fn">pinMode</span>(ECHO, INPUT);
+  Serial.<span class="fn">println</span>(<span class="str">"Otimizador de Enchimento iniciado."</span>);
+}
+
+<span class="kw">long</span> <span class="fn">medirDistancia</span>() {
+  <span class="fn">digitalWrite</span>(TRIG, LOW);
+  <span class="fn">delayMicroseconds</span>(2);
+  <span class="fn">digitalWrite</span>(TRIG, HIGH);
+  <span class="fn">delayMicroseconds</span>(10);
+  <span class="fn">digitalWrite</span>(TRIG, LOW);
+  <span class="kw">long</span> duracao = <span class="fn">pulseIn</span>(ECHO, HIGH, 30000); <span class="cmt">// timeout 30ms</span>
+  <span class="kw">return</span> duracao * 0.034 / 2; <span class="cmt">// converte para cm</span>
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">long</span> dist = <span class="fn">medirDistancia</span>();
+
+  Serial.<span class="fn">printf</span>(<span class="str">"Espaço vazio: %ld cm\n"</span>, dist);
+
+  <span class="kw">if</span> (dist > LIMITE_VAZIO_CM) {
+    Serial.<span class="fn">println</span>(<span class="str">"🚨 ALERTA: Caixa GRANDE DEMAIS!"</span>);
+    Serial.<span class="fn">println</span>(<span class="str">"   → Use uma embalagem menor para este produto."</span>);
+    Serial.<span class="fn">println</span>(<span class="str">"   → Isso evita desperdício de enchimento."</span>);
+  } <span class="kw">else</span> {
+    Serial.<span class="fn">println</span>(<span class="str">"✅ OK: Tamanho de caixa adequado para o produto."</span>);
+  }
+  <span class="fn">delay</span>(1000);
+}</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">4</div></div>
+          <div class="step-content">
+            <div class="step-title">Teste e Calibre</div>
+            <div class="step-text">Coloque objetos de tamanhos diferentes na caixa e observe os alertas no Monitor Serial. Ajuste a constante <em>LIMITE_VAZIO_CM</em> de acordo com o tamanho padrão das caixas do seu projeto. <strong>Objetos com mais de 15 cm de folga</strong> devem gerar alerta.</div>
+            <div class="impact-metric"><div class="metric-val">-40%</div><div class="metric-desc">de redução no uso de materiais de preenchimento ao forçar a escolha da caixa correta para cada produto.</div></div>
+            <div class="alert alert-pitch"><div class="alert-icon">🎤</div><div><strong>No Pitch:</strong> "Reduzimos em até 40% o uso de materiais de preenchimento ao forçar a escolha da caixa correta. Isso elimina plástico bolha e papel amassado em cada envio."</div></div>
+          </div>
+        </div>
+      </div>
+      <button class="complete-btn" id="btn1" onclick="completeProj(1)">✓ MARCAR PROJETO 2 COMO CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- ===== PROJETO 3 ===== -->
+  <div class="project-card" id="proj2">
+    <div class="proj-header" onclick="toggleProj(2)">
+      <div class="proj-badge">🔖</div>
+      <div class="proj-header-info">
+        <div class="proj-num">PROJETO 03 · LOGÍSTICA CIRCULAR</div>
+        <div class="proj-name">Smart Tag RFID — Gestão de Reuso de Embalagens</div>
+        <div class="proj-tagline">Rastreia quantas vezes cada caixa retornável foi usada e prova sua viabilidade ambiental</div>
+      </div>
+      <div class="proj-status"><div class="proj-xp">+130 XP</div><div class="proj-chevron">▼</div></div>
+    </div>
+    <div class="proj-body" id="body2">
+      <div class="mission-box" style="margin-top:0">
+        <div class="mission-label">▸ CONTEXTO DO PROBLEMA</div>
+        <p>Cada caixa de papelão é usada em média <em>1,2 vezes</em> antes de virar resíduo. Caixas plásticas retornáveis podem durar <strong>50+ reusos</strong>, mas precisam de rastreamento para provar sua viabilidade ambiental e financeira. Com RFID, cada caixa tem uma identidade digital e seu ciclo de vida é monitorado automaticamente.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Hardware Necessário</div>
+            <table class="hw-table">
+              <thead><tr><th>COMPONENTE</th><th>PINO ESP32</th><th>FUNÇÃO</th></tr></thead>
+              <tbody>
+                <tr><td class="comp-name">Módulo RFID RC522</td><td class="comp-pin">SPI (ver diagrama)</td><td class="comp-func">Lê as tags nas caixas</td></tr>
+                <tr><td class="comp-name">Tags RFID (cartão/chaveiro)</td><td class="comp-pin">—</td><td class="comp-func">Identificador único de cada caixa</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Diagrama SPI do RC522</div>
+            <div class="pin-diagram">
+              <div class="pin-diagram-title">▸ CONEXÕES SPI — RFID RC522</div>
+              <div class="pin-row"><span class="pin-sensor">SDA (SS)</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 5</span></div>
+              <div class="pin-row"><span class="pin-sensor">SCK</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 18</span></div>
+              <div class="pin-row"><span class="pin-sensor">MOSI</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 23</span></div>
+              <div class="pin-row"><span class="pin-sensor">MISO</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 19</span></div>
+              <div class="pin-row"><span class="pin-sensor">RST</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 22</span></div>
+              <div class="pin-row"><span class="pin-sensor">VCC</span><span class="pin-arrow">──→</span><span class="pin-gpio">3.3V</span></div>
+              <div class="pin-row"><span class="pin-sensor">GND</span><span class="pin-arrow">──→</span><span class="pin-gpio">GND</span></div>
+            </div>
+            <div class="alert alert-info"><div class="alert-icon">ℹ️</div><div>O RC522 opera a 3.3V — <strong>não use 5V</strong>, pois o módulo será danificado. Cole ou fixe a tag RFID na lateral de cada caixa retornável.</div></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">3</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Código do Projeto</div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">C++ / ARDUINO</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+              <pre><span class="pp">#include</span> <span class="str">&lt;SPI.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;MFRC522.h&gt;</span>
+
+MFRC522 rfid(5, 22); <span class="cmt">// SDA=5, RST=22</span>
+
+<span class="cmt">// Contador de usos por ID (simulado em RAM)</span>
+<span class="cmt">// Em produção: usar EEPROM ou servidor MQTT</span>
+<span class="kw">int</span> contadorReuso = 0;
+String ultimoID = <span class="str">""</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(115200);
+  SPI.<span class="fn">begin</span>();
+  rfid.<span class="fn">PCD_Init</span>();
+  Serial.<span class="fn">println</span>(<span class="str">"Sistema RFID de Rastreio de Embalagens ativo."</span>);
+  Serial.<span class="fn">println</span>(<span class="str">"Aproxime a embalagem do leitor..."</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (!rfid.<span class="fn">PICC_IsNewCardPresent</span>() || !rfid.<span class="fn">PICC_ReadCardSerial</span>()) {
+    <span class="fn">delay</span>(200);
+    <span class="kw">return</span>;
+  }
+
+  <span class="cmt">// Montar string do UID</span>
+  String idAtual = <span class="str">""</span>;
+  <span class="kw">for</span> (<span class="kw">byte</span> i = 0; i < rfid.uid.size; i++) {
+    idAtual += String(rfid.uid.uidByte[i], HEX);
+    <span class="kw">if</span> (i < rfid.uid.size - 1) idAtual += <span class="str">":"</span>;
+  }
+  idAtual.<span class="fn">toUpperCase</span>();
+
+  <span class="kw">if</span> (idAtual != ultimoID) {
+    ultimoID = idAtual;
+    contadorReuso++;
+  }
+
+  Serial.<span class="fn">println</span>(<span class="str">"\n=== EMBALAGEM IDENTIFICADA ==="</span>);
+  Serial.<span class="fn">printf</span>(<span class="str">"ID da Caixa:     %s\n"</span>, idAtual.c_str());
+  Serial.<span class="fn">printf</span>(<span class="str">"Ciclos de reuso: %d\n"</span>, contadorReuso);
+
+  <span class="kw">if</span> (contadorReuso >= 50)
+    Serial.<span class="fn">println</span>(<span class="str">"✅ PONTO DE EQUILÍBRIO: Embalagem já se pagou ambientalmente!"</span>);
+  <span class="kw">else</span>
+    Serial.<span class="fn">printf</span>(<span class="str">"   → Faltam %d reusos para atingir ponto de equilíbrio.\n"</span>, 50 - contadorReuso);
+
+  rfid.<span class="fn">PICC_HaltA</span>();
+  rfid.<span class="fn">PCD_StopCrypto1</span>();
+  <span class="fn">delay</span>(1500);
+}</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">4</div></div>
+          <div class="step-content">
+            <div class="step-title">Evolução: Persistir os Dados</div>
+            <div class="step-text">O código acima conta reusos na RAM (perde ao reiniciar). Para um protótipo mais completo, salve o contador na <em>EEPROM do ESP32</em> ou envie via Wi-Fi para um servidor. Isso prova a rastreabilidade ao longo do tempo. <strong>Cada tag RFID tem um ID único gravado de fábrica</strong> — você não precisa programar as tags, só lê-las.</div>
+            <div class="impact-metric"><div class="metric-val">50x</div><div class="metric-desc">é o número de reusos necessário para que a caixa plástica retornável se pague ambientalmente em relação ao papelão descartável.</div></div>
+            <div class="alert alert-pitch"><div class="alert-icon">🎤</div><div><strong>No Pitch:</strong> "Transformamos a embalagem de um resíduo em um ativo rastreável que volta para a empresa. Com nossa Smart Tag, sabemos exatamente quantas vezes cada caixa foi usada e quando ela se pagou ambientalmente."</div></div>
+          </div>
+        </div>
+      </div>
+      <button class="complete-btn" id="btn2" onclick="completeProj(2)">✓ MARCAR PROJETO 3 COMO CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- ===== PROJETO 4 ===== -->
+  <div class="project-card" id="proj3">
+    <div class="proj-header" onclick="toggleProj(3)">
+      <div class="proj-badge">🔒</div>
+      <div class="proj-header-info">
+        <div class="proj-num">PROJETO 04 · FIM DA FITA</div>
+        <div class="proj-name">Lacre Digital Reutilizável</div>
+        <div class="proj-tagline">Substitui metros de fita adesiva plástica por uma trava mecânica monitorada e reutilizável</div>
+      </div>
+      <div class="proj-status"><div class="proj-xp">+140 XP</div><div class="proj-chevron">▼</div></div>
+    </div>
+    <div class="proj-body" id="body3">
+      <div class="mission-box" style="margin-top:0">
+        <div class="mission-label">▸ CONTEXTO DO PROBLEMA</div>
+        <p>Cada caixa de e-commerce usa em média <em>1,5 a 3 metros de fita adesiva plástica</em> que não é reciclável. Esse plástico vai direto para aterros. A solução é uma <strong>trava mecânica inteligente</strong>: a caixa se fecha e trava por um micro servo controlado pelo ESP32, e só abre com um sinal digital — eliminando a fita completamente.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Hardware Necessário</div>
+            <table class="hw-table">
+              <thead><tr><th>COMPONENTE</th><th>PINO ESP32</th><th>FUNÇÃO</th></tr></thead>
+              <tbody>
+                <tr><td class="comp-name">Micro Servo 9g (SG90)</td><td class="comp-pin">GPIO 13 (PWM)</td><td class="comp-func">Aciona a trava mecânica</td></tr>
+                <tr><td class="comp-name">Reed Switch (sensor magnético)</td><td class="comp-pin">GPIO 14</td><td class="comp-func">Detecta se a caixa está fechada</td></tr>
+                <tr><td class="comp-name">Ímã pequeno</td><td class="comp-pin">—</td><td class="comp-func">Fixado na aba da caixa</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Conexões</div>
+            <div class="pin-diagram">
+              <div class="pin-diagram-title">▸ DIAGRAMA DE PINOS</div>
+              <div class="pin-row"><span class="pin-sensor">Servo SINAL</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 13</span></div>
+              <div class="pin-row"><span class="pin-sensor">Servo VCC</span><span class="pin-arrow">──→</span><span class="pin-gpio">5V</span><span class="pin-note">&nbsp;(pino VIN do ESP32)</span></div>
+              <div class="pin-row"><span class="pin-sensor">Servo GND</span><span class="pin-arrow">──→</span><span class="pin-gpio">GND</span></div>
+              <div class="pin-row" style="margin-top:8px"><span class="pin-sensor">Reed Switch</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 14</span><span class="pin-note">&nbsp;(INPUT_PULLUP)</span></div>
+              <div class="pin-row"><span class="pin-sensor">Reed Switch (outro terminal)</span><span class="pin-arrow">──→</span><span class="pin-gpio">GND</span></div>
+            </div>
+            <div class="alert alert-tip"><div class="alert-icon">💡</div><div>O Reed Switch é um interruptor magnético: fecha o circuito quando um ímã se aproxima. Fixe-o na borda da caixa e o ímã na aba. Quando a caixa fecha, o ímã aproxima do sensor e o GPIO vai para LOW.</div></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">3</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Código do Projeto</div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">C++ / ARDUINO</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+              <pre><span class="pp">#include</span> <span class="str">&lt;ESP32Servo.h&gt;</span>
+
+Servo trava;
+<span class="kw">const int</span> SERVO_PIN  = 13;
+<span class="kw">const int</span> REED_PIN   = 14;
+
+<span class="kw">const int</span> POS_TRAVADO = 90;  <span class="cmt">// graus — trava acionada</span>
+<span class="kw">const int</span> POS_ABERTO  = 0;   <span class="cmt">// graus — trava recolhida</span>
+
+<span class="kw">bool</span> estadoAnterior = false;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(115200);
+  trava.<span class="fn">attach</span>(SERVO_PIN);
+  <span class="fn">pinMode</span>(REED_PIN, INPUT_PULLUP);
+  trava.<span class="fn">write</span>(POS_ABERTO);
+  Serial.<span class="fn">println</span>(<span class="str">"Lacre Digital iniciado. Caixa aberta."</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">bool</span> caixaFechada = (<span class="fn">digitalRead</span>(REED_PIN) == LOW); <span class="cmt">// ímã próximo = LOW</span>
+
+  <span class="kw">if</span> (caixaFechada && !estadoAnterior) {
+    <span class="cmt">// Acabou de fechar → ativa a trava</span>
+    trava.<span class="fn">write</span>(POS_TRAVADO);
+    Serial.<span class="fn">println</span>(<span class="str">"🔒 CAIXA FECHADA — Trava acionada. Fita desnecessária!"</span>);
+    estadoAnterior = true;
+  }
+  <span class="kw">else if</span> (!caixaFechada && estadoAnterior) {
+    <span class="cmt">// Caixa aberta (via comando/app) → libera trava</span>
+    trava.<span class="fn">write</span>(POS_ABERTO);
+    Serial.<span class="fn">println</span>(<span class="str">"🔓 CAIXA ABERTA — Trava liberada."</span>);
+    estadoAnterior = false;
+  }
+
+  <span class="fn">delay</span>(200);
+}</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">4</div></div>
+          <div class="step-content">
+            <div class="step-title">Monte a Trava Física</div>
+            <div class="step-text">Use a <strong>impressora 3D ou corte a laser</strong> da Sala Maker para criar a peça de trava que o servo vai mover. O servo gira 90°, encaixando um "dente" em um receptor na aba da caixa. Quando o cliente recebe o pacote, ele aciona a abertura via botão ou app — <em>sem rasgar, sem fita</em>.</div>
+            <div class="impact-metric"><div class="metric-val">1.5m</div><div class="metric-desc">de fita adesiva plástica eliminada por envio. Em 1.000 pedidos/mês = 1,5 km de plástico evitado.</div></div>
+            <div class="alert alert-pitch"><div class="alert-icon">🎤</div><div><strong>No Pitch:</strong> "Eliminamos 1,5 metros de fita adesiva de uso único por pacote. Nossa trava mecânica facilita a abertura e aumenta a chance de reuso da embalagem em 10x."</div></div>
+          </div>
+        </div>
+      </div>
+      <button class="complete-btn" id="btn3" onclick="completeProj(3)">✓ MARCAR PROJETO 4 COMO CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- ===== PROJETO 5 ===== -->
+  <div class="project-card" id="proj4">
+    <div class="proj-header" onclick="toggleProj(4)">
+      <div class="proj-badge">📐</div>
+      <div class="proj-header-info">
+        <div class="proj-num">PROJETO 05 · LOGÍSTICA</div>
+        <div class="proj-name">Medidor de Cubagem Automático</div>
+        <div class="proj-tagline">Mede as 3 dimensões do produto para escolher sempre a menor embalagem possível</div>
+      </div>
+      <div class="proj-status"><div class="proj-xp">+150 XP</div><div class="proj-chevron">▼</div></div>
+    </div>
+    <div class="proj-body" id="body4">
+      <div class="mission-box" style="margin-top:0">
+        <div class="mission-label">▸ CONTEXTO DO PROBLEMA</div>
+        <p>Se medirmos o produto com precisão antes do empacotamento, podemos <em>escolher automaticamente a menor caixa que o comporta</em>. Isso elimina o espaço vazio e, consequentemente, elimina o plástico bolha. A <strong>medição 3D automática</strong> substitui o processo manual (impreciso) de escolha de caixas pelos operadores.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Hardware Necessário</div>
+            <table class="hw-table">
+              <thead><tr><th>COMPONENTE</th><th>PINOS ESP32</th><th>EIXO</th></tr></thead>
+              <tbody>
+                <tr><td class="comp-name">HC-SR04 #1</td><td class="comp-pin">TRIG:5 / ECHO:18</td><td class="comp-func">Comprimento (X)</td></tr>
+                <tr><td class="comp-name">HC-SR04 #2</td><td class="comp-pin">TRIG:16 / ECHO:17</td><td class="comp-func">Largura (Y)</td></tr>
+                <tr><td class="comp-name">HC-SR04 #3</td><td class="comp-pin">TRIG:4 / ECHO:2</td><td class="comp-func">Altura (Z)</td></tr>
+              </tbody>
+            </table>
+            <div class="alert alert-tip"><div class="alert-icon">💡</div><div>Use MDF ou madeira do corte a laser para construir uma "gaiola" cúbica com 50x50x50cm, com um sensor em cada face. O produto é colocado no centro e as 3 dimensões são lidas simultaneamente.</div></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Código do Projeto</div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">C++ / ARDUINO</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+              <pre><span class="cmt">// Projeto 5 — Medidor de Cubagem 3D</span>
+<span class="kw">const int</span> SUPORTE = 50; <span class="cmt">// cm — tamanho interno da gaiola</span>
+
+<span class="cmt">// Pinos: {TRIG, ECHO}</span>
+<span class="kw">int</span> sensores[3][2] = {{5,18}, {16,17}, {4,2}};
+String eixos[3] = {<span class="str">"Comprimento"</span>, <span class="str">"Largura"</span>, <span class="str">"Altura"</span>};
+
+<span class="kw">long</span> <span class="fn">lerDistancia</span>(<span class="kw">int</span> trig, <span class="kw">int</span> echo) {
+  <span class="fn">digitalWrite</span>(trig, LOW); <span class="fn">delayMicroseconds</span>(2);
+  <span class="fn">digitalWrite</span>(trig, HIGH); <span class="fn">delayMicroseconds</span>(10);
+  <span class="fn">digitalWrite</span>(trig, LOW);
+  <span class="kw">return</span> <span class="fn">pulseIn</span>(echo, HIGH, 30000) * 0.034 / 2;
+}
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(115200);
+  <span class="kw">for</span> (<span class="kw">int</span> i = 0; i < 3; i++) {
+    <span class="fn">pinMode</span>(sensores[i][0], OUTPUT);
+    <span class="fn">pinMode</span>(sensores[i][1], INPUT);
+  }
+  Serial.<span class="fn">println</span>(<span class="str">"Medidor de Cubagem 3D ativo. Posicione o produto."</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="fn">delay</span>(1000);
+  Serial.<span class="fn">println</span>(<span class="str">"\n=== MEDIÇÃO DO PRODUTO ==="</span>);
+
+  <span class="kw">long</span> dims[3];
+  <span class="kw">long</span> volume = 1;
+
+  <span class="kw">for</span> (<span class="kw">int</span> i = 0; i < 3; i++) {
+    <span class="kw">long</span> dist = <span class="fn">lerDistancia</span>(sensores[i][0], sensores[i][1]);
+    dims[i] = SUPORTE - dist; <span class="cmt">// dimensão real = suporte - espaço vazio</span>
+    Serial.<span class="fn">printf</span>(<span class="str">"%s: %ld cm\n"</span>, eixos[i].c_str(), dims[i]);
+    volume *= dims[i];
+  }
+
+  Serial.<span class="fn">printf</span>(<span class="str">"Volume: %ld cm³\n"</span>, volume);
+
+  <span class="cmt">// Sugestão de tamanho de caixa</span>
+  <span class="kw">if</span> (volume < 1000)       Serial.<span class="fn">println</span>(<span class="str">"→ Sugestão: Caixa PP (menor)"</span>);
+  <span class="kw">else if</span> (volume < 8000)  Serial.<span class="fn">println</span>(<span class="str">"→ Sugestão: Caixa P"</span>);
+  <span class="kw">else if</span> (volume < 27000) Serial.<span class="fn">println</span>(<span class="str">"→ Sugestão: Caixa M"</span>);
+  <span class="kw">else</span>                     Serial.<span class="fn">println</span>(<span class="str">"→ Sugestão: Caixa G"</span>);
+}</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">3</div></div>
+          <div class="step-content">
+            <div class="step-title">Construa a Gaiola de Medição</div>
+            <div class="step-text">Este é o projeto mais desafiador em termos de hardware físico. Use o <strong>corte a laser</strong> para criar peças de MDF que formam uma estrutura de 50×50×50 cm. Os três sensores são posicionados em faces perpendiculares. <em>O produto é colocado no canto da gaiola</em> e as leituras são feitas simultaneamente.</div>
+            <div class="impact-metric"><div class="metric-val">-35%</div><div class="metric-desc">de papelão desperdiçado com embalagens superestimadas, ao usar a caixa certa para cada produto.</div></div>
+            <div class="alert alert-pitch"><div class="alert-icon">🎤</div><div><strong>No Pitch:</strong> "Se medirmos o produto com precisão de milímetros, eliminamos a necessidade de caixas grandes e, consequentemente, eliminamos o plástico bolha. Este projeto ataca a raiz do problema."</div></div>
+          </div>
+        </div>
+      </div>
+      <button class="complete-btn" id="btn4" onclick="completeProj(4)">✓ MARCAR PROJETO 5 COMO CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- ===== PROJETO 6 ===== -->
+  <div class="project-card" id="proj5">
+    <div class="proj-header" onclick="toggleProj(5)">
+      <div class="proj-badge">📡</div>
+      <div class="proj-header-info">
+        <div class="proj-num">PROJETO 06 · GAMIFICAÇÃO</div>
+        <div class="proj-name">Beacon de Devolução Incentivada (BLE)</div>
+        <div class="proj-tagline">Detecta via Bluetooth quando o cliente trouxe a embalagem para o ponto de coleta e libera recompensas</div>
+      </div>
+      <div class="proj-status"><div class="proj-xp">+110 XP</div><div class="proj-chevron">▼</div></div>
+    </div>
+    <div class="proj-body" id="body5">
+      <div class="mission-box" style="margin-top:0">
+        <div class="mission-label">▸ CONTEXTO DO PROBLEMA</div>
+        <p>Mesmo com embalagens retornáveis, o maior desafio é <em>fazer o cliente devolvê-las</em>. A solução é a gamificação: quando o smartphone do cliente chega perto do ponto de coleta, o <strong>ESP32 Beacon BLE</strong> detecta a presença e automaticamente libera pontos, créditos ou descontos — sem nenhum app especial necessário.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Hardware Necessário</div>
+            <div class="step-text">Este projeto usa <strong>apenas o ESP32</strong> — sem sensores externos. O rádio Bluetooth Low Energy (BLE) já vem integrado no chip. Você só precisa de: ESP32 + cabo USB para programar + fonte de energia (bateria 9V ou powerbank).</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Código do Beacon BLE</div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">C++ / ARDUINO</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+              <pre><span class="pp">#include</span> <span class="str">&lt;BLEDevice.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;BLEUtils.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;BLEServer.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;BLEAdvertisedDevice.h&gt;</span>
+
+<span class="cmt">// Nome que aparecerá nos dispositivos próximos</span>
+<span class="pp">#define</span> NOME_BEACON <span class="str">"PONTO_COLETA_ECO_01"</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(115200);
+
+  <span class="cmt">// Inicializar BLE</span>
+  BLEDevice::<span class="fn">init</span>(NOME_BEACON);
+
+  <span class="cmt">// Criar servidor BLE</span>
+  BLEServer *pServer = BLEDevice::<span class="fn">createServer</span>();
+
+  <span class="cmt">// Configurar advertising</span>
+  BLEAdvertising *pAdv = BLEDevice::<span class="fn">getAdvertising</span>();
+  pAdv-><span class="fn">setScanResponse</span>(true);
+  pAdv-><span class="fn">setMinPreferred</span>(0x06); <span class="cmt">// iPhone compatibility</span>
+  pAdv-><span class="fn">setMinPreferred</span>(0x12);
+  BLEDevice::<span class="fn">startAdvertising</span>();
+
+  Serial.<span class="fn">println</span>(<span class="str">"Beacon BLE ativo!"</span>);
+  Serial.<span class="fn">printf</span>(<span class="str">"Emitindo sinal como: %s\n"</span>, NOME_BEACON);
+  Serial.<span class="fn">println</span>(<span class="str">"Qualquer app BLE Scanner detectará este ponto."</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="cmt">// O beacon emite continuamente — sem necessidade de código no loop</span>
+  <span class="fn">delay</span>(1000);
+}</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">3</div></div>
+          <div class="step-content">
+            <div class="step-title">Teste com App BLE Scanner</div>
+            <div class="step-text">Instale o app <strong>"nRF Connect"</strong> ou <strong>"BLE Scanner"</strong> no celular. Quando estiver próximo do ESP32, o beacon aparecerá na lista com o nome "PONTO_COLETA_ECO_01". Para o pitch, isso demonstra como o sistema detectaria automaticamente a chegada do cliente com a embalagem. <em>RSSI mais próximo de 0 = mais perto do beacon.</em></div>
+            <div class="alert alert-info"><div class="alert-icon">ℹ️</div><div>Para um sistema completo, o app do cliente consultaria um servidor ao detectar o beacon e liberaria os pontos/créditos automaticamente. No protótipo, basta mostrar a detecção do sinal BLE.</div></div>
+            <div class="impact-metric"><div class="metric-val">+300%</div><div class="metric-desc">de aumento na taxa de devolução de embalagens reportado por programas de gamificação com recompensas imediatas.</div></div>
+            <div class="alert alert-pitch"><div class="alert-icon">🎤</div><div><strong>No Pitch:</strong> "Garantimos que a embalagem retorne ao ciclo produtivo através de incentivos digitais. Quando o cliente chega ao ponto de coleta, o sistema detecta automaticamente e libera recompensas — sem fricção."</div></div>
+          </div>
+        </div>
+      </div>
+      <button class="complete-btn" id="btn5" onclick="completeProj(5)">✓ MARCAR PROJETO 6 COMO CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- ===== PROJETO 7 ===== -->
+  <div class="project-card" id="proj6">
+    <div class="proj-header" onclick="toggleProj(6)">
+      <div class="proj-badge">📈</div>
+      <div class="proj-header-info">
+        <div class="proj-num">PROJETO 07 · EMBALAGEM LEVE</div>
+        <div class="proj-name">Monitor de Integridade (Acelerômetro MPU6050)</div>
+        <div class="proj-tagline">Prova que embalagens mais finas protegem o produto — se o transporte for cuidadoso</div>
+      </div>
+      <div class="proj-status"><div class="proj-xp">+120 XP</div><div class="proj-chevron">▼</div></div>
+    </div>
+    <div class="proj-body" id="body6">
+      <div class="mission-box" style="margin-top:0">
+        <div class="mission-label">▸ CONTEXTO DO PROBLEMA</div>
+        <p>Embalagens mais grossas existem para proteger contra choques e quedas. Mas se o transporte for cuidadoso, <em>podemos usar caixas com 20% menos papelão</em>. O MPU6050 registra cada impacto durante a entrega, criando um "relatório de tratamento" da carga. Isso permite <strong>negociar com transportadoras</strong> e justificar o uso de embalagens mais leves.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Hardware Necessário</div>
+            <table class="hw-table">
+              <thead><tr><th>COMPONENTE</th><th>PINO ESP32</th><th>PROTOCOLO</th></tr></thead>
+              <tbody>
+                <tr><td class="comp-name">MPU6050 (acelerômetro/giroscópio)</td><td class="comp-pin">SDA: GPIO 21 · SCL: GPIO 22</td><td class="comp-func">I2C</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Conexões I2C</div>
+            <div class="pin-diagram">
+              <div class="pin-diagram-title">▸ DIAGRAMA I2C — MPU6050</div>
+              <div class="pin-row"><span class="pin-sensor">VCC</span><span class="pin-arrow">──→</span><span class="pin-gpio">3.3V</span></div>
+              <div class="pin-row"><span class="pin-sensor">GND</span><span class="pin-arrow">──→</span><span class="pin-gpio">GND</span></div>
+              <div class="pin-row"><span class="pin-sensor">SDA</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 21</span></div>
+              <div class="pin-row"><span class="pin-sensor">SCL</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 22</span></div>
+              <div class="pin-row"><span class="pin-sensor">AD0</span><span class="pin-arrow">──→</span><span class="pin-gpio">GND</span><span class="pin-note">&nbsp;(define endereço I2C como 0x68)</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">3</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Código do Projeto</div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">C++ / ARDUINO</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+              <pre><span class="pp">#include</span> <span class="str">&lt;Adafruit_MPU6050.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;Adafruit_Sensor.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;Wire.h&gt;</span>
+
+Adafruit_MPU6050 mpu;
+
+<span class="kw">const float</span> LIMIAR_IMPACTO = 15.0; <span class="cmt">// m/s² — ajuste conforme necessário</span>
+<span class="kw">int</span> contagemImpactos = 0;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(115200);
+
+  <span class="kw">if</span> (!mpu.<span class="fn">begin</span>()) {
+    Serial.<span class="fn">println</span>(<span class="str">"MPU6050 não encontrado! Verifique conexões."</span>);
+    <span class="kw">while</span> (1) <span class="fn">delay</span>(10);
+  }
+
+  mpu.<span class="fn">setAccelerometerRange</span>(MPU6050_RANGE_8_G);
+  mpu.<span class="fn">setFilterBandwidth</span>(MPU6050_BAND_21_HZ);
+
+  Serial.<span class="fn">println</span>(<span class="str">"Monitor de Integridade ativo. Aguardando transportes..."</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  sensors_event_t a, g, temp;
+  mpu.<span class="fn">getEvent</span>(&a, &g, &temp);
+
+  <span class="kw">float</span> acX = <span class="fn">abs</span>(a.acceleration.x);
+  <span class="kw">float</span> acY = <span class="fn">abs</span>(a.acceleration.y);
+  <span class="kw">float</span> acZ = <span class="fn">abs</span>(a.acceleration.z - 9.8); <span class="cmt">// remover gravidade</span>
+
+  <span class="kw">float</span> acTotal = <span class="fn">max</span>({acX, acY, acZ});
+
+  <span class="kw">if</span> (acTotal > LIMIAR_IMPACTO) {
+    contagemImpactos++;
+    Serial.<span class="fn">printf</span>(<span class="str">"💥 IMPACTO #%d detectado! Intensidade: %.1f m/s²\n"</span>,
+                   contagemImpactos, acTotal);
+  }
+
+  <span class="cmt">// Log contínuo a cada 5s</span>
+  <span class="kw">static unsigned long</span> ultimo = 0;
+  <span class="kw">if</span> (<span class="fn">millis</span>() - ultimo > 5000) {
+    Serial.<span class="fn">printf</span>(<span class="str">"Impactos registrados: %d | Última aceleração: %.1f m/s²\n"</span>,
+                   contagemImpactos, acTotal);
+    ultimo = <span class="fn">millis</span>();
+  }
+
+  <span class="fn">delay</span>(100); <span class="cmt">// 10Hz de amostragem</span>
+}</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">4</div></div>
+          <div class="step-content">
+            <div class="step-title">Interprete os Resultados</div>
+            <div class="step-text">Fixe o ESP32 + MPU6050 dentro de uma caixa de teste e simule um transporte: balance, sacuda, derrube. O Monitor Serial registrará cada impacto acima do limiar de <em>15 m/s²</em>. <strong>Se o transporte for suave (0 impactos acima do limiar)</strong>, isso valida o uso de embalagens mais finas.</div>
+            <div class="impact-metric"><div class="metric-val">-20%</div><div class="metric-desc">de massa de papelão por caixa quando comprovado que o transporte não causa impactos acima do limiar seguro.</div></div>
+            <div class="alert alert-pitch"><div class="alert-icon">🎤</div><div><strong>No Pitch:</strong> "Nossos dados de aceleração comprovam que o transporte foi suave — isso nos permite usar embalagens com 20% menos papelão sem comprometer a segurança do produto."</div></div>
+          </div>
+        </div>
+      </div>
+      <button class="complete-btn" id="btn6" onclick="completeProj(6)">✓ MARCAR PROJETO 7 COMO CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- ===== PROJETO 8 ===== -->
+  <div class="project-card" id="proj7">
+    <div class="proj-header" onclick="toggleProj(7)">
+      <div class="proj-badge">💡</div>
+      <div class="proj-header-info">
+        <div class="proj-num">PROJETO 08 · ANTI-VIOLAÇÃO</div>
+        <div class="proj-name">Lacre de Luz — Sensor LDR (Anti-Violação)</div>
+        <div class="proj-tagline">Detecta abertura indevida da embalagem retornável sem usar lacres plásticos descartáveis</div>
+      </div>
+      <div class="proj-status"><div class="proj-xp">+90 XP</div><div class="proj-chevron">▼</div></div>
+    </div>
+    <div class="proj-body" id="body7">
+      <div class="mission-box" style="margin-top:0">
+        <div class="mission-label">▸ CONTEXTO DO PROBLEMA</div>
+        <p>Embalagens de alimentos e remédios precisam garantir que não foram abertas antes da entrega. Hoje isso é feito com <em>lacres plásticos descartáveis</em> — mais lixo. A solução elegante: um <strong>LDR (sensor de luz)</strong> instalado dentro da caixa. Se a caixa for aberta, entra luz e o ESP32 registra a violação — sem gerar nenhum resíduo plástico.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Hardware Necessário</div>
+            <table class="hw-table">
+              <thead><tr><th>COMPONENTE</th><th>PINO ESP32</th><th>FUNÇÃO</th></tr></thead>
+              <tbody>
+                <tr><td class="comp-name">LDR (fotoresistor)</td><td class="comp-pin">GPIO 34 (ADC)</td><td class="comp-func">Detecta luz dentro da caixa</td></tr>
+                <tr><td class="comp-name">Resistor 10kΩ</td><td class="comp-pin">—</td><td class="comp-func">Divisor de tensão com o LDR</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Circuito Divisor de Tensão</div>
+            <div class="pin-diagram">
+              <div class="pin-diagram-title">▸ DIVISOR DE TENSÃO COM LDR</div>
+              <div class="pin-row"><span class="pin-sensor">3.3V</span><span class="pin-arrow">──→</span><span class="pin-sensor">LDR</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 34</span><span class="pin-arrow">──→</span><span class="pin-sensor">R 10kΩ</span><span class="pin-arrow">──→</span><span class="pin-gpio">GND</span></div>
+            </div>
+            <div class="step-text" style="margin-top:12px">Monte o circuito: <em>3.3V → LDR → nó → R10k → GND</em>. O GPIO 34 lê o nó do meio. Com mais luz, o LDR tem menos resistência e a tensão no nó aumenta → valor analógico maior. <strong>Caixa fechada = escuro = valor baixo. Caixa aberta = luz = valor alto.</strong></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">3</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Código do Projeto</div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">C++ / ARDUINO</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+              <pre><span class="cmt">// Projeto 8 — Lacre de Luz (Anti-Violação LDR)</span>
+<span class="kw">const int</span> LDR_PIN  = 34;
+<span class="kw">const int</span> LIMIAR   = 800; <span class="cmt">// ajuste: acima = luz detectada</span>
+
+<span class="kw">bool</span> violacaoRegistrada = false;
+<span class="kw">unsigned long</span> horaViolacao = 0;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(115200);
+  Serial.<span class="fn">println</span>(<span class="str">"Lacre de Luz ativo. Embalagem fechada e monitorada."</span>);
+  Serial.<span class="fn">printf</span>(<span class="str">"Leitura inicial: %d\n"</span>, <span class="fn">analogRead</span>(LDR_PIN));
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> leitura = <span class="fn">analogRead</span>(LDR_PIN);
+
+  <span class="kw">if</span> (leitura > LIMIAR && !violacaoRegistrada) {
+    violacaoRegistrada = true;
+    horaViolacao = <span class="fn">millis</span>() / 1000; <span class="cmt">// segundos desde boot</span>
+    Serial.<span class="fn">println</span>(<span class="str">"🚨 VIOLAÇÃO DETECTADA! Embalagem foi aberta indevidamente."</span>);
+    Serial.<span class="fn">printf</span>(<span class="str">"   Momento da violação: %lus após inicialização\n"</span>, horaViolacao);
+    Serial.<span class="fn">printf</span>(<span class="str">"   Intensidade de luz: %d/4095\n"</span>, leitura);
+  }
+
+  <span class="kw">if</span> (!violacaoRegistrada) {
+    Serial.<span class="fn">printf</span>(<span class="str">"✅ OK | Luz: %d | Embalagem íntegra.\n"</span>, leitura);
+  } <span class="kw">else</span> {
+    Serial.<span class="fn">println</span>(<span class="str">"⚠ EMBALAGEM COMPROMETIDA — Registrar ocorrência."</span>);
+  }
+
+  <span class="fn">delay</span>(500);
+}</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">4</div></div>
+          <div class="step-content">
+            <div class="step-title">Calibre o Limiar</div>
+            <div class="step-text">Com a caixa fechada, anote o valor do LDR (deve ser baixo, &lt;400). Com a caixa aberta em ambiente iluminado, o valor deve subir para 2000+. <strong>Defina o LIMIAR</strong> em um ponto intermediário seguro (ex: 800). Se o ambiente de transporte for muito escuro, ajuste para baixo.</div>
+            <div class="impact-metric"><div class="metric-val">0 resíduos</div><div class="metric-desc">plásticos de lacre gerados — substituição total de lacres descartáveis por monitoramento digital.</div></div>
+            <div class="alert alert-pitch"><div class="alert-icon">🎤</div><div><strong>No Pitch:</strong> "Segurança biológica e inviolabilidade sem gerar resíduos de lacres plásticos. Um LDR de R$0,50 faz o que um lacre descartável faz, com a vantagem de ser reutilizável e rastreável."</div></div>
+          </div>
+        </div>
+      </div>
+      <button class="complete-btn" id="btn7" onclick="completeProj(7)">✓ MARCAR PROJETO 8 COMO CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- ===== PROJETO 9 ===== -->
+  <div class="project-card" id="proj8">
+    <div class="proj-header" onclick="toggleProj(8)">
+      <div class="proj-badge">🖥️</div>
+      <div class="proj-header-info">
+        <div class="proj-num">PROJETO 09 · EDUCAÇÃO</div>
+        <div class="proj-name">Totem Maker de Instruções Interativas (PIR + LCD)</div>
+        <div class="proj-tagline">Ensina o cliente a dobrar e devolver a embalagem corretamente quando ele chega ao ponto de coleta</div>
+      </div>
+      <div class="proj-status"><div class="proj-xp">+110 XP</div><div class="proj-chevron">▼</div></div>
+    </div>
+    <div class="proj-body" id="body8">
+      <div class="mission-box" style="margin-top:0">
+        <div class="mission-label">▸ CONTEXTO DO PROBLEMA</div>
+        <p>Mesmo com embalagens retornáveis, muitos clientes as <em>rasgam ou dobram errado ao abrir</em>, tornando o reuso impossível. Um totem educativo no ponto de coleta que <strong>detecta a presença do cliente e exibe automaticamente o passo a passo</strong> de como desmontar a caixa corretamente pode dobrar a vida útil de cada embalagem.</p>
+      </div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">1</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Hardware Necessário</div>
+            <table class="hw-table">
+              <thead><tr><th>COMPONENTE</th><th>PINO ESP32</th><th>FUNÇÃO</th></tr></thead>
+              <tbody>
+                <tr><td class="comp-name">Sensor PIR (HC-SR501)</td><td class="comp-pin">GPIO 15</td><td class="comp-func">Detecta presença de pessoa</td></tr>
+                <tr><td class="comp-name">Display LCD I2C (16×2)</td><td class="comp-pin">SDA: GPIO 21 · SCL: GPIO 22</td><td class="comp-func">Exibe instruções de desmontagem</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">2</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Conexões</div>
+            <div class="pin-diagram">
+              <div class="pin-diagram-title">▸ DIAGRAMA DE PINOS</div>
+              <div class="pin-row"><span class="pin-sensor">PIR VCC</span><span class="pin-arrow">──→</span><span class="pin-gpio">5V</span></div>
+              <div class="pin-row"><span class="pin-sensor">PIR OUT</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 15</span></div>
+              <div class="pin-row"><span class="pin-sensor">PIR GND</span><span class="pin-arrow">──→</span><span class="pin-gpio">GND</span></div>
+              <div class="pin-row" style="margin-top:8px"><span class="pin-sensor">LCD SDA</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 21</span></div>
+              <div class="pin-row"><span class="pin-sensor">LCD SCL</span><span class="pin-arrow">──→</span><span class="pin-gpio">GPIO 22</span></div>
+              <div class="pin-row"><span class="pin-sensor">LCD VCC</span><span class="pin-arrow">──→</span><span class="pin-gpio">5V</span></div>
+              <div class="pin-row"><span class="pin-sensor">LCD GND</span><span class="pin-arrow">──→</span><span class="pin-gpio">GND</span></div>
+            </div>
+            <div class="alert alert-tip"><div class="alert-icon">💡</div><div>O sensor PIR precisa de ~30 segundos de aquecimento após ligar antes de começar a detectar corretamente. O LCD I2C tem endereço padrão 0x27 — se não funcionar, tente 0x3F.</div></div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">3</div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-title">Código do Projeto</div>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">C++ / ARDUINO</span><button class="copy-btn" onclick="copyCode(this)">COPIAR</button></div>
+              <pre><span class="pp">#include</span> <span class="str">&lt;Wire.h&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;LiquidCrystal_I2C.h&gt;</span>
+
+<span class="cmt">// Endereço I2C do LCD: 0x27 (mais comum) ou 0x3F</span>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+<span class="kw">const int</span> PIR_PIN = 15;
+
+<span class="cmt">// Passos de instrução — máximo 16 chars por linha</span>
+<span class="kw">const char</span>* passos[][2] = {
+  {<span class="str">"PASSO 1:"</span>,        <span class="str">"Retire adesivo"</span>},
+  {<span class="str">"PASSO 2:"</span>,        <span class="str">"Abra aba lateral"</span>},
+  {<span class="str">"PASSO 3:"</span>,        <span class="str">"NAO RASGAR abas"</span>},
+  {<span class="str">"PASSO 4:"</span>,        <span class="str">"Achate a base"</span>},
+  {<span class="str">"PASSO 5:"</span>,        <span class="str">"Deposite aqui!"</span>},
+  {<span class="str">"OBRIGADO!"</span>,       <span class="str">"Voce fez a dif."</span>}
+};
+<span class="kw">const int</span> NUM_PASSOS = 6;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(115200);
+  <span class="fn">pinMode</span>(PIR_PIN, INPUT);
+  lcd.<span class="fn">init</span>();
+  lcd.<span class="fn">noBacklight</span>(); <span class="cmt">// Backlight desligado em repouso</span>
+  lcd.<span class="fn">clear</span>();
+  Serial.<span class="fn">println</span>(<span class="str">"Totem Maker ativo. Aguardando presença..."</span>);
+}
+
+<span class="kw">void</span> <span class="fn">exibirPassos</span>() {
+  lcd.<span class="fn">backlight</span>();
+  <span class="kw">for</span> (<span class="kw">int</span> i = 0; i < NUM_PASSOS; i++) {
+    lcd.<span class="fn">clear</span>();
+    lcd.<span class="fn">setCursor</span>(0, 0); lcd.<span class="fn">print</span>(passos[i][0]);
+    lcd.<span class="fn">setCursor</span>(0, 1); lcd.<span class="fn">print</span>(passos[i][1]);
+    Serial.<span class="fn">printf</span>(<span class="str">"%s %s\n"</span>, passos[i][0], passos[i][1]);
+    <span class="fn">delay</span>(3000); <span class="cmt">// 3s por passo</span>
+  }
+  lcd.<span class="fn">clear</span>();
+  lcd.<span class="fn">noBacklight</span>();
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> presenca = <span class="fn">digitalRead</span>(PIR_PIN);
+
+  <span class="kw">if</span> (presenca == HIGH) {
+    Serial.<span class="fn">println</span>(<span class="str">"Pessoa detectada! Exibindo instruções..."</span>);
+    <span class="fn">exibirPassos</span>();
+    <span class="fn">delay</span>(5000); <span class="cmt">// Pausa antes de detectar novamente</span>
+  }
+
+  <span class="fn">delay</span>(200);
+}</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-marker"><div class="step-num-circle">4</div></div>
+          <div class="step-content">
+            <div class="step-title">Monte o Totem Físico</div>
+            <div class="step-text">Use MDF cortado a laser para montar uma caixinha que abriga o ESP32, o LCD na frente e o sensor PIR acima do LCD. Quando alguém se aproxima, o LCD liga automaticamente e exibe os 6 passos em sequência. <strong>Personalize as mensagens</strong> para o tipo específico de embalagem do seu projeto. Após o último passo, o LCD apaga para economizar energia.</div>
+            <div class="impact-metric"><div class="metric-val">10x</div><div class="metric-desc">extensão da vida útil da embalagem quando o cliente aprende a desmontá-la corretamente sem rasgar.</div></div>
+            <div class="alert alert-pitch"><div class="alert-icon">🎤</div><div><strong>No Pitch:</strong> "Educação ambiental no ponto de entrega para maximizar a vida útil da embalagem. Nossa solução garante que a embalagem cara e durável não seja destruída pelo cliente na abertura, estendendo seu ciclo de reuso em até 10 vezes."</div></div>
+          </div>
+        </div>
+      </div>
+      <button class="complete-btn" id="btn8" onclick="completeProj(8)">✓ MARCAR PROJETO 9 COMO CONCLUÍDO</button>
+    </div>
+  </div>
+
+  <!-- FINAL SECTION -->
+  <div class="final-card" id="finalCard" style="display:none">
+    <div style="font-size:3em;margin-bottom:15px">🏆</div>
+    <div class="final-title">MISSÃO CONCLUÍDA!</div>
+    <div class="final-sub">Você completou todos os 9 projetos IoT para redução de embalagens. Agora prepare seu pitch de 3 minutos.</div>
+    <ul class="pitch-tips">
+      <li class="pitch-tip">
+        <div class="pitch-tip-icon">📊</div>
+        <div class="pitch-tip-text"><strong>Métrica de Impacto:</strong> Cite números reais. Ex: "Nossa solução economiza 150g de plástico por envio — em 1.000 pedidos/mês, isso são 150kg de plástico evitados."</div>
+      </li>
+      <li class="pitch-tip">
+        <div class="pitch-tip-icon">💰</div>
+        <div class="pitch-tip-text"><strong>Custo-Benefício:</strong> "O kit ESP32 + sensores custa ~R$80. Uma caixa retornável custa R$8, mas substitui 50 caixas de R$2 cada — R$100 de economia por caixa."</div>
+      </li>
+      <li class="pitch-tip">
+        <div class="pitch-tip-icon">🛠️</div>
+        <div class="pitch-tip-text"><strong>Sala Maker em Ação:</strong> "Prototipamos as peças mecânicas com corte a laser e impressão 3D. A estrutura de medição 3D foi feita em MDF na nossa unidade."</div>
+      </li>
+      <li class="pitch-tip">
+        <div class="pitch-tip-icon">🔗</div>
+        <div class="pitch-tip-text"><strong>Combinações Poderosas:</strong> Projetos 5 (cubagem) + 2 (enchimento) atacam o mesmo problema de dois ângulos. Projetos 3 (RFID) + 6 (Beacon) criam um sistema completo de logística circular.</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PITCH SECTION (always visible at bottom) -->
+  <div class="final-card" style="margin-top:30px">
+    <div class="final-title" style="font-size:1.2em">🎤 Dicas para o Pitch de 3 Minutos</div>
+    <div class="final-sub" style="margin-bottom:20px">O que os avaliadores querem ver:</div>
+    <ul class="pitch-tips">
+      <li class="pitch-tip">
+        <div class="pitch-tip-icon">🎯</div>
+        <div class="pitch-tip-text"><strong>Primeiro 30 segundos — O Problema:</strong> "O e-commerce brasileiro gera X toneladas de embalagem por mês. Cada pedido usa em média 2 caixas, 3m de fita e 200g de plástico bolha que vai direto para o aterro."</div>
+      </li>
+      <li class="pitch-tip">
+        <div class="pitch-tip-icon">⚡</div>
+        <div class="pitch-tip-text"><strong>Próximos 90 segundos — A Solução:</strong> Demonstre o protótipo funcionando. Mostre os dados no Monitor Serial. Explique como o ESP32 resolve especificamente uma parte do problema.</div>
+      </li>
+      <li class="pitch-tip">
+        <div class="pitch-tip-icon">📈</div>
+        <div class="pitch-tip-text"><strong>Últimos 60 segundos — O Impacto:</strong> Use as métricas de cada projeto. Mostre a conta de custo-benefício. Diga qual seria o próximo passo para escalar a solução.</div>
+      </li>
+    </ul>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ===== STATE =====
+let completed = new Array(9).fill(false);
+let totalXP = 0;
+const xpValues = [120,100,130,140,150,110,120,90,110];
+
+// ===== PARTICLES =====
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function createParticle() {
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
+    r: Math.random() * 1.5,
+    a: Math.random() * 0.4 + 0.1,
+    color: Math.random() > 0.5 ? '#39ff14' : '#00f5ff'
+  };
+}
+
+for (let i = 0; i < 80; i++) particles.push(createParticle());
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.a;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ===== TOGGLE PROJECT =====
+function toggleProj(idx) {
+  const body = document.getElementById('body' + idx);
+  const card = document.getElementById('proj' + idx);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  card.querySelector('.proj-chevron').style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+function scrollToProj(idx) {
+  document.getElementById('proj' + idx).scrollIntoView({behavior:'smooth', block:'start'});
+  // auto-open if closed
+  const body = document.getElementById('body' + idx);
+  if (!body.classList.contains('open')) toggleProj(idx);
+}
+
+// ===== COMPLETE PROJECT =====
+function completeProj(idx) {
+  if (completed[idx]) return;
+  completed[idx] = true;
+  totalXP += xpValues[idx];
+
+  // Update button
+  const btn = document.getElementById('btn' + idx);
+  btn.textContent = '✅ PROJETO ' + (idx+1) + ' CONCLUÍDO!';
+  btn.classList.add('done-btn');
+
+  // Update path node
+  const pn = document.getElementById('pn' + idx);
+  pn.classList.add('done');
+  const circle = pn.querySelector('.path-circle');
+  circle.classList.remove('active','locked');
+  circle.classList.add('complete');
+
+  // Activate next
+  if (idx + 1 < 9) {
+    const nextCircle = document.getElementById('pn' + (idx+1)).querySelector('.path-circle');
+    nextCircle.classList.remove('locked');
+    nextCircle.classList.add('active');
+  }
+
+  // Update HUD
+  const count = completed.filter(Boolean).length;
+  document.getElementById('projCounter').textContent = count + ' / 9';
+  document.getElementById('xpVal').textContent = totalXP;
+  document.getElementById('xpBar').style.width = (count / 9 * 100) + '%';
+
+  // Toast
+  showToast('ok', '⚡', 'PROJETO ' + (idx+1) + ' CONCLUÍDO', '+' + xpValues[idx] + ' XP ganhos!');
+
+  // Final
+  if (count === 9) {
+    setTimeout(() => {
+      document.getElementById('finalCard').style.display = 'block';
+      document.getElementById('finalCard').scrollIntoView({behavior:'smooth'});
+      showToast('xp', '🏆', 'MISSÃO COMPLETA!', 'Todos os 9 projetos finalizados!');
+    }, 500);
+  }
+}
+
+// ===== TOAST =====
+function showToast(type, icon, title, msg) {
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.innerHTML = `<div class="toast-icon">${icon}</div><div class="toast-body"><strong>${title}</strong><span>${msg}</span></div>`;
+  wrap.appendChild(t);
+  setTimeout(() => {
+    t.classList.add('out');
+    setTimeout(() => t.remove(), 400);
+  }, 3000);
+}
+
+// ===== COPY CODE =====
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText || pre.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'COPIADO!';
+    btn.style.background = 'rgba(57,255,20,0.3)';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.background = '';
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

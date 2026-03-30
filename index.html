@@ -1,169 +1,590 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISW044 - Programação Multiplataforma | FATEC Ourinhos</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
-        .header { background: rgba(255, 255, 255, 0.95); padding: 30px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; text-align: center; }
-        .header-text h1 { color: #11998e; font-size: 2.8em; margin-bottom: 10px; }
-        .header-text p { color: #666; font-size: 1.2em; margin: 8px 0; }
-        .container { max-width: 1400px; margin: 40px auto; padding: 0 20px; }
-        .course-info { background: white; border-radius: 15px; padding: 40px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .course-info h2 { color: #11998e; font-size: 2em; margin-bottom: 20px; }
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
-        .info-card { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 25px; border-radius: 10px; text-align: center; }
-        .info-card h3 { font-size: 2em; margin-bottom: 10px; }
-        .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
-        .module-card { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.15); transition: all 0.3s; border-top: 5px solid #11998e; }
-        .module-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.25); }
-        .module-card h3 { color: #11998e; font-size: 1.5em; margin-bottom: 15px; }
-        .week-list { list-style: none; }
-        .week-list li { margin-bottom: 10px; }
-        .week-list a { display: block; padding: 12px 15px; background: #f8f9fa; color: #11998e; text-decoration: none; border-radius: 5px; transition: all 0.3s; font-weight: 500; }
-        .week-list a:hover { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; transform: translateX(5px); }
-        .cta-buttons { display: flex; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
-        .cta-button { display: inline-block; padding: 15px 35px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.1em; transition: all 0.3s; }
-        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(17, 153, 142, 0.4); }
-        @media (max-width: 768px) { .header-text h1 { font-size: 1.8em; } .modules-grid { grid-template-columns: 1fr; } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ISW044 — Programação Multiplataforma | FATEC Ourinhos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #0c0f1a;
+      --surface: #131728;
+      --card:    #181d2f;
+      --border:  #222843;
+      --accent:  #4f8cff;
+      --accent2: #38e0c0;
+      --iot:     #f97316;
+      --iot2:    #fb923c;
+      --warn:    #a78bfa;
+      --text:    #e2e8f0;
+      --muted:   #64748b;
+      --muted2:  #94a3b8;
+      --green:   #22d3a5;
+      --yellow:  #fbbf24;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(79,140,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,140,255,.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(12,15,26,.9);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      padding: 0 32px;
+      display: flex; align-items: center; gap: 24px;
+      height: 60px;
+    }
+    .topbar-logo { font-family: 'DM Mono', monospace; font-size: .78rem; color: var(--accent); letter-spacing: 2px; }
+    .topbar-sep { flex: 1; }
+    .topbar-nav { display: flex; gap: 8px; }
+    .topbar-nav a { font-size: .8rem; color: var(--muted2); text-decoration: none; padding: 6px 14px; border-radius: 6px; transition: .2s; }
+    .topbar-nav a:hover { background: var(--border); color: var(--text); }
+
+    /* HERO */
+    .hero {
+      position: relative; z-index: 1;
+      padding: 100px 32px 80px;
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'DM Mono', monospace; font-size: .72rem;
+      color: var(--accent2); letter-spacing: 2px;
+      border: 1px solid rgba(56,224,192,.3);
+      padding: 6px 16px; border-radius: 999px; margin-bottom: 24px;
+    }
+    .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      line-height: 1.1; margin-bottom: 20px;
+      background: linear-gradient(135deg, #fff 30%, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub { font-size: 1rem; color: var(--muted2); line-height: 1.7; margin-bottom: 32px; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; font-weight: 600; font-size: .9rem;
+      text-decoration: none; transition: .2s;
+      box-shadow: 0 0 30px rgba(79,140,255,.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(79,140,255,.5); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px; border-radius: 8px;
+      border: 1px solid var(--border); color: var(--muted2);
+      font-weight: 500; font-size: .9rem; text-decoration: none; transition: .2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px 20px;
+      position: relative; overflow: hidden; transition: .25s;
+    }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+    .stat-card.c1::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+    .stat-card.c2::before { background: linear-gradient(90deg, var(--iot), var(--iot2)); }
+    .stat-card.c3::before { background: linear-gradient(90deg, var(--warn), #60a5fa); }
+    .stat-card.c4::before { background: linear-gradient(90deg, var(--green), var(--accent2)); }
+    .stat-card:hover { transform: translateY(-3px); border-color: rgba(79,140,255,.3); }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; color: #fff; line-height: 1; }
+    .stat-label { font-size: .78rem; color: var(--muted); margin-top: 8px; }
+
+    /* SECTIONS */
+    .section { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 60px 32px; }
+    .section-header { margin-bottom: 40px; }
+    .section-tag { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--accent2); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 2.5vw, 2rem); color: #fff; }
+    .section-desc { color: var(--muted2); margin-top: 10px; font-size: .95rem; line-height: 1.7; }
+    .divider { height: 1px; background: var(--border); max-width: 1200px; margin: 0 auto; }
+
+    /* EMENTA */
+    .ementa-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 36px; margin-bottom: 48px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    }
+    .ementa-col h3 { font-family: 'Syne', sans-serif; font-size: 1rem; color: var(--accent2); margin-bottom: 16px; }
+    .ementa-list { list-style: none; }
+    .ementa-list li {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: .85rem; color: var(--muted2);
+      padding: 9px 0; border-bottom: 1px solid rgba(34,40,67,.6); line-height: 1.5;
+    }
+    .ementa-list li:last-child { border-bottom: none; }
+    .ementa-list li::before { content: '→'; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+    .ementa-list li.iot::before { content: '⬡'; color: var(--iot); }
+
+    /* MODULES */
+    .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
+
+    .mod-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      transition: .25s; display: flex; flex-direction: column;
+    }
+    .mod-card:hover { transform: translateY(-4px); border-color: rgba(79,140,255,.35); box-shadow: 0 20px 40px rgba(0,0,0,.4); }
+    .mod-card.iot-card:hover { border-color: rgba(249,115,22,.4); }
+
+    .mod-accent { height: 3px; }
+    .a1 { background: linear-gradient(90deg,#f97316,#fb923c); }
+    .a2 { background: linear-gradient(90deg,#fbbf24,#f97316); }
+    .a3 { background: linear-gradient(90deg,#4f8cff,#38e0c0); }
+    .a4 { background: linear-gradient(90deg,#a78bfa,#60a5fa); }
+    .a5 { background: linear-gradient(90deg,#22d3a5,#4f8cff); }
+    .a6 { background: linear-gradient(90deg,#f43f5e,#fb923c); }
+    .a7 { background: linear-gradient(90deg,#fbbf24,#f97316); }
+    .a8 { background: linear-gradient(90deg,#60a5fa,#a78bfa); }
+    .a9 { background: linear-gradient(90deg,#34d399,#22d3a5); }
+
+    .mod-body { padding: 28px; flex: 1; }
+    .mod-number { font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--muted); letter-spacing: 2px; margin-bottom: 8px; }
+    .mod-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; color: #fff; margin-bottom: 8px; }
+    .mod-desc { font-size: .82rem; color: var(--muted2); line-height: 1.6; margin-bottom: 20px; }
+
+    .mod-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+    .tag { font-size: .68rem; font-family: 'DM Mono', monospace; padding: 3px 10px; border-radius: 4px; background: rgba(79,140,255,.12); color: var(--accent); border: 1px solid rgba(79,140,255,.2); }
+    .tag.iot { background: rgba(249,115,22,.12); color: var(--iot); border-color: rgba(249,115,22,.25); }
+    .tag.green { background: rgba(34,211,165,.1); color: var(--green); border-color: rgba(34,211,165,.2); }
+    .tag.purple { background: rgba(167,139,250,.1); color: var(--warn); border-color: rgba(167,139,250,.2); }
+    .tag.yellow { background: rgba(251,191,36,.1); color: var(--yellow); border-color: rgba(251,191,36,.2); }
+
+    .iot-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .68rem; font-family: 'DM Mono', monospace;
+      color: var(--iot); letter-spacing: 1.5px;
+      border: 1px solid rgba(249,115,22,.35);
+      padding: 3px 10px; border-radius: 4px;
+      background: rgba(249,115,22,.08); margin-bottom: 14px;
+    }
+    .iot-badge::before { content: '◉'; animation: pulse 2s infinite; }
+
+    .week-list { list-style: none; }
+    .week-list li + li { margin-top: 6px; }
+    .week-list a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 7px;
+      background: var(--surface); color: var(--muted2);
+      text-decoration: none; font-size: .83rem;
+      border: 1px solid transparent; transition: .2s;
+    }
+    .week-list a:hover { background: rgba(79,140,255,.1); color: var(--accent); border-color: rgba(79,140,255,.2); }
+    .week-list a.iot-link:hover { background: rgba(249,115,22,.1); color: var(--iot); border-color: rgba(249,115,22,.25); }
+    .week-list a .wk { font-family: 'DM Mono', monospace; font-size: .68rem; color: var(--muted); min-width: 42px; }
+    .week-list a .ico { margin-left: auto; opacity: 0; transition: .2s; }
+    .week-list a:hover .ico { opacity: 1; }
+
+    /* RESOURCES */
+    .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .resource-card {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 18px 20px;
+      text-decoration: none; color: var(--muted2); transition: .2s; font-size: .85rem;
+    }
+    .resource-card:hover { border-color: rgba(249,115,22,.4); color: var(--iot); background: rgba(249,115,22,.06); }
+    .resource-card .r-ico { font-size: 1.5rem; }
+    .resource-card .r-title { color: var(--text); font-weight: 600; font-size: .88rem; margin-bottom: 2px; }
+
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 32px; text-align: center;
+      font-family: 'DM Mono', monospace; font-size: .72rem;
+      color: var(--muted); letter-spacing: 1px;
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding: 60px 20px; }
+      .ementa-box { grid-template-columns: 1fr; }
+      .section { padding: 40px 20px; }
+      .topbar { padding: 0 20px; }
+      .topbar-nav { display: none; }
+    }
+    @media (max-width: 600px) {
+      .hero-stats { grid-template-columns: 1fr 1fr; }
+      .modules-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-content">
-            <div class="header-text">
-                <h1>📱 ISW044 - Programação Multiplataforma</h1>
-                <p>Curso Superior de Tecnologia em Análise e Desenvolvimento de Sistemas</p>
-                <p>FATEC Ourinhos - Centro Paula Souza</p>
-            </div>
+
+  <!-- TOPBAR -->
+  <nav class="topbar">
+    <span class="topbar-logo">ISW044</span>
+    <div class="topbar-sep"></div>
+    <nav class="topbar-nav">
+      <a href="#ementa">Ementa</a>
+      <a href="#modulos">Módulos</a>
+      <a href="#m1">Arduino</a>
+      <a href="#m2">ESP32</a>
+      <a href="#recursos">Recursos</a>
+    </nav>
+  </nav>
+
+  <!-- HERO -->
+  <section style="position:relative;z-index:1;">
+    <div class="hero">
+      <div>
+        <div class="hero-badge"><span></span> FATEC Ourinhos · ADS · 2026</div>
+        <h1>Programação Multiplataforma</h1>
+        <p class="hero-sub">
+          Desenvolvimento de software para <strong style="color:#fff">Mobile, Web e Desktop</strong>
+          com integração de <strong style="color:var(--iot)">Arduino, ESP32 e Internet das Coisas</strong>.
+          Sistemas distribuídos, mensageria, APIs e TDD.
+        </p>
+        <div class="hero-btns">
+          <a href="semana01.html" class="btn-primary">🚀 Começar — Semana 1</a>
+          <a href="plano_ensino_isw044.html" class="btn-ghost">📄 Plano de Ensino</a>
         </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-card c1"><div class="stat-num">40</div><div class="stat-label">Semanas de conteúdo</div></div>
+        <div class="stat-card c2"><div class="stat-num">160h</div><div class="stat-label">Carga horária total</div></div>
+        <div class="stat-card c3"><div class="stat-num">9</div><div class="stat-label">Módulos temáticos</div></div>
+        <div class="stat-card c4"><div class="stat-num">IoT</div><div class="stat-label">Arduino + ESP32 reais</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- EMENTA -->
+  <section class="section" id="ementa">
+    <div class="section-header">
+      <div class="section-tag">// PPC · ISW044</div>
+      <h2 class="section-title">Ementa & Competências</h2>
+      <p class="section-desc">Conforme o Projeto Pedagógico do Curso — FATEC Ourinhos / Centro Paula Souza.</p>
+    </div>
+    <div class="ementa-box">
+      <div class="ementa-col">
+        <h3>📋 Conteúdos da Ementa</h3>
+        <ul class="ementa-list">
+          <li>Software multiplataforma: Mobile, Web e Desktop</li>
+          <li>Sistemas Distribuídos — concorrência, openness, escalabilidade</li>
+          <li>Protocolos de Mensageria — intercomunicação de sistemas</li>
+          <li>Brokers de recepção de dados (MQTT, RabbitMQ, Kafka)</li>
+          <li>Armazenamento de dados em grande escala</li>
+          <li>Data Streaming — mineração de dados em tempo real</li>
+          <li>Utilização de APIs (REST, GraphQL, WebSocket)</li>
+          <li>Desenvolvimento Dirigido a Testes — TDD</li>
+          <li class="iot">Integração com dispositivos IoT / ESP32</li>
+          <li>Controle de versionamento (Git / GitHub)</li>
+        </ul>
+      </div>
+      <div class="ementa-col">
+        <h3>🎯 Objetivos de Aprendizagem</h3>
+        <ul class="ementa-list">
+          <li>Implementar software aplicando engenharia de software e gerência de projetos</li>
+          <li>Integrar aplicações desktop, web e mobile com transparência</li>
+          <li class="iot">Utilizar sensores IoT para captura de dados tratados nas aplicações</li>
+          <li>Aplicar linguagens back-end e front-end adequadas a cada plataforma</li>
+          <li class="iot">Desenvolver objetos inteligentes com capacidade de interação entre tecnologias</li>
+          <li>Aplicar metodologias ágeis: Projetos, Gamificação, Coding Dojo</li>
+          <li>Construir e consumir APIs robustas e testáveis</li>
+          <li>Entregar software com CI/CD e cobertura de testes adequada</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- MÓDULOS -->
+  <section class="section" id="modulos">
+    <div class="section-header">
+      <div class="section-tag">// Estrutura do Curso</div>
+      <h2 class="section-title">Módulos da Disciplina</h2>
+      <p class="section-desc">
+        40 semanas em 9 módulos — do hardware físico com Arduino até o projeto final integrador multiplataforma com IoT.
+      </p>
     </div>
 
-    <div class="container">
-        <div class="course-info">
-            <h2>📱 Sobre a Disciplina</h2>
-            <p>
-                A disciplina de <strong>Programação Multiplataforma</strong> prepara profissionais para desenvolver
-                aplicações que funcionam em múltiplas plataformas (iOS, Android, Web, Desktop) usando uma única base de código.
-                O curso abrange React Native, Flutter, PWA, Ionic e outras tecnologias modernas para criar apps nativos e híbridos.
-            </p>
+    <div class="modules-grid">
 
-            <div class="info-grid">
-                <div class="info-card"><h3>40</h3><p>Semanas de Conteúdo</p></div>
-                <div class="info-card"><h3>160h</h3><p>Carga Horária Total</p></div>
-                <div class="info-card"><h3>8</h3><p>Módulos Práticos</p></div>
-                <div class="info-card"><h3>100%</h3><p>Hands-On</p></div>
-            </div>
-
-            <div class="cta-buttons">
-                <a href="plano_ensino_isw044.html" class="cta-button">📄 Ver Plano de Ensino</a>
-                <a href="semana01.html" class="cta-button">🚀 Começar Agora</a>
-            </div>
+      <!-- M1 — Arduino -->
+      <div class="mod-card iot-card" id="m1">
+        <div class="mod-accent a1"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 01 · SEMANAS 01–05</div>
+          <div class="iot-badge">Arduino · Sensores · Atuadores</div>
+          <div class="mod-title">🔌 Hardware Embarcado: Arduino & Sensores</div>
+          <div class="mod-desc">Primeiro contato com eletrônica embarcada: Arduino UNO, protoboard, sensores analógicos/digitais, atuadores e lógica em C/C++. Base física indispensável para o ecossistema IoT.</div>
+          <div class="mod-tags">
+            <span class="tag iot">Arduino UNO</span>
+            <span class="tag iot">Sensores</span>
+            <span class="tag iot">Atuadores</span>
+            <span class="tag iot">C / C++</span>
+            <span class="tag iot">Protoboard</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="semana01.html" class="iot-link"><span class="wk">S·01</span> Arduino — IDE, pinagem e primeiro sketch<span class="ico">→</span></a></li>
+            <li><a href="semana02.html" class="iot-link"><span class="wk">S·02</span> Saídas digitais — LEDs, buzzer e relé<span class="ico">→</span></a></li>
+            <li><a href="semana03.html" class="iot-link"><span class="wk">S·03</span> Entradas digitais — botões e pull-up/down<span class="ico">→</span></a></li>
+            <li><a href="semana04.html" class="iot-link"><span class="wk">S·04</span> Sensores analógicos — temperatura, luz e umidade<span class="ico">→</span></a></li>
+            <li><a href="semana05.html" class="iot-link"><span class="wk">S·05</span> Projeto: sistema de monitoramento com display<span class="ico">→</span></a></li>
+          </ul>
         </div>
+      </div>
 
-        <div class="course-info">
-            <h2>📚 Módulos do Curso</h2>
-            <div class="modules-grid">
-                <div class="module-card">
-                    <h3>📘 MÓDULO 1: Fundamentos</h3>
-                    <p>Introdução, Mobile-First, JavaScript ES6+, TypeScript e Git</p>
-                    <ul class="week-list">
-                        <li><a href="semana01.html">Semana 1: Introdução</a></li>
-                        <li><a href="semana02.html">Semana 2: Mobile-First</a></li>
-                        <li><a href="semana03.html">Semana 3: JavaScript ES6+</a></li>
-                        <li><a href="semana04.html">Semana 4: TypeScript</a></li>
-                        <li><a href="semana05.html">Semana 5: Git</a></li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <h3>⚛️ MÓDULO 2: React Native Básico</h3>
-                    <p>Setup, Componentes, State, Navegação e Estilização</p>
-                    <ul class="week-list">
-                        <li><a href="semana06.html">Semana 6: Setup</a></li>
-                        <li><a href="semana07.html">Semana 7: Componentes</a></li>
-                        <li><a href="semana08.html">Semana 8: State</a></li>
-                        <li><a href="semana09.html">Semana 9: Navegação</a></li>
-                        <li><a href="semana10.html">Semana 10: Estilização</a></li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <h3>🚀 MÓDULO 3: React Native Avançado</h3>
-                    <p>Hooks, Context, Redux, APIs e Persistência</p>
-                    <ul class="week-list">
-                        <li><a href="semana11.html">Semana 11: Hooks</a></li>
-                        <li><a href="semana12.html">Semana 12: Context API</a></li>
-                        <li><a href="semana13.html">Semana 13: Redux</a></li>
-                        <li><a href="semana14.html">Semana 14: REST APIs</a></li>
-                        <li><a href="semana15.html">Semana 15: Async Storage</a></li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <h3>🎯 MÓDULO 4: Flutter</h3>
-                    <p>Dart, Widgets, State Management, Navegação e Design</p>
-                    <ul class="week-list">
-                        <li><a href="semana16.html">Semana 16: Dart e Flutter</a></li>
-                        <li><a href="semana17.html">Semana 17: Widgets</a></li>
-                        <li><a href="semana18.html">Semana 18: Provider</a></li>
-                        <li><a href="semana19.html">Semana 19: Navegação</a></li>
-                        <li><a href="semana20.html">Semana 20: Material Design</a></li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <h3>🌐 MÓDULO 5: Progressive Web Apps</h3>
-                    <p>Service Workers, Cache, Manifest, Push e Offline</p>
-                    <ul class="week-list">
-                        <li><a href="semana21.html">Semana 21: Introdução PWA</a></li>
-                        <li><a href="semana22.html">Semana 22: Service Workers</a></li>
-                        <li><a href="semana23.html">Semana 23: App Manifest</a></li>
-                        <li><a href="semana24.html">Semana 24: Push Notifications</a></li>
-                        <li><a href="semana25.html">Semana 25: Offline-First</a></li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <h3>⚡ MÓDULO 6: Ionic e Híbridos</h3>
-                    <p>Ionic, Capacitor, Plugins, Performance e Deploy</p>
-                    <ul class="week-list">
-                        <li><a href="semana26.html">Semana 26: Ionic Framework</a></li>
-                        <li><a href="semana27.html">Semana 27: Capacitor</a></li>
-                        <li><a href="semana28.html">Semana 28: UI Components</a></li>
-                        <li><a href="semana29.html">Semana 29: Performance</a></li>
-                        <li><a href="semana30.html">Semana 30: Build & Deploy</a></li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <h3>🔥 MÓDULO 7: Tópicos Avançados</h3>
-                    <p>Electron, Firebase, CI/CD, Testes e Animações</p>
-                    <ul class="week-list">
-                        <li><a href="semana31.html">Semana 31: Electron</a></li>
-                        <li><a href="semana32.html">Semana 32: Firebase</a></li>
-                        <li><a href="semana33.html">Semana 33: CI/CD</a></li>
-                        <li><a href="semana34.html">Semana 34: Testes</a></li>
-                        <li><a href="semana35.html">Semana 35: Animações</a></li>
-                    </ul>
-                </div>
-
-                <div class="module-card">
-                    <h3>🎓 MÓDULO 8: Projeto Final</h3>
-                    <p>Planejamento, Backend, Frontend, QA e Deploy</p>
-                    <ul class="week-list">
-                        <li><a href="semana36.html">Semana 36: Planejamento</a></li>
-                        <li><a href="semana37.html">Semana 37: Backend</a></li>
-                        <li><a href="semana38.html">Semana 38: Frontend</a></li>
-                        <li><a href="semana39.html">Semana 39: Testes e QA</a></li>
-                        <li><a href="semana40.html">Semana 40: Deploy</a></li>
-                    </ul>
-                </div>
-            </div>
+      <!-- M2 — ESP32 -->
+      <div class="mod-card iot-card" id="m2">
+        <div class="mod-accent a2"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 02 · SEMANAS 06–12</div>
+          <div class="iot-badge">IoT · ESP32 · Wi-Fi · MQTT</div>
+          <div class="mod-title">📡 Internet das Coisas com ESP32</div>
+          <div class="mod-desc">Evolução do Arduino para o ESP32: Wi-Fi nativo, protocolo MQTT, brokers e integração de dados capturados com as camadas web e mobile.</div>
+          <div class="mod-tags">
+            <span class="tag iot">ESP32</span>
+            <span class="tag iot">MQTT</span>
+            <span class="tag iot">Wi-Fi</span>
+            <span class="tag iot">Sensores</span>
+            <span class="tag iot">Arduino IDE</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="esp32_missao_iot.html" class="iot-link"><span class="wk">S·06</span> ESP32 — Missão IoT: Pinagem e Ambiente<span class="ico">→</span></a></li>
+            <li><a href="esp32_missao_iot_v2.html" class="iot-link"><span class="wk">S·07</span> ESP32 — GPIO, Sensores e Atuadores<span class="ico">→</span></a></li>
+            <li><a href="projetosemana_02_esp32.html" class="iot-link"><span class="wk">S·08</span> Projeto: Conversor Decimal → Binário (LEDs)<span class="ico">→</span></a></li>
+            <li><a href="semana09.html" class="iot-link"><span class="wk">S·09</span> Comunicação Wi-Fi e HTTP com ESP32<span class="ico">→</span></a></li>
+            <li><a href="semana10.html" class="iot-link"><span class="wk">S·10</span> Protocolo MQTT e Brokers (Mosquitto)<span class="ico">→</span></a></li>
+            <li><a href="iot_embalagens_tutorial__2_.html" class="iot-link"><span class="wk">S·11</span> Maker Lab: 9 Projetos — Redução de Embalagens<span class="ico">→</span></a></li>
+            <li><a href="semana12.html" class="iot-link"><span class="wk">S·12</span> Integração IoT &harr; Backend / API REST<span class="ico">→</span></a></li>
+          </ul>
         </div>
+      </div>
+
+      <!-- M3 — Fundamentos -->
+      <div class="mod-card">
+        <div class="mod-accent a3"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 03 · SEMANAS 13–17</div>
+          <div class="mod-title">⚙️ Fundamentos & Nivelamento</div>
+          <div class="mod-desc">Bases essenciais para o desenvolvimento multiplataforma: controle de versão com Git, JavaScript moderno, TypeScript e arquiteturas de software.</div>
+          <div class="mod-tags">
+            <span class="tag">Git / GitHub</span>
+            <span class="tag">JS ES6+</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Arquiteturas</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="semana13.html"><span class="wk">S·13</span> Metodologias e Ambiente de Desenvolvimento<span class="ico">→</span></a></li>
+            <li><a href="semana14.html"><span class="wk">S·14</span> Git, GitHub e Controle de Versão<span class="ico">→</span></a></li>
+            <li><a href="semana15.html"><span class="wk">S·15</span> JavaScript ES6+ e TypeScript<span class="ico">→</span></a></li>
+            <li><a href="semana16.html"><span class="wk">S·16</span> Arquiteturas Multiplataforma<span class="ico">→</span></a></li>
+            <li><a href="semana17.html"><span class="wk">S·17</span> Fundamentos de Redes e Protocolos<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M4 — Web -->
+      <div class="mod-card">
+        <div class="mod-accent a4"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 04 · SEMANAS 18–22</div>
+          <div class="mod-title">🌐 Desenvolvimento Web Moderno</div>
+          <div class="mod-desc">Aplicações web responsivas, APIs REST e GraphQL, WebSocket para dashboards IoT em tempo real e consumo de dados dos sensores.</div>
+          <div class="mod-tags">
+            <span class="tag purple">React.js</span>
+            <span class="tag purple">REST API</span>
+            <span class="tag purple">WebSocket</span>
+            <span class="tag iot">Dashboard IoT</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="semana18.html"><span class="wk">S·18</span> React.js — Componentes e Hooks<span class="ico">→</span></a></li>
+            <li><a href="semana19.html"><span class="wk">S·19</span> Consumo de APIs REST no Front-end<span class="ico">→</span></a></li>
+            <li><a href="semana20.html"><span class="wk">S·20</span> WebSocket e Dados em Tempo Real<span class="ico">→</span></a></li>
+            <li><a href="semana21.html"><span class="wk">S·21</span> Dashboard de Sensores IoT com React<span class="ico">→</span></a></li>
+            <li><a href="semana22.html"><span class="wk">S·22</span> Progressive Web Apps (PWA) — Offline-First<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M5 — Mobile -->
+      <div class="mod-card">
+        <div class="mod-accent a5"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 05 · SEMANAS 23–27</div>
+          <div class="mod-title">📱 Desenvolvimento Mobile</div>
+          <div class="mod-desc">Apps nativos e híbridos para iOS e Android. Integração mobile com APIs e visualização de dados coletados pelos dispositivos IoT.</div>
+          <div class="mod-tags">
+            <span class="tag green">React Native</span>
+            <span class="tag green">Expo</span>
+            <span class="tag green">Flutter</span>
+            <span class="tag iot">Mobile + IoT</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="semana23.html"><span class="wk">S·23</span> React Native — Setup e Componentes<span class="ico">→</span></a></li>
+            <li><a href="semana24.html"><span class="wk">S·24</span> Navegação, State e Context API<span class="ico">→</span></a></li>
+            <li><a href="semana25.html"><span class="wk">S·25</span> Consumo de APIs e Persistência Local<span class="ico">→</span></a></li>
+            <li><a href="semana26.html"><span class="wk">S·26</span> App Mobile: Monitoramento de Sensores IoT<span class="ico">→</span></a></li>
+            <li><a href="semana27.html"><span class="wk">S·27</span> Flutter — Dart, Widgets e Material Design<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M6 — Desktop & Brokers -->
+      <div class="mod-card">
+        <div class="mod-accent a6"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 06 · SEMANAS 28–32</div>
+          <div class="mod-title">🖥️ Desktop & Brokers de Mensageria</div>
+          <div class="mod-desc">Apps desktop multiplataforma com Electron. Brokers de mensageria para integrar IoT, mobile e web numa arquitetura distribuída coesa.</div>
+          <div class="mod-tags">
+            <span class="tag">Electron</span>
+            <span class="tag iot">RabbitMQ</span>
+            <span class="tag iot">Kafka</span>
+            <span class="tag purple">Node.js</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="semana28.html"><span class="wk">S·28</span> Electron — Apps Desktop com JavaScript<span class="ico">→</span></a></li>
+            <li><a href="semana29.html"><span class="wk">S·29</span> Desktop + Integração com APIs e IoT<span class="ico">→</span></a></li>
+            <li><a href="semana30.html"><span class="wk">S·30</span> Brokers de Mensageria — Conceitos e MQTT<span class="ico">→</span></a></li>
+            <li><a href="semana31.html"><span class="wk">S·31</span> RabbitMQ e Filas de Mensagens<span class="ico">→</span></a></li>
+            <li><a href="semana32.html"><span class="wk">S·32</span> Apache Kafka — Streaming de Dados IoT<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M7 — Back-end & Streaming -->
+      <div class="mod-card">
+        <div class="mod-accent a7"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 07 · SEMANAS 33–36</div>
+          <div class="mod-title">☁️ Back-end, APIs e Data Streaming</div>
+          <div class="mod-desc">Construção de APIs robustas, armazenamento em grande escala e pipelines de data streaming para processar dados dos sensores em tempo real.</div>
+          <div class="mod-tags">
+            <span class="tag yellow">Node.js / Python</span>
+            <span class="tag yellow">GraphQL</span>
+            <span class="tag iot">InfluxDB</span>
+            <span class="tag iot">Grafana</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="semana33.html"><span class="wk">S·33</span> APIs REST e GraphQL com Node.js<span class="ico">→</span></a></li>
+            <li><a href="semana34.html"><span class="wk">S·34</span> Banco de Dados em Grande Escala (NoSQL)<span class="ico">→</span></a></li>
+            <li><a href="semana35.html"><span class="wk">S·35</span> InfluxDB e Time-Series para IoT<span class="ico">→</span></a></li>
+            <li><a href="semana36.html"><span class="wk">S·36</span> Data Streaming e Visualização — Grafana<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M8 — TDD & CI/CD -->
+      <div class="mod-card">
+        <div class="mod-accent a8"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 08 · SEMANAS 37–39</div>
+          <div class="mod-title">🧪 TDD, Qualidade e CI/CD</div>
+          <div class="mod-desc">Desenvolvimento Dirigido a Testes aplicado a projetos multiplataforma e IoT. Pipelines de integração e entrega contínua para todas as plataformas.</div>
+          <div class="mod-tags">
+            <span class="tag purple">TDD</span>
+            <span class="tag purple">Jest / Pytest</span>
+            <span class="tag">Docker</span>
+            <span class="tag">CI/CD</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="semana37.html"><span class="wk">S·37</span> TDD — Red, Green, Refactor<span class="ico">→</span></a></li>
+            <li><a href="semana38.html"><span class="wk">S·38</span> Docker e Containerização de Apps<span class="ico">→</span></a></li>
+            <li><a href="semana39.html"><span class="wk">S·39</span> CI/CD com GitHub Actions e Deploy<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M9 — Projeto Final -->
+      <div class="mod-card iot-card">
+        <div class="mod-accent a9"></div>
+        <div class="mod-body">
+          <div class="mod-number">MÓDULO 09 · SEMANA 40</div>
+          <div class="iot-badge">Projeto Integrador</div>
+          <div class="mod-title">🎓 Projeto Final Multiplataforma + IoT</div>
+          <div class="mod-desc">Sistema completo: dispositivos IoT (Arduino + ESP32), backend com broker, aplicação web e mobile — com TDD, CI/CD e avaliação em pares.</div>
+          <div class="mod-tags">
+            <span class="tag iot">Arduino</span>
+            <span class="tag iot">ESP32</span>
+            <span class="tag green">Full Stack</span>
+            <span class="tag iot">MQTT</span>
+            <span class="tag purple">TDD</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="semana40.html" class="iot-link"><span class="wk">S·40</span> Apresentação, Deploy e Avaliação em Pares<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
     </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- RECURSOS -->
+  <section class="section" id="recursos">
+    <div class="section-header">
+      <div class="section-tag">// Materiais de Apoio</div>
+      <h2 class="section-title">Recursos dos Módulos IoT</h2>
+      <p class="section-desc">Materiais desenvolvidos para os módulos Arduino / ESP32 da disciplina.</p>
+    </div>
+    <div class="resources-grid">
+      <a href="esp32_missao_iot.html" class="resource-card">
+        <span class="r-ico">📡</span>
+        <div>
+          <div class="r-title">ESP32 — Missão IoT</div>
+          Pinagem completa, periféricos e ambiente de desenvolvimento
+        </div>
+      </a>
+      <a href="esp32_missao_iot_v2.html" class="resource-card">
+        <span class="r-ico">🔌</span>
+        <div>
+          <div class="r-title">ESP32 — Missão IoT v2</div>
+          GPIO, sensores, atuadores e exemplos práticos
+        </div>
+      </a>
+      <a href="projetosemana_02_esp32.html" class="resource-card">
+        <span class="r-ico">💡</span>
+        <div>
+          <div class="r-title">Projeto: Conversor Binário</div>
+          Tutorial completo — Decimal → Binário com LEDs no ESP32
+        </div>
+      </a>
+      <a href="iot_embalagens_tutorial__2_.html" class="resource-card">
+        <span class="r-ico">🏭</span>
+        <div>
+          <div class="r-title">IoT Maker Lab</div>
+          9 projetos para redução de embalagens com sensores
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    ISW044 · PROGRAMAÇÃO MULTIPLATAFORMA · FATEC OURINHOS · CENTRO PAULA SOUZA · 2026
+  </footer>
+
 </body>
 </html>
