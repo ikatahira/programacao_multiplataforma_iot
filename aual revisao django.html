@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Revisão de Comandos — Dev Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0e14;
+    --surface: #13151f;
+    --surface2: #1a1d2e;
+    --border: #252840;
+    --accent-green: #00e5a0;
+    --accent-orange: #ff6b35;
+    --accent-blue: #4f8ef7;
+    --accent-purple: #b06bff;
+    --accent-yellow: #f5c842;
+    --text: #e8eaf0;
+    --muted: #6b7290;
+    --code-bg: #0a0c12;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% -20%, rgba(79,142,247,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(120deg, var(--accent-blue), var(--accent-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+  }
+
+  header p {
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    margin-top: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* NAV TABS */
+  nav {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    border-bottom: 2px solid var(--border);
+    background: var(--surface);
+    padding: 0 1rem;
+  }
+
+  nav button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    padding: 1rem 1.4rem;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent-green); border-bottom-color: var(--accent-green); }
+  nav button[data-tab="flask"].active { color: var(--accent-orange); border-bottom-color: var(--accent-orange); }
+  nav button[data-tab="git"].active { color: var(--accent-purple); border-bottom-color: var(--accent-purple); }
+  nav button[data-tab="chmod"].active { color: var(--accent-yellow); border-bottom-color: var(--accent-yellow); }
+
+  /* MAIN LAYOUT */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* SECTION PANELS */
+  .section {
+    display: none;
+    animation: fadeIn 0.35s ease;
+  }
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-title .icon {
+    font-size: 2.2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .icon-green { background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.3); }
+  .icon-orange { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.3); }
+  .icon-purple { background: rgba(176,107,255,0.12); border: 1px solid rgba(176,107,255,0.3); }
+  .icon-yellow { background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.3); }
+
+  .section-title h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+
+  .section-title p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.6rem;
+    margin-bottom: 1.4rem;
+    position: relative;
+  }
+
+  .card-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    opacity: 0.7;
+  }
+
+  .card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+  }
+
+  .card p {
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.4rem;
+    margin: 0.8rem 0;
+    position: relative;
+    overflow-x: auto;
+  }
+
+  .code-block pre {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    white-space: pre;
+    color: var(--text);
+  }
+
+  .code-block .comment { color: var(--muted); }
+  .code-block .cmd { color: var(--accent-green); }
+  .code-block .flag { color: var(--accent-blue); }
+  .code-block .str { color: var(--accent-yellow); }
+  .code-block .kw { color: var(--accent-purple); }
+  .code-block .num { color: var(--accent-orange); }
+
+  /* COPY BUTTON */
+  .copy-btn {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { color: var(--accent-green); border-color: var(--accent-green); }
+
+  /* GRID 2 COLS */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 1.4rem;
+  }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-right: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .badge-green { background: rgba(0,229,160,0.15); color: var(--accent-green); border: 1px solid rgba(0,229,160,0.3); }
+  .badge-orange { background: rgba(255,107,53,0.15); color: var(--accent-orange); border: 1px solid rgba(255,107,53,0.3); }
+  .badge-blue { background: rgba(79,142,247,0.15); color: var(--accent-blue); border: 1px solid rgba(79,142,247,0.3); }
+  .badge-yellow { background: rgba(245,200,66,0.15); color: var(--accent-yellow); border: 1px solid rgba(245,200,66,0.3); }
+  .badge-purple { background: rgba(176,107,255,0.15); color: var(--accent-purple); border: 1px solid rgba(176,107,255,0.3); }
+
+  /* STEP LIST */
+  .steps { list-style: none; counter-reset: steps; }
+  .steps li {
+    counter-increment: steps;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.1rem;
+  }
+  .steps li::before {
+    content: counter(steps);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .steps.green li::before { background: rgba(0,229,160,0.15); color: var(--accent-green); border: 1px solid rgba(0,229,160,0.3); }
+  .steps.orange li::before { background: rgba(255,107,53,0.15); color: var(--accent-orange); border: 1px solid rgba(255,107,53,0.3); }
+  .steps.purple li::before { background: rgba(176,107,255,0.15); color: var(--accent-purple); border: 1px solid rgba(176,107,255,0.3); }
+
+  .steps li > div p { color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; line-height: 1.6; }
+  .steps li > div strong { font-size: 0.95rem; }
+
+  /* CHMOD TABLE */
+  .chmod-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    margin: 1rem 0;
+  }
+
+  .chmod-table th {
+    background: var(--surface2);
+    color: var(--muted);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+  }
+
+  .chmod-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .chmod-table tr:last-child td { border-bottom: none; }
+  .chmod-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .big-num {
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* CHMOD VISUAL */
+  .chmod-visual {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+  }
+
+  .perm-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    text-align: center;
+    min-width: 90px;
+    flex: 1;
+  }
+
+  .perm-block .who {
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .perm-block .bits {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .perm-block .num-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+    opacity: 0.6;
+  }
+
+  .bit-r { color: var(--accent-green); }
+  .bit-w { color: var(--accent-orange); }
+  .bit-x { color: var(--accent-blue); }
+  .bit-off { color: var(--border); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2rem 0;
+  }
+
+  /* ALERT */
+  .alert {
+    background: rgba(79,142,247,0.08);
+    border-left: 3px solid var(--accent-blue);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .alert.warn {
+    background: rgba(245,200,66,0.08);
+    border-left-color: var(--accent-yellow);
+  }
+
+  .alert strong { color: var(--text); }
+
+  /* FLOW */
+  .git-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 1.2rem 0;
+    flex-wrap: wrap;
+  }
+
+  .flow-step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem 1.1rem;
+    text-align: center;
+    min-width: 110px;
+  }
+
+  .flow-step .fs-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .flow-step .fs-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-top: 0.2rem;
+  }
+
+  .flow-arrow {
+    color: var(--muted);
+    font-size: 1.2rem;
+    padding: 0 0.4rem;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .chmod-table { font-size: 0.75rem; }
+    .git-flow { gap: 0.4rem; }
+    .flow-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Dev Reference</h1>
+  <p>Django · Flask · Git · chmod — revisão prática</p>
+</header>
+
+<nav>
+  <button class="active" data-tab="django" onclick="switchTab('django')">🐍 Django</button>
+  <button data-tab="flask" onclick="switchTab('flask')">⚗️ Flask</button>
+  <button data-tab="git" onclick="switchTab('git')">🌿 Git</button>
+  <button data-tab="chmod" onclick="switchTab('chmod')">🔐 chmod</button>
+</nav>
+
+<main>
+
+  <!-- ========================= DJANGO ========================= -->
+  <section id="django" class="section active">
+    <div class="section-title">
+      <div class="icon icon-green">🐍</div>
+      <div>
+        <h2 style="color: var(--accent-green)">Django</h2>
+        <p>Framework web "batteries included" em Python</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-green)">Pré-requisitos</div>
+      <h3>Python e pip instalados</h3>
+      <p>Verifique as versões antes de instalar:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        <pre><span class="cmd">python</span> <span class="flag">--version</span>
+<span class="cmd">pip</span> <span class="flag">--version</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-green)">Passo a passo</div>
+      <h3>Instalação completa</h3>
+      <ul class="steps green">
+        <li>
+          <div>
+            <strong>Criar e ativar um ambiente virtual</strong>
+            <p>Isola as dependências do projeto do sistema global.</p>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              <pre><span class="comment"># Criar o venv</span>
+<span class="cmd">python</span> <span class="flag">-m</span> venv venv
+
+<span class="comment"># Ativar — Linux / macOS</span>
+<span class="cmd">source</span> venv/bin/activate
+
+<span class="comment"># Ativar — Windows</span>
+<span class="cmd">venv\Scripts\activate</span></pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Instalar o Django</strong>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              <pre><span class="cmd">pip</span> install django
+
+<span class="comment"># Versão específica (opcional)</span>
+<span class="cmd">pip</span> install <span class="str">django==5.0</span></pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Confirmar a instalação</strong>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              <pre><span class="cmd">python</span> <span class="flag">-m</span> django <span class="flag">--version</span></pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Criar um novo projeto</strong>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              <pre><span class="cmd">django-admin</span> startproject meu_projeto <span class="str">.</span>
+<span class="comment"># O ponto final cria na pasta atual</span></pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Rodar o servidor de desenvolvimento</strong>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              <pre><span class="cmd">python</span> manage.py runserver
+<span class="comment"># Acesse: http://127.0.0.1:8000</span></pre>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label" style="color:var(--accent-green)">Salvar dependências</div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+          <pre><span class="cmd">pip</span> freeze <span class="flag">&gt;</span> requirements.txt
+
+<span class="comment"># Reinstalar em outro ambiente</span>
+<span class="cmd">pip</span> install <span class="flag">-r</span> requirements.txt</pre>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label" style="color:var(--accent-green)">Criar uma app</div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+          <pre><span class="cmd">python</span> manage.py startapp blog
+
+<span class="comment"># Aplicar migrações</span>
+<span class="cmd">python</span> manage.py migrate</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert">
+      <strong>💡 Dica:</strong> Sempre ative o ambiente virtual antes de instalar pacotes. Quando ativo, o terminal mostra <code style="color:var(--accent-green)">(venv)</code> no início da linha.
+    </div>
+  </section>
+
+  <!-- ========================= FLASK ========================= -->
+  <section id="flask" class="section">
+    <div class="section-title">
+      <div class="icon icon-orange">⚗️</div>
+      <div>
+        <h2 style="color: var(--accent-orange)">Flask</h2>
+        <p>Microframework minimalista e flexível em Python</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-orange)">Passo a passo</div>
+      <h3>Instalação e primeiro app</h3>
+      <ul class="steps orange">
+        <li>
+          <div>
+            <strong>Ambiente virtual (igual ao Django)</strong>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              <pre><span class="cmd">python</span> <span class="flag">-m</span> venv venv
+<span class="cmd">source</span> venv/bin/activate  <span class="comment"># Linux/macOS</span></pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Instalar o Flask</strong>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              <pre><span class="cmd">pip</span> install flask</pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Criar o arquivo principal <code>app.py</code></strong>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              <pre><span class="kw">from</span> flask <span class="kw">import</span> Flask
+
+app = Flask(__name__)
+
+<span class="flag">@app.route</span>(<span class="str">'/'</span>)
+<span class="kw">def</span> index():
+    <span class="kw">return</span> <span class="str">'Olá, Mundo!'</span>
+
+<span class="kw">if</span> __name__ == <span class="str">'__main__'</span>:
+    app.run(debug=<span class="kw">True</span>)</pre>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Rodar a aplicação</strong>
+            <div class="code-block">
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              <pre><span class="cmd">python</span> app.py
+<span class="comment"># Acesse: http://127.0.0.1:5000</span>
+
+<span class="comment"># Ou via variável de ambiente:</span>
+<span class="cmd">flask</span> <span class="flag">--app</span> app run <span class="flag">--debug</span></pre>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-orange)">Django vs Flask</div>
+      <h3>Quando usar cada um?</h3>
+      <div class="grid-2" style="margin-top:1rem">
+        <div style="background:var(--surface2);border:1px solid rgba(0,229,160,0.2);border-radius:10px;padding:1.1rem">
+          <div style="color:var(--accent-green);font-weight:700;margin-bottom:0.5rem">🐍 Django</div>
+          <p style="font-size:0.85rem;color:var(--muted);line-height:1.6">
+            Projetos grandes · Admin pronto · ORM built-in · Autenticação embutida · Estrutura definida
+          </p>
+        </div>
+        <div style="background:var(--surface2);border:1px solid rgba(255,107,53,0.2);border-radius:10px;padding:1.1rem">
+          <div style="color:var(--accent-orange);font-weight:700;margin-bottom:0.5rem">⚗️ Flask</div>
+          <p style="font-size:0.85rem;color:var(--muted);line-height:1.6">
+            APIs simples · Projetos pequenos · Liberdade total · Aprendizado · Microservices
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert warn">
+      <strong>⚠️ Modo debug:</strong> Use <code>debug=True</code> apenas em desenvolvimento. Em produção, use um servidor WSGI como <strong>Gunicorn</strong> ou <strong>uWSGI</strong>.
+    </div>
+  </section>
+
+  <!-- ========================= GIT ========================= -->
+  <section id="git" class="section">
+    <div class="section-title">
+      <div class="icon icon-purple">🌿</div>
+      <div>
+        <h2 style="color: var(--accent-purple)">Git</h2>
+        <p>Controle de versão: add → commit → push</p>
+      </div>
+    </div>
+
+    <!-- FLUXO VISUAL -->
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-purple)">Fluxo de trabalho</div>
+      <div class="git-flow">
+        <div class="flow-step">
+          <div class="fs-label">Seus arquivos</div>
+          <div class="fs-name" style="color:var(--muted)">Working Dir</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-color:rgba(176,107,255,0.4)">
+          <div class="fs-label">git add</div>
+          <div class="fs-name" style="color:var(--accent-purple)">Stage</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-color:rgba(79,142,247,0.4)">
+          <div class="fs-label">git commit</div>
+          <div class="fs-name" style="color:var(--accent-blue)">Repo local</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-color:rgba(0,229,160,0.4)">
+          <div class="fs-label">git push</div>
+          <div class="fs-name" style="color:var(--accent-green)">Remoto</div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="steps purple">
+
+      <li>
+        <div>
+          <strong style="color:var(--accent-purple)">git add .</strong>
+          <p>Adiciona <em>todos</em> os arquivos novos e modificados à área de staging (preparação para o commit).</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+            <pre><span class="cmd">git</span> add <span class="str">.</span>             <span class="comment"># tudo de uma vez</span>
+<span class="cmd">git</span> add <span class="str">arquivo.py</span>    <span class="comment"># arquivo específico</span>
+<span class="cmd">git</span> add <span class="str">pasta/</span>        <span class="comment"># pasta inteira</span>
+<span class="cmd">git</span> status           <span class="comment"># veja o que foi adicionado</span></pre>
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <strong style="color:var(--accent-blue)">git commit -m "mensagem"</strong>
+          <p>Cria um <em>snapshot</em> permanente dos arquivos em stage. A mensagem deve ser clara e descrever o que foi feito.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+            <pre><span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"feat: adiciona página de login"</span>
+<span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"fix: corrige bug no formulário"</span>
+<span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"docs: atualiza README"</span></pre>
+          </div>
+          <div class="alert" style="margin-top:0.6rem">
+            <strong>Convenção:</strong> Use prefixos como <code>feat:</code>, <code>fix:</code>, <code>docs:</code>, <code>style:</code>, <code>refactor:</code> para organizar o histórico.
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <div>
+          <strong style="color:var(--accent-green)">git push</strong>
+          <p>Envia os commits locais para o repositório remoto (GitHub, GitLab, etc.).</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+            <pre><span class="cmd">git</span> push
+<span class="comment"># ou com origem e branch explícitos:</span>
+<span class="cmd">git</span> push <span class="flag">origin</span> main
+
+<span class="comment"># primeiro push de um novo branch:</span>
+<span class="cmd">git</span> push <span class="flag">-u</span> origin meu-branch</pre>
+          </div>
+        </div>
+      </li>
+
+    </ul>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-purple)">Sequência completa típica</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        <pre><span class="comment"># 1. Ver o estado atual</span>
+<span class="cmd">git</span> status
+
+<span class="comment"># 2. Adicionar tudo</span>
+<span class="cmd">git</span> add <span class="str">.</span>
+
+<span class="comment"># 3. Fazer o commit</span>
+<span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"feat: minha funcionalidade"</span>
+
+<span class="comment"># 4. Enviar para o remoto</span>
+<span class="cmd">git</span> push</pre>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label" style="color:var(--accent-purple)">Comandos úteis</div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+          <pre><span class="cmd">git</span> log <span class="flag">--oneline</span>   <span class="comment"># histórico</span>
+<span class="cmd">git</span> diff            <span class="comment"># ver mudanças</span>
+<span class="cmd">git</span> pull            <span class="comment"># atualizar local</span>
+<span class="cmd">git</span> restore <span class="str">.</span>       <span class="comment"># descartar mudanças</span></pre>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label" style="color:var(--accent-purple)">Primeiro uso</div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+          <pre><span class="cmd">git</span> config <span class="flag">--global</span> user.name <span class="str">"Seu Nome"</span>
+<span class="cmd">git</span> config <span class="flag">--global</span> user.email <span class="str">"email@x.com"</span>
+<span class="cmd">git</span> init            <span class="comment"># iniciar repo</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================= CHMOD ========================= -->
+  <section id="chmod" class="section">
+    <div class="section-title">
+      <div class="icon icon-yellow">🔐</div>
+      <div>
+        <h2 style="color: var(--accent-yellow)">chmod</h2>
+        <p>Permissões de arquivos no Linux/macOS</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-yellow)">Notação textual — rwx</div>
+      <h3>O que significa cada letra?</h3>
+      <p style="margin-bottom:1rem">Cada arquivo tem 3 grupos de permissões: <strong>dono</strong>, <strong>grupo</strong> e <strong>outros</strong>.</p>
+
+      <div class="chmod-visual">
+        <div class="perm-block">
+          <div class="who">Leitura</div>
+          <div class="bits"><span class="bit-r">r</span></div>
+          <div class="num-val">= 4</div>
+        </div>
+        <div class="perm-block">
+          <div class="who">Escrita</div>
+          <div class="bits"><span class="bit-w">w</span></div>
+          <div class="num-val">= 2</div>
+        </div>
+        <div class="perm-block">
+          <div class="who">Execução</div>
+          <div class="bits"><span class="bit-x">x</span></div>
+          <div class="num-val">= 1</div>
+        </div>
+        <div class="perm-block">
+          <div class="who">Negado</div>
+          <div class="bits"><span class="bit-off">-</span></div>
+          <div class="num-val">= 0</div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <pre><span class="comment"># Como ler a saída de: ls -l</span>
+<span class="comment">#  tipo  dono   grupo  outros</span>
+<span class="str">-</span><span class="bit-r">rw</span><span class="bit-x">x</span>  <span class="bit-r">r</span><span class="bit-off">--</span>  <span class="bit-off">---</span>   arquivo.sh
+<span class="str">d</span><span class="bit-r">rwx</span>  <span class="bit-r">r-x</span>  <span class="bit-r">r-x</span>   pasta/</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-yellow)">Notação numérica (octal)</div>
+      <h3>Tabela de valores</h3>
+
+      <table class="chmod-table">
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Bits rwx</th>
+            <th>Permissões</th>
+            <th>Descrição</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="big-num" style="color:var(--accent-orange)">7</span></td>
+            <td><span class="bit-r">r</span><span class="bit-w">w</span><span class="bit-x">x</span></td>
+            <td>4+2+1</td>
+            <td>Leitura + Escrita + Execução <span class="badge badge-orange">tudo</span></td>
+          </tr>
+          <tr>
+            <td><span class="big-num" style="color:var(--accent-green)">6</span></td>
+            <td><span class="bit-r">r</span><span class="bit-w">w</span><span class="bit-off">-</span></td>
+            <td>4+2</td>
+            <td>Leitura + Escrita <span class="badge badge-green">comum para arquivos</span></td>
+          </tr>
+          <tr>
+            <td><span class="big-num" style="color:var(--accent-green)">5</span></td>
+            <td><span class="bit-r">r</span><span class="bit-off">-</span><span class="bit-x">x</span></td>
+            <td>4+1</td>
+            <td>Leitura + Execução <span class="badge badge-green">comum para pastas</span></td>
+          </tr>
+          <tr>
+            <td><span class="big-num" style="color:var(--accent-yellow)">4</span></td>
+            <td><span class="bit-r">r</span><span class="bit-off">--</span></td>
+            <td>4</td>
+            <td>Só leitura <span class="badge badge-yellow">read-only</span></td>
+          </tr>
+          <tr>
+            <td><span class="big-num" style="color:var(--accent-blue)">3</span></td>
+            <td><span class="bit-off">-</span><span class="bit-w">w</span><span class="bit-x">x</span></td>
+            <td>2+1</td>
+            <td>Escrita + Execução</td>
+          </tr>
+          <tr>
+            <td><span class="big-num" style="color:var(--accent-blue)">2</span></td>
+            <td><span class="bit-off">-</span><span class="bit-w">w</span><span class="bit-off">-</span></td>
+            <td>2</td>
+            <td>Só escrita</td>
+          </tr>
+          <tr>
+            <td><span class="big-num" style="color:var(--accent-blue)">1</span></td>
+            <td><span class="bit-off">--</span><span class="bit-x">x</span></td>
+            <td>1</td>
+            <td>Só execução <span class="badge badge-blue">raro</span></td>
+          </tr>
+          <tr>
+            <td><span class="big-num" style="color:var(--muted)">0</span></td>
+            <td><span class="bit-off">---</span></td>
+            <td>0</td>
+            <td>Nenhuma permissão</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-yellow)">Combinações mais usadas</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        <pre><span class="comment"># 755 — padrão para scripts e pastas</span>
+<span class="comment">#       dono: rwx | grupo: r-x | outros: r-x</span>
+<span class="cmd">chmod</span> <span class="num">755</span> script.sh
+
+<span class="comment"># 644 — padrão para arquivos comuns</span>
+<span class="comment">#       dono: rw- | grupo: r-- | outros: r--</span>
+<span class="cmd">chmod</span> <span class="num">644</span> arquivo.txt
+
+<span class="comment"># 600 — arquivo privado (só o dono lê/escreve)</span>
+<span class="cmd">chmod</span> <span class="num">600</span> chave-privada.pem
+
+<span class="comment"># 777 — todos têm tudo (evite em produção!)</span>
+<span class="cmd">chmod</span> <span class="num">777</span> arquivo</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-yellow)">Notação simbólica (textual)</div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        <pre><span class="comment"># u=user(dono), g=group, o=others, a=all</span>
+<span class="comment"># + adiciona, - remove, = define</span>
+
+<span class="cmd">chmod</span> <span class="flag">u+x</span> script.sh       <span class="comment"># dá execução ao dono</span>
+<span class="cmd">chmod</span> <span class="flag">o-w</span> arquivo.txt     <span class="comment"># remove escrita dos outros</span>
+<span class="cmd">chmod</span> <span class="flag">a+r</span> arquivo.txt     <span class="comment"># leitura para todos</span>
+<span class="cmd">chmod</span> <span class="flag">g=rx</span> pasta/          <span class="comment"># grupo: somente r e x</span>
+
+<span class="comment"># Recursivo (aplica em todos os arquivos da pasta)</span>
+<span class="cmd">chmod</span> <span class="flag">-R</span> <span class="num">755</span> minha-pasta/</pre>
+      </div>
+    </div>
+
+    <div class="alert warn">
+      <strong>⚠️ Cuidado com 777:</strong> Dar permissão total a todos os usuários é um risco de segurança. Use apenas localmente para testes. Em servidores, prefira <code>644</code> para arquivos e <code>755</code> para pastas e scripts.
+    </div>
+  </section>
+
+</main>
+
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  }
+
+  function copyCode(btn) {
+    const block = btn.parentElement;
+    const text = block.querySelector('pre').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ copiado';
+      setTimeout(() => btn.textContent = 'copiar', 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
