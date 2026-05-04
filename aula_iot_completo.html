@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoT + Django + RFID — Guia Completo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0e14;
+    --surface: #13151f;
+    --surface2: #1a1d2e;
+    --surface3: #20233a;
+    --border: #252840;
+    --accent-green: #00e5a0;
+    --accent-orange: #ff6b35;
+    --accent-blue: #4f8ef7;
+    --accent-purple: #b06bff;
+    --accent-yellow: #f5c842;
+    --accent-cyan: #00d4ff;
+    --accent-red: #ff4d6d;
+    --text: #e8eaf0;
+    --muted: #6b7290;
+    --code-bg: #0a0c12;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% -20%, rgba(0,212,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header h1 {
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    font-weight: 800; letter-spacing: -1px;
+    background: linear-gradient(120deg, var(--accent-cyan), var(--accent-green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  header p { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.82rem; margin-top: 0.6rem; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* NAV */
+  nav {
+    display: flex; gap: 0; overflow-x: auto;
+    border-bottom: 2px solid var(--border);
+    background: var(--surface); padding: 0 0.5rem;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    background: none; border: none; color: var(--muted);
+    font-family: 'Space Mono', monospace; font-size: 0.72rem;
+    padding: 1rem 1.1rem; cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap; transition: all 0.2s;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  nav button:hover { color: var(--text); }
+  nav button[data-tab="github"].active    { color: #f97316; border-bottom-color: #f97316; }
+  nav button[data-tab="setup"].active     { color: var(--accent-blue);   border-bottom-color: var(--accent-blue); }
+  nav button[data-tab="pastas"].active    { color: var(--accent-yellow); border-bottom-color: var(--accent-yellow); }
+  nav button[data-tab="models"].active    { color: var(--accent-purple); border-bottom-color: var(--accent-purple); }
+  nav button[data-tab="api"].active       { color: var(--accent-green);  border-bottom-color: var(--accent-green); }
+  nav button[data-tab="esp32"].active     { color: var(--accent-cyan);   border-bottom-color: var(--accent-cyan); }
+  nav button[data-tab="frontend"].active  { color: var(--accent-orange); border-bottom-color: var(--accent-orange); }
+  nav button[data-tab="telas"].active     { color: #e879f9;              border-bottom-color: #e879f9; }
+  nav button[data-tab="atividade"].active { color: var(--accent-red);    border-bottom-color: var(--accent-red); }
+
+  /* MAIN */
+  main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+  .section { display: none; animation: fadeIn 0.35s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  /* SECTION TITLE */
+  .section-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .section-title .icon {
+    font-size: 2rem; width: 54px; height: 54px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .icon-orange { background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.35); }
+  .icon-blue   { background: rgba(79,142,247,0.12); border: 1px solid rgba(79,142,247,0.35); }
+  .icon-yellow { background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.35); }
+  .icon-purple { background: rgba(176,107,255,0.12);border: 1px solid rgba(176,107,255,0.35); }
+  .icon-green  { background: rgba(0,229,160,0.12);  border: 1px solid rgba(0,229,160,0.35); }
+  .icon-cyan   { background: rgba(0,212,255,0.12);  border: 1px solid rgba(0,212,255,0.35); }
+  .icon-front  { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.35); }
+  .icon-pink   { background: rgba(232,121,249,0.12);border: 1px solid rgba(232,121,249,0.35); }
+  .icon-red    { background: rgba(255,77,109,0.12); border: 1px solid rgba(255,77,109,0.35); }
+
+  .section-title h2 { font-size: 1.75rem; font-weight: 800; }
+  .section-title p  { color: var(--muted); font-size: 0.88rem; margin-top: 0.2rem; }
+
+  /* CARD */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.6rem; margin-bottom: 1.4rem;
+    position: relative;
+  }
+  .card-label {
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem; opacity: 0.75;
+  }
+  .card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .card > p, .card .desc { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.4rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.4rem; }
+  @media (max-width: 700px) { .grid-2,.grid-3 { grid-template-columns: 1fr; } }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.2rem 1.4rem; margin: 0.8rem 0;
+    position: relative; overflow-x: auto;
+  }
+  .code-block .file-tag {
+    display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 0.15rem 0.55rem;
+    color: var(--muted); margin-bottom: 0.8rem; letter-spacing: 1px;
+  }
+  .code-block pre {
+    font-family: 'Space Mono', monospace; font-size: 0.83rem;
+    line-height: 1.85; white-space: pre; color: var(--text);
+  }
+  .comment { color: var(--muted); }
+  .cmd     { color: var(--accent-green); }
+  .flag    { color: var(--accent-blue); }
+  .str     { color: var(--accent-yellow); }
+  .kw      { color: var(--accent-purple); }
+  .num     { color: var(--accent-orange); }
+  .key     { color: var(--accent-cyan); }
+  .fn      { color: #f97316; }
+
+  /* COPY BTN */
+  .copy-btn {
+    position: absolute; top: 0.7rem; right: 0.7rem;
+    background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    padding: 0.25rem 0.6rem; border-radius: 6px; cursor: pointer;
+    letter-spacing: 1px; transition: all 0.2s;
+  }
+  .copy-btn:hover { color: var(--accent-green); border-color: var(--accent-green); }
+
+  /* ALERT */
+  .alert { border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1.4rem; font-size: 0.9rem; line-height: 1.6; }
+  .alert.info    { background: rgba(79,142,247,0.1);  border: 1px solid rgba(79,142,247,0.3);  color: #a0b8ff; }
+  .alert.warn    { background: rgba(245,200,66,0.1);  border: 1px solid rgba(245,200,66,0.3);  color: #f5c842; }
+  .alert.success { background: rgba(0,229,160,0.1);   border: 1px solid rgba(0,229,160,0.3);   color: #00e5a0; }
+  .alert.danger  { background: rgba(255,77,109,0.1);  border: 1px solid rgba(255,77,109,0.3);  color: #ff4d6d; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    padding: 0.12rem 0.45rem; border-radius: 4px; letter-spacing: 1px;
+    text-transform: uppercase; vertical-align: middle; margin-left: 0.4rem;
+  }
+  .badge-green  { background: rgba(0,229,160,0.15);  color: var(--accent-green);  border: 1px solid rgba(0,229,160,0.3); }
+  .badge-cyan   { background: rgba(0,212,255,0.15);  color: var(--accent-cyan);   border: 1px solid rgba(0,212,255,0.3); }
+  .badge-orange { background: rgba(255,107,53,0.15); color: var(--accent-orange); border: 1px solid rgba(255,107,53,0.3); }
+  .badge-yellow { background: rgba(245,200,66,0.15); color: var(--accent-yellow); border: 1px solid rgba(245,200,66,0.3); }
+  .badge-purple { background: rgba(176,107,255,0.15);color: var(--accent-purple); border: 1px solid rgba(176,107,255,0.3); }
+  .badge-red    { background: rgba(255,77,109,0.15); color: var(--accent-red);    border: 1px solid rgba(255,77,109,0.3); }
+
+  /* STEP FLOW */
+  .steps { display: flex; flex-direction: column; gap: 0; margin: 1rem 0 1.4rem; }
+  .step {
+    display: flex; gap: 1.2rem; padding: 0.9rem 0 0.9rem 1.6rem;
+    border-left: 2px solid var(--border); margin-left: 1.1rem; position: relative;
+  }
+  .step::before {
+    content: attr(data-n); position: absolute; left: -1.15rem; top: 0.85rem;
+    width: 2rem; height: 2rem; border-radius: 50%;
+    background: var(--surface2); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-size: 0.72rem; font-weight: 700;
+  }
+  .step.c-cyan::before   { border-color: var(--accent-cyan);   color: var(--accent-cyan); }
+  .step.c-green::before  { border-color: var(--accent-green);  color: var(--accent-green); }
+  .step.c-orange::before { border-color: var(--accent-orange); color: var(--accent-orange); }
+  .step.c-blue::before   { border-color: var(--accent-blue);   color: var(--accent-blue); }
+  .step.c-purple::before { border-color: var(--accent-purple); color: var(--accent-purple); }
+  .step:last-child { border-left-color: transparent; }
+  .step-title { font-weight: 700; font-size: 0.95rem; }
+  .step-desc  { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; line-height: 1.5; }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; margin: 0.7rem 0; }
+  .checklist li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.9rem; line-height: 1.5; }
+  .checklist li::before { flex-shrink: 0; margin-top: 0.05rem; font-weight: 700; }
+  .checklist.yes li::before   { content: '✓'; color: var(--accent-green); }
+  .checklist.no  li::before   { content: '✗'; color: var(--accent-red); }
+  .checklist.arrow li::before { content: '→'; color: var(--accent-cyan); }
+  .checklist.dot li::before   { content: '·'; color: var(--muted); font-size: 1.2rem; }
+
+  /* FOLDER TREE */
+  .folder-tree {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.4rem 1.6rem; font-family: 'Space Mono', monospace;
+    font-size: 0.82rem; line-height: 2; overflow-x: auto; margin: 0.8rem 0;
+  }
+  .folder-tree .dir  { color: var(--accent-blue); }
+  .folder-tree .file { color: var(--text); }
+  .folder-tree .comment { color: var(--muted); font-size: 0.75rem; }
+
+  /* ===== MOCK SCREENS ===== */
+  .screen-wrap {
+    border: 2px solid var(--border); border-radius: 14px;
+    overflow: hidden; margin: 1rem 0; box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+  .screen-bar {
+    background: #1e2030; padding: 0.6rem 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .screen-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-red    { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green  { background: #28c840; }
+  .screen-url {
+    flex: 1; background: var(--surface2); border-radius: 6px;
+    padding: 0.25rem 0.75rem; font-family: 'Space Mono', monospace;
+    font-size: 0.72rem; color: var(--muted); margin-left: 0.8rem;
+  }
+  .screen-body { background: #f8fafc; padding: 0; overflow: hidden; }
+  .screen-body.dark { background: var(--bg); }
+
+  /* GitHub mock */
+  .gh-header { background: #161b22; padding: 1rem 1.4rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid #30363d; }
+  .gh-logo { color: #fff; font-size: 1.6rem; }
+  .gh-nav { display: flex; gap: 1.2rem; }
+  .gh-nav span { color: #c9d1d9; font-size: 0.82rem; font-family: 'Space Mono', monospace; cursor: pointer; }
+  .gh-nav span:hover { color: #fff; }
+  .gh-repo-header { background: #161b22; padding: 1rem 1.4rem; border-bottom: 1px solid #30363d; }
+  .gh-repo-title { font-family: 'Space Mono', monospace; font-size: 1rem; color: #58a6ff; }
+  .gh-repo-title span { color: #8b949e; }
+  .gh-repo-desc { color: #8b949e; font-size: 0.82rem; margin-top: 0.3rem; font-family: 'Space Mono', monospace; }
+  .gh-tabs { display: flex; gap: 0; background: #161b22; border-bottom: 1px solid #30363d; padding: 0 1.4rem; }
+  .gh-tab { font-family: 'Space Mono', monospace; font-size: 0.78rem; color: #8b949e; padding: 0.7rem 0.9rem; cursor: pointer; border-bottom: 2px solid transparent; }
+  .gh-tab.active { color: #e6edf3; border-bottom-color: #f78166; }
+  .gh-files { background: #161b22; }
+  .gh-file-row { display: flex; align-items: center; gap: 0.8rem; padding: 0.55rem 1.4rem; border-bottom: 1px solid #21262d; font-family: 'Space Mono', monospace; font-size: 0.78rem; }
+  .gh-file-row:hover { background: #1c2128; }
+  .gh-file-icon { color: #8b949e; width: 1rem; text-align: center; }
+  .gh-file-name { color: #58a6ff; flex: 1; }
+  .gh-file-msg  { color: #8b949e; flex: 2; font-size: 0.72rem; }
+  .gh-file-time { color: #8b949e; font-size: 0.7rem; }
+
+  /* Django admin mock */
+  .dj-sidebar { background: #20252b; width: 220px; min-height: 320px; padding: 1rem 0; float: left; }
+  .dj-sidebar-title { color: #79aec8; font-size: 0.7rem; font-family: 'Space Mono', monospace; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.4rem 1rem 0.2rem; }
+  .dj-sidebar-item { display: flex; align-items: center; gap: 0.5rem; color: #fff; font-size: 0.82rem; padding: 0.45rem 1rem; cursor: pointer; font-family: 'Space Mono', monospace; }
+  .dj-sidebar-item:hover { background: rgba(255,255,255,0.05); }
+  .dj-sidebar-item.active { background: rgba(121,174,200,0.15); color: #79aec8; }
+  .dj-content { margin-left: 220px; padding: 1.4rem; background: #f8f8f8; min-height: 320px; }
+  .dj-topbar { background: #20252b; padding: 0.6rem 1rem; display: flex; align-items: center; gap: 1rem; }
+  .dj-topbar-logo { color: #79aec8; font-family: 'Space Mono', monospace; font-size: 0.85rem; font-weight: 700; }
+  .dj-topbar-user { color: #aaa; font-family: 'Space Mono', monospace; font-size: 0.75rem; margin-left: auto; }
+  .dj-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .dj-table th { background: #417690; color: #fff; padding: 0.5rem 0.8rem; font-family: 'Space Mono', monospace; font-size: 0.75rem; text-align: left; }
+  .dj-table td { padding: 0.5rem 0.8rem; font-size: 0.78rem; border-bottom: 1px solid #eee; font-family: 'Space Mono', monospace; color: #333; }
+  .dj-table tr:hover td { background: #f0f4f8; }
+  .dj-table .link { color: #417690; cursor: pointer; }
+  .dj-title { font-size: 1.2rem; font-weight: bold; color: #333; margin-bottom: 1rem; font-family: 'Space Mono', monospace; }
+  .dj-breadcrumb { font-size: 0.75rem; color: #999; margin-bottom: 1rem; font-family: 'Space Mono', monospace; }
+  .dj-breadcrumb span { color: #417690; }
+  .dj-add-btn { display: inline-block; background: #417690; color: #fff; padding: 0.35rem 0.9rem; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.75rem; margin-bottom: 1rem; cursor: pointer; }
+
+  /* Dashboard mock */
+  .dash-nav { background: #1a1d2e; padding: 0.8rem 1.4rem; display: flex; align-items: center; gap: 1.5rem; border-bottom: 1px solid #252840; }
+  .dash-logo { color: #00e5a0; font-family: 'Space Mono', monospace; font-size: 0.9rem; font-weight: 700; }
+  .dash-nav-links { display: flex; gap: 1.2rem; }
+  .dash-nav-link { color: #6b7290; font-size: 0.8rem; font-family: 'Space Mono', monospace; cursor: pointer; }
+  .dash-nav-link.active { color: #e8eaf0; }
+  .dash-body { background: #0d0e14; padding: 1.4rem; }
+  .dash-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.8rem; margin-bottom: 1.2rem; }
+  .dash-stat { background: #13151f; border: 1px solid #252840; border-radius: 10px; padding: 1rem; text-align: center; }
+  .dash-stat-val { font-size: 1.6rem; font-weight: 800; font-family: 'Space Mono', monospace; }
+  .dash-stat-label { color: #6b7290; font-size: 0.72rem; font-family: 'Space Mono', monospace; letter-spacing: 1px; margin-top: 0.2rem; }
+  .dash-table-wrap { background: #13151f; border: 1px solid #252840; border-radius: 10px; overflow: hidden; }
+  .dash-table-title { padding: 0.8rem 1rem; font-family: 'Space Mono', monospace; font-size: 0.8rem; color: #6b7290; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid #252840; }
+  .dash-table { width: 100%; border-collapse: collapse; }
+  .dash-table th { background: #1a1d2e; color: #6b7290; padding: 0.5rem 0.8rem; font-family: 'Space Mono', monospace; font-size: 0.7rem; text-align: left; letter-spacing: 1px; }
+  .dash-table td { padding: 0.5rem 0.8rem; font-size: 0.78rem; border-bottom: 1px solid #1a1d2e; font-family: 'Space Mono', monospace; color: #e8eaf0; }
+  .dash-badge { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-family: 'Space Mono', monospace; }
+  .dash-badge.ativo   { background: rgba(0,229,160,0.15); color: #00e5a0; border: 1px solid rgba(0,229,160,0.3); }
+  .dash-badge.devolvido { background: rgba(79,142,247,0.15); color: #4f8ef7; border: 1px solid rgba(79,142,247,0.3); }
+  .dash-badge.atrasado { background: rgba(255,77,109,0.15); color: #ff4d6d; border: 1px solid rgba(255,77,109,0.3); }
+
+  /* Terminal mock */
+  .terminal {
+    background: #0d1117; border: 1px solid #30363d; border-radius: 10px;
+    padding: 1.2rem 1.4rem; font-family: 'Space Mono', monospace;
+    font-size: 0.8rem; line-height: 1.9; overflow-x: auto; margin: 0.8rem 0;
+  }
+  .terminal .prompt { color: var(--accent-green); }
+  .terminal .output { color: #8b949e; }
+  .terminal .success { color: var(--accent-green); }
+  .terminal .error   { color: var(--accent-red); }
+  .terminal .info    { color: var(--accent-cyan); }
+
+  /* API RESPONSE */
+  .api-mock {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 0.8rem 0;
+  }
+  .api-req { background: #0d0e14; padding: 1rem 1.2rem; border-right: 1px solid var(--border); }
+  .api-res { background: #0a0c12; padding: 1rem 1.2rem; }
+  .api-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); margin-bottom: 0.6rem; text-transform: uppercase; }
+  .api-method { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; margin-right: 0.5rem; }
+  .method-post { background: rgba(0,229,160,0.2); color: #00e5a0; }
+  .method-get  { background: rgba(79,142,247,0.2); color: #4f8ef7; }
+  .api-url { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--text); }
+  .api-body { margin-top: 0.7rem; }
+  .api-body pre { font-family: 'Space Mono', monospace; font-size: 0.78rem; line-height: 1.8; color: var(--text); }
+  .status-201 { color: var(--accent-green); font-family: 'Space Mono', monospace; font-size: 0.75rem; }
+  .status-404 { color: var(--accent-red);   font-family: 'Space Mono', monospace; font-size: 0.75rem; }
+
+  /* ESP32 WIRING */
+  .wiring-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; }
+  .wiring-table th { background: var(--surface2); color: var(--muted); padding: 0.5rem 0.8rem; font-family: 'Space Mono', monospace; font-size: 0.72rem; text-align: left; letter-spacing: 1px; border: 1px solid var(--border); }
+  .wiring-table td { padding: 0.5rem 0.8rem; font-size: 0.82rem; border: 1px solid var(--border); font-family: 'Space Mono', monospace; }
+  .pin-esp { color: var(--accent-cyan); }
+  .pin-rc522 { color: var(--accent-orange); }
+
+  /* RECOMMENDED */
+  .rec-banner {
+    background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(0,229,160,0.08));
+    border: 1px solid rgba(0,229,160,0.35); border-radius: 14px;
+    padding: 1.4rem 1.6rem; margin-bottom: 1.4rem; display: flex; align-items: flex-start; gap: 1rem;
+  }
+  .rec-banner .rec-icon { font-size: 2.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .rec-banner h3 { font-size: 1rem; font-weight: 800; color: var(--accent-green); }
+  .rec-banner p  { color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; line-height: 1.6; }
+
+  /* HARDWARE LIST */
+  .hw-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin: 0.8rem 0; }
+  .hw-list li { display: flex; align-items: center; gap: 0.8rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.88rem; }
+  .hw-list li .hw-icon { font-size: 1.2rem; width: 1.8rem; text-align: center; flex-shrink: 0; }
+
+  /* TEAM GRID */
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 1rem; margin: 1rem 0; }
+  .team-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; text-align: center; }
+  .team-card .t-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .team-card .t-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .team-card .t-desc { color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
+
+  code { background: var(--surface2); border: 1px solid var(--border); padding: 0.1rem 0.4rem; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: 0.82em; color: var(--accent-cyan); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔌 IoT + Django + RFID</h1>
+  <p>Guia completo · GitHub · Setup · Models · API · ESP32 · Dashboard · Telas</p>
+</header>
+
+<nav>
+  <button data-tab="github"    onclick="switchTab('github')"    class="active">🐙 GitHub</button>
+  <button data-tab="setup"     onclick="switchTab('setup')"              >⚙️ Setup</button>
+  <button data-tab="pastas"    onclick="switchTab('pastas')"             >📁 Estrutura</button>
+  <button data-tab="models"    onclick="switchTab('models')"             >🗄️ Models</button>
+  <button data-tab="api"       onclick="switchTab('api')"                >🔗 API REST</button>
+  <button data-tab="esp32"     onclick="switchTab('esp32')"              >🧠 ESP32</button>
+  <button data-tab="frontend"  onclick="switchTab('frontend')"           >🖥️ Dashboard</button>
+  <button data-tab="telas"     onclick="switchTab('telas')"              >📸 Telas</button>
+  <button data-tab="atividade" onclick="switchTab('atividade')"          >🧪 Atividade</button>
+</nav>
+
+<main>
+
+<!-- ========================= GITHUB ========================= -->
+<section id="github" class="section active">
+  <div class="section-title">
+    <div class="icon icon-orange">🐙</div>
+    <div>
+      <h2 style="color:#f97316">GitHub — Criando e Usando o Repositório</h2>
+      <p>Passo a passo completo desde a criação da conta até o primeiro push</p>
+    </div>
+  </div>
+
+  <!-- STEP 1 — CRIAR CONTA -->
+  <div class="card">
+    <div class="card-label" style="color:#f97316">Passo 1 — Acessar o GitHub</div>
+    <h3>Criando a conta e o repositório</h3>
+    <div class="steps">
+      <div class="step c-orange" data-n="1">
+        <div>
+          <div class="step-title">Acesse <code>github.com</code> e clique em <strong>Sign up</strong></div>
+          <div class="step-desc">Preencha: nome de usuário, e-mail e senha. Confirme o e-mail recebido na caixa de entrada.</div>
+        </div>
+      </div>
+      <div class="step c-orange" data-n="2">
+        <div>
+          <div class="step-title">No painel inicial, clique em <strong>"New"</strong> (botão verde, canto superior esquerdo)</div>
+          <div class="step-desc">Ou acesse diretamente: <code>github.com/new</code></div>
+        </div>
+      </div>
+      <div class="step c-orange" data-n="3">
+        <div>
+          <div class="step-title">Preencha os dados do repositório</div>
+          <div class="step-desc">
+            <strong>Repository name:</strong> <code>biblioteca-rfid-django</code><br>
+            <strong>Description:</strong> Sistema de empréstimo de livros com RFID e Django<br>
+            <strong>Visibility:</strong> Public<br>
+            ✅ Add a README file<br>
+            ✅ Add .gitignore → escolha <strong>Python</strong>
+          </div>
+        </div>
+      </div>
+      <div class="step c-orange" data-n="4">
+        <div>
+          <div class="step-title">Clique em <strong>"Create repository"</strong></div>
+          <div class="step-desc">O repositório estará disponível em: <code>github.com/seu-usuario/biblioteca-rfid-django</code></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GitHub mock screen -->
+    <div class="screen-wrap">
+      <div class="screen-bar">
+        <div class="screen-dot dot-red"></div>
+        <div class="screen-dot dot-yellow"></div>
+        <div class="screen-dot dot-green"></div>
+        <div class="screen-url">github.com/seu-usuario/biblioteca-rfid-django</div>
+      </div>
+      <div style="background:#0d1117;">
+        <div class="gh-header">
+          <div class="gh-logo">🐙</div>
+          <div class="gh-nav">
+            <span>Pull requests</span><span>Issues</span><span>Marketplace</span><span>Explore</span>
+          </div>
+        </div>
+        <div class="gh-repo-header">
+          <div class="gh-repo-title"><span>seu-usuario /</span> biblioteca-rfid-django</div>
+          <div class="gh-repo-desc">Sistema de empréstimo de livros com RFID e Django</div>
+        </div>
+        <div class="gh-tabs">
+          <div class="gh-tab active">📁 Code</div>
+          <div class="gh-tab">⚠️ Issues</div>
+          <div class="gh-tab">🔀 Pull requests</div>
+          <div class="gh-tab">⚙️ Settings</div>
+        </div>
+        <div class="gh-files">
+          <div class="gh-file-row">
+            <span class="gh-file-icon">📁</span>
+            <span class="gh-file-name">biblioteca/</span>
+            <span class="gh-file-msg">feat: estrutura inicial do app</span>
+            <span class="gh-file-time">2 horas atrás</span>
+          </div>
+          <div class="gh-file-row">
+            <span class="gh-file-icon">📁</span>
+            <span class="gh-file-name">esp32/</span>
+            <span class="gh-file-msg">feat: código de leitura RFID</span>
+            <span class="gh-file-time">1 hora atrás</span>
+          </div>
+          <div class="gh-file-row">
+            <span class="gh-file-icon">📄</span>
+            <span class="gh-file-name">.gitignore</span>
+            <span class="gh-file-msg">chore: ignorar venv e .pyc</span>
+            <span class="gh-file-time">2 horas atrás</span>
+          </div>
+          <div class="gh-file-row">
+            <span class="gh-file-icon">📄</span>
+            <span class="gh-file-name">README.md</span>
+            <span class="gh-file-msg">docs: instruções de instalação</span>
+            <span class="gh-file-time">2 horas atrás</span>
+          </div>
+          <div class="gh-file-row">
+            <span class="gh-file-icon">📄</span>
+            <span class="gh-file-name">requirements.txt</span>
+            <span class="gh-file-msg">chore: dependências do projeto</span>
+            <span class="gh-file-time">1 hora atrás</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLONAR -->
+  <div class="card">
+    <div class="card-label" style="color:#f97316">Passo 2 — Clonar na máquina local</div>
+    <h3>Baixar o repositório via terminal</h3>
+    <div class="terminal">
+      <div><span class="prompt">$</span> git clone https://github.com/seu-usuario/biblioteca-rfid-django.git</div>
+      <div class="output">Cloning into 'biblioteca-rfid-django'...</div>
+      <div class="output">remote: Enumerating objects: 5, done.</div>
+      <div class="output">remote: Counting objects: 100% (5/5), done.</div>
+      <div class="output">Receiving objects: 100% (5/5), done.</div>
+      <div><span class="prompt">$</span> cd biblioteca-rfid-django</div>
+      <div><span class="prompt">biblioteca-rfid-django $</span> ls</div>
+      <div class="output">.gitignore  README.md</div>
+    </div>
+  </div>
+
+  <!-- GIT WORKFLOW -->
+  <div class="card">
+    <div class="card-label" style="color:#f97316">Passo 3 — Fluxo de trabalho com Git</div>
+    <h3>Sequência diária de comandos</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="comment"># 1. Verificar o que mudou</span>
+<span class="cmd">git</span> status
+
+<span class="comment"># 2. Adicionar todos os arquivos modificados</span>
+<span class="cmd">git</span> add <span class="str">.</span>
+
+<span class="comment"># 3. Criar um commit com mensagem descritiva</span>
+<span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"feat: adiciona model de Emprestimo"</span>
+
+<span class="comment"># 4. Enviar para o GitHub</span>
+<span class="cmd">git</span> push
+
+<span class="comment"># 5. Atualizar do GitHub (antes de começar a trabalhar)</span>
+<span class="cmd">git</span> pull</pre>
+    </div>
+
+    <div class="alert info">
+      <strong>💡 Convenção de mensagens:</strong> Use prefixos como <code>feat:</code> (nova funcionalidade), <code>fix:</code> (correção de bug), <code>docs:</code> (documentação), <code>chore:</code> (configuração). Isso profissionaliza o histórico do projeto.
+    </div>
+  </div>
+
+  <!-- GITIGNORE -->
+  <div class="card">
+    <div class="card-label" style="color:#f97316">.gitignore — O que não enviar ao GitHub</div>
+    <div class="code-block">
+      <div class="file-tag">.gitignore</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="comment"># Ambiente virtual Python — nunca enviar!</span>
+venv/
+env/
+.env
+
+<span class="comment"># Arquivos compilados Python</span>
+__pycache__/
+*.pyc
+*.pyo
+
+<span class="comment"># Banco de dados local</span>
+db.sqlite3
+*.db
+
+<span class="comment"># Configurações locais (segredos, senhas)</span>
+local_settings.py
+.env
+
+<span class="comment"># VS Code / IDEs</span>
+.vscode/
+.idea/
+
+<span class="comment"># Migrações (opcional — recomendo incluir em projetos de aula)</span>
+<span class="comment"># */migrations/</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= SETUP ========================= -->
+<section id="setup" class="section">
+  <div class="section-title">
+    <div class="icon icon-blue">⚙️</div>
+    <div>
+      <h2 style="color:var(--accent-blue)">Setup do Ambiente</h2>
+      <p>Instalação completa: Python, Django, dependências e banco de dados</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-blue)">Requisitos</div>
+    <ul class="hw-list">
+      <li><span class="hw-icon">🐍</span><span><strong>Python 3.10+</strong> — verificar com <code>python --version</code></span></li>
+      <li><span class="hw-icon">📦</span><span><strong>pip</strong> — gerenciador de pacotes Python</span></li>
+      <li><span class="hw-icon">🐙</span><span><strong>Git</strong> — controle de versão</span></li>
+      <li><span class="hw-icon">🐘</span><span><strong>PostgreSQL</strong> — banco de dados de produção (ou SQLite para desenvolvimento)</span></li>
+      <li><span class="hw-icon">🛠️</span><span><strong>VS Code</strong> — editor de código recomendado</span></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-blue)">Passo 1 — Criar ambiente virtual</div>
+    <div class="terminal">
+      <div><span class="prompt">$</span> cd biblioteca-rfid-django</div>
+      <div class="output"></div>
+      <div><span class="comment"># Criar o ambiente virtual (venv)</span></div>
+      <div><span class="prompt">$</span> python -m venv venv</div>
+      <div class="output"></div>
+      <div><span class="comment"># Ativar no Linux/macOS:</span></div>
+      <div><span class="prompt">$</span> source venv/bin/activate</div>
+      <div class="output"></div>
+      <div><span class="comment"># Ativar no Windows:</span></div>
+      <div><span class="prompt">$</span> venv\Scripts\activate</div>
+      <div class="output"></div>
+      <div><span class="comment"># Prompt muda para indicar que o venv está ativo:</span></div>
+      <div><span class="success">(venv) biblioteca-rfid-django $</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-blue)">Passo 2 — Instalar dependências</div>
+    <div class="terminal">
+      <div><span class="comment"># Instalar Django e dependências</span></div>
+      <div><span class="prompt">(venv) $</span> pip install django djangorestframework psycopg2-binary django-cors-headers python-dotenv</div>
+      <div class="output">Collecting django...</div>
+      <div class="output">Collecting djangorestframework...</div>
+      <div class="success">Successfully installed Django-4.2.7 djangorestframework-3.14.0 ...</div>
+      <div></div>
+      <div><span class="comment"># Salvar dependências no requirements.txt</span></div>
+      <div><span class="prompt">(venv) $</span> pip freeze > requirements.txt</div>
+      <div></div>
+      <div><span class="comment"># Para instalar em outra máquina:</span></div>
+      <div><span class="prompt">(venv) $</span> pip install -r requirements.txt</div>
+    </div>
+
+    <div class="code-block" style="margin-top:1rem">
+      <div class="file-tag">requirements.txt</div>
+      <pre><span class="str">Django</span>==4.2.7
+<span class="str">djangorestframework</span>==3.14.0
+<span class="str">psycopg2-binary</span>==2.9.9
+<span class="str">django-cors-headers</span>==4.3.0
+<span class="str">python-dotenv</span>==1.0.0</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-blue)">Passo 3 — Criar o projeto Django</div>
+    <div class="terminal">
+      <div><span class="comment"># Criar projeto Django</span></div>
+      <div><span class="prompt">(venv) $</span> django-admin startproject biblioteca_projeto .</div>
+      <div class="output"></div>
+      <div><span class="comment"># Criar o app 'biblioteca'</span></div>
+      <div><span class="prompt">(venv) $</span> python manage.py startapp biblioteca</div>
+      <div class="output"></div>
+      <div><span class="comment"># Verificar se tudo está funcionando</span></div>
+      <div><span class="prompt">(venv) $</span> python manage.py runserver</div>
+      <div class="info">Watching for file changes with StatReloader</div>
+      <div class="info">Performing system checks...</div>
+      <div class="success">System check identified no issues (0 silenced).</div>
+      <div class="info">Starting development server at http://127.0.0.1:8000/</div>
+    </div>
+    <div class="alert success">
+      <strong>✅ Acesse</strong> <code>http://127.0.0.1:8000/</code> no navegador. Você verá a página padrão do Django com o foguete 🚀
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-blue)">Passo 4 — Configurar settings.py</div>
+    <div class="code-block">
+      <div class="file-tag">biblioteca_projeto/settings.py</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="comment"># Adicionar apps instalados</span>
+INSTALLED_APPS = [
+    <span class="str">'django.contrib.admin'</span>,
+    <span class="str">'django.contrib.auth'</span>,
+    <span class="str">'django.contrib.contenttypes'</span>,
+    <span class="str">'django.contrib.sessions'</span>,
+    <span class="str">'django.contrib.messages'</span>,
+    <span class="str">'django.contrib.staticfiles'</span>,
+    <span class="str">'rest_framework'</span>,      <span class="comment"># Django REST Framework</span>
+    <span class="str">'corsheaders'</span>,          <span class="comment"># CORS (para ESP32 acessar)</span>
+    <span class="str">'biblioteca'</span>,           <span class="comment"># nosso app</span>
+]
+
+MIDDLEWARE = [
+    <span class="str">'corsheaders.middleware.CorsMiddleware'</span>,  <span class="comment"># deve ser o primeiro!</span>
+    <span class="str">'django.middleware.common.CommonMiddleware'</span>,
+    <span class="comment"># ... outros middlewares ...</span>
+]
+
+<span class="comment"># Banco de dados — SQLite para desenvolvimento</span>
+DATABASES = {
+    <span class="str">'default'</span>: {
+        <span class="str">'ENGINE'</span>: <span class="str">'django.db.backends.sqlite3'</span>,
+        <span class="str">'NAME'</span>: BASE_DIR / <span class="str">'db.sqlite3'</span>,
+    }
+}
+
+<span class="comment"># Permitir ESP32 acessar a API</span>
+CORS_ALLOW_ALL_ORIGINS = <span class="kw">True</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= PASTAS ========================= -->
+<section id="pastas" class="section">
+  <div class="section-title">
+    <div class="icon icon-yellow">📁</div>
+    <div>
+      <h2 style="color:var(--accent-yellow)">Estrutura de Pastas</h2>
+      <p>Organização completa do projeto — onde fica cada arquivo</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-yellow)">Visão geral do projeto</div>
+    <div class="folder-tree">
+<span class="dir">biblioteca-rfid-django/</span>          <span class="comment">← pasta raiz (repositório Git)</span>
+│
+├── <span class="dir">biblioteca_projeto/</span>           <span class="comment">← configurações do Django</span>
+│   ├── <span class="file">__init__.py</span>
+│   ├── <span class="file">settings.py</span>               <span class="comment">← configurações gerais</span>
+│   ├── <span class="file">urls.py</span>                   <span class="comment">← rotas principais</span>
+│   ├── <span class="file">wsgi.py</span>
+│   └── <span class="file">asgi.py</span>
+│
+├── <span class="dir">biblioteca/</span>                   <span class="comment">← app principal</span>
+│   ├── <span class="dir">migrations/</span>               <span class="comment">← migrações do banco</span>
+│   │   ├── <span class="file">__init__.py</span>
+│   │   └── <span class="file">0001_initial.py</span>
+│   ├── <span class="dir">templates/</span>
+│   │   └── <span class="dir">biblioteca/</span>
+│   │       ├── <span class="file">dashboard.html</span>        <span class="comment">← tela principal</span>
+│   │       ├── <span class="file">emprestimos.html</span>      <span class="comment">← lista de empréstimos</span>
+│   │       └── <span class="file">base.html</span>             <span class="comment">← template base</span>
+│   ├── <span class="dir">static/</span>
+│   │   └── <span class="dir">biblioteca/</span>
+│   │       ├── <span class="file">style.css</span>
+│   │       └── <span class="file">dashboard.js</span>
+│   ├── <span class="file">__init__.py</span>
+│   ├── <span class="file">models.py</span>                 <span class="comment">← Aluno, Livro, Emprestimo</span>
+│   ├── <span class="file">views.py</span>                  <span class="comment">← lógica e API endpoints</span>
+│   ├── <span class="file">urls.py</span>                   <span class="comment">← rotas do app</span>
+│   ├── <span class="file">serializers.py</span>            <span class="comment">← serialização JSON (DRF)</span>
+│   └── <span class="file">admin.py</span>                  <span class="comment">← registro no painel admin</span>
+│
+├── <span class="dir">esp32/</span>                        <span class="comment">← código do hardware</span>
+│   ├── <span class="file">main.py</span>                   <span class="comment">← código principal ESP32</span>
+│   ├── <span class="file">config.py</span>                 <span class="comment">← WiFi, URL da API</span>
+│   └── <span class="file">rfid_reader.py</span>            <span class="comment">← funções de leitura RFID</span>
+│
+├── <span class="file">manage.py</span>                     <span class="comment">← comando principal do Django</span>
+├── <span class="file">requirements.txt</span>              <span class="comment">← dependências Python</span>
+├── <span class="file">.gitignore</span>                    <span class="comment">← arquivos ignorados pelo Git</span>
+└── <span class="file">README.md</span>                     <span class="comment">← documentação do projeto</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-yellow)">Como criar a estrutura via terminal</div>
+    <div class="terminal">
+      <div><span class="comment"># Dentro da pasta raiz do projeto:</span></div>
+      <div><span class="prompt">(venv) $</span> python manage.py startapp biblioteca</div>
+      <div class="output"></div>
+      <div><span class="comment"># Criar pasta de templates</span></div>
+      <div><span class="prompt">(venv) $</span> mkdir -p biblioteca/templates/biblioteca</div>
+      <div></div>
+      <div><span class="comment"># Criar pasta de arquivos estáticos</span></div>
+      <div><span class="prompt">(venv) $</span> mkdir -p biblioteca/static/biblioteca</div>
+      <div></div>
+      <div><span class="comment"># Criar pasta do ESP32</span></div>
+      <div><span class="prompt">(venv) $</span> mkdir esp32</div>
+      <div></div>
+      <div><span class="comment"># Criar os arquivos necessários</span></div>
+      <div><span class="prompt">(venv) $</span> touch biblioteca/urls.py biblioteca/serializers.py</div>
+      <div><span class="prompt">(venv) $</span> touch esp32/main.py esp32/config.py esp32/rfid_reader.py</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-yellow)">Configurar URLs principal</div>
+    <div class="code-block">
+      <div class="file-tag">biblioteca_projeto/urls.py</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="kw">from</span> django.contrib <span class="kw">import</span> admin
+<span class="kw">from</span> django.urls <span class="kw">import</span> path, include
+
+urlpatterns = [
+    path(<span class="str">'admin/'</span>, admin.site.urls),
+    path(<span class="str">''</span>,      include(<span class="str">'biblioteca.urls'</span>)),
+]</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= MODELS ========================= -->
+<section id="models" class="section">
+  <div class="section-title">
+    <div class="icon icon-purple">🗄️</div>
+    <div>
+      <h2 style="color:var(--accent-purple)">Models — Banco de Dados</h2>
+      <p>Definição das tabelas: Aluno, Livro, Empréstimo e Acesso</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-purple)">biblioteca/models.py — completo</div>
+    <div class="code-block">
+      <div class="file-tag">biblioteca/models.py</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="kw">from</span> django.db <span class="kw">import</span> models
+<span class="kw">from</span> django.utils <span class="kw">import</span> timezone
+
+
+<span class="kw">class</span> <span class="fn">Aluno</span>(models.Model):
+    <span class="comment">"""Representa um aluno cadastrado no sistema."""</span>
+    nome       = models.<span class="cmd">CharField</span>(max_length=<span class="num">100</span>)
+    matricula  = models.<span class="cmd">CharField</span>(max_length=<span class="num">20</span>, unique=<span class="kw">True</span>)
+    uid_rfid   = models.<span class="cmd">CharField</span>(max_length=<span class="num">50</span>, unique=<span class="kw">True</span>,
+                    help_text=<span class="str">"UID da tag/cartão RFID"</span>)
+    turma      = models.<span class="cmd">CharField</span>(max_length=<span class="num">20</span>)
+    ativo      = models.<span class="cmd">BooleanField</span>(default=<span class="kw">True</span>)
+    criado_em  = models.<span class="cmd">DateTimeField</span>(auto_now_add=<span class="kw">True</span>)
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> <span class="str">f"</span>{self.nome}<span class="str"> (</span>{self.matricula}<span class="str">)"</span>
+
+    <span class="kw">class</span> Meta:
+        ordering = [<span class="str">'nome'</span>]
+        verbose_name_plural = <span class="str">'Alunos'</span>
+
+
+<span class="kw">class</span> <span class="fn">Livro</span>(models.Model):
+    <span class="comment">"""Representa um livro do acervo."""</span>
+    titulo     = models.<span class="cmd">CharField</span>(max_length=<span class="num">200</span>)
+    autor      = models.<span class="cmd">CharField</span>(max_length=<span class="num">150</span>)
+    isbn       = models.<span class="cmd">CharField</span>(max_length=<span class="num">20</span>, blank=<span class="kw">True</span>)
+    uid_rfid   = models.<span class="cmd">CharField</span>(max_length=<span class="num">50</span>, unique=<span class="kw">True</span>,
+                    help_text=<span class="str">"UID da tag RFID colada no livro"</span>)
+    disponivel = models.<span class="cmd">BooleanField</span>(default=<span class="kw">True</span>)
+    criado_em  = models.<span class="cmd">DateTimeField</span>(auto_now_add=<span class="kw">True</span>)
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> <span class="str">f"</span>{self.titulo}<span class="str"> — </span>{self.autor}<span class="str">"</span>
+
+    <span class="kw">class</span> Meta:
+        ordering = [<span class="str">'titulo'</span>]
+
+
+<span class="kw">class</span> <span class="fn">Emprestimo</span>(models.Model):
+    <span class="comment">"""Registro de empréstimo criado automaticamente via RFID."""</span>
+    aluno          = models.<span class="cmd">ForeignKey</span>(Aluno, on_delete=models.CASCADE,
+                        related_name=<span class="str">'emprestimos'</span>)
+    livro          = models.<span class="cmd">ForeignKey</span>(Livro, on_delete=models.CASCADE,
+                        related_name=<span class="str">'emprestimos'</span>)
+    data_retirada  = models.<span class="cmd">DateTimeField</span>(auto_now_add=<span class="kw">True</span>)
+    data_devolucao = models.<span class="cmd">DateTimeField</span>(null=<span class="kw">True</span>, blank=<span class="kw">True</span>)
+    prazo          = models.<span class="cmd">DateField</span>(null=<span class="kw">True</span>, blank=<span class="kw">True</span>)
+    ativo          = models.<span class="cmd">BooleanField</span>(default=<span class="kw">True</span>)
+
+    <span class="kw">@property</span>
+    <span class="kw">def</span> <span class="fn">atrasado</span>(self):
+        <span class="kw">from</span> datetime <span class="kw">import</span> date
+        <span class="kw">if</span> self.ativo <span class="kw">and</span> self.prazo:
+            <span class="kw">return</span> date.today() > self.prazo
+        <span class="kw">return</span> <span class="kw">False</span>
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> <span class="str">f"</span>{self.aluno.nome}<span class="str"> → </span>{self.livro.titulo}<span class="str">"</span>
+
+    <span class="kw">class</span> Meta:
+        ordering = [<span class="str">'-data_retirada'</span>]
+
+
+<span class="kw">class</span> <span class="fn">LogAcesso</span>(models.Model):
+    <span class="comment">"""Log de leituras RFID (debugging e auditoria)."""</span>
+    uid_lido   = models.<span class="cmd">CharField</span>(max_length=<span class="num">50</span>)
+    aluno      = models.<span class="cmd">ForeignKey</span>(Aluno, on_delete=models.SET_NULL,
+                    null=<span class="kw">True</span>, blank=<span class="kw">True</span>)
+    livro      = models.<span class="cmd">ForeignKey</span>(Livro, on_delete=models.SET_NULL,
+                    null=<span class="kw">True</span>, blank=<span class="kw">True</span>)
+    timestamp  = models.<span class="cmd">DateTimeField</span>(auto_now_add=<span class="kw">True</span>)
+    status     = models.<span class="cmd">CharField</span>(max_length=<span class="num">20</span>,
+                    choices=[(
+                        <span class="str">'sucesso'</span>, <span class="str">'Sucesso'</span>),(
+                        <span class="str">'erro'</span>, <span class="str">'Erro'</span>),(
+                        <span class="str">'nao_encontrado'</span>, <span class="str">'Não Encontrado'</span>)])
+    mensagem   = models.<span class="cmd">TextField</span>(blank=<span class="kw">True</span>)
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> <span class="str">f"[</span>{self.timestamp}<span class="str">] </span>{self.uid_lido}<span class="str"> — </span>{self.status}<span class="str">"</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-purple)">Aplicar migrações ao banco</div>
+    <div class="terminal">
+      <div><span class="comment"># Gerar os arquivos de migração</span></div>
+      <div><span class="prompt">(venv) $</span> python manage.py makemigrations</div>
+      <div class="success">Migrations for 'biblioteca':</div>
+      <div class="output">  biblioteca/migrations/0001_initial.py</div>
+      <div class="output">    - Create model Aluno</div>
+      <div class="output">    - Create model Livro</div>
+      <div class="output">    - Create model Emprestimo</div>
+      <div class="output">    - Create model LogAcesso</div>
+      <div></div>
+      <div><span class="comment"># Aplicar ao banco de dados</span></div>
+      <div><span class="prompt">(venv) $</span> python manage.py migrate</div>
+      <div class="success">Running migrations:</div>
+      <div class="output">  Applying biblioteca.0001_initial... OK</div>
+      <div></div>
+      <div><span class="comment"># Criar superusuário para o admin</span></div>
+      <div><span class="prompt">(venv) $</span> python manage.py createsuperuser</div>
+      <div class="info">Username: admin</div>
+      <div class="info">Email address: admin@escola.com</div>
+      <div class="info">Password: ********</div>
+      <div class="success">Superuser created successfully.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-purple)">Registrar no Admin</div>
+    <div class="code-block">
+      <div class="file-tag">biblioteca/admin.py</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="kw">from</span> django.contrib <span class="kw">import</span> admin
+<span class="kw">from</span> .models <span class="kw">import</span> Aluno, Livro, Emprestimo, LogAcesso
+
+
+@admin.register(Aluno)
+<span class="kw">class</span> <span class="fn">AlunoAdmin</span>(admin.ModelAdmin):
+    list_display = [<span class="str">'nome'</span>, <span class="str">'matricula'</span>, <span class="str">'turma'</span>, <span class="str">'uid_rfid'</span>, <span class="str">'ativo'</span>]
+    search_fields = [<span class="str">'nome'</span>, <span class="str">'matricula'</span>, <span class="str">'uid_rfid'</span>]
+    list_filter = [<span class="str">'turma'</span>, <span class="str">'ativo'</span>]
+
+
+@admin.register(Livro)
+<span class="kw">class</span> <span class="fn">LivroAdmin</span>(admin.ModelAdmin):
+    list_display = [<span class="str">'titulo'</span>, <span class="str">'autor'</span>, <span class="str">'uid_rfid'</span>, <span class="str">'disponivel'</span>]
+    search_fields = [<span class="str">'titulo'</span>, <span class="str">'autor'</span>, <span class="str">'uid_rfid'</span>]
+    list_filter = [<span class="str">'disponivel'</span>]
+
+
+@admin.register(Emprestimo)
+<span class="kw">class</span> <span class="fn">EmprestimoAdmin</span>(admin.ModelAdmin):
+    list_display = [<span class="str">'aluno'</span>, <span class="str">'livro'</span>, <span class="str">'data_retirada'</span>, <span class="str">'prazo'</span>, <span class="str">'ativo'</span>]
+    list_filter = [<span class="str">'ativo'</span>]
+    search_fields = [<span class="str">'aluno__nome'</span>, <span class="str">'livro__titulo'</span>]
+
+
+@admin.register(LogAcesso)
+<span class="kw">class</span> <span class="fn">LogAcessoAdmin</span>(admin.ModelAdmin):
+    list_display = [<span class="str">'uid_lido'</span>, <span class="str">'aluno'</span>, <span class="str">'status'</span>, <span class="str">'timestamp'</span>]
+    list_filter = [<span class="str">'status'</span>]
+    readonly_fields = [<span class="str">'timestamp'</span>]</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= API ========================= -->
+<section id="api" class="section">
+  <div class="section-title">
+    <div class="icon icon-green">🔗</div>
+    <div>
+      <h2 style="color:var(--accent-green)">API REST</h2>
+      <p>Endpoints que o ESP32 vai chamar — views, serializers e URLs</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-green)">biblioteca/views.py — API completa</div>
+    <div class="code-block">
+      <div class="file-tag">biblioteca/views.py</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="kw">from</span> django.http <span class="kw">import</span> JsonResponse
+<span class="kw">from</span> django.views.decorators.csrf <span class="kw">import</span> csrf_exempt
+<span class="kw">from</span> django.shortcuts <span class="kw">import</span> render
+<span class="kw">from</span> datetime <span class="kw">import</span> date, timedelta
+<span class="kw">import</span> json
+<span class="kw">from</span> .models <span class="kw">import</span> Aluno, Livro, Emprestimo, LogAcesso
+
+
+<span class="comment"># ──────────────────────────────────────────────
+#  ENDPOINT: Registrar Empréstimo via RFID
+#  Chamado pelo ESP32 quando aluno + livro são lidos
+# ──────────────────────────────────────────────</span>
+@csrf_exempt
+<span class="kw">def</span> <span class="fn">api_emprestimo</span>(request):
+    <span class="kw">if</span> request.method != <span class="str">'POST'</span>:
+        <span class="kw">return</span> <span class="cmd">JsonResponse</span>({<span class="str">'erro'</span>: <span class="str">'Método inválido'</span>}, status=<span class="num">405</span>)
+
+    <span class="kw">try</span>:
+        dados = json.<span class="cmd">loads</span>(request.body)
+    <span class="kw">except</span> json.JSONDecodeError:
+        <span class="kw">return</span> <span class="cmd">JsonResponse</span>({<span class="str">'erro'</span>: <span class="str">'JSON inválido'</span>}, status=<span class="num">400</span>)
+
+    uid_aluno = dados.get(<span class="str">'uid_aluno'</span>)
+    uid_livro = dados.get(<span class="str">'uid_livro'</span>)
+
+    <span class="comment"># Registrar no log independente do resultado</span>
+    log = LogAcesso(uid_lido=<span class="str">f"</span>{uid_aluno}<span class="str">+</span>{uid_livro}<span class="str">"</span>)
+
+    <span class="kw">try</span>:
+        aluno = Aluno.objects.<span class="cmd">get</span>(uid_rfid=uid_aluno, ativo=<span class="kw">True</span>)
+        livro = Livro.objects.<span class="cmd">get</span>(uid_rfid=uid_livro, disponivel=<span class="kw">True</span>)
+    <span class="kw">except</span> Aluno.DoesNotExist:
+        log.status = <span class="str">'nao_encontrado'</span>; log.mensagem = <span class="str">'Aluno não encontrado'</span>
+        log.<span class="cmd">save</span>()
+        <span class="kw">return</span> <span class="cmd">JsonResponse</span>({<span class="str">'erro'</span>: <span class="str">'Aluno não cadastrado'</span>}, status=<span class="num">404</span>)
+    <span class="kw">except</span> Livro.DoesNotExist:
+        log.status = <span class="str">'nao_encontrado'</span>; log.mensagem = <span class="str">'Livro indisponível'</span>
+        log.<span class="cmd">save</span>()
+        <span class="kw">return</span> <span class="cmd">JsonResponse</span>({<span class="str">'erro'</span>: <span class="str">'Livro não disponível'</span>}, status=<span class="num">404</span>)
+
+    <span class="comment"># Criar empréstimo com prazo de 7 dias</span>
+    emp = Emprestimo.objects.<span class="cmd">create</span>(
+        aluno=aluno,
+        livro=livro,
+        prazo=date.today() + timedelta(days=<span class="num">7</span>)
+    )
+    livro.disponivel = <span class="kw">False</span>
+    livro.<span class="cmd">save</span>()
+
+    log.aluno = aluno; log.livro = livro
+    log.status = <span class="str">'sucesso'</span>
+    log.<span class="cmd">save</span>()
+
+    <span class="kw">return</span> <span class="cmd">JsonResponse</span>({
+        <span class="str">'mensagem'</span>: <span class="str">'Empréstimo registrado com sucesso!'</span>,
+        <span class="str">'aluno'</span>:    aluno.nome,
+        <span class="str">'livro'</span>:    livro.titulo,
+        <span class="str">'prazo'</span>:    str(emp.prazo),
+        <span class="str">'id'</span>:       emp.pk
+    }, status=<span class="num">201</span>)
+
+
+<span class="comment"># ──────────────────────────────────────────────
+#  ENDPOINT: Devolver livro via RFID
+# ──────────────────────────────────────────────</span>
+@csrf_exempt
+<span class="kw">def</span> <span class="fn">api_devolucao</span>(request):
+    <span class="kw">if</span> request.method != <span class="str">'POST'</span>:
+        <span class="kw">return</span> <span class="cmd">JsonResponse</span>({<span class="str">'erro'</span>: <span class="str">'Método inválido'</span>}, status=<span class="num">405</span>)
+
+    dados = json.<span class="cmd">loads</span>(request.body)
+    uid_livro = dados.get(<span class="str">'uid_livro'</span>)
+
+    <span class="kw">try</span>:
+        livro = Livro.objects.<span class="cmd">get</span>(uid_rfid=uid_livro)
+        emp = Emprestimo.objects.<span class="cmd">get</span>(livro=livro, ativo=<span class="kw">True</span>)
+    <span class="kw">except</span> (Livro.DoesNotExist, Emprestimo.DoesNotExist):
+        <span class="kw">return</span> <span class="cmd">JsonResponse</span>({<span class="str">'erro'</span>: <span class="str">'Empréstimo não encontrado'</span>}, status=<span class="num">404</span>)
+
+    <span class="kw">from</span> django.utils <span class="kw">import</span> timezone
+    emp.data_devolucao = timezone.now()
+    emp.ativo = <span class="kw">False</span>
+    emp.<span class="cmd">save</span>()
+    livro.disponivel = <span class="kw">True</span>
+    livro.<span class="cmd">save</span>()
+
+    <span class="kw">return</span> <span class="cmd">JsonResponse</span>({
+        <span class="str">'mensagem'</span>: <span class="str">'Devolução registrada!'</span>,
+        <span class="str">'livro'</span>: livro.titulo,
+        <span class="str">'aluno'</span>: emp.aluno.nome
+    })
+
+
+<span class="comment"># ──────────────────────────────────────────────
+#  VIEW: Dashboard HTML
+# ──────────────────────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">dashboard</span>(request):
+    context = {
+        <span class="str">'total_livros'</span>:       Livro.objects.<span class="cmd">count</span>(),
+        <span class="str">'livros_disponiveis'</span>: Livro.objects.<span class="cmd">filter</span>(disponivel=<span class="kw">True</span>).<span class="cmd">count</span>(),
+        <span class="str">'total_alunos'</span>:       Aluno.objects.<span class="cmd">filter</span>(ativo=<span class="kw">True</span>).<span class="cmd">count</span>(),
+        <span class="str">'emprestimos_ativos'</span>: Emprestimo.objects.<span class="cmd">filter</span>(ativo=<span class="kw">True</span>).<span class="cmd">count</span>(),
+        <span class="str">'emprestimos'</span>:        Emprestimo.objects.<span class="cmd">filter</span>(ativo=<span class="kw">True</span>).select_related(),
+        <span class="str">'ultimos_logs'</span>:       LogAcesso.objects.<span class="cmd">order_by</span>(<span class="str">'-timestamp'</span>)[:<span class="num">10</span>],
+    }
+    <span class="kw">return</span> <span class="cmd">render</span>(request, <span class="str">'biblioteca/dashboard.html'</span>, context)</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-green)">biblioteca/urls.py</div>
+    <div class="code-block">
+      <div class="file-tag">biblioteca/urls.py</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="kw">from</span> django.urls <span class="kw">import</span> path
+<span class="kw">from</span> . <span class="kw">import</span> views
+
+urlpatterns = [
+    <span class="comment"># Dashboard (tela principal)</span>
+    path(<span class="str">''</span>,                views.dashboard,      name=<span class="str">'dashboard'</span>),
+
+    <span class="comment"># API endpoints — chamados pelo ESP32</span>
+    path(<span class="str">'api/emprestimo/'</span>, views.api_emprestimo, name=<span class="str">'api-emprestimo'</span>),
+    path(<span class="str">'api/devolucao/'</span>,  views.api_devolucao,  name=<span class="str">'api-devolucao'</span>),
+]</pre>
+    </div>
+  </div>
+
+  <!-- API REQUEST/RESPONSE EXAMPLES -->
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-green)">Testando a API — Exemplos de requisição e resposta</div>
+    <h3>POST /api/emprestimo/ — Empréstimo bem-sucedido</h3>
+    <div class="api-mock">
+      <div class="api-req">
+        <div class="api-label">Requisição (ESP32 → Django)</div>
+        <div>
+          <span class="api-method method-post">POST</span>
+          <span class="api-url">/api/emprestimo/</span>
+        </div>
+        <div class="api-body">
+          <pre><span class="str">{</span>
+  <span class="key">"uid_aluno"</span>: <span class="str">"A3F5B12C"</span>,
+  <span class="key">"uid_livro"</span>: <span class="str">"7D4E9A01"</span>
+<span class="str">}</span></pre>
+        </div>
+      </div>
+      <div class="api-res">
+        <div class="api-label">Resposta (Django → ESP32)</div>
+        <div class="status-201">HTTP 201 Created</div>
+        <div class="api-body">
+          <pre><span class="str">{</span>
+  <span class="key">"mensagem"</span>: <span class="str">"Empréstimo registrado!"</span>,
+  <span class="key">"aluno"</span>: <span class="str">"João Silva"</span>,
+  <span class="key">"livro"</span>: <span class="str">"Python Fluente"</span>,
+  <span class="key">"prazo"</span>: <span class="str">"2024-12-10"</span>,
+  <span class="key">"id"</span>: <span class="num">42</span>
+<span class="str">}</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:1.2rem">POST /api/emprestimo/ — Aluno não encontrado</h3>
+    <div class="api-mock">
+      <div class="api-req">
+        <div class="api-label">Requisição</div>
+        <div>
+          <span class="api-method method-post">POST</span>
+          <span class="api-url">/api/emprestimo/</span>
+        </div>
+        <div class="api-body">
+          <pre><span class="str">{</span>
+  <span class="key">"uid_aluno"</span>: <span class="str">"DESCONHECIDO"</span>,
+  <span class="key">"uid_livro"</span>: <span class="str">"7D4E9A01"</span>
+<span class="str">}</span></pre>
+        </div>
+      </div>
+      <div class="api-res">
+        <div class="api-label">Resposta</div>
+        <div class="status-404">HTTP 404 Not Found</div>
+        <div class="api-body">
+          <pre><span class="str">{</span>
+  <span class="key">"erro"</span>: <span class="str">"Aluno não cadastrado"</span>
+<span class="str">}</span></pre>
+        </div>
+      </div>
+    </div>
+    <div class="alert info">
+      <strong>💡 Teste com Postman / Insomnia:</strong> Antes de conectar o hardware, teste todos os endpoints manualmente via Postman ou Insomnia. Só depois conecte o ESP32.
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ESP32 ========================= -->
+<section id="esp32" class="section">
+  <div class="section-title">
+    <div class="icon icon-cyan">🧠</div>
+    <div>
+      <h2 style="color:var(--accent-cyan)">ESP32 + RC522</h2>
+      <p>Código completo, ligação dos fios e fluxo de funcionamento</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-cyan)">Pinagem — ESP32 ↔ RC522</div>
+    <table class="wiring-table">
+      <thead>
+        <tr><th>RC522 (pino)</th><th>ESP32 (pino)</th><th>Função</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="pin-rc522">SDA (SS)</td><td class="pin-esp">GPIO 5</td><td>Seleção do dispositivo SPI</td></tr>
+        <tr><td class="pin-rc522">SCK</td><td class="pin-esp">GPIO 18</td><td>Clock SPI</td></tr>
+        <tr><td class="pin-rc522">MOSI</td><td class="pin-esp">GPIO 23</td><td>Dados: Master → Slave</td></tr>
+        <tr><td class="pin-rc522">MISO</td><td class="pin-esp">GPIO 19</td><td>Dados: Slave → Master</td></tr>
+        <tr><td class="pin-rc522">RST</td><td class="pin-esp">GPIO 22</td><td>Reset do módulo</td></tr>
+        <tr><td class="pin-rc522">3.3V</td><td class="pin-esp">3.3V</td><td>Alimentação ⚠️ não use 5V!</td></tr>
+        <tr><td class="pin-rc522">GND</td><td class="pin-esp">GND</td><td>Terra</td></tr>
+        <tr><td colspan="2">LED verde → GPIO 2 (com resistor 220Ω)</td><td>Sucesso</td></tr>
+        <tr><td colspan="2">LED vermelho → GPIO 4 (com resistor 220Ω)</td><td>Erro</td></tr>
+        <tr><td colspan="2">Buzzer → GPIO 15</td><td>Feedback sonoro</td></tr>
+      </tbody>
+    </table>
+    <div class="alert warn">
+      <strong>⚠️ Atenção:</strong> O RC522 opera em 3.3V. Conectar em 5V pode danificar o módulo permanentemente.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-cyan)">esp32/config.py</div>
+    <div class="code-block">
+      <div class="file-tag">esp32/config.py</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="comment"># Configurações do sistema — altere aqui!</span>
+
+<span class="comment"># WiFi</span>
+WIFI_SSID     = <span class="str">"Nome_Da_Rede"</span>
+WIFI_SENHA    = <span class="str">"senha_do_wifi"</span>
+
+<span class="comment"># URL da API Django (IP do computador na rede local)</span>
+API_BASE_URL  = <span class="str">"http://192.168.1.100:8000"</span>
+API_EMPRESTIMO = API_BASE_URL + <span class="str">"/api/emprestimo/"</span>
+API_DEVOLUCAO  = API_BASE_URL + <span class="str">"/api/devolucao/"</span>
+
+<span class="comment"># Pinos</span>
+PIN_SDA       = <span class="num">5</span>
+PIN_SCK       = <span class="num">18</span>
+PIN_MOSI      = <span class="num">23</span>
+PIN_MISO      = <span class="num">19</span>
+PIN_RST       = <span class="num">22</span>
+PIN_LED_OK    = <span class="num">2</span>
+PIN_LED_ERRO  = <span class="num">4</span>
+PIN_BUZZER    = <span class="num">15</span>
+
+<span class="comment"># Tempo entre leituras (ms)</span>
+DELAY_LEITURA = <span class="num">1000</span>
+DELAY_FEEDBACK = <span class="num">2000</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-cyan)">esp32/main.py — código completo</div>
+    <div class="code-block">
+      <div class="file-tag">esp32/main.py</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="comment"># ─────────────────────────────────────────────
+#  ESP32 — Sistema de Empréstimo RFID
+#  Linguagem: MicroPython
+# ─────────────────────────────────────────────</span>
+<span class="kw">import</span> network
+<span class="kw">import</span> urequests
+<span class="kw">import</span> ujson
+<span class="kw">import</span> time
+<span class="kw">import</span> machine
+<span class="kw">from</span> mfrc522 <span class="kw">import</span> MFRC522
+<span class="kw">from</span> config <span class="kw">import</span> *
+
+
+<span class="comment"># ─── Configuração dos pinos ───</span>
+led_ok   = machine.<span class="cmd">Pin</span>(PIN_LED_OK,   machine.Pin.OUT)
+led_erro = machine.<span class="cmd">Pin</span>(PIN_LED_ERRO, machine.Pin.OUT)
+buzzer   = machine.<span class="cmd">Pin</span>(PIN_BUZZER,   machine.Pin.OUT)
+
+
+<span class="comment"># ─── Conectar ao WiFi ───</span>
+<span class="kw">def</span> <span class="fn">conectar_wifi</span>():
+    wlan = network.<span class="cmd">WLAN</span>(network.STA_IF)
+    wlan.<span class="cmd">active</span>(<span class="kw">True</span>)
+    <span class="kw">if not</span> wlan.<span class="cmd">isconnected</span>():
+        print(<span class="str">"Conectando ao WiFi..."</span>)
+        wlan.<span class="cmd">connect</span>(WIFI_SSID, WIFI_SENHA)
+        <span class="kw">while not</span> wlan.<span class="cmd">isconnected</span>():
+            time.<span class="cmd">sleep</span>(<span class="num">0.5</span>)
+            print(<span class="str">"."</span>, end=<span class="str">""</span>)
+    print(<span class="str">"\nWiFi conectado! IP:"</span>, wlan.<span class="cmd">ifconfig</span>()[<span class="num">0</span>])
+    <span class="kw">return</span> wlan
+
+
+<span class="comment"># ─── Ler UID do RFID ───</span>
+<span class="kw">def</span> <span class="fn">ler_uid</span>(rfid):
+    rfid.<span class="cmd">init</span>()
+    (stat, tag_type) = rfid.<span class="cmd">request</span>(rfid.REQIDL)
+    <span class="kw">if</span> stat == rfid.OK:
+        (stat, uid) = rfid.<span class="cmd">SelectTagSN</span>()
+        <span class="kw">if</span> stat == rfid.OK:
+            <span class="kw">return</span> <span class="str">""</span>.<span class="cmd">join</span>([<span class="str">"{:02X}"</span>.<span class="cmd">format</span>(x) <span class="kw">for</span> x <span class="kw">in</span> uid])
+    <span class="kw">return</span> <span class="kw">None</span>
+
+
+<span class="comment"># ─── Feedbacks ───</span>
+<span class="kw">def</span> <span class="fn">bip_sucesso</span>():
+    led_ok.<span class="cmd">on</span>(); buzzer.<span class="cmd">on</span>()
+    time.<span class="cmd">sleep_ms</span>(<span class="num">200</span>)
+    buzzer.<span class="cmd">off</span>(); time.<span class="cmd">sleep_ms</span>(<span class="num">100</span>)
+    buzzer.<span class="cmd">on</span>(); time.<span class="cmd">sleep_ms</span>(<span class="num">200</span>)
+    buzzer.<span class="cmd">off</span>(); time.<span class="cmd">sleep_ms</span>(<span class="num">800</span>)
+    led_ok.<span class="cmd">off</span>()
+
+<span class="kw">def</span> <span class="fn">bip_erro</span>():
+    led_erro.<span class="cmd">on</span>(); buzzer.<span class="cmd">on</span>()
+    time.<span class="cmd">sleep_ms</span>(<span class="num">600</span>)
+    buzzer.<span class="cmd">off</span>(); time.<span class="cmd">sleep_ms</span>(<span class="num">600</span>)
+    led_erro.<span class="cmd">off</span>()
+
+
+<span class="comment"># ─── Enviar para a API ───</span>
+<span class="kw">def</span> <span class="fn">registrar_emprestimo</span>(uid_aluno, uid_livro):
+    payload = {<span class="str">"uid_aluno"</span>: uid_aluno, <span class="str">"uid_livro"</span>: uid_livro}
+    <span class="kw">try</span>:
+        resp = urequests.<span class="cmd">post</span>(
+            API_EMPRESTIMO,
+            data=ujson.<span class="cmd">dumps</span>(payload),
+            headers={<span class="str">"Content-Type"</span>: <span class="str">"application/json"</span>},
+            timeout=<span class="num">5</span>
+        )
+        dados = resp.<span class="cmd">json</span>()
+        resp.<span class="cmd">close</span>()
+
+        <span class="kw">if</span> resp.status_code == <span class="num">201</span>:
+            print(<span class="str">"✓ Empréstimo:"</span>, dados[<span class="str">'aluno'</span>], <span class="str">"→"</span>, dados[<span class="str">'livro'</span>])
+            <span class="cmd">bip_sucesso</span>()
+        <span class="kw">else</span>:
+            print(<span class="str">"✗ Erro:"</span>, dados.get(<span class="str">'erro'</span>))
+            <span class="cmd">bip_erro</span>()
+
+    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+        print(<span class="str">"Falha na requisição:"</span>, e)
+        <span class="cmd">bip_erro</span>()
+
+
+<span class="comment"># ─── MAIN LOOP ───</span>
+<span class="kw">def</span> <span class="fn">main</span>():
+    <span class="cmd">conectar_wifi</span>()
+
+    rfid = <span class="cmd">MFRC522</span>(
+        sck=PIN_SCK, mosi=PIN_MOSI,
+        miso=PIN_MISO, rst=PIN_RST, cs=PIN_SDA
+    )
+    print(<span class="str">"Sistema pronto! Aproxime o cartão do aluno..."</span>)
+
+    <span class="kw">while</span> <span class="kw">True</span>:
+        <span class="comment"># 1. Leitura do aluno</span>
+        uid_aluno = <span class="kw">None</span>
+        <span class="kw">while not</span> uid_aluno:
+            uid_aluno = <span class="cmd">ler_uid</span>(rfid)
+            time.<span class="cmd">sleep_ms</span>(DELAY_LEITURA)
+
+        print(<span class="str">"Aluno lido:"</span>, uid_aluno)
+        print(<span class="str">"Agora aproxime o livro..."</span>)
+        time.<span class="cmd">sleep</span>(<span class="num">1</span>)
+
+        <span class="comment"># 2. Leitura do livro</span>
+        uid_livro = <span class="kw">None</span>
+        tentativas = <span class="num">0</span>
+        <span class="kw">while not</span> uid_livro <span class="kw">and</span> tentativas < <span class="num">10</span>:
+            uid_livro = <span class="cmd">ler_uid</span>(rfid)
+            time.<span class="cmd">sleep_ms</span>(DELAY_LEITURA)
+            tentativas += <span class="num">1</span>
+
+        <span class="kw">if</span> uid_livro:
+            <span class="cmd">registrar_emprestimo</span>(uid_aluno, uid_livro)
+        <span class="kw">else</span>:
+            print(<span class="str">"Timeout — livro não lido"</span>)
+            <span class="cmd">bip_erro</span>()
+
+<span class="cmd">main</span>()</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-cyan)">Descobrir o IP do computador (Django)</div>
+    <div class="terminal">
+      <div><span class="comment"># Linux/macOS — descobrir o IP na rede local</span></div>
+      <div><span class="prompt">$</span> hostname -I</div>
+      <div class="output">192.168.1.100</div>
+      <div></div>
+      <div><span class="comment"># Windows</span></div>
+      <div><span class="prompt">></span> ipconfig</div>
+      <div class="output">IPv4 Address: 192.168.1.100</div>
+      <div></div>
+      <div><span class="comment"># Rodar Django acessível na rede (não só localhost)</span></div>
+      <div><span class="prompt">(venv) $</span> python manage.py runserver 0.0.0.0:8000</div>
+      <div class="info">Starting development server at http://0.0.0.0:8000/</div>
+    </div>
+    <div class="alert warn">
+      <strong>⚠️ ESP32 e PC devem estar na mesma rede WiFi!</strong> Use o IP local (192.168.x.x), nunca <code>localhost</code> — o ESP32 é um dispositivo diferente.
+    </div>
+  </div>
+</section>
+
+<!-- ========================= FRONTEND ========================= -->
+<section id="frontend" class="section">
+  <div class="section-title">
+    <div class="icon icon-front">🖥️</div>
+    <div>
+      <h2 style="color:var(--accent-orange)">Dashboard HTML</h2>
+      <p>Template Django — tela principal do sistema</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-orange)">templates/biblioteca/base.html</div>
+    <div class="code-block">
+      <div class="file-tag">biblioteca/templates/biblioteca/base.html</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre><span class="kw">&lt;!</span>DOCTYPE html<span class="kw">&gt;</span>
+<span class="kw">&lt;html</span> lang=<span class="str">"pt-BR"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+  <span class="kw">&lt;meta</span> charset=<span class="str">"UTF-8"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;meta</span> name=<span class="str">"viewport"</span> content=<span class="str">"width=device-width, initial-scale=1.0"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;title&gt;</span>{% block title %}Biblioteca RFID{% endblock %}<span class="kw">&lt;/title&gt;</span>
+  <span class="kw">&lt;link</span> rel=<span class="str">"stylesheet"</span>
+    href=<span class="str">"https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css"</span><span class="kw">&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+<span class="kw">&lt;body&gt;</span>
+
+<span class="kw">&lt;nav</span> class=<span class="str">"navbar navbar-dark bg-dark"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> class=<span class="str">"container"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;a</span> class=<span class="str">"navbar-brand"</span> href=<span class="str">"/"</span><span class="kw">&gt;</span>📚 Biblioteca RFID<span class="kw">&lt;/a&gt;</span>
+    <span class="kw">&lt;div&gt;</span>
+      <span class="kw">&lt;a</span> href=<span class="str">"/"</span> class=<span class="str">"btn btn-sm btn-outline-light me-1"</span><span class="kw">&gt;</span>Dashboard<span class="kw">&lt;/a&gt;</span>
+      <span class="kw">&lt;a</span> href=<span class="str">"/admin/"</span> class=<span class="str">"btn btn-sm btn-outline-success"</span><span class="kw">&gt;</span>Admin<span class="kw">&lt;/a&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/nav&gt;</span>
+
+<span class="kw">&lt;main</span> class=<span class="str">"container my-4"</span><span class="kw">&gt;</span>
+  {% block content %}{% endblock %}
+<span class="kw">&lt;/main&gt;</span>
+
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-orange)">templates/biblioteca/dashboard.html</div>
+    <div class="code-block">
+      <div class="file-tag">biblioteca/templates/biblioteca/dashboard.html</div>
+      <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+      <pre>{% extends <span class="str">"biblioteca/base.html"</span> %}
+{% block title %}Dashboard — Biblioteca RFID{% endblock %}
+
+{% block content %}
+
+<span class="comment">&lt;!-- Cards de estatísticas --&gt;</span>
+<span class="kw">&lt;div</span> class=<span class="str">"row g-3 mb-4"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;div</span> class=<span class="str">"col-md-3"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;div</span> class=<span class="str">"card text-white bg-primary"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;div</span> class=<span class="str">"card-body"</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;h5&gt;</span>Total de Livros<span class="kw">&lt;/h5&gt;</span>
+        <span class="kw">&lt;h2&gt;</span>{{ total_livros }}<span class="kw">&lt;/h2&gt;</span>
+      <span class="kw">&lt;/div&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> class=<span class="str">"col-md-3"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;div</span> class=<span class="str">"card text-white bg-success"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;div</span> class=<span class="str">"card-body"</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;h5&gt;</span>Disponíveis<span class="kw">&lt;/h5&gt;</span>
+        <span class="kw">&lt;h2&gt;</span>{{ livros_disponiveis }}<span class="kw">&lt;/h2&gt;</span>
+      <span class="kw">&lt;/div&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> class=<span class="str">"col-md-3"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;div</span> class=<span class="str">"card text-white bg-warning"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;div</span> class=<span class="str">"card-body"</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;h5&gt;</span>Empréstimos Ativos<span class="kw">&lt;/h5&gt;</span>
+        <span class="kw">&lt;h2&gt;</span>{{ emprestimos_ativos }}<span class="kw">&lt;/h2&gt;</span>
+      <span class="kw">&lt;/div&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;div</span> class=<span class="str">"col-md-3"</span><span class="kw">&gt;</span>
+    <span class="kw">&lt;div</span> class=<span class="str">"card text-white bg-info"</span><span class="kw">&gt;</span>
+      <span class="kw">&lt;div</span> class=<span class="str">"card-body"</span><span class="kw">&gt;</span>
+        <span class="kw">&lt;h5&gt;</span>Alunos Cadastrados<span class="kw">&lt;/h5&gt;</span>
+        <span class="kw">&lt;h2&gt;</span>{{ total_alunos }}<span class="kw">&lt;/h2&gt;</span>
+      <span class="kw">&lt;/div&gt;</span>
+    <span class="kw">&lt;/div&gt;</span>
+  <span class="kw">&lt;/div&gt;</span>
+<span class="kw">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- Tabela de empréstimos ativos --&gt;</span>
+<span class="kw">&lt;h4&gt;</span>📋 Empréstimos Ativos<span class="kw">&lt;/h4&gt;</span>
+<span class="kw">&lt;table</span> class=<span class="str">"table table-striped table-hover"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;thead&gt;&lt;tr&gt;</span>
+    <span class="kw">&lt;th&gt;</span>Aluno<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Turma<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Livro<span class="kw">&lt;/th&gt;</span>
+    <span class="kw">&lt;th&gt;</span>Retirada<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Prazo<span class="kw">&lt;/th&gt;&lt;th&gt;</span>Status<span class="kw">&lt;/th&gt;</span>
+  <span class="kw">&lt;/tr&gt;&lt;/thead&gt;</span>
+  <span class="kw">&lt;tbody&gt;</span>
+  {% for emp in emprestimos %}
+    <span class="kw">&lt;tr</span> {% if emp.atrasado %}class=<span class="str">"table-danger"</span>{% endif %}<span class="kw">&gt;</span>
+      <span class="kw">&lt;td&gt;</span>{{ emp.aluno.nome }}<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>{{ emp.aluno.turma }}<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>{{ emp.livro.titulo }}<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>{{ emp.data_retirada|date:<span class="str">"d/m/Y"</span> }}<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>{{ emp.prazo|date:<span class="str">"d/m/Y"</span> }}<span class="kw">&lt;/td&gt;</span>
+      <span class="kw">&lt;td&gt;</span>
+        {% if emp.atrasado %}
+          <span class="kw">&lt;span</span> class=<span class="str">"badge bg-danger"</span><span class="kw">&gt;</span>Atrasado<span class="kw">&lt;/span&gt;</span>
+        {% else %}
+          <span class="kw">&lt;span</span> class=<span class="str">"badge bg-success"</span><span class="kw">&gt;</span>Em dia<span class="kw">&lt;/span&gt;</span>
+        {% endif %}
+      <span class="kw">&lt;/td&gt;</span>
+    <span class="kw">&lt;/tr&gt;</span>
+  {% empty %}
+    <span class="kw">&lt;tr&gt;&lt;td</span> colspan=<span class="str">"6"</span> class=<span class="str">"text-center text-muted"</span><span class="kw">&gt;</span>Nenhum empréstimo ativo<span class="kw">&lt;/td&gt;&lt;/tr&gt;</span>
+  {% endfor %}
+  <span class="kw">&lt;/tbody&gt;</span>
+<span class="kw">&lt;/table&gt;</span>
+
+{% endblock %}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= TELAS ========================= -->
+<section id="telas" class="section">
+  <div class="section-title">
+    <div class="icon icon-pink">📸</div>
+    <div>
+      <h2 style="color:#e879f9">Prévia das Telas</h2>
+      <p>Como ficaria cada tela do sistema no navegador</p>
+    </div>
+  </div>
+
+  <!-- TELA: Django admin login -->
+  <div class="card">
+    <div class="card-label" style="color:#e879f9">Tela 1 — Django Admin Login</div>
+    <p style="margin-bottom:1rem">Acesse em <code>http://127.0.0.1:8000/admin/</code></p>
+    <div class="screen-wrap">
+      <div class="screen-bar">
+        <div class="screen-dot dot-red"></div><div class="screen-dot dot-yellow"></div><div class="screen-dot dot-green"></div>
+        <div class="screen-url">127.0.0.1:8000/admin/login/</div>
+      </div>
+      <div class="screen-body" style="background:#f8f9fa; padding:3rem 2rem; text-align:center;">
+        <div style="max-width:300px; margin:0 auto; background:#fff; padding:2rem; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+          <div style="color:#417690; font-size:1rem; font-weight:bold; margin-bottom:1.5rem; font-family:'Space Mono',monospace;">Django administration</div>
+          <div style="text-align:left; margin-bottom:1rem;">
+            <label style="font-size:0.78rem; color:#666; display:block; margin-bottom:0.3rem; font-family:'Space Mono',monospace;">Usuário:</label>
+            <div style="border:1px solid #ccc; border-radius:4px; padding:0.4rem 0.7rem; font-size:0.82rem; font-family:'Space Mono',monospace; color:#333;">admin</div>
+          </div>
+          <div style="text-align:left; margin-bottom:1.5rem;">
+            <label style="font-size:0.78rem; color:#666; display:block; margin-bottom:0.3rem; font-family:'Space Mono',monospace;">Senha:</label>
+            <div style="border:1px solid #ccc; border-radius:4px; padding:0.4rem 0.7rem; font-size:0.82rem; font-family:'Space Mono',monospace; color:#333;">••••••••</div>
+          </div>
+          <div style="background:#417690; color:#fff; text-align:center; padding:0.5rem; border-radius:4px; font-family:'Space Mono',monospace; font-size:0.82rem; cursor:pointer;">Entrar →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA: Admin com tabela de alunos -->
+  <div class="card">
+    <div class="card-label" style="color:#e879f9">Tela 2 — Painel Admin — Lista de Alunos</div>
+    <p style="margin-bottom:1rem">Acesse em <code>http://127.0.0.1:8000/admin/biblioteca/aluno/</code></p>
+    <div class="screen-wrap">
+      <div class="screen-bar">
+        <div class="screen-dot dot-red"></div><div class="screen-dot dot-yellow"></div><div class="screen-dot dot-green"></div>
+        <div class="screen-url">127.0.0.1:8000/admin/biblioteca/aluno/</div>
+      </div>
+      <div class="screen-body" style="min-height:280px; overflow:hidden;">
+        <div class="dj-topbar">
+          <div class="dj-topbar-logo">Django administration</div>
+          <div class="dj-topbar-user">Bem-vindo, admin | Sair</div>
+        </div>
+        <div style="overflow:hidden;">
+          <div class="dj-sidebar">
+            <div class="dj-sidebar-title">Biblioteca</div>
+            <div class="dj-sidebar-item active">👥 Alunos</div>
+            <div class="dj-sidebar-item">📚 Livros</div>
+            <div class="dj-sidebar-item">📋 Empréstimos</div>
+            <div class="dj-sidebar-item">📟 Logs de Acesso</div>
+            <div class="dj-sidebar-title" style="margin-top:1rem">Autenticação</div>
+            <div class="dj-sidebar-item">👤 Usuários</div>
+          </div>
+          <div class="dj-content">
+            <div class="dj-breadcrumb">Início › <span>Biblioteca</span> › <span>Alunos</span></div>
+            <div class="dj-title">Selecione o aluno para alterar</div>
+            <div class="dj-add-btn">+ Adicionar aluno</div>
+            <table class="dj-table">
+              <thead><tr><th>Nome</th><th>Matrícula</th><th>Turma</th><th>UID RFID</th><th>Ativo</th></tr></thead>
+              <tbody>
+                <tr><td class="link">Ana Souza</td><td>2024001</td><td>3A</td><td>A3F5B12C</td><td>✅</td></tr>
+                <tr><td class="link">Carlos Lima</td><td>2024002</td><td>3B</td><td>B7D2E40F</td><td>✅</td></tr>
+                <tr><td class="link">João Silva</td><td>2024003</td><td>2A</td><td>C1A8F395</td><td>✅</td></tr>
+                <tr><td class="link">Maria Oliveira</td><td>2024004</td><td>2B</td><td>D5C3B712</td><td>✅</td></tr>
+              </tbody>
+            </table>
+            <div style="margin-top:0.8rem; font-family:'Space Mono',monospace; font-size:0.72rem; color:#999;">4 alunos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA: Dashboard -->
+  <div class="card">
+    <div class="card-label" style="color:#e879f9">Tela 3 — Dashboard Principal</div>
+    <p style="margin-bottom:1rem">Acesse em <code>http://127.0.0.1:8000/</code></p>
+    <div class="screen-wrap">
+      <div class="screen-bar">
+        <div class="screen-dot dot-red"></div><div class="screen-dot dot-yellow"></div><div class="screen-dot dot-green"></div>
+        <div class="screen-url">127.0.0.1:8000/</div>
+      </div>
+      <div class="screen-body dark">
+        <div class="dash-nav">
+          <div class="dash-logo">📚 Biblioteca RFID</div>
+          <div class="dash-nav-links">
+            <div class="dash-nav-link active">Dashboard</div>
+            <div class="dash-nav-link">Livros</div>
+            <div class="dash-nav-link">Alunos</div>
+            <div class="dash-nav-link">Logs</div>
+          </div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-stats">
+            <div class="dash-stat">
+              <div class="dash-stat-val" style="color:var(--accent-blue)">48</div>
+              <div class="dash-stat-label">Total Livros</div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-val" style="color:var(--accent-green)">35</div>
+              <div class="dash-stat-label">Disponíveis</div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-val" style="color:var(--accent-yellow)">13</div>
+              <div class="dash-stat-label">Emprestados</div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-val" style="color:var(--accent-cyan)">32</div>
+              <div class="dash-stat-label">Alunos</div>
+            </div>
+          </div>
+          <div class="dash-table-wrap">
+            <div class="dash-table-title">📋 Empréstimos Ativos</div>
+            <table class="dash-table">
+              <thead><tr><th>Aluno</th><th>Turma</th><th>Livro</th><th>Prazo</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Ana Souza</td><td>3A</td><td>Python Fluente</td><td>10/12/2024</td>
+                  <td><span class="dash-badge ativo">Em dia</span></td>
+                </tr>
+                <tr>
+                  <td>Carlos Lima</td><td>3B</td><td>Clean Code</td><td>05/12/2024</td>
+                  <td><span class="dash-badge atrasado">Atrasado</span></td>
+                </tr>
+                <tr>
+                  <td>Maria Oliveira</td><td>2B</td><td>Django for Beginners</td><td>12/12/2024</td>
+                  <td><span class="dash-badge ativo">Em dia</span></td>
+                </tr>
+                <tr>
+                  <td>João Silva</td><td>2A</td><td>Arduino Cookbook</td><td>08/12/2024</td>
+                  <td><span class="dash-badge devolvido">Devolvido</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA: Terminal rodando -->
+  <div class="card">
+    <div class="card-label" style="color:#e879f9">Tela 4 — Terminal com o servidor rodando</div>
+    <div class="screen-wrap">
+      <div class="screen-bar">
+        <div class="screen-dot dot-red"></div><div class="screen-dot dot-yellow"></div><div class="screen-dot dot-green"></div>
+        <div class="screen-url">Terminal — bash</div>
+      </div>
+      <div class="screen-body dark" style="padding:1.2rem 1.4rem;">
+        <div class="terminal" style="border:none; padding:0; margin:0; background:transparent;">
+          <div class="output">Django version 4.2.7, using settings 'biblioteca_projeto.settings'</div>
+          <div class="success">Starting development server at http://0.0.0.0:8000/</div>
+          <div class="info">Quit the server with CONTROL-C.</div>
+          <div></div>
+          <div class="success">[03/Dec/2024 14:23:11] "GET / HTTP/1.1" 200 4821</div>
+          <div class="success">[03/Dec/2024 14:23:15] "POST /api/emprestimo/ HTTP/1.1" 201 98</div>
+          <div class="output">  → Aluno: João Silva | Livro: Python Fluente</div>
+          <div class="success">[03/Dec/2024 14:23:42] "POST /api/emprestimo/ HTTP/1.1" 201 95</div>
+          <div class="output">  → Aluno: Ana Souza | Livro: Clean Code</div>
+          <div class="error">[03/Dec/2024 14:24:01] "POST /api/emprestimo/ HTTP/1.1" 404 38</div>
+          <div class="output">  → Aluno não cadastrado (UID: DESCONHECIDO)</div>
+          <div class="success">[03/Dec/2024 14:24:33] "GET / HTTP/1.1" 200 4821</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA: Postman -->
+  <div class="card">
+    <div class="card-label" style="color:#e879f9">Tela 5 — Testando API no Postman</div>
+    <p style="margin-bottom:1rem">Antes de ligar o ESP32, teste assim:</p>
+    <div class="screen-wrap">
+      <div class="screen-bar">
+        <div class="screen-dot dot-red"></div><div class="screen-dot dot-yellow"></div><div class="screen-dot dot-green"></div>
+        <div class="screen-url">Postman — POST http://127.0.0.1:8000/api/emprestimo/</div>
+      </div>
+      <div class="screen-body" style="background:#1e1e2e; padding:1.4rem;">
+        <div style="display:flex; gap:1rem; margin-bottom:1rem; align-items:center;">
+          <div style="background:#00e5a0; color:#000; font-family:'Space Mono',monospace; font-size:0.72rem; font-weight:700; padding:0.3rem 0.7rem; border-radius:4px;">POST</div>
+          <div style="flex:1; background:#13151f; border:1px solid #252840; border-radius:6px; padding:0.4rem 0.8rem; font-family:'Space Mono',monospace; font-size:0.78rem; color:#e8eaf0;">http://127.0.0.1:8000/api/emprestimo/</div>
+          <div style="background:#4f8ef7; color:#fff; padding:0.3rem 0.9rem; border-radius:4px; font-family:'Space Mono',monospace; font-size:0.72rem; cursor:pointer;">Send</div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:0.68rem; color:#6b7290; margin-bottom:0.5rem; letter-spacing:1px;">BODY — raw JSON</div>
+            <div style="background:#0a0c12; border:1px solid #252840; border-radius:6px; padding:0.8rem; font-family:'Space Mono',monospace; font-size:0.78rem; color:#e8eaf0; line-height:1.8;">
+              {<br>&nbsp;&nbsp;"uid_aluno": "A3F5B12C",<br>&nbsp;&nbsp;"uid_livro": "7D4E9A01"<br>}
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:0.68rem; margin-bottom:0.5rem; letter-spacing:1px;">
+              <span style="color:#00e5a0;">● 201 Created</span>
+              <span style="color:#6b7290; margin-left:0.5rem;">98ms</span>
+            </div>
+            <div style="background:#0a0c12; border:1px solid rgba(0,229,160,0.3); border-radius:6px; padding:0.8rem; font-family:'Space Mono',monospace; font-size:0.78rem; color:#e8eaf0; line-height:1.8;">
+              {<br>&nbsp;&nbsp;<span style="color:#00d4ff;">"mensagem"</span>: <span style="color:#f5c842;">"Empréstimo registrado!"</span>,<br>&nbsp;&nbsp;<span style="color:#00d4ff;">"aluno"</span>: <span style="color:#f5c842;">"João Silva"</span>,<br>&nbsp;&nbsp;<span style="color:#00d4ff;">"livro"</span>: <span style="color:#f5c842;">"Python Fluente"</span>,<br>&nbsp;&nbsp;<span style="color:#00d4ff;">"prazo"</span>: <span style="color:#f5c842;">"2024-12-10"</span><br>}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ATIVIDADE ========================= -->
+<section id="atividade" class="section">
+  <div class="section-title">
+    <div class="icon icon-red">🧪</div>
+    <div>
+      <h2 style="color:var(--accent-red)">Atividade Prática — Divisão em Grupos</h2>
+      <p>Roteiro de aula com checklists por grupo e critérios de avaliação</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-red)">Divisão da turma — 4 grupos</div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="t-icon">🗄️</div>
+        <div class="t-name" style="color:var(--accent-purple)">Grupo 1 — Backend</div>
+        <div class="t-desc">Django · Models · Admin<br>Banco de dados · Migrações</div>
+      </div>
+      <div class="team-card">
+        <div class="t-icon">🔗</div>
+        <div class="t-name" style="color:var(--accent-green)">Grupo 2 — API REST</div>
+        <div class="t-desc">Views · URLs · JSON<br>Endpoints · Testes Postman</div>
+      </div>
+      <div class="team-card">
+        <div class="t-icon">🧠</div>
+        <div class="t-name" style="color:var(--accent-cyan)">Grupo 3 — IoT</div>
+        <div class="t-desc">ESP32 · RFID · Circuito<br>MicroPython · WiFi</div>
+      </div>
+      <div class="team-card">
+        <div class="t-icon">🖥️</div>
+        <div class="t-name" style="color:var(--accent-orange)">Grupo 4 — Frontend</div>
+        <div class="t-desc">Templates Django · Bootstrap<br>Dashboard · Gráficos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-purple)">✅ Checklist — Grupo 1 (Backend)</div>
+      <ul class="checklist arrow">
+        <li>Clonar o repositório do GitHub</li>
+        <li>Criar e ativar o ambiente virtual</li>
+        <li>Instalar dependências (<code>pip install -r requirements.txt</code>)</li>
+        <li>Criar projeto Django (<code>startproject</code>)</li>
+        <li>Criar app <code>biblioteca</code> (<code>startapp</code>)</li>
+        <li>Definir models: <code>Aluno</code>, <code>Livro</code>, <code>Emprestimo</code>, <code>LogAcesso</code></li>
+        <li>Registrar models no <code>admin.py</code></li>
+        <li>Rodar <code>makemigrations</code> e <code>migrate</code></li>
+        <li>Criar superusuário</li>
+        <li>Popular banco com dados de teste via admin</li>
+        <li>Fazer commit e push para o GitHub</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-green)">✅ Checklist — Grupo 2 (API)</div>
+      <ul class="checklist arrow">
+        <li>Criar <code>views.py</code> com <code>api_emprestimo</code></li>
+        <li>Criar <code>views.py</code> com <code>api_devolucao</code></li>
+        <li>Criar <code>biblioteca/urls.py</code> com as rotas</li>
+        <li>Incluir URLs no <code>urls.py</code> principal</li>
+        <li>Testar <code>POST /api/emprestimo/</code> no Postman</li>
+        <li>Testar resposta de sucesso (201)</li>
+        <li>Testar resposta de erro (404)</li>
+        <li>Verificar log criado no banco</li>
+        <li>Documentar os endpoints no README</li>
+        <li>Fazer commit e push para o GitHub</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-cyan)">✅ Checklist — Grupo 3 (IoT)</div>
+      <ul class="checklist arrow">
+        <li>Montar o circuito ESP32 + RC522</li>
+        <li>Verificar pinagem (SDA, SCK, MOSI, MISO, RST)</li>
+        <li>Instalar MicroPython no ESP32</li>
+        <li>Criar <code>esp32/config.py</code> com WiFi e URL da API</li>
+        <li>Criar <code>esp32/main.py</code> com o loop principal</li>
+        <li>Testar leitura de UID no terminal serial</li>
+        <li>Conectar ESP32 ao WiFi</li>
+        <li>Fazer POST para a API e verificar resposta</li>
+        <li>Testar feedback LED verde (sucesso) e vermelho (erro)</li>
+        <li>Testar buzzer</li>
+        <li>Fazer commit do código no GitHub</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--accent-orange)">✅ Checklist — Grupo 4 (Frontend)</div>
+      <ul class="checklist arrow">
+        <li>Criar <code>base.html</code> com navbar e Bootstrap</li>
+        <li>Criar <code>dashboard.html</code> estendendo base</li>
+        <li>Exibir cards com estatísticas (total livros, disponíveis, etc.)</li>
+        <li>Criar tabela de empréstimos ativos</li>
+        <li>Destacar em vermelho os empréstimos atrasados</li>
+        <li>Configurar <code>TEMPLATES</code> no <code>settings.py</code></li>
+        <li>Criar view <code>dashboard(request)</code> passando contexto</li>
+        <li>Adicionar rota no <code>urls.py</code></li>
+        <li>Exibir últimos logs de acesso RFID</li>
+        <li>Responsividade mobile</li>
+        <li>Fazer commit e push para o GitHub</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:var(--accent-red)">🎯 Critérios de avaliação</div>
+    <div class="grid-2">
+      <div>
+        <p style="color:var(--accent-green); font-weight:700; margin-bottom:0.6rem">✅ O que avalia</p>
+        <ul class="checklist yes">
+          <li>Sistema funcionando de ponta a ponta</li>
+          <li>Leitura RFID registra no banco</li>
+          <li>Dashboard mostra dados reais</li>
+          <li>Código no GitHub com histórico de commits</li>
+          <li>README com instruções de instalação</li>
+          <li>Apresentação explicando a arquitetura</li>
+        </ul>
+      </div>
+      <div>
+        <p style="color:var(--accent-red); font-weight:700; margin-bottom:0.6rem">❌ Erros comuns</p>
+        <ul class="checklist no">
+          <li>IoT sem integração com Django</li>
+          <li>Complicar demais (MQTT, cloud, etc.)</li>
+          <li>Grupos isolados sem comunicar interfaces</li>
+          <li>Não testar a API antes de ligar o hardware</li>
+          <li>Hardcodar IPs sem usar config.py</li>
+          <li>Esquecer o <code>.gitignore</code> e enviar o <code>venv/</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="rec-banner">
+    <div class="rec-icon">🏁</div>
+    <div>
+      <h3>Sequência recomendada de integração</h3>
+      <p>
+        <strong style="color:var(--accent-cyan)">1.</strong> Grupo 1 popula o banco com alunos e livros →
+        <strong style="color:var(--accent-cyan)">2.</strong> Grupo 2 testa API com Postman usando UIDs reais →
+        <strong style="color:var(--accent-cyan)">3.</strong> Grupo 3 conecta o ESP32 à API já testada →
+        <strong style="color:var(--accent-cyan)">4.</strong> Grupo 4 abre o dashboard e mostra o empréstimo registrado em tempo real.
+        <br>Resultado: toda a turma vê o sistema funcionando do hardware ao navegador. 🎉
+      </p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+  function switchTab(tab) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  }
+
+  function copyCode(btn) {
+    const block = btn.closest('.code-block, .terminal');
+    const pre = block.querySelector('pre');
+    if (pre) {
+      const text = pre.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✓ copiado';
+        setTimeout(() => btn.textContent = 'copiar', 2000);
+      });
+    }
+  }
+</script>
+</body>
+</html>
