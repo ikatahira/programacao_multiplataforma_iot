@@ -246,6 +246,7 @@
       <a href="#modulos">Módulos</a>
       <a href="#m1">Arduino</a>
       <a href="#m2">ESP32</a>
+      <a href="#django">Django</a>
       <a href="#recursos">Recursos</a>
     </nav>
   </nav>
@@ -534,6 +535,125 @@
           </div>
           <ul class="week-list">
             <li><a href="semana40.html" class="iot-link"><span class="wk">S·40</span> Apresentação, Deploy e Avaliação em Pares<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- DJANGO -->
+  <section class="section" id="django">
+    <div class="section-header">
+      <div class="section-tag">// Back-end Web · Python</div>
+      <h2 class="section-title">🐍 Aulas Django — Space Gallery</h2>
+      <p class="section-desc">Desenvolvimento web com Django 4: do zero ao projeto completo com banco de dados, arquivos estáticos e painel administrativo.</p>
+    </div>
+    <div class="modules-grid">
+
+      <!-- Aula 01 -->
+      <div class="mod-card">
+        <div class="mod-accent" style="background:linear-gradient(90deg,#00e5a0,#4f8cff)"></div>
+        <div class="mod-body">
+          <div class="mod-number">AULA 01</div>
+          <div class="mod-title">🚀 Introdução ao Django</div>
+          <div class="mod-desc">Arquitetura MVT, GitHub Codespace, criação do projeto, configuração do settings.py, requirements.txt e proteção da SECRET_KEY com python-dotenv.</div>
+          <div class="mod-tags">
+            <span class="tag green">Django</span>
+            <span class="tag green">Codespace</span>
+            <span class="tag green">python-dotenv</span>
+            <span class="tag green">requirements.txt</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="aula_01_django_intro.html"><span class="wk">A·01</span> O que é Django &amp; Ambiente<span class="ico">→</span></a></li>
+            <li><a href="aula_01_django_intro.html"><span class="wk">A·01</span> Criando o Projeto Django<span class="ico">→</span></a></li>
+            <li><a href="aula_01_django_intro.html"><span class="wk">A·01</span> Segurança — SECRET_KEY &amp; .env<span class="ico">→</span></a></li>
+            <li><a href="aula_01_django_intro.html"><span class="wk">A·01</span> requirements.txt — Dependências<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aula 02 -->
+      <div class="mod-card">
+        <div class="mod-accent" style="background:linear-gradient(90deg,#a78bfa,#60a5fa)"></div>
+        <div class="mod-body">
+          <div class="mod-number">AULA 02</div>
+          <div class="mod-title">🗂️ App, Views e URLs</div>
+          <div class="mod-desc">Diferença entre projeto e app, criação do primeiro app, views baseadas em função, sistema de URLs com path() e rotas aninhadas.</div>
+          <div class="mod-tags">
+            <span class="tag purple">startapp</span>
+            <span class="tag purple">Views</span>
+            <span class="tag purple">URLs</span>
+            <span class="tag purple">Templates</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="aula_02_app_views_urls.html"><span class="wk">A·02</span> Projeto vs App — Conceitos<span class="ico">→</span></a></li>
+            <li><a href="aula_02_app_views_urls.html"><span class="wk">A·02</span> Criando Views e Renderizando HTML<span class="ico">→</span></a></li>
+            <li><a href="aula_02_app_views_urls.html"><span class="wk">A·02</span> Sistema de URLs — path() e include()<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aula 03 -->
+      <div class="mod-card">
+        <div class="mod-accent" style="background:linear-gradient(90deg,#fbbf24,#f97316)"></div>
+        <div class="mod-body">
+          <div class="mod-number">AULA 03</div>
+          <div class="mod-title">🎨 Arquivos Estáticos</div>
+          <div class="mod-desc">Configuração e uso de CSS, JavaScript e imagens no Django. STATICFILES_DIRS, collectstatic, e integração de arquivos estáticos nos templates.</div>
+          <div class="mod-tags">
+            <span class="tag yellow">STATIC_URL</span>
+            <span class="tag yellow">{% load static %}</span>
+            <span class="tag yellow">collectstatic</span>
+            <span class="tag yellow">CSS / JS</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="aula_03_arquivos_estaticos.html"><span class="wk">A·03</span> Configurando Arquivos Estáticos<span class="ico">→</span></a></li>
+            <li><a href="aula_03_arquivos_estaticos.html"><span class="wk">A·03</span> Tag {% load static %} nos Templates<span class="ico">→</span></a></li>
+            <li><a href="aula_03_arquivos_estaticos.html"><span class="wk">A·03</span> collectstatic e Deploy<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Aula 04 -->
+      <div class="mod-card">
+        <div class="mod-accent" style="background:linear-gradient(90deg,#f43f5e,#a78bfa)"></div>
+        <div class="mod-body">
+          <div class="mod-number">AULA 04</div>
+          <div class="mod-title">🗄️ Models e Banco de Dados</div>
+          <div class="mod-desc">Criação de models, ORM do Django, migrações com makemigrations e migrate, tipos de campos, relacionamentos e painel admin.</div>
+          <div class="mod-tags">
+            <span class="tag" style="background:rgba(244,63,94,.1);color:#f43f5e;border-color:rgba(244,63,94,.3)">Models</span>
+            <span class="tag" style="background:rgba(244,63,94,.1);color:#f43f5e;border-color:rgba(244,63,94,.3)">ORM</span>
+            <span class="tag" style="background:rgba(244,63,94,.1);color:#f43f5e;border-color:rgba(244,63,94,.3)">Migrations</span>
+            <span class="tag" style="background:rgba(244,63,94,.1);color:#f43f5e;border-color:rgba(244,63,94,.3)">Admin</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="aula_04_models_banco.html"><span class="wk">A·04</span> Criando Models e Campos<span class="ico">→</span></a></li>
+            <li><a href="aula_04_models_banco.html"><span class="wk">A·04</span> makemigrations e migrate<span class="ico">→</span></a></li>
+            <li><a href="aula_04_models_banco.html"><span class="wk">A·04</span> Django Admin — Painel Automático<span class="ico">→</span></a></li>
+            <li><a href="aula_04_models_banco.html"><span class="wk">A·04</span> Relacionamentos — ForeignKey<span class="ico">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Revisão -->
+      <div class="mod-card">
+        <div class="mod-accent" style="background:linear-gradient(90deg,#22d3a5,#a78bfa)"></div>
+        <div class="mod-body">
+          <div class="mod-number">REFERÊNCIA</div>
+          <div class="mod-title">📖 Revisão — Dev Reference</div>
+          <div class="mod-desc">Guia de referência rápida com os principais comandos Django, atalhos de terminal, dicas de debug e boas práticas para consulta durante o desenvolvimento.</div>
+          <div class="mod-tags">
+            <span class="tag green">Comandos</span>
+            <span class="tag green">Referência</span>
+            <span class="tag green">Debug</span>
+            <span class="tag green">Boas práticas</span>
+          </div>
+          <ul class="week-list">
+            <li><a href="aual_revisao_django.html"><span class="wk">REF</span> Revisão de Comandos Django<span class="ico">→</span></a></li>
           </ul>
         </div>
       </div>

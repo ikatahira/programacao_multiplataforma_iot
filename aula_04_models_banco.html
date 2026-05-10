@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 04 — Models e Banco de Dados</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0e14; --surface: #13151f; --surface2: #1a1d2e; --border: #252840;
+    --accent-green: #00e5a0; --accent-orange: #ff6b35; --accent-blue: #4f8ef7;
+    --accent-purple: #b06bff; --accent-yellow: #f5c842;
+    --text: #e8eaf0; --muted: #6b7290; --code-bg: #0a0c12;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+  header { background: var(--surface); border-bottom: 2px solid var(--border); padding: 3rem 2rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -20%, rgba(245,200,66,0.15) 0%, transparent 70%); pointer-events: none; }
+  header h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -1px; background: linear-gradient(120deg, var(--accent-yellow), var(--accent-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; position: relative; }
+  header p { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.85rem; margin-top: 0.6rem; letter-spacing: 2px; text-transform: uppercase; }
+  nav { display: flex; gap: 0; overflow-x: auto; border-bottom: 2px solid var(--border); background: var(--surface); padding: 0 1rem; }
+  nav button { background: none; border: none; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.78rem; padding: 1rem 1.4rem; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; letter-spacing: 1px; text-transform: uppercase; }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent-yellow); border-bottom-color: var(--accent-yellow); }
+  main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  .section { display: none; animation: fadeIn 0.35s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .section-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .section-title .icon { font-size: 2.2rem; width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .icon-green { background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.3); }
+  .icon-orange { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.3); }
+  .icon-purple { background: rgba(176,107,255,0.12); border: 1px solid rgba(176,107,255,0.3); }
+  .icon-blue { background: rgba(79,142,247,0.12); border: 1px solid rgba(79,142,247,0.3); }
+  .icon-yellow { background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.3); }
+  .section-title h2 { font-size: 1.8rem; font-weight: 800; }
+  .section-title p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem; margin-bottom: 1.4rem; position: relative; }
+  .card-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem; opacity: 0.7; }
+  .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.7rem; }
+  .card p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+  .code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem 1.4rem; margin: 0.8rem 0; position: relative; overflow-x: auto; }
+  .code-block pre { font-family: 'Space Mono', monospace; font-size: 0.85rem; line-height: 1.8; white-space: pre; color: var(--text); }
+  .code-block .comment { color: var(--muted); }
+  .code-block .cmd { color: var(--accent-green); }
+  .code-block .kw { color: var(--accent-purple); }
+  .code-block .str { color: var(--accent-yellow); }
+  .code-block .fn { color: var(--accent-orange); }
+  .code-block .cls { color: var(--accent-blue); }
+  .copy-btn { position: absolute; top: 0.7rem; right: 0.7rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.68rem; padding: 0.3rem 0.7rem; border-radius: 6px; cursor: pointer; letter-spacing: 1px; transition: all 0.2s; }
+  .copy-btn:hover { color: var(--accent-green); border-color: var(--accent-green); }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-bottom: 1.4rem; }
+  .steps { list-style: none; counter-reset: steps; }
+  .steps li { counter-increment: steps; display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.1rem; }
+  .steps li::before { content: counter(steps); font-family: 'Space Mono', monospace; font-size: 0.75rem; font-weight: 700; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .steps.yellow li::before { background: rgba(245,200,66,0.15); color: var(--accent-yellow); border: 1px solid rgba(245,200,66,0.3); }
+  .steps.green li::before { background: rgba(0,229,160,0.15); color: var(--accent-green); border: 1px solid rgba(0,229,160,0.3); }
+  .steps li > div p { color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; line-height: 1.6; }
+  .steps li > div strong { font-size: 0.95rem; }
+  .tip-box { background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.25); border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; display: flex; gap: 0.8rem; align-items: flex-start; }
+  .tip-box .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+  .tip-box strong { color: var(--accent-blue); }
+  .db-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 0.82rem; margin: 1rem 0; }
+  .db-table th { background: var(--surface2); color: var(--muted); text-align: left; padding: 0.6rem 1rem; border: 1px solid var(--border); font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; }
+  .db-table td { padding: 0.6rem 1rem; border: 1px solid var(--border); color: var(--text); }
+  .db-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .td-type { color: var(--accent-blue); }
+  .td-desc { color: var(--muted); font-size: 0.78rem; }
+  .summary-box { background: linear-gradient(135deg, rgba(245,200,66,0.05), rgba(255,107,53,0.05)); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem; margin-top: 2rem; }
+  .summary-box h3 { font-size: 1rem; margin-bottom: 1rem; color: var(--accent-yellow); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; }
+  .summary-box ul { list-style: none; }
+  .summary-box ul li { color: var(--muted); font-size: 0.9rem; padding: 0.3rem 0; padding-left: 1.2rem; position: relative; line-height: 1.5; }
+  .summary-box ul li::before { content: '▸'; color: var(--accent-yellow); position: absolute; left: 0; }
+  .nav-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .nav-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.78rem; padding: 0.7rem 1.2rem; border-radius: 8px; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .nav-btn.next { background: rgba(245,200,66,0.1); color: var(--accent-yellow); border-color: rgba(245,200,66,0.4); }
+  .nav-btn.prev { background: rgba(176,107,255,0.1); color: var(--accent-purple); border-color: rgba(176,107,255,0.4); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Aula 04 — Models e Banco de Dados</h1>
+  <p>ORM Django · SQLite · Migrations · QuerySets</p>
+</header>
+
+<nav>
+  <button class="active" data-tab="orm" onclick="showTab('orm',this)">🗄️ ORM Django</button>
+  <button data-tab="model" onclick="showTab('model',this)">📋 Criando o Model</button>
+  <button data-tab="migrations" onclick="showTab('migrations',this)">🔄 Migrations</button>
+  <button data-tab="shell" onclick="showTab('shell',this)">💻 Shell Django</button>
+  <button data-tab="views" onclick="showTab('views',this)">👁️ Views com BD</button>
+  <button data-tab="resumo" onclick="showTab('resumo',this)">✅ Resumo</button>
+</nav>
+
+<main>
+
+  <!-- ORM -->
+  <div class="section active" id="orm">
+    <div class="section-title">
+      <div class="icon icon-yellow">🗄️</div>
+      <div>
+        <h2>Django ORM</h2>
+        <p>Banco de dados sem escrever SQL</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📖 O que é ORM?</div>
+      <h3>Object-Relational Mapper</h3>
+      <p>O ORM do Django "traduz" classes Python em tabelas de banco de dados. Você cria uma classe Python e o Django transforma automaticamente em uma tabela com colunas, sem que você precise escrever uma única linha de SQL.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label" style="color:var(--accent-blue)">Antes do ORM</div>
+        <h3>SQL manual</h3>
+        <div class="code-block" style="margin-top:0.5rem">
+          <pre><span class="comment">-- SQL puro (sem ORM)</span>
+SELECT * FROM galeria_fotografia
+WHERE publicada = 1
+ORDER BY data;</pre>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label" style="color:var(--accent-green)">Com ORM Django</div>
+        <h3>Python puro</h3>
+        <div class="code-block" style="margin-top:0.5rem">
+          <pre><span class="comment"># Python com Django ORM</span>
+Fotografia.objects
+  .filter(publicada=<span class="kw">True</span>)
+  .order_by(<span class="str">'data'</span>)</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">🗃️</span>
+      <p><strong>SQLite incluso:</strong> O Django vem configurado com <strong>SQLite</strong> — um banco de dados que fica em um único arquivo (<code>db.sqlite3</code>) no projeto. Perfeito para desenvolvimento e funciona direto no Codespace sem configuração adicional!</p>
+    </div>
+  </div>
+
+  <!-- MODEL -->
+  <div class="section" id="model">
+    <div class="section-title">
+      <div class="icon icon-orange">📋</div>
+      <div>
+        <h2>Criando o Model</h2>
+        <p>galeria/models.py</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">✏️ Modelo completo de Fotografia</div>
+      <h3>galeria/models.py</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># galeria/models.py</span>
+<span class="kw">from</span> django.db <span class="kw">import</span> models
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+<span class="kw">class</span> <span class="cls">Fotografia</span>(models.Model):
+
+    OPCOES_CATEGORIA = [
+        (<span class="str">"NEBULOSA"</span>, <span class="str">"Nebulosa"</span>),
+        (<span class="str">"ESTRELA"</span>,  <span class="str">"Estrela"</span>),
+        (<span class="str">"GALÁXIA"</span>,  <span class="str">"Galáxia"</span>),
+        (<span class="str">"PLANETA"</span>,  <span class="str">"Planeta"</span>),
+    ]
+
+    nome     = models.CharField(max_length=<span class="fn">100</span>, null=<span class="kw">False</span>, blank=<span class="kw">False</span>)
+    legenda  = models.CharField(max_length=<span class="fn">150</span>, null=<span class="kw">False</span>, blank=<span class="kw">False</span>)
+    categoria = models.CharField(
+        max_length=<span class="fn">100</span>, 
+        choices=OPCOES_CATEGORIA, 
+        default=<span class="str">''</span>
+    )
+    descricao = models.TextField(null=<span class="kw">False</span>, blank=<span class="kw">False</span>)
+    foto      = models.ImageField(upload_to=<span class="str">"fotos/%Y/%m/%d/"</span>, blank=<span class="kw">True</span>)
+    publicada = models.BooleanField(default=<span class="kw">False</span>)
+    data_fotografia = models.DateTimeField(
+        default=datetime.now, 
+        blank=<span class="kw">False</span>
+    )
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> self.nome</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📊 Campos do Model</div>
+      <h3>O que cada campo representa</h3>
+      <table class="db-table">
+        <thead>
+          <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>nome</td><td class="td-type">CharField</td><td class="td-desc">Texto curto (até 100 caracteres)</td></tr>
+          <tr><td>legenda</td><td class="td-type">CharField</td><td class="td-desc">Créditos/fonte da foto</td></tr>
+          <tr><td>categoria</td><td class="td-type">CharField + choices</td><td class="td-desc">Lista de opções pré-definidas</td></tr>
+          <tr><td>descricao</td><td class="td-type">TextField</td><td class="td-desc">Texto longo sem limite</td></tr>
+          <tr><td>foto</td><td class="td-type">ImageField</td><td class="td-desc">Upload de arquivo de imagem</td></tr>
+          <tr><td>publicada</td><td class="td-type">BooleanField</td><td class="td-desc">True/False — visível no site?</td></tr>
+          <tr><td>data_fotografia</td><td class="td-type">DateTimeField</td><td class="td-desc">Data e hora da fotografia</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🖼️ ImageField — instalação extra</div>
+      <h3>Requer Pillow</h3>
+      <p>Para usar <code>ImageField</code>, é necessário instalar a biblioteca <code>Pillow</code>:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="cmd">pip install pillow</span>
+<span class="cmd">pip freeze > requirements.txt</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- MIGRATIONS -->
+  <div class="section" id="migrations">
+    <div class="section-title">
+      <div class="icon icon-green">🔄</div>
+      <div>
+        <h2>Migrations</h2>
+        <p>Criando a tabela no banco de dados</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📖 O que são Migrations?</div>
+      <h3>Controle de versão do banco de dados</h3>
+      <p>As migrations são como um "histórico" de todas as alterações no banco de dados. Cada vez que você modifica um model, cria uma migration que descreve o que mudou. Assim, o banco é atualizado de forma controlada e rastreável.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">⚡ Os dois comandos essenciais</div>
+      <h3>makemigrations → migrate</h3>
+      <ul class="steps yellow">
+        <li><div>
+          <strong>makemigrations — gera o arquivo de migration</strong>
+          <div class="code-block" style="margin-top:0.5rem">
+            <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            <pre><span class="cmd">python manage.py makemigrations</span></pre>
+          </div>
+          <p>Analisa os models e cria um arquivo em <code>galeria/migrations/0001_initial.py</code> descrevendo o que precisa ser criado no banco.</p>
+        </div></li>
+        <li><div>
+          <strong>migrate — aplica as mudanças no banco</strong>
+          <div class="code-block" style="margin-top:0.5rem">
+            <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            <pre><span class="cmd">python manage.py migrate</span></pre>
+          </div>
+          <p>Executa todas as migrations pendentes e cria/altera as tabelas no <code>db.sqlite3</code>.</p>
+        </div></li>
+      </ul>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">🔁</span>
+      <p><strong>Regra de ouro:</strong> sempre que modificar um model (adicionar/remover campo, alterar tipo), rode <strong>makemigrations</strong> seguido de <strong>migrate</strong>. É como um "git add + git commit" para o banco de dados.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🗃️ Visualizando o banco</div>
+      <h3>Extensão SQLite Viewer no Codespace</h3>
+      <p>No VS Code do Codespace, instale a extensão <strong>SQLite Viewer</strong> (de Florian Klampfer). Com ela, clique com o botão direito no arquivo <code>db.sqlite3</code> → <strong>Abrir com → SQLite Viewer</strong>.</p>
+    </div>
+  </div>
+
+  <!-- SHELL -->
+  <div class="section" id="shell">
+    <div class="section-title">
+      <div class="icon icon-blue">💻</div>
+      <div>
+        <h2>Shell Django</h2>
+        <p>Inserindo e consultando dados pelo terminal</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🐚 Abrindo o shell</div>
+      <h3>python manage.py shell</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="cmd">python manage.py shell</span></pre>
+      </div>
+      <p>Abre uma sessão Python interativa com todo o ambiente Django carregado. Perfeito para testar queries e inserir dados manualmente.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">➕ Inserindo dados</div>
+      <h3>Criando uma fotografia pelo shell</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Dentro do shell Django</span>
+<span class="kw">from</span> galeria.models <span class="kw">import</span> Fotografia
+
+<span class="comment"># Criar o objeto</span>
+foto = <span class="cls">Fotografia</span>(
+    nome=<span class="str">"Nebulosa de Carina"</span>,
+    legenda=<span class="str">"webbtelescope.org / NASA / James Webb"</span>,
+    categoria=<span class="str">"NEBULOSA"</span>,
+    descricao=<span class="str">"A Nebulosa Carina vista pelo Telescópio James Webb."</span>,
+    foto=<span class="str">"carina-nebula.png"</span>,
+    publicada=<span class="kw">True</span>
+)
+
+<span class="comment"># Salvar no banco</span>
+foto.save()
+
+<span class="comment"># Verificar</span>
+Fotografia.objects.all()</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🔍 Consultando dados</div>
+      <h3>QuerySets — filtrando e ordenando</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Buscar todas as fotos</span>
+Fotografia.objects.all()
+
+<span class="comment"># Filtrar somente publicadas</span>
+Fotografia.objects.filter(publicada=<span class="kw">True</span>)
+
+<span class="comment"># Ordenar por data</span>
+Fotografia.objects.order_by(<span class="str">"data_fotografia"</span>)
+
+<span class="comment"># Combinar filtro + ordenação</span>
+Fotografia.objects
+    .filter(publicada=<span class="kw">True</span>)
+    .order_by(<span class="str">"data_fotografia"</span>)
+
+<span class="comment"># Buscar um item específico por ID</span>
+Fotografia.objects.get(pk=<span class="fn">1</span>)</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEWS COM BANCO -->
+  <div class="section" id="views">
+    <div class="section-title">
+      <div class="icon icon-yellow">👁️</div>
+      <div>
+        <h2>Views com Banco de Dados</h2>
+        <p>Substituindo dicionários por queries reais</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">✏️ views.py completo</div>
+      <h3>Buscando dados reais do banco</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># galeria/views.py</span>
+<span class="kw">from</span> django.shortcuts <span class="kw">import</span> render, get_object_or_404
+<span class="kw">from</span> galeria.models <span class="kw">import</span> Fotografia
+
+<span class="kw">def</span> <span class="fn">index</span>(request):
+    fotografias = Fotografia.objects
+        .order_by(<span class="str">"data_fotografia"</span>)
+        .filter(publicada=<span class="kw">True</span>)
+    <span class="kw">return</span> render(
+        request, 
+        <span class="str">'galeria/index.html'</span>, 
+        {<span class="str">"cards"</span>: fotografias}
+    )
+
+<span class="kw">def</span> <span class="fn">imagem</span>(request, foto_id):
+    fotografia = get_object_or_404(Fotografia, pk=foto_id)
+    <span class="kw">return</span> render(
+        request, 
+        <span class="str">'galeria/imagem.html'</span>, 
+        {<span class="str">"fotografia"</span>: fotografia}
+    )</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🖼️ No template index.html</div>
+      <h3>Iterando sobre os dados do banco</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment">&lt;!-- templates/galeria/index.html --&gt;</span>
+<span class="fn">{% if cards %}</span>
+  <span class="fn">{% for fotografia in cards %}</span>
+    &lt;li class="card"&gt;
+      &lt;a href="<span class="fn">{% url 'imagem' fotografia.id %}</span>"&gt;
+        &lt;img 
+          src="<span class="fn">{% static 'assets/imagens/galeria/' %}{{fotografia.foto}}</span>" 
+          alt="<span class="fn">{{fotografia.nome}}</span>"
+        &gt;
+      &lt;/a&gt;
+      &lt;p class="card__titulo"&gt;<span class="fn">{{fotografia.nome}}</span>&lt;/p&gt;
+      &lt;p class="card__descricao"&gt;<span class="fn">{{fotografia.legenda}}</span>&lt;/p&gt;
+    &lt;/li&gt;
+  <span class="fn">{% endfor %}</span>
+<span class="fn">{% else %}</span>
+  &lt;p&gt;Nenhuma fotografia encontrada.&lt;/p&gt;
+<span class="fn">{% endif %}</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMO -->
+  <div class="section" id="resumo">
+    <div class="section-title">
+      <div class="icon icon-yellow">✅</div>
+      <div>
+        <h2>Resumo da Aula 04</h2>
+        <p>O que aprendemos hoje</p>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      <h3>📚 Nesta aula</h3>
+      <ul>
+        <li>Entendemos o <strong>Django ORM</strong> — Python ao invés de SQL</li>
+        <li>Criamos o model <code>Fotografia</code> com campos: CharField, TextField, ImageField, BooleanField, DateTimeField</li>
+        <li>Rodamos <code>makemigrations</code> e <code>migrate</code> para criar a tabela</li>
+        <li>Usamos o <strong>shell Django</strong> para inserir dados manualmente</li>
+        <li>Aprendemos QuerySets: <code>.all()</code>, <code>.filter()</code>, <code>.order_by()</code></li>
+        <li>Atualizamos as <strong>views</strong> para buscar dados reais do banco</li>
+        <li>Usamos <code>{% for %}</code> e <code>{% if %}</code> no template para exibir os dados</li>
+      </ul>
+    </div>
+
+    <div class="summary-box" style="margin-top:1rem; background: linear-gradient(135deg, rgba(0,229,160,0.05), rgba(79,142,247,0.05));">
+      <h3 style="color:var(--accent-green)">🔜 Próxima aula</h3>
+      <ul>
+        <li>Configurar o <strong>Django Admin</strong></li>
+        <li>Criar um <code>superuser</code></li>
+        <li>Personalizar o Admin para gerenciar fotografias</li>
+        <li>Adicionar busca, filtros e paginação no Admin</li>
+        <li>Implementar função de <strong>busca</strong> no site</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:1.4rem">
+      <div class="card-label">🧪 Desafio</div>
+      <h3>Pratique antes da próxima aula</h3>
+      <ol style="color:var(--muted); font-size:0.9rem; line-height:2; padding-left:1.5rem;">
+        <li>Crie o model Fotografia e rode as migrations</li>
+        <li>Pelo shell, insira pelo menos 3 fotografias com dados diferentes</li>
+        <li>Marque apenas 2 como <code>publicada=True</code></li>
+        <li>Confirme que apenas as publicadas aparecem no site</li>
+        <li>Commite: <code>git commit -m "Aula 04: model e banco configurados"</code></li>
+      </ol>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="aula_03_arquivos_estaticos.html" class="nav-btn prev">← Aula 03</a>
+      <a href="aula_05_admin_busca.html" class="nav-btn next">Aula 05 — Admin e Busca →</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function copyCode(btn) {
+  const pre = btn.nextElementSibling;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'COPIADO!';
+    btn.style.color = 'var(--accent-green)';
+    btn.style.borderColor = 'var(--accent-green)';
+    setTimeout(() => { btn.textContent = 'COPIAR'; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 01 — Introdução ao Django</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0e14;
+    --surface: #13151f;
+    --surface2: #1a1d2e;
+    --border: #252840;
+    --accent-green: #00e5a0;
+    --accent-orange: #ff6b35;
+    --accent-blue: #4f8ef7;
+    --accent-purple: #b06bff;
+    --accent-yellow: #f5c842;
+    --text: #e8eaf0;
+    --muted: #6b7290;
+    --code-bg: #0a0c12;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+
+  header {
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% -20%, rgba(0,229,160,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(120deg, var(--accent-green), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+  }
+  header p { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.85rem; margin-top: 0.6rem; letter-spacing: 2px; text-transform: uppercase; }
+
+  nav {
+    display: flex; gap: 0; overflow-x: auto; border-bottom: 2px solid var(--border);
+    background: var(--surface); padding: 0 1rem;
+  }
+  nav button {
+    background: none; border: none; color: var(--muted);
+    font-family: 'Space Mono', monospace; font-size: 0.78rem;
+    padding: 1rem 1.4rem; cursor: pointer; border-bottom: 3px solid transparent;
+    white-space: nowrap; transition: all 0.2s; letter-spacing: 1px; text-transform: uppercase;
+  }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent-green); border-bottom-color: var(--accent-green); }
+
+  main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  .section { display: none; animation: fadeIn 0.35s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .section-title .icon {
+    font-size: 2.2rem; width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .icon-green { background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.3); }
+  .icon-orange { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.3); }
+  .icon-purple { background: rgba(176,107,255,0.12); border: 1px solid rgba(176,107,255,0.3); }
+  .icon-blue { background: rgba(79,142,247,0.12); border: 1px solid rgba(79,142,247,0.3); }
+  .icon-yellow { background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.3); }
+  .section-title h2 { font-size: 1.8rem; font-weight: 800; }
+  .section-title p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.6rem; margin-bottom: 1.4rem; position: relative;
+  }
+  .card-label {
+    font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 0.8rem; opacity: 0.7;
+  }
+  .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.7rem; }
+  .card p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+
+  .code-block {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.2rem 1.4rem; margin: 0.8rem 0; position: relative; overflow-x: auto;
+  }
+  .code-block pre { font-family: 'Space Mono', monospace; font-size: 0.85rem; line-height: 1.8; white-space: pre; color: var(--text); }
+  .code-block .comment { color: var(--muted); }
+  .code-block .cmd { color: var(--accent-green); }
+  .code-block .flag { color: var(--accent-blue); }
+  .code-block .str { color: var(--accent-yellow); }
+  .code-block .kw { color: var(--accent-purple); }
+  .code-block .num { color: var(--accent-orange); }
+
+  .copy-btn {
+    position: absolute; top: 0.7rem; right: 0.7rem;
+    background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+    font-family: 'Space Mono', monospace; font-size: 0.68rem; padding: 0.3rem 0.7rem;
+    border-radius: 6px; cursor: pointer; letter-spacing: 1px; transition: all 0.2s;
+  }
+  .copy-btn:hover { color: var(--accent-green); border-color: var(--accent-green); }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-bottom: 1.4rem; }
+
+  .badge {
+    display: inline-block; padding: 0.2rem 0.7rem; border-radius: 20px;
+    font-size: 0.72rem; font-family: 'Space Mono', monospace; letter-spacing: 1px;
+    text-transform: uppercase; margin-right: 0.4rem; margin-bottom: 0.4rem;
+  }
+  .badge-green { background: rgba(0,229,160,0.15); color: var(--accent-green); border: 1px solid rgba(0,229,160,0.3); }
+  .badge-orange { background: rgba(255,107,53,0.15); color: var(--accent-orange); border: 1px solid rgba(255,107,53,0.3); }
+  .badge-blue { background: rgba(79,142,247,0.15); color: var(--accent-blue); border: 1px solid rgba(79,142,247,0.3); }
+  .badge-yellow { background: rgba(245,200,66,0.15); color: var(--accent-yellow); border: 1px solid rgba(245,200,66,0.3); }
+  .badge-purple { background: rgba(176,107,255,0.15); color: var(--accent-purple); border: 1px solid rgba(176,107,255,0.3); }
+
+  .steps { list-style: none; counter-reset: steps; }
+  .steps li { counter-increment: steps; display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.1rem; }
+  .steps li::before {
+    content: counter(steps); font-family: 'Space Mono', monospace; font-size: 0.75rem; font-weight: 700;
+    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+  .steps.green li::before { background: rgba(0,229,160,0.15); color: var(--accent-green); border: 1px solid rgba(0,229,160,0.3); }
+  .steps.orange li::before { background: rgba(255,107,53,0.15); color: var(--accent-orange); border: 1px solid rgba(255,107,53,0.3); }
+  .steps.purple li::before { background: rgba(176,107,255,0.15); color: var(--accent-purple); border: 1px solid rgba(176,107,255,0.3); }
+  .steps li > div p { color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; line-height: 1.6; }
+  .steps li > div strong { font-size: 0.95rem; }
+
+  .tip-box {
+    background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.25);
+    border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0;
+    display: flex; gap: 0.8rem; align-items: flex-start;
+  }
+  .tip-box .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+  .tip-box strong { color: var(--accent-blue); }
+
+  .warn-box {
+    background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.25);
+    border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0;
+    display: flex; gap: 0.8rem; align-items: flex-start;
+  }
+  .warn-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+  .warn-box strong { color: var(--accent-orange); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+  .summary-box {
+    background: linear-gradient(135deg, rgba(0,229,160,0.05), rgba(79,142,247,0.05));
+    border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem; margin-top: 2rem;
+  }
+  .summary-box h3 { font-size: 1rem; margin-bottom: 1rem; color: var(--accent-green); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; }
+  .summary-box ul { list-style: none; }
+  .summary-box ul li { color: var(--muted); font-size: 0.9rem; padding: 0.3rem 0; padding-left: 1.2rem; position: relative; line-height: 1.5; }
+  .summary-box ul li::before { content: '▸'; color: var(--accent-green); position: absolute; left: 0; }
+
+  .file-tree {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1.2rem 1.4rem; margin: 0.8rem 0; font-family: 'Space Mono', monospace; font-size: 0.82rem;
+  }
+  .file-tree .folder { color: var(--accent-blue); }
+  .file-tree .file { color: var(--text); }
+  .file-tree .file-py { color: var(--accent-green); }
+  .file-tree .file-env { color: var(--accent-orange); }
+
+  .nav-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+  }
+  .nav-btn {
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    font-family: 'Space Mono', monospace; font-size: 0.78rem; padding: 0.7rem 1.2rem;
+    border-radius: 8px; cursor: pointer; letter-spacing: 1px; text-transform: uppercase;
+    transition: all 0.2s; text-decoration: none; display: inline-block;
+  }
+  .nav-btn:hover { color: var(--accent-green); border-color: var(--accent-green); }
+  .nav-btn.next { background: rgba(0,229,160,0.1); color: var(--accent-green); border-color: rgba(0,229,160,0.4); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Aula 01 — Introdução ao Django</h1>
+  <p>Django Framework · GitHub Codespace · Projeto Space Gallery</p>
+</header>
+
+<nav>
+  <button class="active" data-tab="intro" onclick="showTab('intro',this)">🚀 O que é Django</button>
+  <button data-tab="codespace" onclick="showTab('codespace',this)">☁️ Codespace</button>
+  <button data-tab="projeto" onclick="showTab('projeto',this)">📁 Criando o Projeto</button>
+  <button data-tab="seguranca" onclick="showTab('seguranca',this)">🔐 Segurança</button>
+  <button data-tab="requirements" onclick="showTab('requirements',this)">📋 Requirements</button>
+  <button data-tab="github" onclick="showTab('github',this)">🐙 GitHub</button>
+  <button data-tab="resumo" onclick="showTab('resumo',this)">✅ Resumo</button>
+</nav>
+
+<main>
+
+  <!-- TAB: O QUE É DJANGO -->
+  <div class="section active" id="intro">
+    <div class="section-title">
+      <div class="icon icon-green">🐍</div>
+      <div>
+        <h2>O que é Django?</h2>
+        <p>Framework web em Python para quem tem prazos</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📖 Definição</div>
+      <h3>Django é um framework web de alto nível escrito em Python</h3>
+      <p>
+        O próprio Django se define como <em>"um framework para perfeccionistas que têm prazos"</em>.
+        Ele permite criar aplicações web completas com muito menos código, já que vem com soluções
+        prontas para as tarefas mais comuns do desenvolvimento web.
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label">🏗️ Arquitetura</div>
+        <h3>MVT — Model, View, Template</h3>
+        <p>Django usa o padrão MVT: o <strong style="color:var(--accent-green)">Model</strong> cuida do banco de dados, a <strong style="color:var(--accent-blue)">View</strong> processa a lógica, e o <strong style="color:var(--accent-purple)">Template</strong> renderiza o HTML para o usuário.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">⚡ Fullstack</div>
+        <h3>Front-end + Back-end juntos</h3>
+        <p>Diferente de APIs REST, o Django pode renderizar páginas HTML completas, sendo uma solução <strong style="color:var(--accent-yellow)">fullstack</strong> — front e back no mesmo projeto.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">✨ Por que usar Django?</div>
+      <h3>Vantagens principais</h3>
+      <div style="margin-top:0.8rem; display:flex; flex-wrap:wrap; gap:0.4rem;">
+        <span class="badge badge-green">Sintaxe simples</span>
+        <span class="badge badge-blue">ORM nativo</span>
+        <span class="badge badge-purple">Admin automático</span>
+        <span class="badge badge-orange">Segurança contra XSS/SQL</span>
+        <span class="badge badge-yellow">Comunidade ativa</span>
+        <span class="badge badge-green">Banco de dados integrado</span>
+        <span class="badge badge-blue">Código aberto desde 2005</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🌌 Nosso Projeto</div>
+      <h3>Space Gallery — Galeria de Imagens do Espaço</h3>
+      <p>Ao longo das aulas, vamos construir uma galeria de fotografias astronômicas. O projeto terá páginas de listagem e detalhes de imagens, com sistema de busca, banco de dados e painel administrativo.</p>
+      <div style="margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.4rem;">
+        <span class="badge badge-green">Rotas</span>
+        <span class="badge badge-blue">Templates</span>
+        <span class="badge badge-purple">Arquivos estáticos</span>
+        <span class="badge badge-orange">Banco de dados</span>
+        <span class="badge badge-yellow">Admin Django</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: CODESPACE -->
+  <div class="section" id="codespace">
+    <div class="section-title">
+      <div class="icon icon-blue">☁️</div>
+      <div>
+        <h2>GitHub Codespace</h2>
+        <p>Desenvolvendo 100% na nuvem — sem instalar nada</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">💡 O que é Codespace?</div>
+      <h3>Seu VS Code na nuvem</h3>
+      <p>O GitHub Codespace é um ambiente de desenvolvimento completo que roda direto no navegador.
+      Você tem acesso a um terminal Linux, editor VS Code e todos os recursos necessários — sem precisar configurar nada na sua máquina.</p>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">💡</span>
+      <p><strong>Já fizemos isso antes!</strong> Na aula anterior já criamos nosso repositório no GitHub e abrimos um Codespace. Se precisar relembrar: repositório → botão verde <strong>Code</strong> → aba <strong>Codespaces</strong> → <strong>Create codespace on main</strong>.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🖥️ Passo a passo</div>
+      <h3>Abrindo o Codespace</h3>
+      <ul class="steps green">
+        <li><div><strong>Acesse seu repositório no GitHub</strong><p>O projeto já deve estar no seu GitHub. Se ainda não criou, crie um repositório chamado <code>space-gallery</code>.</p></div></li>
+        <li><div><strong>Clique no botão verde "Code"</strong><p>No repositório, clique no botão <strong>Code</strong> no canto superior direito da lista de arquivos.</p></div></li>
+        <li><div><strong>Aba Codespaces → Create codespace on main</strong><p>Selecione a aba <strong>Codespaces</strong> e clique em <strong>Create codespace on main</strong>.</p></div></li>
+        <li><div><strong>Aguarde o ambiente carregar</strong><p>Em alguns segundos o VS Code abre no navegador com um terminal Linux pronto para uso.</p></div></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🔧 Verificando o ambiente</div>
+      <h3>Python já vem instalado no Codespace</h3>
+      <p>No Codespace, Python e pip já estão disponíveis. Confira no terminal:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Verificar versão do Python</span>
+<span class="cmd">python3 --version</span>
+
+<span class="comment"># Verificar o pip</span>
+<span class="cmd">pip --version</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🌐 Visualizando o projeto</div>
+      <h3>Port Forwarding — acessando o servidor do Django</h3>
+      <p>No Codespace, quando rodar <code>python manage.py runserver</code>, o Django sobe em <code>localhost:8000</code>. O Codespace vai detectar isso e mostrar um aviso para abrir no navegador. Clique em <strong>Abrir no navegador</strong> ou acesse a aba <strong>Ports</strong> no painel inferior.</p>
+      <div class="tip-box">
+        <span class="tip-icon">🔗</span>
+        <p>A URL gerada pelo Codespace tem um formato parecido com: <code>https://seu-codespace-8000.app.github.dev</code> — compartilhe com colegas para que vejam seu projeto em tempo real!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: PROJETO -->
+  <div class="section" id="projeto">
+    <div class="section-title">
+      <div class="icon icon-orange">📁</div>
+      <div>
+        <h2>Criando o Projeto Django</h2>
+        <p>Do zero até o servidor funcionando</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📦 Passo 1 — Instalar Django</div>
+      <h3>Instalando com pip</h3>
+      <p>No terminal do Codespace, instale o Django e as dependências:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Instalar Django</span>
+<span class="cmd">pip install django</span>
+
+<span class="comment"># Salvar as dependências</span>
+<span class="cmd">pip freeze > requirements.txt</span></pre>
+      </div>
+      <div class="tip-box">
+        <span class="tip-icon">📌</span>
+        <p><strong>Boa prática:</strong> sempre que instalar um novo pacote, rode <code>pip freeze &gt; requirements.txt</code> para manter o arquivo atualizado. Isso garante que qualquer pessoa que abrir o projeto no Codespace consiga instalar tudo com um único comando.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🏗️ Passo 2 — Criar o projeto</div>
+      <h3>django-admin startproject</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Criar o projeto (o ponto '.' cria na pasta atual)</span>
+<span class="cmd">django-admin startproject setup .</span></pre>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-top:0.8rem;">O ponto <code>.</code> no final é importante! Sem ele, seria criada uma pasta dentro de outra pasta desnecessária.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📂 Estrutura gerada</div>
+      <h3>O que foi criado</h3>
+      <div class="file-tree">
+        <pre><span class="folder">space-gallery/</span>
+├── <span class="file-py">manage.py</span>           <span class="comment"># Comandos do Django</span>
+├── <span class="file">requirements.txt</span>    <span class="comment"># Dependências</span>
+└── <span class="folder">setup/</span>
+    ├── <span class="file-py">__init__.py</span>
+    ├── <span class="file-py">settings.py</span>     <span class="comment"># Configurações do projeto</span>
+    ├── <span class="file-py">urls.py</span>         <span class="comment"># Rotas principais</span>
+    ├── <span class="file-py">asgi.py</span>
+    └── <span class="file-py">wsgi.py</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🌍 Passo 3 — Configurar idioma e fuso horário</div>
+      <h3>Editando o settings.py</h3>
+      <p>Abra <code>setup/settings.py</code> e altere as linhas de idioma e timezone:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># setup/settings.py — procure e altere estas linhas</span>
+
+<span class="kw">LANGUAGE_CODE</span> = <span class="str">'pt-br'</span>
+
+<span class="kw">TIME_ZONE</span> = <span class="str">'America/Sao_Paulo'</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🚀 Passo 4 — Subir o servidor</div>
+      <h3>python manage.py runserver</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="cmd">python manage.py runserver</span></pre>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-top:0.8rem;">
+        Vai aparecer um aviso sobre "migrações não aplicadas" — isso é normal! Por enquanto ignore.
+        O Codespace vai detectar a porta 8000 e oferecer um link para visualizar a página.
+      </p>
+      <div class="warn-box">
+        <span class="tip-icon">⚠️</span>
+        <p><strong>ALLOWED_HOSTS:</strong> No Codespace, pode ser necessário adicionar o host ao settings.py. Se aparecer erro de host, adicione: <code>ALLOWED_HOSTS = ['*']</code> no settings.py (apenas para desenvolvimento).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: SEGURANÇA -->
+  <div class="section" id="seguranca">
+    <div class="section-title">
+      <div class="icon icon-purple">🔐</div>
+      <div>
+        <h2>Segurança — SECRET_KEY</h2>
+        <p>Nunca suba segredos para o GitHub</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">⚠️ O problema</div>
+      <h3>A SECRET_KEY não pode ficar exposta</h3>
+      <p>Todo projeto Django tem uma chave secreta (<code>SECRET_KEY</code>) no <code>settings.py</code>. Se você subir esse arquivo para o GitHub, qualquer pessoa terá acesso a essa chave — o que é uma grave falha de segurança.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">✅ A solução — python-dotenv</div>
+      <h3>Usando variáveis de ambiente</h3>
+      <ul class="steps orange">
+        <li><div><strong>Instalar python-dotenv</strong>
+          <div class="code-block" style="margin-top:0.5rem">
+            <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            <pre><span class="cmd">pip install python-dotenv</span>
+<span class="cmd">pip freeze > requirements.txt</span></pre>
+          </div>
+        </div></li>
+        <li><div><strong>Criar o arquivo .env na raiz do projeto</strong>
+          <div class="code-block" style="margin-top:0.5rem">
+            <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            <pre><span class="comment"># .env — NUNCA suba este arquivo para o GitHub!</span>
+<span class="kw">SECRET_KEY</span>=<span class="str">sua-secret-key-aqui</span></pre>
+          </div>
+          <p>Copie a SECRET_KEY do seu <code>settings.py</code> e cole aqui.</p>
+        </div></li>
+        <li><div><strong>Atualizar o settings.py</strong>
+          <div class="code-block" style="margin-top:0.5rem">
+            <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            <pre><span class="comment"># setup/settings.py</span>
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">import</span> os
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+
+<span class="cmd">load_dotenv()</span>
+
+<span class="comment"># Substitua a SECRET_KEY antiga por:</span>
+<span class="kw">SECRET_KEY</span> = str(os.getenv(<span class="str">'SECRET_KEY'</span>))</pre>
+          </div>
+        </div></li>
+        <li><div><strong>Criar o .gitignore</strong><p>Acesse <a href="https://gitignore.io" target="_blank" style="color:var(--accent-blue)">gitignore.io</a>, pesquise por "Django" e copie o conteúdo para um arquivo <code>.gitignore</code> na raiz do projeto. Isso garante que o <code>.env</code> e a pasta <code>venv</code> não vão para o GitHub.</p></div></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🔐 Codespace Secrets</div>
+      <h3>Alternativa: Secrets do Codespace</h3>
+      <p>Uma forma ainda mais elegante no Codespace é usar os <strong>Secrets do GitHub</strong>. Vá em: <strong>Configurações do repositório → Secrets and variables → Codespaces → New repository secret</strong>. Crie um secret chamado <code>SECRET_KEY</code> com o valor da chave. O Codespace vai injetar automaticamente como variável de ambiente!</p>
+    </div>
+  </div>
+
+  <!-- TAB: REQUIREMENTS -->
+  <div class="section" id="requirements">
+    <div class="section-title">
+      <div class="icon icon-green">📋</div>
+      <div>
+        <h2>Arquivo requirements.txt</h2>
+        <p>Registrando e reproduzindo dependências do projeto</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">❓ O que é</div>
+      <h3>Por que o requirements.txt existe?</h3>
+      <p>O <code>requirements.txt</code> é um arquivo de texto simples que lista todas as bibliotecas Python instaladas no projeto, com suas versões exatas. Ele garante que qualquer pessoa — ou qualquer ambiente (um novo Codespace, um servidor de produção, um colega de equipe) — consiga instalar exatamente as mesmas dependências com um único comando.</p>
+      <div class="tip-box" style="margin-top:1rem">
+        <span class="tip-icon">💡</span>
+        <p><strong>Analogia:</strong> Pense no <code>requirements.txt</code> como a lista de ingredientes de uma receita. Sem ela, cada pessoa prepararia o projeto com versões diferentes das bibliotecas — e o resultado seria imprevisível.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">⚙️ Como gerar</div>
+      <h3>Comando pip freeze</h3>
+      <p>O arquivo <strong>não é criado na mão</strong>. O pip gera automaticamente a partir do que está instalado no ambiente:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Lista todos os pacotes instalados com versão exata</span>
+<span class="cmd">pip freeze</span>
+
+<span class="comment"># Redireciona a saída para o arquivo requirements.txt</span>
+<span class="cmd">pip freeze > requirements.txt</span></pre>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-top:0.8rem;">O operador <code>&gt;</code> redireciona a saída do terminal para dentro do arquivo. Se o arquivo não existir, ele é criado. Se já existir, é sobrescrito.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📄 Conteúdo do arquivo</div>
+      <h3>O que aparece dentro do requirements.txt</h3>
+      <p>Após instalar o Django e o python-dotenv, o arquivo terá um conteúdo parecido com este:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># requirements.txt gerado após: pip install django python-dotenv</span>
+<span class="str">asgiref</span>==<span class="num">3.8.1</span>
+<span class="str">Django</span>==<span class="num">5.0.6</span>
+<span class="str">python-dotenv</span>==<span class="num">1.0.1</span>
+<span class="str">sqlparse</span>==<span class="num">0.5.0</span></pre>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-top:0.8rem;">Cada linha segue o padrão <code>pacote==versão</code>. O <code>==</code> garante que a versão instalada será <strong>exatamente</strong> aquela, evitando incompatibilidades.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📦 Dependências indiretas</div>
+      <h3>Por que aparecem mais pacotes do que os que eu instalei?</h3>
+      <p>Quando você instala o Django, ele instala automaticamente pacotes dos quais depende — como <code>asgiref</code> e <code>sqlparse</code>. O <code>pip freeze</code> captura <strong>tudo</strong> que está no ambiente, incluindo essas dependências indiretas. Isso é intencional: garante reprodutibilidade total.</p>
+      <div class="grid-2" style="margin-top:1rem">
+        <div class="card" style="background:var(--surface2); border-color:rgba(0,229,160,0.2)">
+          <div class="card-label" style="color:var(--accent-green)">✅ Você instalou</div>
+          <p style="font-family:'Space Mono',monospace; font-size:0.85rem; color:var(--text)">django<br>python-dotenv</p>
+        </div>
+        <div class="card" style="background:var(--surface2); border-color:rgba(79,142,247,0.2)">
+          <div class="card-label" style="color:var(--accent-blue)">🔗 Dependências automáticas</div>
+          <p style="font-family:'Space Mono',monospace; font-size:0.85rem; color:var(--text)">asgiref<br>sqlparse</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🔄 Fluxo de uso</div>
+      <h3>Passo a passo na Aula 01</h3>
+      <ul class="steps green">
+        <li><div><strong>Instalar o Django</strong>
+          <div class="code-block" style="margin-top:0.5rem">
+            <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            <pre><span class="cmd">pip install django</span></pre>
+          </div>
+        </div></li>
+        <li><div><strong>Gerar o requirements.txt pela primeira vez</strong>
+          <div class="code-block" style="margin-top:0.5rem">
+            <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            <pre><span class="cmd">pip freeze > requirements.txt</span></pre>
+          </div>
+        </div></li>
+        <li><div><strong>Instalar o python-dotenv (aba Segurança)</strong>
+          <div class="code-block" style="margin-top:0.5rem">
+            <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            <pre><span class="cmd">pip install python-dotenv</span></pre>
+          </div>
+        </div></li>
+        <li><div><strong>Atualizar o requirements.txt</strong>
+          <p>Sempre que instalar um novo pacote, rode novamente:</p>
+          <div class="code-block" style="margin-top:0.5rem">
+            <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            <pre><span class="cmd">pip freeze > requirements.txt</span></pre>
+          </div>
+        </div></li>
+      </ul>
+      <div class="warn-box" style="margin-top:1rem">
+        <span class="tip-icon">⚠️</span>
+        <p><strong>Boa prática:</strong> nunca esqueça de atualizar o <code>requirements.txt</code> após instalar um pacote novo. Se o arquivo ficar desatualizado, quem clonar o projeto terá um ambiente incompleto.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">♻️ Reproduzindo o ambiente</div>
+      <h3>Como instalar a partir do requirements.txt</h3>
+      <p>Quando alguém clonar o repositório ou abrir um novo Codespace, basta rodar:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Instala todas as dependências listadas no arquivo</span>
+<span class="cmd">pip install -r requirements.txt</span></pre>
+      </div>
+      <p style="color:var(--muted); font-size:0.9rem; margin-top:0.8rem;">A flag <code>-r</code> significa "leia as dependências a partir deste arquivo". Todos os pacotes serão instalados nas versões exatas especificadas.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🐙 GitHub</div>
+      <h3>O requirements.txt deve ir para o repositório</h3>
+      <p>Ao contrário do <code>.env</code>, o <code>requirements.txt</code> <strong>deve</strong> ser enviado para o GitHub. Ele não contém informações sensíveis e é fundamental para que o projeto funcione em outros ambientes.</p>
+      <div class="grid-2" style="margin-top:1rem">
+        <div class="card" style="background:rgba(0,229,160,0.06); border-color:rgba(0,229,160,0.25)">
+          <div class="card-label" style="color:var(--accent-green)">✅ Deve subir para o GitHub</div>
+          <p style="font-family:'Space Mono',monospace; font-size:0.82rem; color:var(--text)">requirements.txt<br>.gitignore<br>manage.py<br>setup/settings.py</p>
+        </div>
+        <div class="card" style="background:rgba(255,107,53,0.06); border-color:rgba(255,107,53,0.25)">
+          <div class="card-label" style="color:var(--accent-orange)">🚫 NUNCA subir</div>
+          <p style="font-family:'Space Mono',monospace; font-size:0.82rem; color:var(--text)">.env<br>venv/<br>__pycache__/</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB: GITHUB -->
+  <div class="section" id="github">
+    <div class="section-title">
+      <div class="icon icon-yellow">🐙</div>
+      <div>
+        <h2>Subindo para o GitHub</h2>
+        <p>Versionando o projeto do Codespace</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📤 Commit e Push</div>
+      <h3>Salvando as alterações no repositório</h3>
+      <p>No Codespace, o repositório já está conectado ao GitHub. Para salvar, use o terminal ou a interface gráfica do VS Code:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Verificar o que foi alterado</span>
+<span class="cmd">git status</span>
+
+<span class="comment"># Adicionar todos os arquivos</span>
+<span class="cmd">git add .</span>
+
+<span class="comment"># Criar um commit com mensagem descritiva</span>
+<span class="cmd">git commit -m "Aula 01: projeto Django criado com settings configurados"</span>
+
+<span class="comment"># Enviar para o GitHub</span>
+<span class="cmd">git push</span></pre>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">👀</span>
+      <p><strong>Verifique no GitHub!</strong> Após o push, acesse seu repositório no GitHub e confirme que o arquivo <code>.env</code> <strong>NÃO aparece</strong> na lista de arquivos. Se aparecer, algo deu errado no .gitignore.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📋 Checklist da aula</div>
+      <h3>O que deve estar no repositório</h3>
+      <ul class="steps green">
+        <li><div><strong>manage.py</strong><p>Arquivo principal de comandos do Django.</p></div></li>
+        <li><div><strong>requirements.txt</strong><p>Com django e python-dotenv listados.</p></div></li>
+        <li><div><strong>setup/settings.py</strong><p>Com LANGUAGE_CODE, TIME_ZONE e SECRET_KEY usando os.getenv().</p></div></li>
+        <li><div><strong>.gitignore</strong><p>Com .env listado — para não subir a chave secreta.</p></div></li>
+      </ul>
+      <div class="warn-box" style="margin-top:1rem">
+        <span class="tip-icon">🚫</span>
+        <p><strong>NÃO deve aparecer no GitHub:</strong> o arquivo <code>.env</code> com a SECRET_KEY.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: RESUMO -->
+  <div class="section" id="resumo">
+    <div class="section-title">
+      <div class="icon icon-green">✅</div>
+      <div>
+        <h2>Resumo da Aula 01</h2>
+        <p>O que aprendemos hoje</p>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      <h3>📚 Nesta aula</h3>
+      <ul>
+        <li>Conhecemos o Django 4: história, filosofia e arquitetura MVT</li>
+        <li>Configuramos o ambiente no <strong>GitHub Codespace</strong> (sem instalar nada localmente)</li>
+        <li>Criamos o projeto com <code>django-admin startproject setup .</code></li>
+        <li>Configuramos idioma e fuso horário no <code>settings.py</code></li>
+        <li>Subimos o servidor com <code>python manage.py runserver</code></li>
+        <li>Protegemos a SECRET_KEY usando <code>python-dotenv</code> e arquivo <code>.env</code></li>
+        <li>Criamos o <code>.gitignore</code> e fizemos o primeiro commit/push</li>
+      </ul>
+    </div>
+
+    <div class="summary-box" style="margin-top:1rem; background: linear-gradient(135deg, rgba(255,107,53,0.05), rgba(176,107,255,0.05));">
+      <h3 style="color:var(--accent-orange)">🔜 Próxima aula</h3>
+      <ul>
+        <li>Criar a primeira <strong>app</strong> do projeto: <code>python manage.py startapp galeria</code></li>
+        <li>Entender a diferença entre <strong>projeto</strong> e <strong>app</strong></li>
+        <li>Criar as primeiras <strong>views</strong> e <strong>rotas (URLs)</strong></li>
+        <li>Exibir uma página HTML personalizada no navegador</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:1.4rem">
+      <div class="card-label">🧪 Desafio</div>
+      <h3>Pratique antes da próxima aula</h3>
+      <ol style="color:var(--muted); font-size:0.9rem; line-height:2; padding-left:1.5rem;">
+        <li>Abra o Codespace e confira se o servidor sobe corretamente</li>
+        <li>Explore o arquivo <code>settings.py</code> e leia os comentários</li>
+        <li>Tente alterar o <code>LANGUAGE_CODE</code> para <code>'en-us'</code> e veja o que muda</li>
+        <li>Verifique no GitHub se o <code>.env</code> não está no repositório</li>
+      </ol>
+    </div>
+
+    <div class="nav-bottom">
+      <span></span>
+      <a href="aula_02_app_views_urls.html" class="nav-btn next">Aula 02 — App, Views e URLs →</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function copyCode(btn) {
+  const pre = btn.nextElementSibling;
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'COPIADO!';
+    btn.style.color = 'var(--accent-green)';
+    btn.style.borderColor = 'var(--accent-green)';
+    setTimeout(() => { btn.textContent = 'COPIAR'; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 02 — App, Views e URLs</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0e14; --surface: #13151f; --surface2: #1a1d2e; --border: #252840;
+    --accent-green: #00e5a0; --accent-orange: #ff6b35; --accent-blue: #4f8ef7;
+    --accent-purple: #b06bff; --accent-yellow: #f5c842;
+    --text: #e8eaf0; --muted: #6b7290; --code-bg: #0a0c12;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+  header { background: var(--surface); border-bottom: 2px solid var(--border); padding: 3rem 2rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -20%, rgba(255,107,53,0.15) 0%, transparent 70%); pointer-events: none; }
+  header h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -1px; background: linear-gradient(120deg, var(--accent-orange), var(--accent-yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; position: relative; }
+  header p { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.85rem; margin-top: 0.6rem; letter-spacing: 2px; text-transform: uppercase; }
+  nav { display: flex; gap: 0; overflow-x: auto; border-bottom: 2px solid var(--border); background: var(--surface); padding: 0 1rem; }
+  nav button { background: none; border: none; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.78rem; padding: 1rem 1.4rem; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; letter-spacing: 1px; text-transform: uppercase; }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent-orange); border-bottom-color: var(--accent-orange); }
+  main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  .section { display: none; animation: fadeIn 0.35s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .section-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .section-title .icon { font-size: 2.2rem; width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .icon-green { background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.3); }
+  .icon-orange { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.3); }
+  .icon-purple { background: rgba(176,107,255,0.12); border: 1px solid rgba(176,107,255,0.3); }
+  .icon-blue { background: rgba(79,142,247,0.12); border: 1px solid rgba(79,142,247,0.3); }
+  .icon-yellow { background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.3); }
+  .section-title h2 { font-size: 1.8rem; font-weight: 800; }
+  .section-title p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem; margin-bottom: 1.4rem; position: relative; }
+  .card-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem; opacity: 0.7; }
+  .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.7rem; }
+  .card p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+  .code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem 1.4rem; margin: 0.8rem 0; position: relative; overflow-x: auto; }
+  .code-block pre { font-family: 'Space Mono', monospace; font-size: 0.85rem; line-height: 1.8; white-space: pre; color: var(--text); }
+  .code-block .comment { color: var(--muted); }
+  .code-block .cmd { color: var(--accent-green); }
+  .code-block .kw { color: var(--accent-purple); }
+  .code-block .str { color: var(--accent-yellow); }
+  .code-block .fn { color: var(--accent-orange); }
+  .copy-btn { position: absolute; top: 0.7rem; right: 0.7rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.68rem; padding: 0.3rem 0.7rem; border-radius: 6px; cursor: pointer; letter-spacing: 1px; transition: all 0.2s; }
+  .copy-btn:hover { color: var(--accent-green); border-color: var(--accent-green); }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-bottom: 1.4rem; }
+  .badge { display: inline-block; padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.72rem; font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; margin-right: 0.4rem; margin-bottom: 0.4rem; }
+  .badge-green { background: rgba(0,229,160,0.15); color: var(--accent-green); border: 1px solid rgba(0,229,160,0.3); }
+  .badge-orange { background: rgba(255,107,53,0.15); color: var(--accent-orange); border: 1px solid rgba(255,107,53,0.3); }
+  .badge-blue { background: rgba(79,142,247,0.15); color: var(--accent-blue); border: 1px solid rgba(79,142,247,0.3); }
+  .badge-yellow { background: rgba(245,200,66,0.15); color: var(--accent-yellow); border: 1px solid rgba(245,200,66,0.3); }
+  .badge-purple { background: rgba(176,107,255,0.15); color: var(--accent-purple); border: 1px solid rgba(176,107,255,0.3); }
+  .steps { list-style: none; counter-reset: steps; }
+  .steps li { counter-increment: steps; display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.1rem; }
+  .steps li::before { content: counter(steps); font-family: 'Space Mono', monospace; font-size: 0.75rem; font-weight: 700; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .steps.green li::before { background: rgba(0,229,160,0.15); color: var(--accent-green); border: 1px solid rgba(0,229,160,0.3); }
+  .steps.orange li::before { background: rgba(255,107,53,0.15); color: var(--accent-orange); border: 1px solid rgba(255,107,53,0.3); }
+  .steps li > div p { color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; line-height: 1.6; }
+  .steps li > div strong { font-size: 0.95rem; }
+  .tip-box { background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.25); border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; display: flex; gap: 0.8rem; align-items: flex-start; }
+  .tip-box .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+  .tip-box strong { color: var(--accent-blue); }
+  .file-tree { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem 1.4rem; margin: 0.8rem 0; font-family: 'Space Mono', monospace; font-size: 0.82rem; }
+  .file-tree .folder { color: var(--accent-blue); }
+  .file-tree .file-py { color: var(--accent-green); }
+  .file-tree .file-html { color: var(--accent-orange); }
+  .file-tree .comment { color: var(--muted); }
+  .summary-box { background: linear-gradient(135deg, rgba(255,107,53,0.05), rgba(245,200,66,0.05)); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem; margin-top: 2rem; }
+  .summary-box h3 { font-size: 1rem; margin-bottom: 1rem; color: var(--accent-orange); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; }
+  .summary-box ul { list-style: none; }
+  .summary-box ul li { color: var(--muted); font-size: 0.9rem; padding: 0.3rem 0; padding-left: 1.2rem; position: relative; line-height: 1.5; }
+  .summary-box ul li::before { content: '▸'; color: var(--accent-orange); position: absolute; left: 0; }
+  .nav-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .nav-btn { background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.78rem; padding: 0.7rem 1.2rem; border-radius: 8px; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .nav-btn:hover { color: var(--accent-orange); border-color: var(--accent-orange); }
+  .nav-btn.next { background: rgba(255,107,53,0.1); color: var(--accent-orange); border-color: rgba(255,107,53,0.4); }
+  .nav-btn.prev { background: rgba(0,229,160,0.1); color: var(--accent-green); border-color: rgba(0,229,160,0.4); }
+
+  .diagram { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .diag-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1.2rem; text-align: center; }
+  .diag-box .diag-title { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.3rem; }
+  .diag-box .diag-file { font-size: 0.9rem; font-weight: 700; }
+  .diag-arrow { color: var(--muted); font-size: 1.5rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Aula 02 — App, Views e URLs</h1>
+  <p>Criando a primeira página personalizada</p>
+</header>
+
+<nav>
+  <button class="active" data-tab="conceitos" onclick="showTab('conceitos',this)">📦 Projeto vs App</button>
+  <button data-tab="criando" onclick="showTab('criando',this)">⚙️ Criando a App</button>
+  <button data-tab="views" onclick="showTab('views',this)">👁️ Views</button>
+  <button data-tab="urls" onclick="showTab('urls',this)">🔗 URLs</button>
+  <button data-tab="templates" onclick="showTab('templates',this)">🖼️ Templates</button>
+  <button data-tab="resumo" onclick="showTab('resumo',this)">✅ Resumo</button>
+</nav>
+
+<main>
+
+  <!-- TAB: CONCEITOS -->
+  <div class="section active" id="conceitos">
+    <div class="section-title">
+      <div class="icon icon-orange">📦</div>
+      <div>
+        <h2>Projeto vs App</h2>
+        <p>Entendendo a estrutura do Django</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label" style="color:var(--accent-blue)">🏗️ Projeto (setup)</div>
+        <h3>Coleção de configurações</h3>
+        <p>O <strong>projeto</strong> é o contêiner principal. Ele reúne todas as configurações, a lista de apps instaladas e as rotas principais. Um projeto pode ter vários apps.</p>
+        <div style="margin-top:0.8rem">
+          <span class="badge badge-blue">settings.py</span>
+          <span class="badge badge-blue">urls.py</span>
+          <span class="badge badge-blue">wsgi.py</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label" style="color:var(--accent-orange)">🧩 App (galeria)</div>
+        <h3>Funcionalidade isolada</h3>
+        <p>Um <strong>app</strong> é um pedaço independente do projeto com uma responsabilidade específica. A galeria de fotos é um app. Um sistema de login seria outro app.</p>
+        <div style="margin-top:0.8rem">
+          <span class="badge badge-orange">models.py</span>
+          <span class="badge badge-orange">views.py</span>
+          <span class="badge badge-orange">urls.py</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">💡</span>
+      <p><strong>Analogia:</strong> O <strong>projeto</strong> é como um prédio inteiro, e cada <strong>app</strong> é um apartamento com uma função específica. Um app pode até ser reutilizado em diferentes projetos!</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🔄 Fluxo de uma requisição</div>
+      <h3>O que acontece quando você acessa uma página</h3>
+      <div class="diagram">
+        <div class="diag-box">
+          <div class="diag-title">Usuário</div>
+          <div class="diag-file">🌐 Browser</div>
+        </div>
+        <div class="diag-arrow">→</div>
+        <div class="diag-box" style="border-color: rgba(79,142,247,0.4)">
+          <div class="diag-title">Rota</div>
+          <div class="diag-file" style="color:var(--accent-blue)">urls.py</div>
+        </div>
+        <div class="diag-arrow">→</div>
+        <div class="diag-box" style="border-color: rgba(255,107,53,0.4)">
+          <div class="diag-title">Lógica</div>
+          <div class="diag-file" style="color:var(--accent-orange)">views.py</div>
+        </div>
+        <div class="diag-arrow">→</div>
+        <div class="diag-box" style="border-color: rgba(176,107,255,0.4)">
+          <div class="diag-title">Visual</div>
+          <div class="diag-file" style="color:var(--accent-purple)">template.html</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: CRIANDO A APP -->
+  <div class="section" id="criando">
+    <div class="section-title">
+      <div class="icon icon-orange">⚙️</div>
+      <div>
+        <h2>Criando a App Galeria</h2>
+        <p>python manage.py startapp</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">1️⃣ Criar a app</div>
+      <h3>Comando startapp</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Criar o app "galeria"</span>
+<span class="cmd">python manage.py startapp galeria</span></pre>
+      </div>
+      <p>Isso cria uma pasta <code>galeria/</code> com vários arquivos prontos.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📂 Estrutura criada</div>
+      <h3>O que foi gerado</h3>
+      <div class="file-tree">
+        <pre><span class="folder">galeria/</span>
+├── <span class="file-py">__init__.py</span>
+├── <span class="file-py">admin.py</span>       <span class="comment"># Configuração do Admin</span>
+├── <span class="file-py">apps.py</span>        <span class="comment"># Configurações do app</span>
+├── <span class="file-py">models.py</span>      <span class="comment"># Banco de dados</span>
+├── <span class="file-py">tests.py</span>       <span class="comment"># Testes automatizados</span>
+├── <span class="file-py">views.py</span>       <span class="comment"># Lógica das páginas</span>
+└── <span class="folder">migrations/</span>
+    └── <span class="file-py">__init__.py</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">2️⃣ Registrar o app no projeto</div>
+      <h3>Editar settings.py</h3>
+      <p>O projeto precisa saber que a app <code>galeria</code> existe. Adicione ao <code>INSTALLED_APPS</code>:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># setup/settings.py</span>
+<span class="kw">INSTALLED_APPS</span> = [
+    <span class="str">'django.contrib.admin'</span>,
+    <span class="str">'django.contrib.auth'</span>,
+    <span class="str">'django.contrib.contenttypes'</span>,
+    <span class="str">'django.contrib.sessions'</span>,
+    <span class="str">'django.contrib.messages'</span>,
+    <span class="str">'django.contrib.staticfiles'</span>,
+    <span class="str">'galeria'</span>,   <span class="comment"># ← adicione esta linha</span>
+]</pre>
+      </div>
+      <div class="tip-box" style="margin-top:0.8rem">
+        <span class="tip-icon">💡</span>
+        <p><strong>Boa prática:</strong> você pode referenciar o app com sua configuração completa: <code>'galeria.apps.GaleriaConfig'</code>. Isso é mais preciso e é o padrão de mercado.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: VIEWS -->
+  <div class="section" id="views">
+    <div class="section-title">
+      <div class="icon icon-blue">👁️</div>
+      <div>
+        <h2>Views — A Lógica das Páginas</h2>
+        <p>Funções que processam requisições e retornam respostas</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📖 O que é uma View?</div>
+      <h3>Funções Python que respondem a requisições HTTP</h3>
+      <p>Uma view recebe um <code>request</code> (pedido do navegador) e retorna uma <code>response</code> (resposta com o conteúdo HTML). É aqui que fica a lógica da sua página.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">✏️ Primeira view</div>
+      <h3>galeria/views.py</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># galeria/views.py</span>
+<span class="kw">from</span> django.shortcuts <span class="kw">import</span> render
+
+<span class="kw">def</span> <span class="fn">index</span>(request):
+    <span class="kw">return</span> render(request, <span class="str">'galeria/index.html'</span>)
+
+<span class="kw">def</span> <span class="fn">imagem</span>(request):
+    <span class="kw">return</span> render(request, <span class="str">'galeria/imagem.html'</span>)</pre>
+      </div>
+      <p>A função <code>render()</code> junta o request com o template HTML e retorna a página pronta para o navegador.</p>
+    </div>
+
+    <div class="tip-box">
+      <span class="tip-icon">🔎</span>
+      <p><strong>render(request, template, contexto)</strong> — o terceiro parâmetro (opcional) é um dicionário que passa dados do Python para o HTML. Usaremos isso na Aula 03!</p>
+    </div>
+  </div>
+
+  <!-- TAB: URLS -->
+  <div class="section" id="urls">
+    <div class="section-title">
+      <div class="icon icon-purple">🔗</div>
+      <div>
+        <h2>URLs — O Sistema de Rotas</h2>
+        <p>Conectando endereços web às suas views</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">1️⃣ Criar urls.py na galeria</div>
+      <h3>Boa prática: cada app tem suas próprias rotas</h3>
+      <p>Crie um novo arquivo <code>galeria/urls.py</code>:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># galeria/urls.py</span>
+<span class="kw">from</span> django.urls <span class="kw">import</span> path
+<span class="kw">from</span> galeria.views <span class="kw">import</span> index, imagem
+
+urlpatterns = [
+    path(<span class="str">''</span>, index, name=<span class="str">'index'</span>),
+    path(<span class="str">'imagem/'</span>, imagem, name=<span class="str">'imagem'</span>),
+]</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">2️⃣ Conectar ao urls.py principal</div>
+      <h3>setup/urls.py — incluindo as rotas da galeria</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># setup/urls.py</span>
+<span class="kw">from</span> django.contrib <span class="kw">import</span> admin
+<span class="kw">from</span> django.urls <span class="kw">import</span> path, include
+
+urlpatterns = [
+    path(<span class="str">'admin/'</span>, admin.site.urls),
+    path(<span class="str">''</span>, include(<span class="str">'galeria.urls'</span>)),
+]</pre>
+      </div>
+      <div class="tip-box" style="margin-top:0.8rem">
+        <span class="tip-icon">💡</span>
+        <p><strong>include()</strong> importa todas as rotas do arquivo <code>galeria/urls.py</code>. Isso mantém o projeto organizado: cada app gerencia suas próprias URLs, e o urls.py principal apenas delega.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🏷️ URL com nome (name)</div>
+      <h3>Por que nomear as URLs?</h3>
+      <p>Com nomes nas rotas, você usa <code>{% url 'imagem' %}</code> nos templates ao invés de escrever o caminho diretamente. Se a URL mudar, só precisa alterar em um lugar!</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment">&lt;!-- No template HTML, use assim: --&gt;</span>
+&lt;a href="<span class="fn">{% url 'index' %}</span>"&gt;Home&lt;/a&gt;
+&lt;a href="<span class="fn">{% url 'imagem' %}</span>"&gt;Ver imagem&lt;/a&gt;</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: TEMPLATES -->
+  <div class="section" id="templates">
+    <div class="section-title">
+      <div class="icon icon-yellow">🖼️</div>
+      <div>
+        <h2>Templates — O HTML do Django</h2>
+        <p>Configurando e organizando os arquivos HTML</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">1️⃣ Configurar a pasta de templates</div>
+      <h3>settings.py — informando onde ficam os HTMLs</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># setup/settings.py</span>
+<span class="kw">TEMPLATES</span> = [
+    {
+        <span class="str">'BACKEND'</span>: <span class="str">'django.template.backends.django.DjangoTemplates'</span>,
+        <span class="str">'DIRS'</span>: [os.path.join(<span class="fn">BASE_DIR</span>, <span class="str">'templates'</span>)],  <span class="comment"># ← esta linha</span>
+        <span class="str">'APP_DIRS'</span>: <span class="kw">True</span>,
+        ...
+    },
+]</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📂 Estrutura de pastas</div>
+      <h3>Organização dos templates</h3>
+      <div class="file-tree">
+        <pre><span class="folder">templates/</span>
+└── <span class="folder">galeria/</span>
+    ├── <span class="file-html">base.html</span>      <span class="comment"># Template base (evita repetição)</span>
+    ├── <span class="file-html">index.html</span>     <span class="comment"># Página inicial</span>
+    └── <span class="file-html">imagem.html</span>    <span class="comment"># Página de detalhe</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">2️⃣ Template base — DRY</div>
+      <h3>Don't Repeat Yourself</h3>
+      <p>O <code>base.html</code> contém a estrutura HTML que se repete em todas as páginas (head, menu, footer). Os outros templates "herdam" dele:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment">&lt;!-- templates/galeria/base.html --&gt;</span>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+    &lt;title&gt;Space Gallery&lt;/title&gt;
+    <span class="comment">&lt;!-- CSS, fonts etc. --&gt;</span>
+&lt;/head&gt;
+&lt;body&gt;
+    <span class="fn">{% block content %}{% endblock %}</span>
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+      </div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment">&lt;!-- templates/galeria/index.html --&gt;</span>
+<span class="fn">{% extends 'galeria/base.html' %}</span>
+<span class="fn">{% load static %}</span>
+
+<span class="fn">{% block content %}</span>
+  &lt;main&gt;
+    &lt;h1&gt;Galeria de Imagens&lt;/h1&gt;
+    <span class="comment">&lt;!-- conteúdo específico desta página --&gt;</span>
+  &lt;/main&gt;
+<span class="fn">{% endblock %}</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">3️⃣ Partials — fragmentos reutilizáveis</div>
+      <h3>Menu e footer separados</h3>
+      <p>Código como o menu lateral e footer pode ser isolado em partials e incluído com <code>{% include %}</code>:</p>
+      <div class="file-tree">
+        <pre><span class="folder">templates/galeria/</span>
+└── <span class="folder">partials/</span>
+    ├── <span class="file-html">_menu.html</span>
+    └── <span class="file-html">_footer.html</span></pre>
+      </div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment">&lt;!-- No base.html, inclua as partials assim: --&gt;</span>
+<span class="fn">{% include 'galeria/partials/_menu.html' %}</span>
+<span class="fn">{% include 'galeria/partials/_footer.html' %}</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: RESUMO -->
+  <div class="section" id="resumo">
+    <div class="section-title">
+      <div class="icon icon-orange">✅</div>
+      <div>
+        <h2>Resumo da Aula 02</h2>
+        <p>O que aprendemos hoje</p>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      <h3>📚 Nesta aula</h3>
+      <ul>
+        <li>Entendemos a diferença entre <strong>projeto</strong> e <strong>app</strong> no Django</li>
+        <li>Criamos a app <code>galeria</code> com <code>python manage.py startapp galeria</code></li>
+        <li>Registramos a app no <code>settings.py</code></li>
+        <li>Criamos as primeiras <strong>views</strong> no <code>galeria/views.py</code></li>
+        <li>Configuramos as <strong>URLs</strong> em <code>galeria/urls.py</code> e no <code>setup/urls.py</code></li>
+        <li>Configuramos a pasta <code>templates/</code> no settings.py</li>
+        <li>Aprendemos <strong>herança de templates</strong> com <code>extends</code> e <code>block</code></li>
+        <li>Criamos <strong>partials</strong> para menu e footer reutilizáveis</li>
+      </ul>
+    </div>
+
+    <div class="summary-box" style="margin-top:1rem; background: linear-gradient(135deg, rgba(79,142,247,0.05), rgba(176,107,255,0.05));">
+      <h3 style="color:var(--accent-blue)">🔜 Próxima aula</h3>
+      <ul>
+        <li>Carregar <strong>arquivos estáticos</strong> (CSS, imagens)</li>
+        <li>Configurar <code>STATICFILES_DIRS</code> e <code>STATIC_ROOT</code></li>
+        <li>Usar <code>{% load static %}</code> e <code>{% static '...' %}</code> no template</li>
+        <li>Deixar o site com o visual completo do Space Gallery</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:1.4rem">
+      <div class="card-label">🧪 Desafio</div>
+      <h3>Pratique antes da próxima aula</h3>
+      <ol style="color:var(--muted); font-size:0.9rem; line-height:2; padding-left:1.5rem;">
+        <li>Crie a app e confira a estrutura de pastas gerada</li>
+        <li>Faça a view <code>index</code> retornar um HTML simples com <code>HttpResponse</code></li>
+        <li>Configure as URLs e acesse <code>localhost:8000</code> no Codespace</li>
+        <li>Crie o <code>base.html</code> e faça o <code>index.html</code> herdar dele</li>
+        <li>Commite as alterações: <code>git add . &amp;&amp; git commit -m "Aula 02: app galeria criada"</code></li>
+      </ol>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="aula_01_django_intro.html" class="nav-btn prev">← Aula 01</a>
+      <a href="aula_03_arquivos_estaticos.html" class="nav-btn next">Aula 03 — Arquivos Estáticos →</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function copyCode(btn) {
+  const pre = btn.nextElementSibling;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'COPIADO!';
+    btn.style.color = 'var(--accent-green)';
+    btn.style.borderColor = 'var(--accent-green)';
+    setTimeout(() => { btn.textContent = 'COPIAR'; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
