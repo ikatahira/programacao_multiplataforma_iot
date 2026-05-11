@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aula 06 — Dados Dinâmicos e ORM</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0e14; --surface: #13151f; --surface2: #1a1d2e; --border: #252840;
+    --accent-green: #00e5a0; --accent-orange: #ff6b35; --accent-blue: #4f8ef7;
+    --accent-purple: #b06bff; --accent-yellow: #f5c842; --text: #e8eaf0; --muted: #6b7290; --code-bg: #0a0c12;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; }
+  header { background: var(--surface); border-bottom: 2px solid var(--border); padding: 3rem 2rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -20%, rgba(0,229,160,0.15) 0%, transparent 70%); pointer-events: none; }
+  header h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -1px; background: linear-gradient(120deg, var(--accent-green), var(--accent-yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; position: relative; }
+  header p { color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.85rem; margin-top: 0.6rem; letter-spacing: 2px; text-transform: uppercase; }
+  nav { display: flex; gap: 0; overflow-x: auto; border-bottom: 2px solid var(--border); background: var(--surface); padding: 0 1rem; }
+  nav button { background: none; border: none; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.78rem; padding: 1rem 1.4rem; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; letter-spacing: 1px; text-transform: uppercase; }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent-green); border-bottom-color: var(--accent-green); }
+  main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  .section { display: none; animation: fadeIn 0.35s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .section-title { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .section-title .icon { font-size: 2.2rem; width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .icon-green { background: rgba(0,229,160,0.12); border: 1px solid rgba(0,229,160,0.3); }
+  .icon-orange { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.3); }
+  .icon-purple { background: rgba(176,107,255,0.12); border: 1px solid rgba(176,107,255,0.3); }
+  .icon-blue { background: rgba(79,142,247,0.12); border: 1px solid rgba(79,142,247,0.3); }
+  .icon-yellow { background: rgba(245,200,66,0.12); border: 1px solid rgba(245,200,66,0.3); }
+  .section-title h2 { font-size: 1.8rem; font-weight: 800; }
+  .section-title p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem; margin-bottom: 1.4rem; position: relative; }
+  .card-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem; opacity: 0.7; }
+  .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.7rem; }
+  .card p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+  .code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem 1.4rem; margin: 0.8rem 0; position: relative; overflow-x: auto; }
+  .code-block pre { font-family: 'Space Mono', monospace; font-size: 0.85rem; line-height: 1.8; white-space: pre; color: var(--text); }
+  .code-block .comment { color: var(--muted); }
+  .code-block .cmd { color: var(--accent-green); }
+  .code-block .str { color: var(--accent-yellow); }
+  .code-block .kw { color: var(--accent-blue); }
+  .code-block .num { color: var(--accent-orange); }
+  .code-block .fn { color: var(--accent-green); }
+  .copy-btn { position: absolute; top: 0.7rem; right: 0.7rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.68rem; padding: 0.3rem 0.7rem; border-radius: 6px; cursor: pointer; letter-spacing: 1px; transition: all 0.2s; }
+  .copy-btn:hover { color: var(--accent-green); border-color: var(--accent-green); }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-bottom: 1.4rem; }
+  .steps { list-style: none; counter-reset: steps; }
+  .steps li { counter-increment: steps; display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.1rem; }
+  .steps li::before { content: counter(steps); font-family: 'Space Mono', monospace; font-size: 0.75rem; font-weight: 700; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .steps.green li::before { background: rgba(0,229,160,0.15); color: var(--accent-green); border: 1px solid rgba(0,229,160,0.3); }
+  .steps li > div p { color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; line-height: 1.6; }
+  .steps li > div strong { font-size: 0.95rem; }
+  .tip-box { background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.25); border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; display: flex; gap: 0.8rem; align-items: flex-start; }
+  .tip-box .tip-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .tip-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+  .tip-box strong { color: var(--accent-blue); }
+  .warn-box { background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.25); border-radius: 10px; padding: 1rem 1.2rem; margin: 1rem 0; display: flex; gap: 0.8rem; align-items: flex-start; }
+  .warn-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+  .warn-box strong { color: var(--accent-orange); }
+  .summary-box { background: linear-gradient(135deg, rgba(0,229,160,0.05), rgba(245,200,66,0.05)); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem; margin-top: 2rem; }
+  .summary-box h3 { font-size: 1rem; margin-bottom: 1rem; color: var(--accent-green); font-family: 'Space Mono', monospace; letter-spacing: 1px; text-transform: uppercase; }
+  .summary-box ul { list-style: none; }
+  .summary-box ul li { color: var(--muted); font-size: 0.92rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.6rem; }
+  .summary-box ul li::before { content: '✓'; color: var(--accent-green); font-weight: 700; flex-shrink: 0; }
+  .nav-bottom { display: flex; justify-content: space-between; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .nav-btn { font-family: 'Space Mono', monospace; font-size: 0.8rem; padding: 0.7rem 1.4rem; border-radius: 8px; text-decoration: none; letter-spacing: 1px; transition: all 0.2s; border: 1px solid var(--border); color: var(--muted); }
+  .nav-btn.next { background: rgba(0,229,160,0.1); color: var(--accent-green); border-color: rgba(0,229,160,0.3); }
+  .nav-btn:hover { opacity: 0.8; }
+  code { font-family: 'Space Mono', monospace; background: var(--surface2); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--accent-yellow); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th { font-family: 'Space Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); padding: 0.7rem 1rem; border-bottom: 2px solid var(--border); text-align: left; }
+  td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+  td:first-child { color: var(--accent-yellow); font-family: 'Space Mono', monospace; font-size: 0.82rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📊 Dados Dinâmicos e ORM</h1>
+  <p>Aula 06 · Django · Space Gallery</p>
+</header>
+
+<nav>
+  <button class="active" data-tab="contexto" onclick="showTab('contexto',this)">📦 Contexto</button>
+  <button data-tab="queries" onclick="showTab('queries',this)">🔍 Queries ORM</button>
+  <button data-tab="filtros" onclick="showTab('filtros',this)">🎯 Filtros</button>
+  <button data-tab="detalhe" onclick="showTab('detalhe',this)">🖼️ Página Detalhe</button>
+  <button data-tab="resumo" onclick="showTab('resumo',this)">✅ Resumo</button>
+</nav>
+
+<main>
+
+  <!-- CONTEXTO -->
+  <div class="section active" id="contexto">
+    <div class="section-title">
+      <div class="icon icon-green">📦</div>
+      <div><h2>Contexto — Enviando Dados para o Template</h2><p>A ponte entre a view e o HTML</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">❓ O que é contexto</div>
+      <h3>Como a view fala com o template</h3>
+      <p>O contexto é um dicionário Python que você passa como terceiro argumento do <code>render()</code>. As chaves do dicionário viram variáveis disponíveis no template com a sintaxe <code>{{ chave }}</code>.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">⚙️ Exemplo completo</div>
+      <h3>View → Contexto → Template</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># galeria/views.py</span>
+<span class="kw">from</span> django.shortcuts <span class="kw">import</span> render
+<span class="kw">from</span> galeria.models <span class="kw">import</span> Fotografia
+
+<span class="kw">def</span> <span class="fn">index</span>(request):
+    <span class="comment"># 1. Buscar dados do banco</span>
+    fotografias = Fotografia.objects.<span class="fn">filter</span>(publicada=<span class="kw">True</span>)
+
+    <span class="comment"># 2. Montar o contexto</span>
+    contexto = {
+        <span class="str">'fotografias'</span>: fotografias,
+        <span class="str">'titulo'</span>: <span class="str">'Space Gallery'</span>,
+    }
+
+    <span class="comment"># 3. Renderizar passando o contexto</span>
+    <span class="kw">return</span> <span class="fn">render</span>(request, <span class="str">'galeria/index.html'</span>, contexto)</pre>
+      </div>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment">&lt;!-- templates/galeria/index.html --&gt;</span>
+{% extends 'galeria/base.html' %}
+
+{% block conteudo %}
+  &lt;h1&gt;{{ titulo }}&lt;/h1&gt;
+
+  {% for fotografia in fotografias %}
+    &lt;div class="card"&gt;
+      &lt;h2&gt;{{ fotografia.nome }}&lt;/h2&gt;
+      &lt;p&gt;{{ fotografia.descricao }}&lt;/p&gt;
+    &lt;/div&gt;
+  {% empty %}
+    &lt;p&gt;Nenhuma foto publicada.&lt;/p&gt;
+  {% endfor %}
+{% endblock %}</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🔡 Sintaxe de variáveis</div>
+      <h3>Acessando atributos no template</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment">{# Variável simples #}</span>
+{{ titulo }}
+
+<span class="comment">{# Atributo de um objeto #}</span>
+{{ fotografia.nome }}
+{{ fotografia.data_fotografia }}
+
+<span class="comment">{# Filtros de template #}</span>
+{{ fotografia.nome|upper }}           <span class="comment">{# MAIÚSCULAS #}</span>
+{{ fotografia.descricao|truncatechars:100 }}  <span class="comment">{# Limita caracteres #}</span>
+{{ fotografia.data_fotografia|date:"d/m/Y" }} <span class="comment">{# Formata data #}</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUERIES -->
+  <div class="section" id="queries">
+    <div class="section-title">
+      <div class="icon icon-blue">🔍</div>
+      <div><h2>Queries ORM</h2><p>Consultando o banco sem escrever SQL</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📋 Principais métodos</div>
+      <h3>O Manager objects</h3>
+      <p>Todo model Django tem um gerenciador chamado <code>objects</code> que permite consultar o banco de dados com Python puro, sem SQL:</p>
+      <table style="margin-top:1rem">
+        <tr><th>Método</th><th>O que faz</th></tr>
+        <tr><td>Fotografia.objects.all()</td><td>Retorna todas as fotos</td></tr>
+        <tr><td>Fotografia.objects.filter(...)</td><td>Retorna fotos que atendem a condição</td></tr>
+        <tr><td>Fotografia.objects.exclude(...)</td><td>Exclui fotos que atendem a condição</td></tr>
+        <tr><td>Fotografia.objects.get(pk=1)</td><td>Retorna um único objeto pelo ID</td></tr>
+        <tr><td>Fotografia.objects.order_by(...)</td><td>Ordena o resultado</td></tr>
+        <tr><td>Fotografia.objects.count()</td><td>Conta quantos registros existem</td></tr>
+        <tr><td>Fotografia.objects.first()</td><td>Retorna o primeiro registro</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-label">💻 Exemplos práticos</div>
+      <h3>Queries mais usadas na galeria</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="kw">from</span> galeria.models <span class="kw">import</span> Fotografia
+
+<span class="comment"># Todas as fotos</span>
+Fotografia.objects.<span class="fn">all</span>()
+
+<span class="comment"># Só as publicadas</span>
+Fotografia.objects.<span class="fn">filter</span>(publicada=<span class="kw">True</span>)
+
+<span class="comment"># Ordenadas por data (mais recente primeiro)</span>
+Fotografia.objects.<span class="fn">order_by</span>(<span class="str">'-data_fotografia'</span>)
+
+<span class="comment"># Publicadas e ordenadas — chaining</span>
+Fotografia.objects.<span class="fn">filter</span>(publicada=<span class="kw">True</span>).<span class="fn">order_by</span>(<span class="str">'-data_fotografia'</span>)
+
+<span class="comment"># Total de fotos publicadas</span>
+Fotografia.objects.<span class="fn">filter</span>(publicada=<span class="kw">True</span>).<span class="fn">count</span>()</pre>
+      </div>
+      <div class="tip-box" style="margin-top:0.5rem">
+        <span class="tip-icon">💡</span>
+        <p>O <code>-</code> antes do campo em <code>order_by</code> significa <strong>decrescente</strong>. Sem o <code>-</code>, a ordem é crescente.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🐚 Django Shell</div>
+      <h3>Testando queries no terminal</h3>
+      <p>Antes de usar na view, teste as queries no shell interativo do Django:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># Abrir o shell</span>
+<span class="cmd">python manage.py shell</span>
+
+<span class="comment"># Dentro do shell:</span>
+<span class="kw">&gt;&gt;&gt;</span> <span class="kw">from</span> galeria.models <span class="kw">import</span> Fotografia
+<span class="kw">&gt;&gt;&gt;</span> Fotografia.objects.<span class="fn">all</span>()
+<span class="kw">&gt;&gt;&gt;</span> Fotografia.objects.<span class="fn">filter</span>(publicada=<span class="kw">True</span>)
+<span class="kw">&gt;&gt;&gt;</span> <span class="fn">exit</span>()</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="section" id="filtros">
+    <div class="section-title">
+      <div class="icon icon-yellow">🎯</div>
+      <div><h2>Filtros Avançados</h2><p>Field lookups — buscas precisas com ORM</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🔍 Field lookups</div>
+      <h3>Filtros com duplo underscore __</h3>
+      <p>O ORM do Django usa <code>campo__lookup</code> para filtros mais sofisticados do que igualdade simples:</p>
+      <table style="margin-top:1rem">
+        <tr><th>Lookup</th><th>Equivale a</th></tr>
+        <tr><td>nome__icontains='lua'</td><td>WHERE nome ILIKE '%lua%'</td></tr>
+        <tr><td>nome__contains='Lua'</td><td>WHERE nome LIKE '%Lua%' (case sensitive)</td></tr>
+        <tr><td>nome__startswith='N'</td><td>WHERE nome LIKE 'N%'</td></tr>
+        <tr><td>data_fotografia__year=2024</td><td>WHERE YEAR(data) = 2024</td></tr>
+        <tr><td>id__in=[1,2,3]</td><td>WHERE id IN (1,2,3)</td></tr>
+        <tr><td>id__gte=5</td><td>WHERE id >= 5</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-label">💻 Busca por nome</div>
+      <h3>icontains — busca parcial sem case sensitivity</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># galeria/views.py — view de busca</span>
+<span class="kw">def</span> <span class="fn">buscar</span>(request):
+    termo = request.GET.get(<span class="str">'buscar'</span>, <span class="str">''</span>)
+
+    <span class="kw">if</span> termo:
+        fotografias = Fotografia.objects.<span class="fn">filter</span>(
+            nome__icontains=termo,
+            publicada=<span class="kw">True</span>
+        )
+    <span class="kw">else</span>:
+        fotografias = Fotografia.objects.<span class="fn">filter</span>(publicada=<span class="kw">True</span>)
+
+    <span class="kw">return</span> <span class="fn">render</span>(request, <span class="str">'galeria/index.html'</span>, {
+        <span class="str">'fotografias'</span>: fotografias,
+        <span class="str">'termo'</span>: termo,
+    })</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🐍 get_object_or_404</div>
+      <h3>Buscando um único objeto com segurança</h3>
+      <p>Ao buscar por ID para a página de detalhe, use <code>get_object_or_404</code> — ele retorna 404 automaticamente se o objeto não existir, em vez de lançar uma exceção feia:</p>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="kw">from</span> django.shortcuts <span class="kw">import</span> get_object_or_404
+
+<span class="kw">def</span> <span class="fn">imagem</span>(request, foto_id):
+    fotografia = <span class="fn">get_object_or_404</span>(Fotografia, pk=foto_id)
+    <span class="kw">return</span> <span class="fn">render</span>(request, <span class="str">'galeria/imagem.html'</span>, {
+        <span class="str">'fotografia'</span>: fotografia
+    })</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETALHE -->
+  <div class="section" id="detalhe">
+    <div class="section-title">
+      <div class="icon icon-orange">🖼️</div>
+      <div><h2>Página de Detalhe</h2><p>Exibindo uma foto individual com URL dinâmica</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🗺️ URL com parâmetro</div>
+      <h3>Rota dinâmica com &lt;int:foto_id&gt;</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment"># galeria/urls.py</span>
+urlpatterns = [
+    path(<span class="str">''</span>, views.index, name=<span class="str">'index'</span>),
+    path(<span class="str">'imagem/&lt;int:foto_id&gt;/'</span>, views.imagem, name=<span class="str">'imagem'</span>),
+]</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">📄 Template de detalhe</div>
+      <h3>imagem.html — exibindo os dados da foto</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre>{% extends 'galeria/base.html' %}
+{% load static %}
+
+{% block conteudo %}
+&lt;section class="foto-detalhe"&gt;
+  &lt;h1&gt;{{ fotografia.nome }}&lt;/h1&gt;
+
+  &lt;img src="{{ fotografia.foto.url }}" alt="{{ fotografia.nome }}"&gt;
+
+  &lt;p&gt;{{ fotografia.descricao }}&lt;/p&gt;
+  &lt;p&gt;Categoria: {{ fotografia.categoria }}&lt;/p&gt;
+  &lt;p&gt;Data: {{ fotografia.data_fotografia|date:"d/m/Y" }}&lt;/p&gt;
+
+  &lt;a href="{% url 'index' %}"&gt;← Voltar para galeria&lt;/a&gt;
+&lt;/section&gt;
+{% endblock %}</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">🔗 Link no card da galeria</div>
+      <h3>Apontando para a página de detalhe</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        <pre><span class="comment">&lt;!-- No loop de fotos em index.html --&gt;</span>
+{% for fotografia in fotografias %}
+  &lt;div class="card"&gt;
+    &lt;a href="{% url 'imagem' fotografia.id %}"&gt;
+      &lt;img src="{{ fotografia.foto.url }}" alt="{{ fotografia.nome }}"&gt;
+      &lt;h2&gt;{{ fotografia.nome }}&lt;/h2&gt;
+    &lt;/a&gt;
+  &lt;/div&gt;
+{% endfor %}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMO -->
+  <div class="section" id="resumo">
+    <div class="section-title">
+      <div class="icon icon-green">✅</div>
+      <div><h2>Resumo da Aula 06</h2><p>O que aprendemos hoje</p></div>
+    </div>
+
+    <div class="summary-box">
+      <h3>📚 Nesta aula</h3>
+      <ul>
+        <li>Passamos dados do banco para o template via <strong>contexto</strong> no <code>render()</code></li>
+        <li>Usamos <code>objects.all()</code>, <code>filter()</code>, <code>order_by()</code></li>
+        <li>Testamos queries no <code>python manage.py shell</code></li>
+        <li>Aplicamos field lookups como <code>nome__icontains</code></li>
+        <li>Usamos <code>get_object_or_404</code> para páginas de detalhe seguras</li>
+        <li>Criamos URL dinâmica com <code>&lt;int:foto_id&gt;</code></li>
+        <li>Aplicamos filtros de template: <code>|date</code>, <code>|truncatechars</code>, <code>|upper</code></li>
+      </ul>
+    </div>
+
+    <div class="summary-box" style="margin-top:1rem; background: linear-gradient(135deg, rgba(255,107,53,0.05), rgba(176,107,255,0.05));">
+      <h3 style="color:var(--accent-orange)">🔜 Próxima aula</h3>
+      <ul>
+        <li>Personalizar o <strong>Django Admin</strong> com list_display, search_fields, filtros</li>
+        <li>Criar superusuário com <code>createsuperuser</code></li>
+        <li>Gerenciar permissões de usuários e grupos</li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="aula_05_template_tags.html" class="nav-btn">← Aula 05</a>
+      <a href="aula_07_admin_avancado.html" class="nav-btn next">Aula 07 — Admin Avançado →</a>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function copyCode(btn) {
+  const pre = btn.nextElementSibling;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'COPIADO!';
+    btn.style.color = 'var(--accent-green)';
+    btn.style.borderColor = 'var(--accent-green)';
+    setTimeout(() => { btn.textContent = 'COPIAR'; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+  });
+}
+</script>
+</body>
+</html>
