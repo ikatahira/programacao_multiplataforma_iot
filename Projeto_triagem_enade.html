@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ficha de Triagem · ENADE — Listas Encadeadas com Prioridade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1F3EE;
+    --card:#FFFFFF;
+    --ink:#1E2A22;
+    --ink-soft:#4A574C;
+    --line:#CFD8CC;
+    --verde:#2F9E44;
+    --verde-deep:#1E6B30;
+    --amarelo:#F0A202;
+    --amarelo-deep:#8A5C00;
+    --teal:#0B7285;
+    --teal-soft:#E4F1F3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;
+    line-height:1.65;
+    padding:28px 16px 80px;
+  }
+  .sheet{max-width:920px;margin:0 auto;}
+
+  /* ---------- HEADER: ficha de admissão ---------- */
+  header.ficha{
+    background:var(--ink);
+    color:#EDF2ED;
+    border-radius:18px;
+    padding:38px 40px 32px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.ficha::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 46px);
+    pointer-events:none;
+  }
+  .protocolo{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.85em;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:#9FC7A6;
+    display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+  }
+  .protocolo .num{
+    font-size:1.6em;
+    color:#EDF2ED;
+    letter-spacing:.04em;
+  }
+  header.ficha h1{
+    font-family:'IBM Plex Serif',serif;
+    font-weight:700;
+    font-size:2.15em;
+    margin:14px 0 8px;
+    max-width:640px;
+  }
+  header.ficha .sub{
+    color:#B9C9BB;
+    font-size:1.02em;
+    max-width:600px;
+  }
+  .chip-row{display:flex; gap:10px; margin-top:22px; flex-wrap:wrap;}
+  .chip{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.82em;
+    padding:6px 14px 6px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);
+  }
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+  .dot.v{background:var(--verde);}
+  .dot.a{background:var(--amarelo);}
+
+  /* ---------- SECTIONS ---------- */
+  section{margin-top:46px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.78em;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    margin-bottom:6px;
+  }
+  h2{
+    font-family:'IBM Plex Serif',serif;
+    font-size:1.6em;
+    font-weight:600;
+    margin-bottom:16px;
+    border-bottom:2px solid var(--line);
+    padding-bottom:10px;
+  }
+  h3{
+    font-family:'IBM Plex Serif',serif;
+    font-size:1.15em;
+    margin:22px 0 10px;
+    color:var(--verde-deep);
+  }
+  p{margin:12px 0; text-align:justify;}
+  strong{color:var(--verde-deep);}
+  .panel{
+    background:var(--card);
+    border-radius:14px;
+    padding:26px 28px;
+    box-shadow:0 3px 14px rgba(30,42,34,0.06);
+    border:1px solid var(--line);
+  }
+
+  /* ---------- cartão (ticket) ---------- */
+  .fila{
+    display:flex; align-items:center; gap:0; flex-wrap:wrap;
+    padding:22px 6px; margin-top:16px;
+  }
+  .cartao{
+    position:relative;
+    width:78px; height:78px;
+    border-radius:10px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    box-shadow:0 4px 10px rgba(0,0,0,0.12);
+    flex-shrink:0;
+  }
+  .cartao::before{
+    content:"";
+    position:absolute; left:-7px; top:50%; transform:translateY(-50%);
+    width:14px; height:14px; border-radius:50%;
+    background:var(--paper);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.08);
+  }
+  .cartao:first-child::before{display:none;}
+  .cartao .num{font-size:1.15em;}
+  .cartao .cor{font-size:0.68em; letter-spacing:.08em; opacity:.85; margin-top:2px;}
+  .cartao.verde{background:var(--verde); color:#08340F;}
+  .cartao.amarelo{background:var(--amarelo); color:#402B00;}
+  .seta{
+    width:26px; height:2px; background:var(--line); flex-shrink:0;
+    position:relative;
+  }
+  .seta::after{
+    content:"";
+    position:absolute; right:0; top:50%; transform:translate(0,-50%);
+    border:5px solid transparent; border-left-color:var(--line);
+  }
+
+  /* ---------- code blocks ---------- */
+  pre{
+    background:#182019;
+    color:#CFE8D3;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.86em;
+    padding:20px 22px;
+    border-radius:10px;
+    overflow-x:auto;
+    margin:16px 0;
+    line-height:1.65;
+  }
+  pre .kw{color:#7FD99B;}
+  pre .cm{color:#7A8C7E; font-style:italic;}
+  code.inline{
+    font-family:'IBM Plex Mono',monospace;
+    background:var(--teal-soft);
+    color:var(--teal);
+    padding:2px 6px;
+    border-radius:4px;
+    font-size:0.9em;
+  }
+
+  /* ---------- annotated code ---------- */
+  .anota{
+    display:grid; grid-template-columns: 1fr;
+    gap:14px; margin:18px 0;
+  }
+  .anota .item{
+    display:grid; grid-template-columns: 118px 1fr;
+    gap:14px; align-items:start;
+    padding:10px 0; border-top:1px dashed var(--line);
+  }
+  .anota .item:first-child{border-top:none;}
+  .anota .fn{
+    font-family:'IBM Plex Mono',monospace; font-weight:600; color:var(--verde-deep);
+    font-size:0.88em;
+  }
+  .anota .desc{font-size:0.95em; color:var(--ink-soft);}
+
+  /* ---------- simulator ---------- */
+  .sim-controls{display:flex; gap:10px; margin:18px 0; flex-wrap:wrap; align-items:center;}
+  button.btn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.85em;
+    padding:10px 18px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    background:var(--verde);
+    color:#08340F;
+    font-weight:600;
+    transition:transform .15s ease;
+  }
+  button.btn:hover{transform:translateY(-2px);}
+  button.btn.secondary{background:transparent; color:var(--ink-soft); border:1px solid var(--line);}
+  button.btn:disabled{opacity:.4; cursor:not-allowed; transform:none;}
+  .sim-step-label{
+    font-family:'IBM Plex Mono',monospace; font-size:0.85em; color:var(--ink-soft);
+  }
+  .sim-desc{
+    background:var(--teal-soft);
+    border-left:4px solid var(--teal);
+    padding:14px 18px;
+    border-radius:8px;
+    margin-top:14px;
+    font-size:0.95em;
+    color:#0B4B58;
+    min-height:26px;
+  }
+  .sim-desc code.inline{background:rgba(255,255,255,0.6);}
+
+  /* ---------- wiring table ---------- */
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.92em;}
+  th,td{padding:10px 12px; text-align:left; border-bottom:1px solid var(--line);}
+  th{font-family:'IBM Plex Mono',monospace; font-size:0.8em; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft);}
+  td.led-v{color:var(--verde-deep); font-weight:600;}
+  td.led-a{color:var(--amarelo-deep); font-weight:600;}
+
+  /* ---------- gabarito ---------- */
+  .gabarito{
+    background:linear-gradient(135deg,#EAF6EC 0%, #F1F3EE 100%);
+    border:1px solid var(--verde);
+    border-radius:14px;
+    padding:28px 30px;
+  }
+  .gabarito h3{margin-top:0;}
+  .checklist{list-style:none; margin:14px 0;}
+  .checklist li{
+    padding:9px 0 9px 30px; position:relative; font-size:0.96em;
+  }
+  .checklist li::before{
+    content:"✓";
+    position:absolute; left:0; top:9px;
+    color:var(--verde-deep); font-weight:700;
+  }
+  .alerta{
+    background:#FFF6E5;
+    border-left:4px solid var(--amarelo-deep);
+    padding:14px 18px;
+    border-radius:8px;
+    margin:16px 0;
+    font-size:0.94em;
+  }
+
+  footer{
+    margin-top:60px; text-align:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.78em; color:var(--ink-soft);
+    letter-spacing:.06em;
+  }
+
+  @media (max-width:640px){
+    header.ficha{padding:28px 22px;}
+    header.ficha h1{font-size:1.6em;}
+    .panel{padding:20px;}
+    .anota .item{grid-template-columns:1fr;}
+    .cartao{width:64px; height:64px;}
+    .cartao .num{font-size:1em;}
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="ficha">
+    <div class="protocolo">
+      <span>Ficha nº</span><span class="num">ENADE·05</span>
+      <span>· Ciência da Computação</span>
+    </div>
+    <h1>Fila de Triagem: Listas Encadeadas com Prioridade</h1>
+    <p class="sub">Questão discursiva sobre estrutura de dados aplicada a um sistema hospitalar de classificação de risco — do enunciado ao circuito físico.</p>
+    <div class="chip-row">
+      <span class="chip"><span class="dot v"></span> Cartão verde = menor urgência</span>
+      <span class="chip"><span class="dot a"></span> Cartão amarelo = maior urgência</span>
+      <span class="chip">Estrutura: lista simplesmente encadeada</span>
+    </div>
+  </header>
+
+  <!-- ================= O CASO ================= -->
+  <section>
+    <div class="eyebrow">01 · O caso</div>
+    <h2>O cenário da triagem</h2>
+    <div class="panel">
+      <p>Um hospital organiza o atendimento com uma fila de prioridade simples: cada paciente recebe, na triagem, um <strong>cartão verde</strong> (casos menos urgentes) ou um <strong>cartão amarelo</strong> (casos mais urgentes). A fila deve refletir essa prioridade — mas sem embaralhar a ordem de chegada dentro de cada grupo.</p>
+      <p>A regra de organização é: pacientes verdes entram sempre no <strong>final</strong> da fila, na ordem em que chegam. Pacientes amarelos furam a fila dos verdes, mas respeitam a ordem de chegada entre os próprios amarelos — ou seja, um amarelo novo entra depois dos amarelos que já estão na fila, e antes de todos os verdes.</p>
+      <p>Considerando a chegada, nessa ordem, dos pacientes <code class="inline">10-V</code>, <code class="inline">11-V</code>, <code class="inline">5-A</code>, <code class="inline">12-V</code> e <code class="inline">6-A</code>, a fila final deve ficar assim organizada:</p>
+      <div class="fila">
+        <div class="cartao amarelo"><span class="num">5</span><span class="cor">URGENTE</span></div>
+        <div class="seta"></div>
+        <div class="cartao amarelo"><span class="num">6</span><span class="cor">URGENTE</span></div>
+        <div class="seta"></div>
+        <div class="cartao verde"><span class="num">10</span><span class="cor">ROTINA</span></div>
+        <div class="seta"></div>
+        <div class="cartao verde"><span class="num">11</span><span class="cor">ROTINA</span></div>
+        <div class="seta"></div>
+        <div class="cartao verde"><span class="num">12</span><span class="cor">ROTINA</span></div>
+      </div>
+      <p style="margin-top:4px;">A tarefa da questão é implementar a função que faz essa inserção com prioridade — a peça que falta no código-fonte fornecido.</p>
+    </div>
+  </section>
+
+  <!-- ================= O CÓDIGO DADO ================= -->
+  <section>
+    <div class="eyebrow">02 · Leitura do código</div>
+    <h2>O que o código-fonte já traz pronto</h2>
+    <div class="panel">
+      <p>O software de triagem usa uma lista simplesmente encadeada, onde cada nó guarda o número do paciente e a cor do cartão:</p>
+<pre><span class="kw">struct</span> lista {
+    <span class="kw">int</span> numero;
+    <span class="kw">char</span> cor;
+    <span class="kw">struct</span> lista* prox;
+};
+<span class="kw">typedef</span> <span class="kw">struct</span> lista Lista;</pre>
+
+      <div class="anota">
+        <div class="item">
+          <div class="fn">inserir_fim</div>
+          <div class="desc">Percorre a lista até o último nó (aquele cujo <code class="inline">prox</code> é <code class="inline">NULL</code>) e encadeia o novo paciente ali. É assim que os cartões <strong>verdes</strong> entram — sempre no final, respeitando a ordem de chegada.</div>
+        </div>
+        <div class="item">
+          <div class="fn">inserir</div>
+          <div class="desc">Função de entrada: recebe número e cor, aloca o nó e decide o destino. Lista vazia → o novo nó vira a cabeça. Caso contrário, delega para <code class="inline">inserir_fim</code> (se for <code class="inline">'V'</code>) ou para <code class="inline">inserir_prioridade</code> (se for <code class="inline">'A'</code>) — esta última é a que falta implementar.</div>
+        </div>
+      </div>
+      <p>Ou seja: o comportamento dos cartões verdes já está garantido pelo código existente. O que falta é ensinar a lista a inserir um cartão amarelo <em>na frente dos verdes, mas atrás dos amarelos que já chegaram antes.</em></p>
+    </div>
+  </section>
+
+  <!-- ================= A SOLUÇÃO ================= -->
+  <section>
+    <div class="eyebrow">03 · A solução</div>
+    <h2>Implementando <code class="inline" style="font-size:1em;">inserir_prioridade</code></h2>
+    <div class="panel">
+      <p>A lógica tem só dois casos:</p>
+      <p><strong>Caso 1 — a cabeça da lista não é amarela</strong> (lista vazia, ou o primeiro nó já é verde). Nesse caso o novo cartão amarelo vira a nova cabeça, na frente de tudo.</p>
+      <p><strong>Caso 2 — a cabeça já é amarela.</strong> Aí é preciso andar pela lista <em>enquanto o próximo nó também for amarelo</em>, parando assim que encontrar o fim do bloco de amarelos (seja porque chegou a um verde, seja porque chegou ao fim da lista). O novo nó é encaixado logo ali.</p>
+
+<pre><span class="kw">Lista*</span> inserir_prioridade(Lista* l, Lista* no) {
+    Lista* aux;
+
+    <span class="kw">if</span> (l == NULL || l->cor == 'V') {
+        <span class="cm">// fila vazia ou começa com verde: o amarelo assume a cabeça</span>
+        no->prox = l;
+        l = no;
+    } <span class="kw">else</span> {
+        <span class="cm">// avança enquanto o nó seguinte também for amarelo</span>
+        aux = l;
+        <span class="kw">while</span> (aux->prox != NULL && aux->prox->cor == 'A')
+            aux = aux->prox;
+
+        no->prox = aux->prox;
+        aux->prox = no;
+    }
+
+    <span class="kw">return</span> l;
+}</pre>
+
+      <h3>Simulador — passo a passo com a sequência do enunciado</h3>
+      <p>Clique em <em>Próximo</em> para inserir cada paciente na ordem <code class="inline">10-V, 11-V, 5-A, 12-V, 6-A</code> e acompanhar como a lista se reorganiza a cada chamada.</p>
+
+      <div class="fila" id="filaSim"></div>
+
+      <div class="sim-controls">
+        <button class="btn" id="btnNext">▶ Próximo paciente</button>
+        <button class="btn secondary" id="btnReset">↺ Reiniciar</button>
+        <span class="sim-step-label" id="stepLabel">Passo 0 de 5</span>
+      </div>
+      <div class="sim-desc" id="simDesc">Clique em "Próximo paciente" para começar a simulação.</div>
+    </div>
+  </section>
+
+  <!-- ================= ARDUINO ================= -->
+  <section>
+    <div class="eyebrow">04 · Da tela para a bancada</div>
+    <h2>Implementação física com Arduino Uno e LEDs</h2>
+    <div class="panel">
+      <p>A mesma lógica roda literalmente no Arduino (a AVR libc tem <code class="inline">malloc</code>, então a struct e as funções não mudam nada). Cada posição da fila vira um par de LEDs — verde e amarelo — e só um deles acende, indicando a cor do cartão que está ali. Um botão avança a simulação, inserindo o próximo paciente da sequência.</p>
+
+      <h3>Mapa de pinos</h3>
+      <table>
+        <tr><th>Posição na fila</th><th>LED verde</th><th>LED amarelo</th></tr>
+        <tr><td>1</td><td class="led-v">D2</td><td class="led-a">D3</td></tr>
+        <tr><td>2</td><td class="led-v">D4</td><td class="led-a">D5</td></tr>
+        <tr><td>3</td><td class="led-v">D6</td><td class="led-a">D7</td></tr>
+        <tr><td>4</td><td class="led-v">D8</td><td class="led-a">D9</td></tr>
+        <tr><td>5</td><td class="led-v">D10</td><td class="led-a">D11</td></tr>
+        <tr><td colspan="3">Botão de avanço: <strong>D12</strong> → GND (<code class="inline">INPUT_PULLUP</code>)</td></tr>
+      </table>
+      <p>Cada LED liga em pino digital → resistor de 220Ω → LED → GND. A cada clique no botão, o Arduino insere o próximo paciente da sequência de teste, percorre a lista e reacende os LEDs na ordem correta — reproduzindo fisicamente o diagrama da questão. O número de cada paciente é impresso no Serial Monitor, já que os LEDs sozinhos não mostram números.</p>
+
+      <h3>Núcleo da lógica no firmware</h3>
+<pre><span class="kw">void</span> atualizarLEDs() {
+    <span class="cm">// apaga tudo, depois percorre a lista e acende</span>
+    <span class="cm">// o LED correspondente à cor de cada nó, posição a posição</span>
+    Lista* aux = fila;
+    <span class="kw">int</span> pos = <span class="kw">0</span>;
+    <span class="kw">while</span> (aux != NULL && pos < NUM_SLOTS) {
+        <span class="kw">if</span> (aux->cor == 'V')
+            digitalWrite(pinVerde[pos], HIGH);
+        <span class="kw">else</span>
+            digitalWrite(pinAmarelo[pos], HIGH);
+        aux = aux->prox;
+        pos++;
+    }
+}</pre>
+      <p>O sketch completo (com <code class="inline">inserir</code>, <code class="inline">inserir_fim</code>, <code class="inline">inserir_prioridade</code> e o tratamento do botão com debounce) é o mesmo <code class="inline">triagem_leds.ino</code> já preparado — é só copiar direto pro Arduino IDE.</p>
+    </div>
+  </section>
+
+  <!-- ================= GABARITO ================= -->
+  <section>
+    <div class="eyebrow">05 · Resposta documentada</div>
+    <h2>Gabarito comentado</h2>
+    <div class="gabarito">
+      <h3>Padrão de resposta oficial</h3>
+      <p>A banca resume a lógica esperada em dois fundamentos de inserção em lista simplesmente encadeada, avaliados de forma independente:</p>
+      <ul class="checklist">
+        <li><strong>Inserção no início:</strong> se ainda não há nenhum cartão amarelo na fila (ou seja, a cabeça atual já é verde), o novo nó é inserido como primeiro elemento.</li>
+        <li><strong>Inserção no meio ou no fim:</strong> se já existem cartões amarelos, o novo nó entra logo depois do último deles — seja porque em seguida vem um verde (inserção no meio), seja porque a lista termina ali (inserção no fim). A lógica de inserção é a mesma para os dois casos; o que muda é só até onde o percurso avança.</li>
+      </ul>
+      <p>A banca observa ainda que <strong>é aceita qualquer linguagem de programação ou pseudo-código</strong>, desde que compatível com essa lógica.</p>
+
+      <h3>Código do padrão oficial (INEP)</h3>
+<pre><span class="kw">Lista*</span> inserir_prioridade(Lista* l, Lista* no) {
+    <span class="kw">if</span> (l->cartao == 'V') {
+        no->prox = l;
+        l = no;
+    } <span class="kw">else</span> {
+        Lista* ant = l;
+        Lista* aux = ant->prox;
+        <span class="kw">while</span> (aux != NULL && aux->cartao == 'A') {
+            ant = aux;
+            aux = aux->prox;
+        }
+        ant->prox = no;
+        no->prox = aux;
+    }
+    <span class="kw">return</span> l;
+}</pre>
+
+      <p>Repare que a banca não testa <code class="inline">l == NULL</code>: olhando a função <code class="inline">inserir</code> do enunciado, <code class="inline">inserir_prioridade</code> só é chamada dentro do ramo <code class="inline">else</code>, ou seja, quando a lista já tem pelo menos um nó. Note também que o campo aparece como <code class="inline">cartao</code> no gabarito — no código-fonte original da questão esse mesmo campo se chama <code class="inline">cor</code>; é só uma troca de nome, o comportamento é idêntico.</p>
+
+      <h3>Comparando com a versão implementada aqui</h3>
+      <p>A versão que construímos usa <strong>um único ponteiro auxiliar com "olhar à frente"</strong> (<code class="inline">aux->prox->cor == 'A'</code>) em vez do par <code class="inline">ant</code>/<code class="inline">aux</code> do gabarito oficial. São duas formas igualmente corretas de resolver o mesmo problema:</p>
+      <table>
+        <tr><th>Abordagem</th><th>Como percorre</th><th>Como insere</th></tr>
+        <tr><td>Gabarito oficial (ant/aux)</td><td><code class="inline">aux</code> avança; <code class="inline">ant</code> guarda o nó anterior</td><td><code class="inline">ant->prox = no; no->prox = aux;</code></td></tr>
+        <tr><td>Versão desta página (1 ponteiro)</td><td><code class="inline">aux</code> avança olhando <code class="inline">aux->prox</code> antes de mover</td><td><code class="inline">no->prox = aux->prox; aux->prox = no;</code></td></tr>
+      </table>
+      <p>Ambas param exatamente no mesmo nó e produzem a mesma fila final — a diferença é só estilística (uma variável a menos, ao custo de olhar um passo à frente na condição do laço). Numa correção discursiva, as duas versões atendem integralmente aos dois fundamentos exigidos pelo padrão de resposta.</p>
+
+      <p>Complexidade: <strong>O(n)</strong> no pior caso em ambas as versões, pois a função pode precisar percorrer todos os cartões amarelos já inseridos antes de encontrar o ponto de inserção — mesma ordem de grandeza de <code class="inline">inserir_fim</code>.</p>
+
+      <div class="alerta">
+        <strong>Erros comuns que a banca costuma penalizar:</strong> testar apenas a lista vazia e esquecer o caso "cabeça já é verde" (faz o primeiro amarelo ser inserido no lugar errado); inverter a ordem de religação dos ponteiros (perde a referência ao restante da lista); ou, na versão com olhar à frente, usar <code class="inline">aux->cor == 'A'</code> em vez de <code class="inline">aux->prox->cor == 'A'</code> na condição do laço — o que faz o ponteiro avançar um nó a mais e insere na posição errada.
+      </div>
+    </div>
+  </section>
+
+  <footer>Documentação de estudo — ENADE · Estruturas de Dados</footer>
+</div>
+
+<script>
+(function(){
+  const sequencia = [
+    {numero:10, cor:'V'},
+    {numero:11, cor:'V'},
+    {numero:5,  cor:'A'},
+    {numero:12, cor:'V'},
+    {numero:6,  cor:'A'},
+  ];
+
+  let fila = [];
+  let passo = 0;
+
+  const filaEl = document.getElementById('filaSim');
+  const descEl = document.getElementById('simDesc');
+  const stepEl = document.getElementById('stepLabel');
+  const btnNext = document.getElementById('btnNext');
+  const btnReset = document.getElementById('btnReset');
+
+  function inserirFim(item){
+    fila.push(item);
+  }
+
+  function inserirPrioridade(item){
+    if (fila.length === 0 || fila[0].cor === 'V'){
+      fila.unshift(item);
+      return 'cabeça (lista vazia ou começa com verde)';
+    }
+    let i = 0;
+    while (i + 1 < fila.length && fila[i+1].cor === 'A') i++;
+    fila.splice(i+1, 0, item);
+    return 'após o bloco de amarelos, na posição ' + (i+2);
+  }
+
+  function render(){
+    filaEl.innerHTML = '';
+    fila.forEach((item, idx) => {
+      if (idx > 0){
+        const seta = document.createElement('div');
+        seta.className = 'seta';
+        filaEl.appendChild(seta);
+      }
+      const card = document.createElement('div');
+      card.className = 'cartao ' + (item.cor === 'V' ? 'verde' : 'amarelo');
+      card.innerHTML = '<span class="num">'+item.numero+'</span><span class="cor">'+(item.cor==='V'?'ROTINA':'URGENTE')+'</span>';
+      filaEl.appendChild(card);
+    });
+    stepEl.textContent = 'Passo ' + passo + ' de ' + sequencia.length;
+    btnNext.disabled = passo >= sequencia.length;
+  }
+
+  function passoSeguinte(){
+    if (passo >= sequencia.length) return;
+    const paciente = sequencia[passo];
+    let onde;
+    if (paciente.cor === 'V'){
+      inserirFim(paciente);
+      onde = 'chamou <code class="inline">inserir_fim</code> — vai direto para o final da fila.';
+    } else {
+      const local = inserirPrioridade(paciente);
+      onde = 'chamou <code class="inline">inserir_prioridade</code> — inserido na ' + local + '.';
+    }
+    passo++;
+    descEl.innerHTML = 'Paciente <strong>'+paciente.numero+'-'+paciente.cor+'</strong>: '+onde;
+    render();
+  }
+
+  function reiniciar(){
+    fila = [];
+    passo = 0;
+    descEl.textContent = 'Clique em "Próximo paciente" para começar a simulação.';
+    render();
+  }
+
+  btnNext.addEventListener('click', passoSeguinte);
+  btnReset.addEventListener('click', reiniciar);
+  render();
+})();
+</script>
+
+</body>
+</html>
