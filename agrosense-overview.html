@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgroSense — Programação Multiplataforma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d150f;
+    --panel:#121f16;
+    --panel-2:#182b1d;
+    --ink:#e4ede6;
+    --muted:#8fa290;
+    --line:#26402e;
+    --green:#7ed957;
+    --green-soft:#7ed95733;
+    --amber:#e8b23d;
+    --amber-soft:#e8b23d33;
+    --teal:#4c93a6;
+    --teal-soft:#4c93a633;
+    --rose:#c1603a;
+    --rose-soft:#c1603a33;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #17251b 0%, transparent 60%),
+      repeating-linear-gradient(90deg, #101a13 0px, #101a13 1px, transparent 1px, transparent 64px),
+      var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.6;
+    min-height:100vh;
+  }
+
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--amber); outline-offset:3px;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+
+  header{padding:56px 0 40px;border-bottom:1px solid var(--line);}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:.78rem; letter-spacing:.18em;
+    color:var(--green); text-transform:uppercase; display:flex; align-items:center; gap:10px; margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--green-soft);}
+  h1{font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:clamp(1.9rem, 4.2vw, 3.1rem); letter-spacing:-.01em; max-width:20ch;}
+  .tagline{margin-top:14px;color:var(--muted);font-size:1.05rem;max-width:60ch;}
+  .tagline strong{color:var(--ink);font-weight:600;}
+
+  .stat-strip{margin-top:36px;display:grid;grid-template-columns:repeat(auto-fit, minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);}
+  .stat{background:var(--panel);padding:16px 18px;display:flex;flex-direction:column;gap:6px;}
+  .stat .label{font-family:'IBM Plex Mono', monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+  .stat .value{font-family:'IBM Plex Mono', monospace;font-size:1.05rem;font-weight:600;color:var(--ink);display:flex;align-items:baseline;gap:6px;}
+  .stat .value::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--amber);display:inline-block;margin-right:2px;}
+
+  .season{padding:52px 0 12px;}
+  .season-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;margin-bottom:22px;}
+  .season-head h2{font-family:'IBM Plex Mono', monospace;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;}
+  .season-head span{font-size:.85rem;color:var(--muted);}
+
+  .track{position:relative;display:grid;grid-template-columns:repeat(8, 1fr);gap:4px;height:64px;margin-bottom:10px;}
+  .tick{position:relative;border-radius:3px;cursor:default;transition:transform .15s ease, filter .15s ease;}
+  .tick:hover, .tick:focus-visible{transform:scaleY(1.12);filter:brightness(1.25);}
+  .tick.m1{background:linear-gradient(180deg, var(--green), #4c7440);}
+  .tick.m2{background:linear-gradient(180deg, var(--amber), #b87a26);}
+  .tick.m3{background:linear-gradient(180deg, var(--teal), #35707f);}
+  .tick.m4{background:linear-gradient(180deg, var(--rose), #954a2b);}
+
+  .track-labels{display:grid;grid-template-columns:repeat(4, 1fr);gap:4px;margin-bottom:8px;}
+  .track-labels div{font-family:'IBM Plex Mono', monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:6px 2px 0;}
+  .track-labels .m1{color:var(--green);}
+  .track-labels .m2{color:var(--amber);}
+  .track-labels .m3{color:var(--teal);}
+  .track-labels .m4{color:var(--rose);}
+  .season-caption{color:var(--muted);font-size:.85rem;margin-top:6px;}
+
+  .panels{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:24px;padding:48px 0;border-bottom:1px solid var(--line);}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:26px 28px;}
+  .panel h3{font-family:'IBM Plex Mono', monospace;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:14px;}
+  .panel p{color:var(--ink);opacity:.92;font-size:.96rem;}
+  .panel p + p{margin-top:10px;}
+  .panel ul{margin-top:4px;padding-left:18px;font-size:.92rem;color:var(--ink);opacity:.92;}
+  .panel ul li{margin-bottom:6px;}
+
+  .toolkit-list{list-style:none;display:flex;flex-direction:column;gap:14px;}
+  .toolkit-list li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--panel-2);border-radius:8px;border-left:3px solid var(--amber);}
+  .toolkit-list li:nth-child(2){border-left-color:var(--teal);}
+  .toolkit-list li:nth-child(3){border-left-color:var(--rose);}
+  .toolkit-list li:nth-child(4){border-left-color:var(--green);}
+  .toolkit-list .glyph{font-family:'IBM Plex Mono', monospace;font-size:.95rem;color:var(--amber);line-height:1.4;}
+  .toolkit-list li:nth-child(2) .glyph{color:var(--teal);}
+  .toolkit-list li:nth-child(3) .glyph{color:var(--rose);}
+  .toolkit-list li:nth-child(4) .glyph{color:var(--green);}
+  .toolkit-list .txt strong{display:block;font-size:.92rem;margin-bottom:2px;}
+  .toolkit-list .txt span{font-size:.85rem;color:var(--muted);}
+
+  .modules{padding:48px 0 72px;}
+  .modules > h2{font-family:'IBM Plex Mono', monospace;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:28px;}
+  .modules-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:22px;}
+
+  .module-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px 24px 22px;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+  .module-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;}
+  .module-card.c1::before{background:var(--green);}
+  .module-card.c2::before{background:var(--amber);}
+  .module-card.c3::before{background:var(--teal);}
+  .module-card.c4::before{background:var(--rose);}
+
+  .module-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:6px;}
+  .module-num{font-family:'IBM Plex Mono', monospace;font-size:.72rem;letter-spacing:.1em;color:var(--muted);}
+  .module-head h4{font-size:1.12rem;font-weight:600;margin-top:2px;}
+  .module-card.c1 .module-num{color:var(--green);}
+  .module-card.c2 .module-num{color:var(--amber);}
+  .module-card.c3 .module-num{color:var(--teal);}
+  .module-card.c4 .module-num{color:var(--rose);}
+
+  .applied-note{font-size:.86rem;color:var(--muted);background:var(--panel-2);border-radius:7px;padding:10px 12px;margin:14px 0 16px;line-height:1.5;}
+  .applied-note b{color:var(--ink);font-weight:600;}
+
+  .weeks-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:auto;}
+  .weeks-list a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:6px;text-decoration:none;color:var(--ink);font-size:.88rem;transition:background .15s ease, padding-left .15s ease;border-left:2px solid transparent;}
+  .weeks-list a:hover, .weeks-list a:focus-visible{background:var(--panel-2);padding-left:14px;}
+  .module-card.c1 .weeks-list a:hover{border-left-color:var(--green);}
+  .module-card.c2 .weeks-list a:hover{border-left-color:var(--amber);}
+  .module-card.c3 .weeks-list a:hover{border-left-color:var(--teal);}
+  .module-card.c4 .weeks-list a:hover{border-left-color:var(--rose);}
+  .week-num{font-family:'IBM Plex Mono', monospace;font-size:.76rem;color:var(--muted);min-width:34px;}
+
+  .biblio{padding:8px 0 56px;}
+  .biblio > h2{font-family:'IBM Plex Mono', monospace;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:22px;color:var(--teal);}
+  .biblio .panel h3{font-family:'IBM Plex Mono', monospace;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;}
+  .ref-list{list-style:none;display:flex;flex-direction:column;gap:12px;}
+  .ref-list li{font-size:.9rem;color:var(--ink);opacity:.92;padding-left:16px;position:relative;line-height:1.55;}
+  .ref-list li::before{content:"—";position:absolute;left:0;color:var(--muted);}
+  .ref-list a:hover{color:var(--amber) !important;}
+  .axis-tag{display:inline-block;font-family:'IBM Plex Mono', monospace;font-size:.66rem;letter-spacing:.04em;padding:2px 8px;border-radius:20px;margin-left:6px;white-space:nowrap;}
+  .axis-precisao{background:#7ed95733;color:var(--green);}
+  .axis-ia{background:#4c93a633;color:var(--teal);}
+  .biblio-note{margin-top:18px;font-size:.85rem;color:var(--muted);max-width:70ch;}
+
+  footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:.84rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  footer .mono{color:var(--muted);}
+
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto;} .tick, .weeks-list a{transition:none;}}
+  @media (max-width: 980px){.panels{grid-template-columns:1fr;}}
+  @media (max-width: 620px){.track{grid-template-columns:repeat(4, 1fr);grid-auto-rows:28px;} .track-labels{grid-template-columns:1fr;gap:2px;} .track-labels div{padding-top:0;}}
+</style>
+</head>
+<body>
+
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Programação Multiplataforma · Tecnologia em ADS · 1º Semestre/2026</div>
+      <h1>AgroSense — Monitoramento agrícola com sensores IoT em tempo real</h1>
+      <p class="tagline">Projeto de <strong>8 semanas</strong>: um sistema multiplataforma (Web, Desktop e Mobile) sobre uma lavoura simulada, aplicando sistemas distribuídos, mensageria, streaming de dados e integração com dispositivos IoT.</p>
+
+      <div class="stat-strip">
+        <div class="stat"><span class="label">Duração</span><span class="value">8 semanas</span></div>
+        <div class="stat"><span class="label">Camadas</span><span class="value">Sensor → Broker → API → 3 clientes</span></div>
+        <div class="stat"><span class="label">Metodologia</span><span class="value">TDD</span></div>
+        <div class="stat"><span class="label">Entregas</span><span class="value">Web · Desktop · Mobile</span></div>
+      </div>
+    </header>
+
+    <section class="season">
+      <div class="season-head">
+        <h2 class="mono">Cronograma — semana 1 a 8</h2>
+        <span class="mono">passe o cursor para ver o tema de cada semana</span>
+      </div>
+
+      <div class="track">
+        <div class="tick m1" title="Semana 1 · Planejamento e setup" tabindex="0"></div>
+        <div class="tick m1" title="Semana 2 · IoT e broker MQTT" tabindex="0"></div>
+        <div class="tick m2" title="Semana 3 · Backend com TDD" tabindex="0"></div>
+        <div class="tick m2" title="Semana 4 · API REST e tempo real" tabindex="0"></div>
+        <div class="tick m3" title="Semana 5 · Aplicação Web" tabindex="0"></div>
+        <div class="tick m3" title="Semana 6 · Aplicação Desktop" tabindex="0"></div>
+        <div class="tick m4" title="Semana 7 · Aplicação Mobile" tabindex="0"></div>
+        <div class="tick m4" title="Semana 8 · Integração e entrega" tabindex="0"></div>
+      </div>
+      <div class="track-labels">
+        <div class="m1">Módulo 01 · Fundação</div>
+        <div class="m2">Módulo 02 · Backend</div>
+        <div class="m3">Módulo 03 · Clientes</div>
+        <div class="m4">Módulo 04 · Mobile e entrega</div>
+      </div>
+      <p class="season-caption">Cada tick corresponde a uma semana do guia passo a passo — clique nos módulos abaixo pra abrir o material com o código de cada etapa.</p>
+    </section>
+
+    <section class="panels">
+      <div class="panel">
+        <h3>Objetivo do projeto</h3>
+        <p>Implementar um sistema que capture leituras de sensores de solo (umidade, temperatura, luminosidade) em vários talhões de uma fazenda simulada, processe essas leituras em tempo real e disponibilize o resultado — histórico e alertas — em três clientes diferentes: um painel web pro agrônomo, uma estação desktop pra sede da fazenda e um app mobile pro produtor rural no campo.</p>
+        <p>O mesmo backend e a mesma API atendem os três clientes, o que é justamente o ponto central da disciplina: um sistema, múltiplas plataformas de acesso.</p>
+      </div>
+
+      <div class="panel">
+        <h3>O que a ementa exige</h3>
+        <ul>
+          <li>Sistemas distribuídos (concorrência, openness, escalabilidade)</li>
+          <li>Protocolo de mensageria (MQTT)</li>
+          <li>Broker de recepção de dados (Mosquitto)</li>
+          <li>Armazenamento em grande escala (MongoDB)</li>
+          <li>Mineração de dados em tempo real (data streaming)</li>
+          <li>Utilização de APIs (REST + WebSocket)</li>
+          <li>Desenvolvimento dirigido a testes (TDD)</li>
+          <li>Integração com dispositivos IoT</li>
+          <li>Controle de versionamento (Git)</li>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <h3>Toolkit</h3>
+        <ul class="toolkit-list">
+          <li><span class="glyph">→</span><div class="txt"><strong>MQTT + Mosquitto</strong><span>mensageria entre sensores e backend</span></div></li>
+          <li><span class="glyph">→</span><div class="txt"><strong>Node.js + Express + Socket.io</strong><span>ingestão, API REST e tempo real</span></div></li>
+          <li><span class="glyph">→</span><div class="txt"><strong>MongoDB</strong><span>armazenamento das leituras</span></div></li>
+          <li><span class="glyph">→</span><div class="txt"><strong>React · Electron · React Native</strong><span>web, desktop e mobile sobre a mesma API</span></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="modules">
+      <h2 class="mono">Módulos do projeto</h2>
+      <div class="modules-grid">
+
+        <div class="module-card c1">
+          <div class="module-head">
+            <div><div class="module-num">MÓDULO 01</div><h4>Fundação</h4></div>
+          </div>
+          <div class="applied-note"><b>Com ou sem hardware:</b> o simulador em Python já é suficiente pro projeto todo; se o grupo tiver um ESP32 com sensor de umidade do solo, o mesmo formato de mensagem funciona sem mudar o backend.</div>
+          <ul class="weeks-list">
+            <li><a href="guia-agrosense.html#semana-1"><span class="week-num">S1</span> Planejamento e setup</a></li>
+            <li><a href="guia-agrosense.html#semana-2"><span class="week-num">S2</span> IoT e broker MQTT</a></li>
+          </ul>
+        </div>
+
+        <div class="module-card c2">
+          <div class="module-head">
+            <div><div class="module-num">MÓDULO 02</div><h4>Backend</h4></div>
+          </div>
+          <div class="applied-note"><b>TDD de verdade:</b> os testes das regras de alerta (solo seco, calor excessivo) são escritos antes da implementação — é o que a banca vai querer ver no relatório final.</div>
+          <ul class="weeks-list">
+            <li><a href="guia-agrosense.html#semana-3"><span class="week-num">S3</span> Backend com TDD</a></li>
+            <li><a href="guia-agrosense.html#semana-4"><span class="week-num">S4</span> API REST e tempo real</a></li>
+          </ul>
+        </div>
+
+        <div class="module-card c3">
+          <div class="module-head">
+            <div><div class="module-num">MÓDULO 03</div><h4>Clientes desktop e web</h4></div>
+          </div>
+          <div class="applied-note"><b>Reuso de código:</b> o desktop (Electron) carrega o mesmo build do painel React usado na web — mesmo cliente, embalagem diferente.</div>
+          <ul class="weeks-list">
+            <li><a href="guia-agrosense.html#semana-5"><span class="week-num">S5</span> Aplicação Web</a></li>
+            <li><a href="guia-agrosense.html#semana-6"><span class="week-num">S6</span> Aplicação Desktop</a></li>
+          </ul>
+        </div>
+
+        <div class="module-card c4">
+          <div class="module-head">
+            <div><div class="module-num">MÓDULO 04</div><h4>Mobile e entrega</h4></div>
+          </div>
+          <div class="applied-note"><b>Projeto final:</b> demo de ponta a ponta — sensor publicando, alerta chegando no celular do produtor em segundos — é a parte que mais impressiona numa apresentação.</div>
+          <ul class="weeks-list">
+            <li><a href="guia-agrosense.html#semana-7"><span class="week-num">S7</span> Aplicação Mobile</a></li>
+            <li><a href="guia-agrosense.html#semana-8"><span class="week-num">S8</span> Integração e entrega</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="biblio">
+      <h2 class="mono">Referências reais — precedente direto</h2>
+      <div class="panel" style="margin-bottom:18px;border-left:3px solid var(--rose);">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--rose);margin-bottom:10px;">★ precedente mais próximo do projeto de vocês</p>
+        <h3 style="color:var(--rose);">Projeto Integrador ADS Fatec × Visiona</h3>
+        <p>Projeto integrador de alunos de ADS da Faculdade de Tecnologia de São Paulo, em parceria com a empresa Visiona: um sistema web com visualização geoespacial de talhões (dados espaço-temporais), API própria pra consultar a base gerada por um módulo de processamento de imagens, e documentação pública do projeto inteiro. É a prova de que dá pra sair de uma disciplina técnica de ADS pra um sistema real de agro, com parceria de empresa.</p>
+        <p style="margin-top:14px;"><a href="https://github.com/ProjetoIntegradorADSFatec" style="color:var(--ink);text-decoration:underline;" target="_blank" rel="noopener"><b>Repositório no GitHub →</b></a></p>
+      </div>
+
+      <div class="panel" style="margin-bottom:18px;">
+        <h3>TCCs e artigos sobre IoT/MQTT aplicados à agricultura</h3>
+        <ul class="ref-list">
+          <li><a href="https://repositorio.ifmg.edu.br/items/414e9a1b-dfb8-45f5-ab44-3c9b645362a1" style="color:var(--ink);text-decoration:underline;" target="_blank" rel="noopener"><b>Monitoramento de irrigação em tempo real (IFMG, 2025)</b></a> — TCC que integra sensores de telemetria, aplicação web e o protocolo MQTT pra calcular a necessidade hídrica da cultura em tempo real. <span class="axis-tag axis-precisao">Agricultura de precisão</span></li>
+          <li><a href="https://dspace.mackenzie.br/items/40626865-e7c5-4551-959e-06d246865931" style="color:var(--ink);text-decoration:underline;" target="_blank" rel="noopener"><b>IoT na agricultura: gestão hídrica em tempo real (Mackenzie)</b></a> — sensores em campo com coleta de dados em tempo real, focado em baixo custo pra pequeno/médio produtor. <span class="axis-tag axis-precisao">Agricultura de precisão</span></li>
+          <li><a href="https://doi.org/10.17013/risti.42.1-11" style="color:var(--ink);text-decoration:underline;" target="_blank" rel="noopener"><b>Análise de cobertura de dispositivo IoT para smart farm</b></a> — Escola et al., Revista Ibérica de Sistemas e Tecnologias de Informação (RISTI), 2021. <span class="axis-tag axis-ia">Infraestrutura IoT</span></li>
+          <li><a href="https://medium.com/@hugosrc/cultivo-conectado-do-conceito-%C3%A0-realidade-de-um-sistema-iot-para-monitoramento-agr%C3%ADcola-1f537af61b5b" style="color:var(--ink);text-decoration:underline;" target="_blank" rel="noopener"><b>Cultivo Conectado (tutorial + código)</b></a> — passo a passo publicado no Medium ligando um ESP32 via MQTT a uma nuvem (AWS IoT), com repositório aberto no GitHub. Boa referência prática pra semana 2, se o grupo trocar o Mosquitto local por um broker em nuvem.</li>
+        </ul>
+      </div>
+
+      <div class="panel" style="margin-bottom:18px;">
+        <h3>Projetos de feiras de ciência (FEBRACE)</h3>
+        <ul class="ref-list">
+          <li><a href="https://virtual.febrace.org.br/2022/AGR/245/" style="color:var(--ink);text-decoration:underline;" target="_blank" rel="noopener"><b>Sensor de temperatura de baixo custo para colheitadeiras</b></a> — alarme sonoro/luminoso pra evitar incêndio de máquina agrícola. <span class="axis-tag axis-precisao">Agricultura de precisão</span></li>
+          <li><a href="https://virtual.febrace.org.br/2023/AGR/1318/" style="color:var(--ink);text-decoration:underline;" target="_blank" rel="noopener"><b>Irrigação automatizada com Arduino + placas solares</b></a> — sensor de umidade do solo aciona bomba, alimentado por energia solar. <span class="axis-tag axis-precisao">Agricultura de precisão</span></li>
+          <li><a href="https://virtual.febrace.org.br/2024/AGR/6065/" style="color:var(--ink);text-decoration:underline;" target="_blank" rel="noopener"><b>Irrigação automatizada numa horta escolar</b></a> — combina umidade do solo e temperatura ambiente pra decidir quando regar. <span class="axis-tag axis-precisao">Agricultura de precisão</span></li>
+        </ul>
+      </div>
+
+      <div class="panel" style="border-left:3px solid var(--teal);">
+        <h3 style="color:var(--teal);">Evento científico de referência — SBIAGRO</h3>
+        <p>O Congresso Brasileiro de Agroinformática (SBIAGRO), promovido pela Associação Brasileira de Agroinformática desde 1996, é o principal evento científico brasileiro de computação aplicada à agricultura — acontece a cada dois anos e reúne pesquisa, inovação e estudos de caso da área. Vale citar no relatório final como o contexto científico em que um projeto como o AgroSense se encaixa, mesmo sem submeter trabalho.</p>
+      </div>
+
+      <p class="biblio-note">Todas as fontes acima foram localizadas por busca na web em agosto de 2026 — confira as datas de cada evento/artigo antes de citar formalmente, pois congressos bienais mudam de edição.</p>
+    </section>
+
+    <footer>
+      <span class="mono">AgroSense — Projeto de Programação Multiplataforma</span>
+      <span class="mono">Tecnologia em Análise e Desenvolvimento de Sistemas</span>
+    </footer>
+  </div>
+
+</body>
+</html>
