@@ -1,0 +1,8 @@
+﻿Nome,Quantidade,Componente
+"U1, U2",2," Arduino Uno R3"
+"Dled IR, D1",2,"Branco LED"
+"R1, R4",2,"180 Ω Resistor"
+"R2, R5",2,"10 kΩ Resistor"
+"Q1, Q2",2," Sensor de luz ambiente [fototransistor]"
+"R3, R6",2,"300 Ω Resistor"
+"D2, D3",2,"Azul LED"

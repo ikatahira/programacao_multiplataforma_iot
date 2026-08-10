@@ -255,7 +255,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
 
 <details class="glossario">
-  <summary>📖 Glossário desta semana — clique para expandir (12 termos)</summary>
+  <summary>📖 Glossário desta semana — clique para expandir (15 termos)</summary>
   <div class="glossario-grid">
     <div class="gloss-item"><div class="g-term">WebSocket</div><div class="g-def">Um protocolo que abre uma conexão persistente e bidirecional entre cliente e servidor, permitindo que o servidor envie dados a qualquer momento, sem o cliente precisar pedir.</div></div>
 <div class="gloss-item"><div class="g-term">handshake</div><div class="g-def">O "aperto de mão" inicial entre cliente e servidor para abrir a conexão WebSocket, feito uma única vez no começo.</div></div>
@@ -269,6 +269,9 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 <div class="gloss-item"><div class="g-term">concurrently</div><div class="g-def">Um pacote npm que permite rodar dois ou mais comandos/processos ao mesmo tempo em um único terminal.</div></div>
 <div class="gloss-item"><div class="g-term">localhost</div><div class="g-def">O "endereço" que representa o próprio computador (ou, no nosso caso, o próprio ambiente virtual do WebContainer) — usado para processos se comunicarem entre si sem sair da máquina.</div></div>
 <div class="gloss-item"><div class="g-term">porta (port)</div><div class="g-def">Um "número de canal" que identifica um serviço específico rodando em um computador/servidor — ex: a porta 8080 do nosso servidor WebSocket.</div></div>
+<div class="gloss-item"><div class="g-term">Web Serial API</div><div class="g-def">Um recurso nativo do Chrome/Edge que permite que uma página web converse diretamente com um dispositivo USB (como um Arduino), sem instalar drivers nem programas.</div></div>
+<div class="gloss-item"><div class="g-term">baud rate</div><div class="g-def">A velocidade de comunicação serial, medida em bits por segundo — o Arduino e o computador precisam usar o mesmo valor (ex: 115200) para se entenderem.</div></div>
+<div class="gloss-item"><div class="g-term">fototransistor</div><div class="g-def">Um componente eletrônico que muda sua resistência elétrica de acordo com a quantidade de luz que recebe — é o "sensor de luz" físico usado no circuito desta aula.</div></div>
   </div>
   <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
 </details>
@@ -452,6 +455,154 @@ socket.onmessage = (evento) => {
 </div>
 
 <div class="section">
+  <h2>🔌 Bônus: Conectando um Sensor Real via Web Serial API</h2>
+  <p>Até aqui, o "sensor" era simulado com <code>Math.random()</code>. Se o seu laboratório já tem um <strong>Arduino Uno com um sensor de luz montado</strong>, dá para trocar o dado simulado por um dado <strong>100% real</strong> — e, o melhor, sem instalar absolutamente nada, usando a <span class="term" tabindex="0" data-tip="Recurso nativo do Chrome/Edge que permite que uma página web converse diretamente com um dispositivo USB, sem instalar drivers nem programas.">Web Serial API</span>: um recurso do próprio navegador que lê a porta USB do Arduino diretamente da aba do Chrome/Edge.</p>
+
+  <div class="box" style="border-left:3px solid var(--iot);">
+    <strong style="color:#fff;">📦 Projeto de referência: "Magnificent Hango" — Sensor de Luz Ambiente</strong>
+    <p style="margin-top:8px;">Este é um circuito real de exemplo, com Arduino Uno, um <span class="term" tabindex="0" data-tip="Componente que muda sua resistência elétrica de acordo com a quantidade de luz recebida — é o sensor de luz físico deste circuito.">fototransistor</span> (sensor de luz) e um LED indicador. Existem duas montagens possíveis, que invertem a lógica do sinal:</p>
+    <img src="assets/circuito-sensor-luz.png" alt="Dois circuitos no Tinkercad: acima, circuito HIGH ao detectar luz; abaixo, circuito HIGH ao não detectar luz" style="width:100%; border-radius:10px; margin:14px 0; border:1px solid var(--border);">
+    <ul>
+      <li><strong>Circuito 1 — HIGH ao detectar luz:</strong> o pino do sensor vai para nível alto quando há luz incidindo no fototransistor;</li>
+      <li><strong>Circuito 2 — HIGH ao não detectar luz:</strong> a mesma lógica, só que com o fototransistor e o resistor de 10 kΩ trocados de posição no divisor de tensão, invertendo o sinal.</li>
+    </ul>
+    <p>Lista de materiais (BOM) do projeto: 2× Arduino Uno R3, 2× LED branco, 2× LED azul, resistores de 180 Ω, 300 Ω e 10 kΩ, e 2× fototransistores. <a href="assets/bom-sensor-luz.csv" target="_blank">📄 baixar bom-sensor-luz.csv</a> · <a href="assets/Magnificent_Hango_esquematico.pdf" target="_blank">📐 baixar esquemático em PDF</a>.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">1</span> Entenda o firmware já gravado no Arduino</div>
+    <p>O sketch abaixo já está preparado para os dois circuitos (a diferença é só um parâmetro). Ele lê o pino digital do sensor a cada 50 ms e imprime o estado pela porta Serial:</p>
+    <pre><code>#define IR_SENSOR 2
+#define LED       3
+
+void setup() {
+  pinMode(IR_SENSOR, INPUT);
+  pinMode(LED, OUTPUT);
+  Serial.begin(115200);
+}
+
+void print_stateled(const bool beam, const bool inverted) {
+  Serial.print("State[");
+  Serial.print(beam ? "High" : "Low");
+  Serial.print("]");
+  if (inverted) {
+    Serial.println(beam ? "Feixe detectado" : "Feixe interrompido");
+  } else {
+    Serial.println(beam ? "Feixe interrompido" : "Feixe detectado");
+  }
+}
+
+void loop() {
+  const bool beamDetected = digitalRead(IR_SENSOR);
+  digitalWrite(LED, beamDetected);
+  print_stateled(beamDetected, 1); // troque para 0 no circuito 2
+  delay(50);
+}</code></pre>
+    <p>Cada linha impressa na Serial fica assim: <code>State[High]Feixe detectado</code> — exatamente o texto que vamos capturar e transformar em dado utilizável no dashboard.</p>
+    <div class="tip"><strong>Quem grava o programa no Arduino?</strong> Gravar (fazer upload) um sketch exige o Arduino IDE ou o Arduino Web Editor, o que normalmente é preparado com antecedência pelo professor/técnico do laboratório — já que instalar softwares pode exigir permissões que vocês não têm. A parte que <strong>não exige nenhuma instalação</strong>, e que faremos agora, é <em>ler</em> os dados de um Arduino que já está com o programa gravado, usando apenas o navegador.</div>
+    <p>📥 Arquivos completos: <a href="assets/magnificent_hango1.ino" target="_blank">magnificent_hango1.ino</a> (circuito 1) e <a href="assets/magnificent_hango2.ino" target="_blank">magnificent_hango2.ino</a> (circuito 2).</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">2</span> Conecte o Arduino ao computador do laboratório</div>
+    <p>Conecte o cabo USB do Arduino Uno a uma porta USB do computador — isso não exige instalação de driver no Windows 11 (o Arduino Uno usa um chip USB-Serial já reconhecido nativamente pelo sistema na grande maioria dos casos).</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">3</span> Abra o Preview em uma aba separada do navegador</div>
+    <p>A Web Serial API só funciona em uma <strong>página real do Chrome/Edge</strong>, não dentro do iframe do editor do StackBlitz. Clique no ícone de "abrir em nova aba" no canto do painel de Preview antes de continuar.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">4</span> Crie o hook useSerialSensor</div>
+    <p>De volta ao editor, crie <code>src/useSerialSensor.js</code>:</p>
+    <pre><code>import { useState, useRef, useCallback } from 'react';
+
+function useSerialSensor(baudRate = 115200) {
+  const [leitura, setLeitura] = useState(null);
+  const [conectado, setConectado] = useState(false);
+  const suportado = 'serial' in navigator;
+  const portRef = useRef(null);
+
+  const conectar = useCallback(async () => {
+    if (!suportado) return;
+
+    const port = await navigator.serial.requestPort(); // abre o seletor de porta do navegador
+    await port.open({ baudRate });
+    portRef.current = port;
+    setConectado(true);
+
+    const decoder = new TextDecoderStream();
+    port.readable.pipeTo(decoder.writable);
+    const reader = decoder.readable.getReader();
+
+    let buffer = '';
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += value;
+
+      let indice;
+      while ((indice = buffer.indexOf('\n')) >= 0) {
+        const linha = buffer.slice(0, indice).trim();
+        buffer = buffer.slice(indice + 1);
+
+        const match = linha.match(/State\[(High|Low)\](.+)/);
+        if (match) {
+          setLeitura({
+            estadoPino: match[1],       // "High" ou "Low"
+            mensagem: match[2].trim(),  // "Feixe detectado" ou "Feixe interrompido"
+            timestamp: new Date().toISOString(),
+          });
+        }
+      }
+    }
+  }, [baudRate, suportado]);
+
+  return { leitura, conectado, suportado, conectar };
+}
+
+export default useSerialSensor;</code></pre>
+    <div class="tip"><strong>Por que precisa de um clique para conectar?</strong> Por segurança, o navegador só mostra o seletor de portas (<code>requestPort()</code>) em resposta a uma ação explícita do usuário, como clicar em um botão — nunca automaticamente ao carregar a página.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">5</span> Exibindo a leitura real</div>
+    <pre><code>import useSerialSensor from './useSerialSensor';
+
+function SensorReal() {
+  const { leitura, conectado, suportado, conectar } = useSerialSensor();
+
+  if (!suportado) {
+    return &lt;p&gt;⚠️ Seu navegador não suporta Web Serial API. Use Chrome ou Edge no computador.&lt;/p&gt;;
+  }
+
+  return (
+    &lt;div style={{ padding: 20, border: '1px solid #333', borderRadius: 10 }}&gt;
+      {!conectado &amp;&amp; (
+        &lt;button onClick={conectar}&gt;🔌 Conectar Arduino&lt;/button&gt;
+      )}
+      {conectado &amp;&amp; leitura &amp;&amp; (
+        &lt;&gt;
+          &lt;h2&gt;{leitura.mensagem}&lt;/h2&gt;
+          &lt;small&gt;Pino: {leitura.estadoPino} · {new Date(leitura.timestamp).toLocaleTimeString()}&lt;/small&gt;
+        &lt;/&gt;
+      )}
+    &lt;/div&gt;
+  );
+}
+
+export default SensorReal;</code></pre>
+    <p>Clique em <strong>"Conectar Arduino"</strong>, escolha a porta na janela que o navegador abrir (algo como "USB Serial Device (COMx)") e cubra/descubra o sensor com a mão: a mensagem deve alternar entre "Feixe detectado" e "Feixe interrompido" em tempo real.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">6</span> Uma limitação importante (e uma boa discussão de Sistemas Distribuídos)</div>
+    <p>Diferente do servidor WebSocket simulado (que qualquer pessoa na rede pode acessar), a Web Serial API só funciona <strong>na aba do navegador fisicamente conectada</strong> ao Arduino via USB — os outros colegas não conseguem ver esses dados direto. Isso não é uma falha do que construímos: é assim que hardware físico funciona na prática. Para "distribuir" essa leitura para outras pessoas/telas, seria necessário um <strong>broker de mensageria</strong> — exatamente o papel que MQTT, RabbitMQ e Kafka cumprem, e que veremos em detalhe no <strong>Módulo 06 (Semanas 28–32)</strong>.</p>
+  </div>
+</div>
+
+<div class="section">
   <h2>🧪 Checkpoint TDD</h2>
   <div class="checkpoint">
     Testar WebSocket de verdade em unidade é complexo — a prática comum é criar um <strong>mock</strong> da classe <code>WebSocket</code> global e simular eventos <code>onmessage</code> manualmente, verificando se o estado do componente atualiza como esperado. Documente no README como você testaria isso (não é obrigatório implementar o mock completo esta semana).
@@ -470,6 +621,7 @@ socket.onmessage = (evento) => {
       <li>Exiba um histórico das últimas 10–20 leituras de cada sensor (lista simples — gráfico vem na Semana 21);</li>
       <li>Mostre visualmente o status da conexão (conectado/desconectado);</li>
       <li>Documente no README como rodar o projeto (<code>npm install</code> + <code>npm run dev</code> — um único comando, já que servidor e front-end sobem juntos);</li>
+      <li><strong>Bônus (pontuação extra):</strong> se sua turma tiver um Arduino Uno com o sensor de luz "Magnificent Hango" (ou similar) disponível, implemente também o <code>useSerialSensor</code> e conecte via Web Serial API, comparando lado a lado o dado simulado e o dado real;</li>
       <li>Salve no GitHub.</li>
     </ol>
     <div class="deliverable"><strong>📦 Entregável:</strong> Link do repositório GitHub atualizado + vídeo curto (1–2 min) ou GIF mostrando os dados atualizando ao vivo no Preview do StackBlitz.</div>
@@ -480,6 +632,7 @@ socket.onmessage = (evento) => {
       <li>Histórico de leituras implementado com limite de tamanho</li>
       <li>Indicação clara do status da conexão</li>
       <li>README com instruções claras de execução</li>
+      <li><em>(Bônus)</em> Integração funcional com o sensor real via Web Serial API</li>
     </ul>
   </div>
 </div>
@@ -498,6 +651,14 @@ socket.onmessage = (evento) => {
     <a class="res-card" href="https://vitejs.dev/config/server-options.html#server-proxy" target="_blank">
       <div class="r-title">🔀 Vite — server.proxy</div>
       <div class="r-desc">Documentação oficial da opção de proxy usada para ligar front-end e back-end.</div>
+    </a>
+    <a class="res-card" href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API" target="_blank">
+      <div class="r-title">🔌 MDN — Web Serial API</div>
+      <div class="r-desc">Documentação da API usada para ler o Arduino direto do navegador.</div>
+    </a>
+    <a class="res-card" href="assets/Magnificent_Hango_esquematico.pdf" target="_blank">
+      <div class="r-title">📐 Esquemático — Magnificent Hango</div>
+      <div class="r-desc">Diagrama completo do circuito do sensor de luz usado nesta aula.</div>
     </a>
     <a class="res-card" href="https://mqtt.org/" target="_blank">
       <div class="r-title">⬡ MQTT.org</div>

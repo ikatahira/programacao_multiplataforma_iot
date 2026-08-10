@@ -284,20 +284,66 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
 <div class="section">
   <h2>🧠 Arquitetura do Dashboard IoT</h2>
-  <p>Esta semana fecha o ciclo iniciado na Semana 18. O fluxo completo de dados, do sensor físico até a tela do usuário, é:</p>
-  <pre><code>[ ESP32 / Arduino ]
-        │  mede temperatura, umidade, luz...
+  <p>Esta semana fecha o ciclo iniciado na Semana 18. O fluxo completo de dados, do sensor físico até a tela do usuário, tem duas variantes possíveis:</p>
+  <pre><code>Caminho A — sensor simulado ou em rede (o que já construímos):
+[ Sensor simulado / ESP32 em rede ]
         ▼
 [ Servidor / Broker ]   ← nosso servidor.js com WebSocket, dentro do mesmo projeto StackBlitz
         │                  (no Módulo 06 veremos MQTT/RabbitMQ/Kafka)
         ▼
 [ WebSocket via /ws (proxy do Vite) ]
         ▼
-[ Dashboard React ]  ← o que vamos construir agora
-        │
+[ Dashboard React ]
         ▼
-  Usuário vê os gráficos ao vivo</code></pre>
-  <p>Se o laboratório já tiver placas ESP32 disponíveis, o <code>servidor.js</code> pode receber dados reais via <code>HTTP POST</code> em vez de <code>Math.random()</code> — a interface React não muda nada, pois ela só depende do formato JSON da mensagem.</p>
+  Usuário vê os gráficos ao vivo
+
+Caminho B — sensor real via USB (Semana 20, bônus):
+[ Arduino Uno + fototransistor ] → cabo USB
+        ▼
+[ Web Serial API ]  ← lida direto pelo navegador, sem servidor
+        ▼
+[ Dashboard React ]
+        ▼
+  Usuário vê o dado real ao vivo</code></pre>
+  <p>Repare que, nos dois casos, o <strong>componente React que desenha o gráfico não muda nada</strong> — ele só espera receber um objeto com os valores. Essa separação entre "de onde o dado vem" e "como o dado é exibido" é um dos princípios mais importantes de sistemas distribuídos: trocar a fonte de dados não deveria exigir reescrever a interface.</p>
+</div>
+
+<div class="section">
+  <h2>🔀 Ligando os dois mundos: simulado e real, lado a lado</h2>
+  <p>Se você fez o bônus da Semana 20 (Arduino + Web Serial), pode oferecer no dashboard um <strong>seletor de fonte de dados</strong>, deixando claro para o usuário se ele está vendo dados simulados ou o sensor físico de verdade:</p>
+  <pre><code>import { useState } from 'react';
+import useSensorStream from './useSensorStream';   // Caminho A — WebSocket simulado
+import useSerialSensor from './useSerialSensor';   // Caminho B — Web Serial real
+
+function Dashboard() {
+  const [fonte, setFonte] = useState('simulado'); // 'simulado' | 'real'
+
+  const simulado = useSensorStream(20);
+  const real = useSerialSensor();
+
+  return (
+    &lt;div style={{ padding: 24 }}&gt;
+      &lt;div style={{ marginBottom: 16 }}&gt;
+        &lt;button onClick={() =&gt; setFonte('simulado')}&gt;📡 Simulado&lt;/button&gt;
+        &lt;button onClick={() =&gt; setFonte('real')}&gt;🔌 Sensor Real (USB)&lt;/button&gt;
+      &lt;/div&gt;
+
+      {fonte === 'simulado' &amp;&amp; (
+        &lt;p&gt;Conectado: {simulado.conectado ? '🟢' : '🔴'} — Temperatura: {simulado.ultimo?.temperatura} °C&lt;/p&gt;
+      )}
+
+      {fonte === 'real' &amp;&amp; (
+        &lt;&gt;
+          {!real.conectado &amp;&amp; &lt;button onClick={real.conectar}&gt;Conectar Arduino&lt;/button&gt;}
+          {real.leitura &amp;&amp; &lt;p&gt;{real.leitura.mensagem} (pino: {real.leitura.estadoPino})&lt;/p&gt;}
+        &lt;/&gt;
+      )}
+    &lt;/div&gt;
+  );
+}
+
+export default Dashboard;</code></pre>
+  <p>Essa alternância explícita entre fonte simulada e fonte real é ótima para <strong>demonstrações e defesas de projeto</strong>: você mostra que o sistema funciona igual dos dois lados, provando que a arquitetura está desacoplada corretamente.</p>
 </div>
 
 <div class="section">
@@ -425,8 +471,9 @@ export default Dashboard;</code></pre>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">7</span> (Opcional) Conectando um ESP32 real</div>
-    <p>Se sua turma já tem placas ESP32 disponíveis (materiais de apoio "ESP32 — Missão IoT" no índice do curso), o ESP32 pode enviar leituras via <code>HTTP POST</code> para uma rota adicionada ao <code>servidor.js</code> (usando <code>express</code>), que por sua vez retransmite via WebSocket para os clientes conectados. Isso normalmente exige que o ESP32 esteja na mesma rede que consegue alcançar o endereço público do seu projeto StackBlitz — combine com o professor a melhor forma de testar isso no laboratório (pode envolver expor o servidor via um serviço de túnel, o que será visto com mais detalhe no Módulo 06).</p>
+    <div class="step-title"><span class="step-num">7</span> (Opcional) Combinando com o sensor real do Arduino</div>
+    <p>Se você já fez o bônus da Semana 20 com o Arduino Uno + fototransistor ("Magnificent Hango"), reaproveite o <code>useSerialSensor</code> aqui: adicione um <code>GraficoSensor</code> alimentado pelo histórico das leituras reais (basta acumular cada <code>leitura</code> recebida num array de estado, do mesmo jeito que fizemos com o WebSocket). Assim seu dashboard final mostra, lado a lado, um gráfico com dados simulados e outro com dados 100% reais vindos de um sensor físico.</p>
+    <p>Se sua turma tiver placas <strong>ESP32</strong> disponíveis (materiais de apoio "ESP32 — Missão IoT" no índice do curso) conectadas à mesma rede Wi-Fi, o caminho é diferente do Arduino via USB: o ESP32 enviaria leituras via <code>HTTP POST</code> para uma rota adicionada ao <code>servidor.js</code>, que retransmite via WebSocket para os clientes — isso será formalizado com um broker de verdade (MQTT) no <strong>Módulo 06</strong>.</p>
   </div>
 </div>
 
@@ -450,6 +497,7 @@ export default Dashboard;</code></pre>
       <li>Adicione um cabeçalho com status de conexão e horário da última atualização;</li>
       <li>Escreva testes para pelo menos 2 componentes (incluindo o caso de histórico vazio);</li>
       <li>Escreva no README a arquitetura do projeto (pode reaproveitar o diagrama desta aula) e print(s) do dashboard em desktop e mobile;</li>
+      <li><strong>Bônus (pontuação extra):</strong> se você fez o bônus da Semana 20, adicione o seletor "Simulado / Sensor Real" mostrando o gráfico com dados do Arduino via Web Serial API;</li>
       <li>Salve no GitHub.</li>
     </ol>
     <div class="deliverable"><strong>📦 Entregável:</strong> Repositório GitHub completo + prints (desktop e mobile) + README com arquitetura explicada.</div>
@@ -460,6 +508,7 @@ export default Dashboard;</code></pre>
       <li>Código organizado em componentes e hooks reutilizáveis</li>
       <li>Testes cobrindo casos de borda (ex: histórico vazio)</li>
       <li>Documentação clara da arquitetura no README</li>
+      <li><em>(Bônus)</em> Integração com o sensor real exibida no dashboard</li>
     </ul>
   </div>
 </div>
@@ -482,6 +531,10 @@ export default Dashboard;</code></pre>
     <a class="res-card" href="esp32_missao_iot_v2.html">
       <div class="r-title">📡 ESP32 — Missão IoT v2 (material do curso)</div>
       <div class="r-desc">Pinagem, GPIO e sensores para quando for conectar hardware real.</div>
+    </a>
+    <a class="res-card" href="assets/circuito-sensor-luz.png" target="_blank">
+      <div class="r-title">💡 Circuito — Sensor de Luz (Magnificent Hango)</div>
+      <div class="r-desc">Imagem dos dois circuitos usados no bônus de sensor real da Semana 20.</div>
     </a>
   </div>
 </div>
