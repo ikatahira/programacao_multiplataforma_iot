@@ -145,6 +145,49 @@ pre code { background:none; color:inherit; padding:0; }
 .criteria li:last-child { border-bottom:none; }
 .criteria li::before { content:'✓'; position:absolute; left:0; color:var(--green); font-weight:700; }
 
+/* GLOSSARY TOOLTIPS */
+.term {
+  border-bottom: 1.5px dotted var(--accent2);
+  cursor: help; position: relative; color: inherit; font-weight: 600;
+  color: var(--accent2);
+}
+code.term { font-weight: 400; border-bottom: 1.5px dotted var(--accent2); }
+.term:hover, .term:focus { outline: none; color: #fff; }
+.term:hover::after, .term:focus::after {
+  content: attr(data-tip);
+  position: absolute; left: 50%; bottom: 135%; transform: translateX(-50%);
+  background: #0a0d17; color: var(--text); border: 1px solid var(--accent2);
+  padding: 10px 14px; border-radius: 8px; font-size: .76rem; line-height: 1.55;
+  width: max-content; max-width: 260px; z-index: 80;
+  box-shadow: 0 12px 30px rgba(0,0,0,.55); white-space: normal; font-weight: 400;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.term:hover::before, .term:focus::before {
+  content:''; position:absolute; left:50%; bottom:122%; transform: translateX(-50%);
+  border:6px solid transparent; border-top-color: var(--accent2); z-index:81;
+}
+@media (max-width: 640px) {
+  .term:hover::after, .term:focus::after { left:0; transform:none; max-width: 220px; }
+  .term:hover::before, .term:focus::before { left:14px; transform:none; }
+}
+
+.glossario {
+  background: var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:22px 26px; margin:18px 0; border-left:3px solid var(--warn);
+}
+.glossario summary {
+  cursor:pointer; font-family:'Syne', sans-serif; color:#fff; font-size:1rem;
+  list-style: none; display:flex; align-items:center; gap:8px;
+}
+.glossario summary::-webkit-details-marker { display:none; }
+.glossario summary::before { content:'▸'; color:var(--warn); transition:.2s; }
+.glossario[open] summary::before { transform: rotate(90deg); }
+.glossario-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:12px; margin-top:16px; }
+.gloss-item { font-size:.85rem; }
+.gloss-item .g-term { color: var(--warn); font-weight:600; font-family:'DM Mono', monospace; font-size:.8rem; }
+.gloss-item .g-def { color: var(--muted2); margin-top:3px; line-height:1.5; }
+.gloss-tip { font-size:.78rem; color:var(--muted); margin-top:14px; font-style:italic; }
+
 .res-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:14px; margin-top:16px; }
 .res-card {
   display:block; background:var(--card); border:1px solid var(--border); border-radius:10px;
@@ -201,15 +244,34 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <h2>🎯 Objetivos de Aprendizagem</h2>
   <div class="box objetivos">
     <ul>
-      <li>Revisar os conceitos de <strong>API REST</strong>: recursos, verbos HTTP, status codes e JSON;</li>
-      <li>Consumir uma API pública real dentro de um componente React com <code>fetch</code>;</li>
+      <li>Revisar os conceitos de <span class="term" tabindex="0" data-tip="Um estilo de API onde cada informação é um &quot;recurso&quot; acessado por uma URL, usando verbos HTTP.">API REST</span>: recursos, <span class="term" tabindex="0" data-tip="A &quot;ação&quot; de uma requisição: GET (buscar), POST (criar), PUT/PATCH (atualizar), DELETE (remover).">verbos HTTP</span>, <span class="term" tabindex="0" data-tip="Número que a API devolve indicando se a requisição deu certo, falhou ou foi criada com sucesso.">status codes</span> e <span class="term" tabindex="0" data-tip="Formato de texto simples e legível para representar dados estruturados, usado pela maioria das APIs.">JSON</span>;</li>
+      <li>Consumir uma API pública real dentro de um componente React com <span class="term" tabindex="0" data-tip="Função nativa do JavaScript usada para fazer requisições HTTP (buscar dados de uma API) direto do navegador.">fetch</span>;</li>
       <li>Tratar estados de <strong>carregando / sucesso / erro</strong> corretamente;</li>
-      <li>Criar um <strong>hook customizado</strong> (<code>useFetch</code>) para reaproveitar lógica de requisição;</li>
-      <li>Comparar rapidamente REST com <strong>GraphQL</strong>, conforme previsto na ementa da disciplina.</li>
+      <li>Criar um <span class="term" tabindex="0" data-tip="Função criada por você, começando com &quot;use&quot;, que reaproveita lógica com estado/efeitos entre vários componentes.">hook customizado</span> (<code>useFetch</code>) para reaproveitar lógica de requisição;</li>
+      <li>Comparar rapidamente REST com <span class="term" tabindex="0" data-tip="Alternativa a REST onde o cliente pede exatamente os campos que quer, em uma única requisição.">GraphQL</span>, conforme previsto na ementa da disciplina.</li>
     </ul>
   </div>
 </div>
 
+
+<details class="glossario">
+  <summary>📖 Glossário desta semana — clique para expandir (12 termos)</summary>
+  <div class="glossario-grid">
+    <div class="gloss-item"><div class="g-term">API</div><div class="g-def">Application Programming Interface — um "conjunto de portas de entrada" que um sistema oferece para que outros programas troquem dados com ele.</div></div>
+<div class="gloss-item"><div class="g-term">API REST</div><div class="g-def">Um estilo de API muito comum na web, onde cada informação é um "recurso" acessado por uma URL, usando verbos HTTP (GET, POST, etc).</div></div>
+<div class="gloss-item"><div class="g-term">endpoint</div><div class="g-def">O endereço (URL) específico de uma API que você chama para obter ou enviar um dado — ex: /forecast, /usuarios/1.</div></div>
+<div class="gloss-item"><div class="g-term">verbo HTTP</div><div class="g-def">A "ação" de uma requisição HTTP: GET (buscar), POST (criar), PUT/PATCH (atualizar), DELETE (remover).</div></div>
+<div class="gloss-item"><div class="g-term">JSON</div><div class="g-def">JavaScript Object Notation — um formato de texto simples e legível para representar dados estruturados, usado pela maioria das APIs.</div></div>
+<div class="gloss-item"><div class="g-term">status code</div><div class="g-def">Um número que a API devolve junto da resposta, indicando se deu certo (200), se foi criado (201), se o pedido está errado (400) ou se algo falhou no servidor (500).</div></div>
+<div class="gloss-item"><div class="g-term">fetch</div><div class="g-def">Função nativa do JavaScript usada para fazer requisições HTTP (buscar dados de uma API) direto do navegador.</div></div>
+<div class="gloss-item"><div class="g-term">Promise</div><div class="g-def">Um objeto do JavaScript que representa uma operação assíncrona (que leva um tempo para terminar, como uma requisição de rede) e seu resultado futuro.</div></div>
+<div class="gloss-item"><div class="g-term">hook customizado</div><div class="g-def">Uma função criada por você (não pronta do React) que começa com "use" e reaproveita lógica com estado/efeitos entre vários componentes.</div></div>
+<div class="gloss-item"><div class="g-term">polling</div><div class="g-def">Técnica em que o cliente pergunta ao servidor "tem novidade?" repetidamente, de tempos em tempos, em vez de esperar o servidor avisar.</div></div>
+<div class="gloss-item"><div class="g-term">GraphQL</div><div class="g-def">Uma alternativa a REST onde o cliente pede exatamente os campos que quer, em uma única requisição, em vez de receber tudo que o endpoint devolve.</div></div>
+<div class="gloss-item"><div class="g-term">mock</div><div class="g-def">Uma versão "falsa"/simulada de algo (como a função fetch) usada em testes, para não depender de internet ou de um servidor real.</div></div>
+  </div>
+  <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
+</details>
 
 <div class="box" style="border-left:3px solid var(--accent);">
   <strong style="color:#fff;">🔄 Retomando de onde parou?</strong>
@@ -226,14 +288,14 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
 <div class="section">
   <h2>🧠 Revisão rápida: REST em uma página</h2>
-  <p>Uma API REST expõe <strong>recursos</strong> através de URLs, e você interage com eles usando <strong>verbos HTTP</strong>:</p>
+  <p>Uma <span class="term" tabindex="0" data-tip="Um estilo de API onde cada informação é um &quot;recurso&quot; acessado por uma URL, usando verbos HTTP.">API REST</span> expõe <strong>recursos</strong> através de URLs, e você interage com eles usando <strong>verbos HTTP</strong>:</p>
   <ul>
     <li><code>GET</code> — buscar dados (ex: última leitura de um sensor)</li>
     <li><code>POST</code> — criar um novo registro (ex: o ESP32 envia uma nova leitura)</li>
     <li><code>PUT/PATCH</code> — atualizar um registro existente</li>
     <li><code>DELETE</code> — remover um registro</li>
   </ul>
-  <p>As respostas normalmente vêm em <strong>JSON</strong> e trazem um <strong>status code</strong>: <code>200</code> OK, <code>201</code> criado, <code>400</code> erro do cliente, <code>404</code> não encontrado, <code>500</code> erro no servidor.</p>
+  <p>As respostas normalmente vêm em <strong>JSON</strong> e trazem um <span class="term" tabindex="0" data-tip="Número que indica se deu certo (200), se foi criado (201), se o pedido está errado (400) ou se algo falhou no servidor (500).">status code</span>: <code>200</code> OK, <code>201</code> criado, <code>400</code> erro do cliente, <code>404</code> não encontrado, <code>500</code> erro no servidor.</p>
 </div>
 
 <div class="section">
@@ -368,7 +430,7 @@ export default PainelClima;</code></pre>
   const id = setInterval(buscar, 60000);
   return () =&gt; clearInterval(id);
 }, [url]);</code></pre>
-    <div class="tip"><strong>Isso é "polling"</strong>: o cliente pergunta ao servidor de tempos em tempos. Na Semana 20 veremos o <strong>WebSocket</strong>, onde é o servidor quem avisa o cliente assim que há um dado novo.</div>
+    <div class="tip"><strong>Isso é <span class="term" tabindex="0" data-tip="Técnica em que o cliente pergunta ao servidor &quot;tem novidade?&quot; repetidamente, em vez de esperar o servidor avisar.">polling</span></strong>: o cliente pergunta ao servidor de tempos em tempos. Na Semana 20 veremos o <strong>WebSocket</strong>, onde é o servidor quem avisa o cliente assim que há um dado novo.</div>
   </div>
 
   <div class="step">
@@ -390,7 +452,7 @@ export default PainelClima;</code></pre>
 <div class="section">
   <h2>🧪 Checkpoint TDD</h2>
   <div class="checkpoint">
-    No terminal do StackBlitz, teste o hook <code>useFetch</code> "mockando" (simulando) a função <code>fetch</code> global, sem depender da internet estar disponível durante os testes:
+    No terminal do StackBlitz, teste o hook <code>useFetch</code> criando um <span class="term" tabindex="0" data-tip="Versão &quot;falsa&quot;/simulada de algo, usada em testes para não depender de internet ou de um servidor real.">mock</span> (simulando) da função <code>fetch</code> global, sem depender da internet estar disponível durante os testes:
   </div>
   <pre><code>import { describe, it, expect, vi } from 'vitest';
 

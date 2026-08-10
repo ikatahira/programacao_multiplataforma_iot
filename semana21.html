@@ -145,6 +145,49 @@ pre code { background:none; color:inherit; padding:0; }
 .criteria li:last-child { border-bottom:none; }
 .criteria li::before { content:'✓'; position:absolute; left:0; color:var(--green); font-weight:700; }
 
+/* GLOSSARY TOOLTIPS */
+.term {
+  border-bottom: 1.5px dotted var(--accent2);
+  cursor: help; position: relative; color: inherit; font-weight: 600;
+  color: var(--accent2);
+}
+code.term { font-weight: 400; border-bottom: 1.5px dotted var(--accent2); }
+.term:hover, .term:focus { outline: none; color: #fff; }
+.term:hover::after, .term:focus::after {
+  content: attr(data-tip);
+  position: absolute; left: 50%; bottom: 135%; transform: translateX(-50%);
+  background: #0a0d17; color: var(--text); border: 1px solid var(--accent2);
+  padding: 10px 14px; border-radius: 8px; font-size: .76rem; line-height: 1.55;
+  width: max-content; max-width: 260px; z-index: 80;
+  box-shadow: 0 12px 30px rgba(0,0,0,.55); white-space: normal; font-weight: 400;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.term:hover::before, .term:focus::before {
+  content:''; position:absolute; left:50%; bottom:122%; transform: translateX(-50%);
+  border:6px solid transparent; border-top-color: var(--accent2); z-index:81;
+}
+@media (max-width: 640px) {
+  .term:hover::after, .term:focus::after { left:0; transform:none; max-width: 220px; }
+  .term:hover::before, .term:focus::before { left:14px; transform:none; }
+}
+
+.glossario {
+  background: var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:22px 26px; margin:18px 0; border-left:3px solid var(--warn);
+}
+.glossario summary {
+  cursor:pointer; font-family:'Syne', sans-serif; color:#fff; font-size:1rem;
+  list-style: none; display:flex; align-items:center; gap:8px;
+}
+.glossario summary::-webkit-details-marker { display:none; }
+.glossario summary::before { content:'▸'; color:var(--warn); transition:.2s; }
+.glossario[open] summary::before { transform: rotate(90deg); }
+.glossario-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:12px; margin-top:16px; }
+.gloss-item { font-size:.85rem; }
+.gloss-item .g-term { color: var(--warn); font-weight:600; font-family:'DM Mono', monospace; font-size:.8rem; }
+.gloss-item .g-def { color: var(--muted2); margin-top:3px; line-height:1.5; }
+.gloss-tip { font-size:.78rem; color:var(--muted); margin-top:14px; font-style:italic; }
+
 .res-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:14px; margin-top:16px; }
 .res-card {
   display:block; background:var(--card); border:1px solid var(--border); border-radius:10px;
@@ -202,14 +245,29 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <div class="box objetivos">
     <ul>
       <li>Consolidar os conhecimentos das Semanas 18–20 em um <strong>dashboard IoT completo</strong>;</li>
-      <li>Entender a arquitetura ponta a ponta: <strong>sensor (ESP32/Arduino) → broker/servidor → WebSocket → React</strong>;</li>
-      <li>Exibir múltiplos sensores com <strong>gráficos</strong> de histórico usando Chart.js;</li>
-      <li>Organizar o layout de forma <strong>responsiva</strong> (mobile-first);</li>
+      <li>Entender a <span class="term" tabindex="0" data-tip="O &quot;desenho&quot; geral de como as partes de um sistema se conectam e se comunicam.">arquitetura</span> ponta a ponta: <strong>sensor (ESP32/Arduino) → broker/servidor → WebSocket → React</strong>;</li>
+      <li>Exibir múltiplos sensores com <strong>gráficos</strong> de histórico usando <span class="term" tabindex="0" data-tip="Biblioteca JavaScript popular para desenhar gráficos (linhas, barras, pizza) em páginas web.">Chart.js</span>;</li>
+      <li>Organizar o layout de forma <span class="term" tabindex="0" data-tip="Layout que se adapta automaticamente a diferentes tamanhos de tela, sem quebrar ou ficar cortado.">responsiva</span> (<span class="term" tabindex="0" data-tip="Estratégia de projetar primeiro pensando em telas pequenas (celular) e depois adaptar para telas maiores.">mobile-first</span>);</li>
       <li>Preparar o projeto para ligação com hardware real (ESP32) quando disponível no laboratório.</li>
     </ul>
   </div>
 </div>
 
+
+<details class="glossario">
+  <summary>📖 Glossário desta semana — clique para expandir (8 termos)</summary>
+  <div class="glossario-grid">
+    <div class="gloss-item"><div class="g-term">arquitetura (de software)</div><div class="g-def">O "desenho" geral de como as partes de um sistema se conectam e se comunicam — ex: sensor → servidor → WebSocket → dashboard.</div></div>
+<div class="gloss-item"><div class="g-term">Chart.js</div><div class="g-def">Uma biblioteca JavaScript popular para desenhar gráficos (linhas, barras, pizza) em páginas web.</div></div>
+<div class="gloss-item"><div class="g-term">react-chartjs-2</div><div class="g-def">Um "adaptador" que permite usar a biblioteca Chart.js como componentes React, de forma mais natural dentro do código.</div></div>
+<div class="gloss-item"><div class="g-term">responsivo (design)</div><div class="g-def">Um layout que se adapta automaticamente a diferentes tamanhos de tela (celular, tablet, monitor), sem quebrar ou ficar cortado.</div></div>
+<div class="gloss-item"><div class="g-term">mobile-first</div><div class="g-def">Estratégia de projetar primeiro pensando em telas pequenas (celular) e depois adaptar para telas maiores — em vez do caminho inverso.</div></div>
+<div class="gloss-item"><div class="g-term">CSS Grid</div><div class="g-def">Um sistema de layout do CSS que organiza elementos em linhas e colunas, útil para grades de cards e painéis responsivos.</div></div>
+<div class="gloss-item"><div class="g-term">DevTools</div><div class="g-def">Developer Tools — o painel de ferramentas para desenvolvedores embutido no navegador (abre com a tecla F12), usado para inspecionar, depurar e testar sites.</div></div>
+<div class="gloss-item"><div class="g-term">caso de borda (edge case)</div><div class="g-def">Uma situação incomum ou extrema que o código precisa tratar corretamente — ex: uma lista de histórico vazia antes do primeiro dado chegar.</div></div>
+  </div>
+  <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
+</details>
 
 <div class="box" style="border-left:3px solid var(--accent);">
   <strong style="color:#fff;">🔄 Retomando de onde parou?</strong>
@@ -358,12 +416,12 @@ function Dashboard() {
 }
 
 export default Dashboard;</code></pre>
-    <p>Use <code>&lt;Dashboard /&gt;</code> em <code>App.jsx</code> no lugar do componente da semana passada. Repare no <code>gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'</code>: isso faz o layout se reorganizar sozinho conforme o tamanho da tela — a base da <strong>responsividade</strong> exigida na ementa.</p>
+    <p>Use <code>&lt;Dashboard /&gt;</code> em <code>App.jsx</code> no lugar do componente da semana passada. Repare no <code>gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'</code> — um recurso de <span class="term" tabindex="0" data-tip="Sistema de layout do CSS que organiza elementos em linhas e colunas.">CSS Grid</span>: isso faz o layout se reorganizar sozinho conforme o tamanho da tela — a base da responsividade exigida na ementa.</p>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">6</span> Testando a responsividade</div>
-    <p>Abra o Preview em uma aba separada (ícone no canto do painel), pressione <strong>F12</strong> para abrir o DevTools do navegador, clique no ícone de "alternar visualização de dispositivo" (parece um celular/tablet, geralmente <kbd>Ctrl+Shift+M</kbd> no Edge/Chrome) e teste em diferentes tamanhos de tela.</p>
+    <p>Abra o Preview em uma aba separada (ícone no canto do painel), pressione <strong>F12</strong> para abrir o <span class="term" tabindex="0" data-tip="Painel de ferramentas para desenvolvedores embutido no navegador, usado para inspecionar, depurar e testar sites.">DevTools</span> do navegador, clique no ícone de "alternar visualização de dispositivo" (parece um celular/tablet, geralmente <kbd>Ctrl+Shift+M</kbd> no Edge/Chrome) e teste em diferentes tamanhos de tela.</p>
   </div>
 
   <div class="step">
@@ -375,7 +433,7 @@ export default Dashboard;</code></pre>
 <div class="section">
   <h2>🧪 Checkpoint TDD</h2>
   <div class="checkpoint">
-    Escreva um teste para o componente <code>GraficoSensor</code> verificando que ele recebe corretamente um array de histórico e não quebra quando o histórico está vazio (<code>historico = []</code>) — um caso de borda comum logo que a conexão é aberta e nenhum dado chegou ainda.
+    Escreva um teste para o componente <code>GraficoSensor</code> verificando que ele recebe corretamente um array de histórico e não quebra quando o histórico está vazio (<code>historico = []</code>) — um <span class="term" tabindex="0" data-tip="Situação incomum ou extrema que o código precisa tratar corretamente.">caso de borda</span> comum logo que a conexão é aberta e nenhum dado chegou ainda.
   </div>
 </div>
 

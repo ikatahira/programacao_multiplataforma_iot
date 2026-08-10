@@ -145,6 +145,49 @@ pre code { background:none; color:inherit; padding:0; }
 .criteria li:last-child { border-bottom:none; }
 .criteria li::before { content:'✓'; position:absolute; left:0; color:var(--green); font-weight:700; }
 
+/* GLOSSARY TOOLTIPS */
+.term {
+  border-bottom: 1.5px dotted var(--accent2);
+  cursor: help; position: relative; color: inherit; font-weight: 600;
+  color: var(--accent2);
+}
+code.term { font-weight: 400; border-bottom: 1.5px dotted var(--accent2); }
+.term:hover, .term:focus { outline: none; color: #fff; }
+.term:hover::after, .term:focus::after {
+  content: attr(data-tip);
+  position: absolute; left: 50%; bottom: 135%; transform: translateX(-50%);
+  background: #0a0d17; color: var(--text); border: 1px solid var(--accent2);
+  padding: 10px 14px; border-radius: 8px; font-size: .76rem; line-height: 1.55;
+  width: max-content; max-width: 260px; z-index: 80;
+  box-shadow: 0 12px 30px rgba(0,0,0,.55); white-space: normal; font-weight: 400;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.term:hover::before, .term:focus::before {
+  content:''; position:absolute; left:50%; bottom:122%; transform: translateX(-50%);
+  border:6px solid transparent; border-top-color: var(--accent2); z-index:81;
+}
+@media (max-width: 640px) {
+  .term:hover::after, .term:focus::after { left:0; transform:none; max-width: 220px; }
+  .term:hover::before, .term:focus::before { left:14px; transform:none; }
+}
+
+.glossario {
+  background: var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:22px 26px; margin:18px 0; border-left:3px solid var(--warn);
+}
+.glossario summary {
+  cursor:pointer; font-family:'Syne', sans-serif; color:#fff; font-size:1rem;
+  list-style: none; display:flex; align-items:center; gap:8px;
+}
+.glossario summary::-webkit-details-marker { display:none; }
+.glossario summary::before { content:'▸'; color:var(--warn); transition:.2s; }
+.glossario[open] summary::before { transform: rotate(90deg); }
+.glossario-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:12px; margin-top:16px; }
+.gloss-item { font-size:.85rem; }
+.gloss-item .g-term { color: var(--warn); font-weight:600; font-family:'DM Mono', monospace; font-size:.8rem; }
+.gloss-item .g-def { color: var(--muted2); margin-top:3px; line-height:1.5; }
+.gloss-tip { font-size:.78rem; color:var(--muted); margin-top:14px; font-style:italic; }
+
 .res-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:14px; margin-top:16px; }
 .res-card {
   display:block; background:var(--card); border:1px solid var(--border); border-radius:10px;
@@ -201,15 +244,34 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <h2>🎯 Objetivos de Aprendizagem</h2>
   <div class="box objetivos">
     <ul>
-      <li>Entender a diferença entre <strong>polling HTTP</strong> e <strong>WebSocket</strong> para dados em tempo real;</li>
-      <li>Relacionar WebSocket com os conceitos de <strong>Sistemas Distribuídos</strong> da ementa (concorrência, comunicação assíncrona);</li>
+      <li>Entender a diferença entre <span class="term" tabindex="0" data-tip="Técnica em que o cliente pergunta ao servidor &quot;tem novidade?&quot; repetidamente.">polling</span> HTTP e <span class="term" tabindex="0" data-tip="Protocolo que abre uma conexão persistente e bidirecional entre cliente e servidor.">WebSocket</span> para dados em tempo real;</li>
+      <li>Relacionar WebSocket com os conceitos de <span class="term" tabindex="0" data-tip="Sistemas formados por vários programas/computadores separados que se comunicam entre si.">Sistemas Distribuídos</span> da ementa (<span class="term" tabindex="0" data-tip="Capacidade de várias tarefas ou conexões acontecerem ao mesmo tempo, sem travar umas às outras.">concorrência</span>, comunicação assíncrona);</li>
       <li>Criar um <strong>servidor WebSocket</strong> simples em Node.js, rodando <em>dentro do mesmo projeto StackBlitz</em>, que simula um sensor publicando dados;</li>
       <li>Conectar um componente React ao servidor e atualizar a tela em tempo real, sem recarregar a página;</li>
-      <li>Entender o papel de um <strong>broker de mensageria</strong> (introdução — será aprofundado no Módulo 06).</li>
+      <li>Entender o papel de um <span class="term" tabindex="0" data-tip="Servidor intermediário especializado em receber mensagens de quem publica e entregá-las para quem está interessado.">broker de mensageria</span> (introdução — será aprofundado no Módulo 06).</li>
     </ul>
   </div>
 </div>
 
+
+<details class="glossario">
+  <summary>📖 Glossário desta semana — clique para expandir (12 termos)</summary>
+  <div class="glossario-grid">
+    <div class="gloss-item"><div class="g-term">WebSocket</div><div class="g-def">Um protocolo que abre uma conexão persistente e bidirecional entre cliente e servidor, permitindo que o servidor envie dados a qualquer momento, sem o cliente precisar pedir.</div></div>
+<div class="gloss-item"><div class="g-term">handshake</div><div class="g-def">O "aperto de mão" inicial entre cliente e servidor para abrir a conexão WebSocket, feito uma única vez no começo.</div></div>
+<div class="gloss-item"><div class="g-term">polling</div><div class="g-def">Técnica em que o cliente pergunta ao servidor "tem novidade?" repetidamente, em vez de esperar o servidor avisar (usada na Semana 19).</div></div>
+<div class="gloss-item"><div class="g-term">Sistemas Distribuídos</div><div class="g-def">Sistemas formados por vários programas/computadores separados que se comunicam entre si para funcionar como um todo (ex: sensor + servidor + dashboard).</div></div>
+<div class="gloss-item"><div class="g-term">concorrência</div><div class="g-def">A capacidade de várias tarefas ou conexões acontecerem ao mesmo tempo dentro de um sistema, sem travar umas às outras.</div></div>
+<div class="gloss-item"><div class="g-term">broker de mensageria</div><div class="g-def">Um servidor intermediário especializado em receber mensagens de quem publica (ex: sensores) e entregá-las para quem está interessado — será aprofundado no Módulo 06.</div></div>
+<div class="gloss-item"><div class="g-term">MQTT</div><div class="g-def">Protocolo de mensageria leve, muito usado em IoT, baseado no padrão "publish/subscribe" — veremos em detalhe no Módulo 06.</div></div>
+<div class="gloss-item"><div class="g-term">proxy</div><div class="g-def">Um "intermediário" que recebe uma requisição em um endereço e a repassa para outro endereço/porta por trás dos panos, sem o cliente perceber.</div></div>
+<div class="gloss-item"><div class="g-term">CORS</div><div class="g-def">Cross-Origin Resource Sharing — uma regra de segurança do navegador que restringe requisições entre origens (domínios/portas) diferentes, a menos que o servidor autorize.</div></div>
+<div class="gloss-item"><div class="g-term">concurrently</div><div class="g-def">Um pacote npm que permite rodar dois ou mais comandos/processos ao mesmo tempo em um único terminal.</div></div>
+<div class="gloss-item"><div class="g-term">localhost</div><div class="g-def">O "endereço" que representa o próprio computador (ou, no nosso caso, o próprio ambiente virtual do WebContainer) — usado para processos se comunicarem entre si sem sair da máquina.</div></div>
+<div class="gloss-item"><div class="g-term">porta (port)</div><div class="g-def">Um "número de canal" que identifica um serviço específico rodando em um computador/servidor — ex: a porta 8080 do nosso servidor WebSocket.</div></div>
+  </div>
+  <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
+</details>
 
 <div class="box" style="border-left:3px solid var(--accent);">
   <strong style="color:#fff;">🔄 Retomando de onde parou?</strong>
@@ -227,9 +289,9 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 <div class="section">
   <h2>🧠 Por que WebSocket para IoT?</h2>
   <p>Na Semana 19 usamos <strong>polling</strong>: o cliente pergunta "tem novidade?" de tempos em tempos. Funciona, mas gasta banda e sempre tem atraso.</p>
-  <p>O <strong>WebSocket</strong> abre uma <strong>conexão persistente e bidirecional</strong> entre cliente e servidor: depois do "aperto de mão" inicial (handshake), os dois lados podem enviar mensagens a qualquer momento. Isso é exatamente o que sensores IoT precisam: assim que o ESP32 publica uma nova leitura, todos os painéis conectados recebem o dado <strong>imediatamente</strong>.</p>
-  <p>Esse padrão de "muitos dispositivos publicando e muitos clientes recebendo" é a essência de <strong>sistemas distribuídos com brokers de mensageria</strong> (MQTT, RabbitMQ, Kafka — Módulo 06, Semanas 28–32). Hoje construímos uma versão simplificada com WebSocket puro.</p>
-  <div class="warn-box"><strong>Detalhe importante do ambiente:</strong> como estamos num navegador sem instalação local, vamos rodar o <strong>servidor e o front-end dentro do mesmo projeto StackBlitz</strong>, usando um único endereço exposto. Isso evita o problema de portas/URLs diferentes não conseguirem "se enxergar". A técnica usada — <strong>proxy do Vite</strong> — é a mesma usada em empresas reais para evitar problemas de CORS entre front-end e back-end durante o desenvolvimento.</div>
+  <p>O <strong>WebSocket</strong> abre uma <strong>conexão persistente e bidirecional</strong> entre cliente e servidor: depois do <span class="term" tabindex="0" data-tip="O &quot;aperto de mão&quot; inicial entre cliente e servidor para abrir a conexão, feito uma única vez no começo.">handshake</span> ("aperto de mão") inicial, os dois lados podem enviar mensagens a qualquer momento. Isso é exatamente o que sensores IoT precisam: assim que o ESP32 publica uma nova leitura, todos os painéis conectados recebem o dado <strong>imediatamente</strong>.</p>
+  <p>Esse padrão de "muitos dispositivos publicando e muitos clientes recebendo" é a essência de sistemas distribuídos com brokers de mensageria (<span class="term" tabindex="0" data-tip="Protocolo de mensageria leve, muito usado em IoT, baseado no padrão &quot;publish/subscribe&quot;.">MQTT</span>, RabbitMQ, Kafka — Módulo 06, Semanas 28–32). Hoje construímos uma versão simplificada com WebSocket puro.</p>
+  <div class="warn-box"><strong>Detalhe importante do ambiente:</strong> como estamos num navegador sem instalação local, vamos rodar o <strong>servidor e o front-end dentro do mesmo projeto StackBlitz</strong>, usando um único endereço exposto. Isso evita o problema de <span class="term" tabindex="0" data-tip="Um &quot;número de canal&quot; que identifica um serviço rodando em um computador/servidor.">portas</span>/URLs diferentes não conseguirem "se enxergar". A técnica usada — <span class="term" tabindex="0" data-tip="Um &quot;intermediário&quot; que recebe uma requisição e a repassa para outro endereço/porta por trás dos panos.">proxy</span> do Vite — é a mesma usada em empresas reais para evitar problemas de <span class="term" tabindex="0" data-tip="Regra de segurança do navegador que restringe requisições entre origens diferentes, a menos que o servidor autorize.">CORS</span> entre front-end e back-end durante o desenvolvimento.</div>
 </div>
 
 <div class="section">
@@ -239,7 +301,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <div class="step-title"><span class="step-num">1</span> Reabra o projeto e instale as bibliotecas necessárias</div>
     <p>No StackBlitz, projeto <code>dashboard-iot-isw044</code>, abra a aba <strong>Terminal</strong> e rode:</p>
     <pre><code>npm install ws concurrently</code></pre>
-    <p><code>ws</code> é a biblioteca de WebSocket para Node.js. <code>concurrently</code> permite rodar dois comandos (o servidor e o Vite) ao mesmo tempo com um único <code>npm run dev</code>.</p>
+    <p><code>ws</code> é a biblioteca de WebSocket para Node.js. <span class="term" tabindex="0" data-tip="Pacote npm que permite rodar dois ou mais comandos/processos ao mesmo tempo em um único terminal.">concurrently</span> permite rodar dois comandos (o servidor e o Vite) ao mesmo tempo com um único <code>npm run dev</code>.</p>
   </div>
 
   <div class="step">
@@ -292,7 +354,7 @@ export default defineConfig({
     },
   },
 })</code></pre>
-    <p>Isso diz ao Vite: "toda vez que o navegador tentar abrir um WebSocket no caminho <code>/ws</code>, encaminhe essa conexão para o processo que está escutando na porta 8080" — mesmo que, para o navegador, tudo pareça vir do mesmo endereço único do Preview.</p>
+    <p>Isso diz ao Vite: "toda vez que o navegador tentar abrir um WebSocket no caminho <code>/ws</code>, encaminhe essa conexão para o processo que está escutando na <span class="term" tabindex="0" data-tip="Número de canal que identifica um serviço rodando em um computador/servidor.">porta</span> 8080" — mesmo que, para o navegador, tudo pareça vir do mesmo endereço único do Preview.</p>
   </div>
 
   <div class="step">
@@ -341,7 +403,7 @@ function useWebSocket() {
 }
 
 export default useWebSocket;</code></pre>
-    <div class="tip"><strong>Por que <code>window.location.host</code> em vez de "localhost:8080" fixo?</strong> No StackBlitz (e em qualquer ambiente hospedado), o endereço público do seu Preview não é literalmente "localhost" — é uma URL gerada dinamicamente. Usar <code>window.location.host</code> faz o código funcionar tanto no StackBlitz quanto, futuramente, em um computador local ou em produção, sem precisar trocar nada.</div>
+    <div class="tip"><strong>Por que <code>window.location.host</code> em vez de "localhost:8080" fixo?</strong> No StackBlitz (e em qualquer ambiente hospedado), o endereço público do seu Preview não é literalmente <span class="term" tabindex="0" data-tip="Endereço que representa o próprio computador (ou o próprio ambiente virtual do WebContainer) — usado para processos se comunicarem sem sair da máquina.">localhost</span> — é uma URL gerada dinamicamente. Usar <code>window.location.host</code> faz o código funcionar tanto no StackBlitz quanto, futuramente, em um computador local ou em produção, sem precisar trocar nada.</div>
   </div>
 
   <div class="step">

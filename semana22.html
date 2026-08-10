@@ -145,6 +145,49 @@ pre code { background:none; color:inherit; padding:0; }
 .criteria li:last-child { border-bottom:none; }
 .criteria li::before { content:'✓'; position:absolute; left:0; color:var(--green); font-weight:700; }
 
+/* GLOSSARY TOOLTIPS */
+.term {
+  border-bottom: 1.5px dotted var(--accent2);
+  cursor: help; position: relative; color: inherit; font-weight: 600;
+  color: var(--accent2);
+}
+code.term { font-weight: 400; border-bottom: 1.5px dotted var(--accent2); }
+.term:hover, .term:focus { outline: none; color: #fff; }
+.term:hover::after, .term:focus::after {
+  content: attr(data-tip);
+  position: absolute; left: 50%; bottom: 135%; transform: translateX(-50%);
+  background: #0a0d17; color: var(--text); border: 1px solid var(--accent2);
+  padding: 10px 14px; border-radius: 8px; font-size: .76rem; line-height: 1.55;
+  width: max-content; max-width: 260px; z-index: 80;
+  box-shadow: 0 12px 30px rgba(0,0,0,.55); white-space: normal; font-weight: 400;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.term:hover::before, .term:focus::before {
+  content:''; position:absolute; left:50%; bottom:122%; transform: translateX(-50%);
+  border:6px solid transparent; border-top-color: var(--accent2); z-index:81;
+}
+@media (max-width: 640px) {
+  .term:hover::after, .term:focus::after { left:0; transform:none; max-width: 220px; }
+  .term:hover::before, .term:focus::before { left:14px; transform:none; }
+}
+
+.glossario {
+  background: var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:22px 26px; margin:18px 0; border-left:3px solid var(--warn);
+}
+.glossario summary {
+  cursor:pointer; font-family:'Syne', sans-serif; color:#fff; font-size:1rem;
+  list-style: none; display:flex; align-items:center; gap:8px;
+}
+.glossario summary::-webkit-details-marker { display:none; }
+.glossario summary::before { content:'▸'; color:var(--warn); transition:.2s; }
+.glossario[open] summary::before { transform: rotate(90deg); }
+.glossario-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:12px; margin-top:16px; }
+.gloss-item { font-size:.85rem; }
+.gloss-item .g-term { color: var(--warn); font-weight:600; font-family:'DM Mono', monospace; font-size:.8rem; }
+.gloss-item .g-def { color: var(--muted2); margin-top:3px; line-height:1.5; }
+.gloss-tip { font-size:.78rem; color:var(--muted); margin-top:14px; font-style:italic; }
+
 .res-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:14px; margin-top:16px; }
 .res-card {
   display:block; background:var(--card); border:1px solid var(--border); border-radius:10px;
@@ -201,15 +244,33 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <h2>🎯 Objetivos de Aprendizagem</h2>
   <div class="box objetivos">
     <ul>
-      <li>Entender o que é uma <strong>Progressive Web App (PWA)</strong> e por que ela importa para dashboards IoT;</li>
-      <li>Criar o <strong>manifest</strong> e tornar o dashboard instalável;</li>
-      <li>Registrar um <strong>Service Worker</strong> e entender estratégias de cache;</li>
-      <li>Transformar o Dashboard IoT das semanas anteriores em uma PWA <strong>offline-first</strong>;</li>
+      <li>Entender o que é uma <span class="term" tabindex="0" data-tip="Aplicação web que se comporta como um app nativo: pode ser instalada e funcionar (ao menos parcialmente) offline.">PWA (Progressive Web App)</span> e por que ela importa para dashboards IoT;</li>
+      <li>Criar o <span class="term" tabindex="0" data-tip="Arquivo que descreve seu app para o navegador — nome, ícone, cor, modo de exibição.">manifest</span> e tornar o dashboard instalável;</li>
+      <li>Registrar um <span class="term" tabindex="0" data-tip="Script que roda em segundo plano no navegador, capaz de interceptar requisições de rede e responder com cache ou buscar na internet.">Service Worker</span> e entender estratégias de <span class="term" tabindex="0" data-tip="Cópia guardada de arquivos ou dados, usada para responder rapidamente ou mesmo offline.">cache</span>;</li>
+      <li>Transformar o Dashboard IoT das semanas anteriores em uma PWA <span class="term" tabindex="0" data-tip="Filosofia de projeto onde a aplicação é pensada para continuar funcionando mesmo sem conexão de internet.">offline-first</span>;</li>
       <li>Testar o comportamento offline dentro do próprio StackBlitz e fechar o Módulo 04 com o projeto completo no GitHub.</li>
     </ul>
   </div>
 </div>
 
+
+<details class="glossario">
+  <summary>📖 Glossário desta semana — clique para expandir (11 termos)</summary>
+  <div class="glossario-grid">
+    <div class="gloss-item"><div class="g-term">PWA (Progressive Web App)</div><div class="g-def">Uma aplicação web que se comporta como um app nativo: pode ser instalada, ganhar ícone na tela inicial e funcionar (ao menos parcialmente) offline.</div></div>
+<div class="gloss-item"><div class="g-term">manifest</div><div class="g-def">Um arquivo (JSON) que descreve seu app para o navegador — nome, ícone, cor, modo de exibição — necessário para o app ficar instalável.</div></div>
+<div class="gloss-item"><div class="g-term">Service Worker</div><div class="g-def">Um script que roda em segundo plano no navegador, separado da página, capaz de interceptar requisições de rede e decidir se responde com algo em cache ou busca na internet.</div></div>
+<div class="gloss-item"><div class="g-term">cache</div><div class="g-def">Uma "cópia guardada" de arquivos ou dados, usada para responder rapidamente (ou mesmo offline) sem precisar buscar tudo de novo na rede.</div></div>
+<div class="gloss-item"><div class="g-term">offline-first</div><div class="g-def">Uma filosofia de projeto onde a aplicação é pensada para continuar funcionando (ao menos parcialmente) mesmo sem conexão de internet.</div></div>
+<div class="gloss-item"><div class="g-term">Cache First</div><div class="g-def">Estratégia de cache que usa o arquivo salvo localmente se existir, só buscando na rede se não houver nada em cache.</div></div>
+<div class="gloss-item"><div class="g-term">Network First</div><div class="g-def">Estratégia de cache que tenta buscar da rede primeiro, e só usa o cache salvo se a rede falhar.</div></div>
+<div class="gloss-item"><div class="g-term">Stale-While-Revalidate</div><div class="g-def">Estratégia de cache que mostra o dado salvo imediatamente enquanto busca uma versão atualizada em segundo plano.</div></div>
+<div class="gloss-item"><div class="g-term">localStorage</div><div class="g-def">Um espaço de armazenamento simples do navegador que guarda dados (texto) no computador do usuário, mesmo depois de fechar a aba.</div></div>
+<div class="gloss-item"><div class="g-term">build de produção</div><div class="g-def">A versão final e otimizada do projeto, gerada para ser publicada/usada de verdade — diferente do modo de desenvolvimento, que prioriza velocidade de edição.</div></div>
+<div class="gloss-item"><div class="g-term">navigator.onLine</div><div class="g-def">Uma propriedade do navegador que informa se o dispositivo está atualmente conectado à internet ou não.</div></div>
+  </div>
+  <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
+</details>
 
 <div class="box" style="border-left:3px solid var(--accent);">
   <strong style="color:#fff;">🔄 Retomando de onde parou?</strong>
@@ -288,7 +349,7 @@ export default defineConfig({
 
   <div class="step">
     <div class="step-title"><span class="step-num">4</span> Entenda o que o plugin faz por trás</div>
-    <p>O <code>vite-plugin-pwa</code> gera automaticamente, no build de produção, dois arquivos essenciais:</p>
+    <p>O <code>vite-plugin-pwa</code> gera automaticamente, no <span class="term" tabindex="0" data-tip="Versão final e otimizada do projeto, gerada para ser publicada/usada de verdade.">build de produção</span>, dois arquivos essenciais:</p>
     <ul>
       <li><strong>manifest</strong> — descreve o app (nome, ícone, cor, modo de exibição) para o navegador saber como "instalá-lo";</li>
       <li><strong>service worker</strong> — um script que roda em segundo plano, intercepta requisições de rede e decide se responde com algo em cache ou busca na internet.</li>
@@ -298,15 +359,15 @@ export default defineConfig({
   <div class="step">
     <div class="step-title"><span class="step-num">5</span> Estratégias de cache — qual usar em cada caso</div>
     <ul>
-      <li><strong>Cache First:</strong> usa o cache se existir, só vai à rede se não tiver nada salvo. Ideal para arquivos estáticos (CSS, ícones, fontes);</li>
-      <li><strong>Network First:</strong> tenta a rede primeiro, cai para o cache se falhar. Ideal para dados de sensores/API — configuramos assim no passo 2;</li>
-      <li><strong>Stale-While-Revalidate:</strong> mostra o cache imediatamente enquanto busca uma versão nova em segundo plano.</li>
+      <li><span class="term" tabindex="0" data-tip="Usa o arquivo salvo localmente se existir, só busca na rede se não houver nada em cache.">Cache First</span>: usa o cache se existir, só vai à rede se não tiver nada salvo. Ideal para arquivos estáticos (CSS, ícones, fontes);</li>
+      <li><span class="term" tabindex="0" data-tip="Tenta buscar da rede primeiro, e só usa o cache salvo se a rede falhar.">Network First</span>: tenta a rede primeiro, cai para o cache se falhar. Ideal para dados de sensores/API — configuramos assim no passo 2;</li>
+      <li><span class="term" tabindex="0" data-tip="Mostra o dado salvo imediatamente enquanto busca uma versão atualizada em segundo plano.">Stale-While-Revalidate</span>: mostra o cache imediatamente enquanto busca uma versão nova em segundo plano.</li>
     </ul>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">6</span> Salvando a última leitura para exibir offline</div>
-    <p>Ajuste <code>useSensorStream.js</code> para persistir a última leitura no <code>localStorage</code>:</p>
+    <p>Ajuste <code>useSensorStream.js</code> para persistir a última leitura no <span class="term" tabindex="0" data-tip="Espaço de armazenamento simples do navegador que guarda dados no computador do usuário, mesmo depois de fechar a aba.">localStorage</span>:</p>
     <pre><code>socket.onmessage = (evento) =&gt; {
   const leitura = JSON.parse(evento.data);
   localStorage.setItem('ultimaLeitura', JSON.stringify(leitura));

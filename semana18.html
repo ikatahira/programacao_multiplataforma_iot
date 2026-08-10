@@ -145,6 +145,49 @@ pre code { background:none; color:inherit; padding:0; }
 .criteria li:last-child { border-bottom:none; }
 .criteria li::before { content:'✓'; position:absolute; left:0; color:var(--green); font-weight:700; }
 
+/* GLOSSARY TOOLTIPS */
+.term {
+  border-bottom: 1.5px dotted var(--accent2);
+  cursor: help; position: relative; color: inherit; font-weight: 600;
+  color: var(--accent2);
+}
+code.term { font-weight: 400; border-bottom: 1.5px dotted var(--accent2); }
+.term:hover, .term:focus { outline: none; color: #fff; }
+.term:hover::after, .term:focus::after {
+  content: attr(data-tip);
+  position: absolute; left: 50%; bottom: 135%; transform: translateX(-50%);
+  background: #0a0d17; color: var(--text); border: 1px solid var(--accent2);
+  padding: 10px 14px; border-radius: 8px; font-size: .76rem; line-height: 1.55;
+  width: max-content; max-width: 260px; z-index: 80;
+  box-shadow: 0 12px 30px rgba(0,0,0,.55); white-space: normal; font-weight: 400;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.term:hover::before, .term:focus::before {
+  content:''; position:absolute; left:50%; bottom:122%; transform: translateX(-50%);
+  border:6px solid transparent; border-top-color: var(--accent2); z-index:81;
+}
+@media (max-width: 640px) {
+  .term:hover::after, .term:focus::after { left:0; transform:none; max-width: 220px; }
+  .term:hover::before, .term:focus::before { left:14px; transform:none; }
+}
+
+.glossario {
+  background: var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:22px 26px; margin:18px 0; border-left:3px solid var(--warn);
+}
+.glossario summary {
+  cursor:pointer; font-family:'Syne', sans-serif; color:#fff; font-size:1rem;
+  list-style: none; display:flex; align-items:center; gap:8px;
+}
+.glossario summary::-webkit-details-marker { display:none; }
+.glossario summary::before { content:'▸'; color:var(--warn); transition:.2s; }
+.glossario[open] summary::before { transform: rotate(90deg); }
+.glossario-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:12px; margin-top:16px; }
+.gloss-item { font-size:.85rem; }
+.gloss-item .g-term { color: var(--warn); font-weight:600; font-family:'DM Mono', monospace; font-size:.8rem; }
+.gloss-item .g-def { color: var(--muted2); margin-top:3px; line-height:1.5; }
+.gloss-tip { font-size:.78rem; color:var(--muted); margin-top:14px; font-style:italic; }
+
 .res-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px,1fr)); gap:14px; margin-top:16px; }
 .res-card {
   display:block; background:var(--card); border:1px solid var(--border); border-radius:10px;
@@ -202,18 +245,47 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <div class="box objetivos">
     <ul>
       <li>Montar um ambiente de desenvolvimento React <strong>sem instalar nada</strong> no computador do laboratório;</li>
-      <li>Aprender a usar o <strong>StackBlitz</strong>, um "VS Code dentro do navegador" que roda Node.js de verdade;</li>
-      <li>Entender por que usamos <strong>React.js</strong> para aplicações web responsivas com dados em tempo real;</li>
-      <li>Criar componentes funcionais e entender a sintaxe JSX;</li>
-      <li>Usar os hooks <code>useState</code> e <code>useEffect</code> para controlar estado e efeitos colaterais;</li>
+      <li>Aprender a usar o <span class="term" tabindex="0" data-tip="Site que roda um ambiente de programação completo (editor + terminal + Node.js) dentro do navegador, sem precisar instalar nada no computador.">StackBlitz</span>, um "VS Code dentro do navegador" que roda Node.js de verdade;</li>
+      <li>Entender por que usamos <span class="term" tabindex="0" data-tip="Biblioteca JavaScript para construir interfaces organizadas em pequenas peças reutilizáveis chamadas componentes.">React.js</span> para aplicações web responsivas com dados em tempo real;</li>
+      <li>Criar <span class="term" tabindex="0" data-tip="Peças reutilizáveis de interface, escritas como funções JavaScript que retornam o que deve aparecer na tela.">componentes</span> funcionais e entender a sintaxe <span class="term" tabindex="0" data-tip="Extensão de sintaxe do JavaScript que permite escrever algo parecido com HTML dentro do código.">JSX</span>;</li>
+      <li>Usar os <span class="term" tabindex="0" data-tip="Funções especiais do React (começam com &quot;use&quot;) que dão superpoderes a um componente, como guardar estado ou reagir a mudanças.">hooks</span> <code>useState</code> e <code>useEffect</code> para controlar estado e efeitos colaterais;</li>
       <li>Salvar o projeto no <strong>GitHub</strong> direto do navegador, sem usar comandos de <code>git</code> instalados localmente.</li>
     </ul>
   </div>
 </div>
 
+
+<details class="glossario">
+  <summary>📖 Glossário desta semana — clique para expandir (20 termos)</summary>
+  <div class="glossario-grid">
+    <div class="gloss-item"><div class="g-term">StackBlitz</div><div class="g-def">Site que roda um ambiente de programação completo (editor + terminal + Node.js) dentro do navegador, sem precisar instalar nada no computador.</div></div>
+<div class="gloss-item"><div class="g-term">WebContainer</div><div class="g-def">A tecnologia por trás do StackBlitz: um "computador virtual" com Node.js rodando dentro da própria aba do navegador, usando WebAssembly.</div></div>
+<div class="gloss-item"><div class="g-term">Node.js</div><div class="g-def">Um programa que permite rodar código JavaScript fora do navegador — é o "motor" que executa o servidor e as ferramentas de build (Vite, npm, etc).</div></div>
+<div class="gloss-item"><div class="g-term">npm</div><div class="g-def">Node Package Manager — o "gerenciador de pacotes" do Node.js. Serve para instalar bibliotecas prontas (como React) digitando comandos no terminal.</div></div>
+<div class="gloss-item"><div class="g-term">Vite</div><div class="g-def">Ferramenta que organiza, empacota e serve seu projeto React durante o desenvolvimento, com atualização automática no navegador.</div></div>
+<div class="gloss-item"><div class="g-term">React</div><div class="g-def">Biblioteca JavaScript para construir interfaces (telas) organizadas em pequenas peças reutilizáveis chamadas componentes.</div></div>
+<div class="gloss-item"><div class="g-term">componente</div><div class="g-def">Uma peça reutilizável de interface (um pedaço de tela) escrita como uma função JavaScript que retorna o que deve aparecer na página.</div></div>
+<div class="gloss-item"><div class="g-term">JSX</div><div class="g-def">Uma extensão de sintaxe do JavaScript que permite escrever algo parecido com HTML dentro do código — é convertido em JavaScript puro por trás dos panos.</div></div>
+<div class="gloss-item"><div class="g-term">props</div><div class="g-def">Abreviação de "properties" (propriedades) — são os dados que um componente recebe de fora, como parâmetros de uma função.</div></div>
+<div class="gloss-item"><div class="g-term">hook</div><div class="g-def">Uma função especial do React (sempre começa com "use", como useState) que permite componentes de função usar recursos como estado e efeitos colaterais.</div></div>
+<div class="gloss-item"><div class="g-term">estado (state)</div><div class="g-def">Um dado que pertence a um componente e que, quando muda, faz a tela se atualizar sozinha automaticamente.</div></div>
+<div class="gloss-item"><div class="g-term">useState</div><div class="g-def">Hook do React que cria uma variável de estado: guarda um valor e fornece uma função para atualizá-lo.</div></div>
+<div class="gloss-item"><div class="g-term">useEffect</div><div class="g-def">Hook do React que executa código em resposta a mudanças (ex: buscar dados, iniciar um temporizador) — os chamados "efeitos colaterais".</div></div>
+<div class="gloss-item"><div class="g-term">efeito colateral</div><div class="g-def">Qualquer ação que um componente faz além de simplesmente desenhar a tela — como buscar dados na internet, ligar um temporizador ou mexer no armazenamento do navegador.</div></div>
+<div class="gloss-item"><div class="g-term">setInterval</div><div class="g-def">Função nativa do JavaScript que repete uma ação de tempos em tempos (ex: a cada 2000 milissegundos = 2 segundos).</div></div>
+<div class="gloss-item"><div class="g-term">Hot Module Reload</div><div class="g-def">Recurso do Vite que atualiza a página no navegador automaticamente assim que você salva uma alteração no código, sem precisar recarregar tudo.</div></div>
+<div class="gloss-item"><div class="g-term">Vitest</div><div class="g-def">Ferramenta (test runner) usada para escrever e rodar testes automatizados no projeto, integrada nativamente ao Vite.</div></div>
+<div class="gloss-item"><div class="g-term">commit</div><div class="g-def">Um "registro" de uma versão do seu código no Git/GitHub, com uma mensagem descrevendo o que mudou.</div></div>
+<div class="gloss-item"><div class="g-term">push</div><div class="g-def">Ação de enviar seus commits salvos localmente para o repositório remoto no GitHub, tornando-os visíveis para quem tiver acesso ao repositório.</div></div>
+<div class="gloss-item"><div class="g-term">repositório</div><div class="g-def">Uma pasta de projeto versionada e hospedada no GitHub, contendo todo o histórico de alterações do código.</div></div>
+  </div>
+  <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
+</details>
+
+
 <div class="section">
   <h2>🖥️ Ambiente de Desenvolvimento — sem instalar absolutamente nada</h2>
-  <p>Nos laboratórios da FATEC os computadores rodam <strong>Windows 11</strong> e você <strong>não tem permissão para instalar programas</strong> (nem o Node.js, nem o VS Code, nem o Git). Isso não é um problema: vamos usar o <strong><a href="https://stackblitz.com" target="_blank">StackBlitz</a></strong>, um site que roda um ambiente Node.js <strong>completo dentro do próprio navegador</strong>, usando uma tecnologia chamada <em>WebContainers</em>. Na prática, para você, ele se comporta exatamente como o VS Code + terminal + Node instalados — só que 100% dentro de uma aba do Edge ou Chrome, sem precisar de permissão de administrador.</p>
+  <p>Nos laboratórios da FATEC os computadores rodam <strong>Windows 11</strong> e você <strong>não tem permissão para instalar programas</strong> (nem o <span class="term" tabindex="0" data-tip="Programa que permite rodar código JavaScript fora do navegador — é o &quot;motor&quot; que executa o servidor e as ferramentas de build.">Node.js</span>, nem o VS Code, nem o Git). Isso não é um problema: vamos usar o <strong><a href="https://stackblitz.com" target="_blank">StackBlitz</a></strong>, um site que roda um ambiente Node.js <strong>completo dentro do próprio navegador</strong>, usando uma tecnologia chamada <span class="term" tabindex="0" data-tip="Tecnologia que roda um &quot;computador virtual&quot; com Node.js dentro da própria aba do navegador, usando WebAssembly — sem precisar de instalação nem de servidor externo.">WebContainers</span>. Na prática, para você, ele se comporta exatamente como o VS Code + terminal + Node instalados — só que 100% dentro de uma aba do Edge ou Chrome, sem precisar de permissão de administrador.</p>
   <div class="tip"><strong>Funciona em qualquer computador:</strong> como nada é instalado localmente, você pode sair do laboratório, chegar em outro computador na próxima semana (ou em casa) e continuar exatamente de onde parou — desde que entre com a mesma conta.</div>
 
   <div class="step">
@@ -233,7 +305,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
   <div class="step">
     <div class="step-title"><span class="step-num">3</span> Crie o projeto React com Vite</div>
-    <p>Ainda na página inicial do StackBlitz, clique no botão <strong>"Create new" (ou "+ New Project" / "New")</strong>. Na galeria de templates que abrir, procure e clique no card <strong>"React"</strong> (ele já vem configurado com <strong>Vite</strong>, a ferramenta que empacota o projeto — não é necessário escolher nada a mais).</p>
+    <p>Ainda na página inicial do StackBlitz, clique no botão <strong>"Create new" (ou "+ New Project" / "New")</strong>. Na galeria de templates que abrir, procure e clique no card <strong>"React"</strong> (ele já vem configurado com <span class="term" tabindex="0" data-tip="Ferramenta que organiza, empacota e serve seu projeto React durante o desenvolvimento, com atualização automática no navegador a cada alteração.">Vite</span>, a ferramenta que empacota o projeto — não é necessário escolher nada a mais).</p>
     <p>Espere alguns segundos: na primeira vez, o StackBlitz está baixando e montando um Node.js completo dentro da própria aba do navegador. Quando terminar, você verá três áreas principais na tela:</p>
     <ul>
       <li><strong>Esquerda:</strong> explorador de arquivos (igual ao do VS Code);</li>
@@ -274,7 +346,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 }
 
 export default App;</code></pre>
-    <p>Assim que você salva (o StackBlitz salva sozinho enquanto você digita — não existe "Ctrl+S obrigatório", mas pode usar mesmo assim), olhe o painel de <strong>Preview</strong> à direita: ele atualiza sozinho. Repare que dentro do <code>return()</code> você escreve algo parecido com HTML dentro do JavaScript — isso é <strong>JSX</strong>.</p>
+    <p>Assim que você salva (o StackBlitz salva sozinho enquanto você digita graças ao <span class="term" tabindex="0" data-tip="Recurso do Vite que atualiza a página no navegador automaticamente assim que você salva uma alteração, sem precisar recarregar tudo.">Hot Module Reload</span> — não existe "Ctrl+S obrigatório", mas pode usar mesmo assim), olhe o painel de <strong>Preview</strong> à direita: ele atualiza sozinho. Repare que dentro do <code>return()</code> você escreve algo parecido com HTML dentro do JavaScript — isso é <strong>JSX</strong>.</p>
     <div class="tip"><strong>Regra de ouro do JSX:</strong> todo componente deve retornar <em>um único elemento pai</em> (por isso a <code>&lt;div&gt;</code> envolvendo tudo), e atributos de estilo usam <code>camelCase</code> dentro de um objeto JS (<code>style={{...}}</code>).</div>
   </div>
 
@@ -294,7 +366,7 @@ export default App;</code></pre>
 }
 
 export default SensorCard;</code></pre>
-    <p>Este componente recebe <strong>props</strong> (<code>nome</code>, <code>valor</code>, <code>unidade</code>) — são os "parâmetros" de um componente, exatamente como parâmetros de uma função. Agora use-o em <code>App.jsx</code>:</p>
+    <p>Este componente recebe <span class="term" tabindex="0" data-tip="Abreviação de &quot;properties&quot; — os dados que um componente recebe de fora, como parâmetros de uma função.">props</span> (<code>nome</code>, <code>valor</code>, <code>unidade</code>) — são os "parâmetros" de um componente, exatamente como parâmetros de uma função. Agora use-o em <code>App.jsx</code>:</p>
     <pre><code>import SensorCard from './SensorCard';
 
 function App() {
@@ -312,7 +384,7 @@ export default App;</code></pre>
 
   <div class="step">
     <div class="step-title"><span class="step-num">8</span> Estado com useState</div>
-    <p>Sensores mudam de valor. Para a tela reagir a mudanças, usamos o hook <code>useState</code>. Edite <code>App.jsx</code>:</p>
+    <p>Sensores mudam de valor. Para a tela reagir a mudanças, usamos o <span class="term" tabindex="0" data-tip="Função especial do React (sempre começa com &quot;use&quot;) que dá superpoderes a um componente, como guardar estado ou reagir a mudanças.">hook</span> <code>useState</code>. Edite <code>App.jsx</code>:</p>
     <pre><code>import { useState } from 'react';
 import SensorCard from './SensorCard';
 
@@ -333,7 +405,7 @@ function App() {
 }
 
 export default App;</code></pre>
-    <p><code>useState(24.5)</code> devolve dois itens: o <strong>valor atual</strong> (<code>temperatura</code>) e uma <strong>função para atualizá-lo</strong> (<code>setTemperatura</code>). Sempre que você chama <code>setTemperatura(...)</code>, o React re-renderiza o componente com o novo valor. Clique no botão no painel de Preview e veja o número mudar.</p>
+    <p><code>useState(24.5)</code> devolve dois itens: o <span class="term" tabindex="0" data-tip="O &quot;estado&quot; (state) é um dado que pertence ao componente. Quando ele muda, a tela se atualiza sozinha.">valor atual do estado</span> (<code>temperatura</code>) e uma <strong>função para atualizá-lo</strong> (<code>setTemperatura</code>). Sempre que você chama <code>setTemperatura(...)</code>, o React re-renderiza (redesenha) o componente com o novo valor. Clique no botão no painel de Preview e veja o número mudar.</p>
   </div>
 
   <div class="step">
@@ -385,13 +457,13 @@ export default App;</code></pre>
   <div class="step">
     <div class="step-title"><span class="step-num">11</span> Salvando o projeto no GitHub (sem usar git no terminal)</div>
     <p>Na barra superior do StackBlitz, procure o ícone do <strong>GitHub</strong> (perto do nome do projeto) e clique nele — a opção pode aparecer como <strong>"Connect Repository"</strong> ou <strong>"Export to GitHub"</strong>. Escolha <strong>criar um novo repositório</strong>, dê o nome <code>dashboard-iot-isw044</code> e confirme. O StackBlitz envia todos os arquivos automaticamente para o seu GitHub — nenhum comando <code>git</code> é digitado.</p>
-    <p>A partir de agora, sempre que quiser salvar uma nova versão do trabalho, clique novamente nesse mesmo ícone e use a opção de <strong>commit/push</strong> disponível ali, escrevendo uma mensagem curta descrevendo o que mudou (ex: "adiciona SensorCard e useEffect").</p>
+    <p>A partir de agora, sempre que quiser salvar uma nova versão do trabalho, clique novamente nesse mesmo ícone e use a opção de <span class="term" tabindex="0" data-tip="Um &quot;registro&quot; de uma versão do seu código, com uma mensagem descrevendo o que mudou.">commit</span>/<span class="term" tabindex="0" data-tip="Ação de enviar seus commits para o repositório no GitHub, tornando-os visíveis para quem tiver acesso.">push</span> disponível ali, escrevendo uma mensagem curta descrevendo o que mudou (ex: "adiciona SensorCard e useEffect").</p>
     <div class="tip"><strong>Por que isso substitui o Git tradicional?</strong> O comando <code>git</code> por trás continua existindo — só que quem digita os comandos é o próprio StackBlitz, através da API do GitHub. O resultado no seu repositório é idêntico ao que você teria rodando <code>git add / commit / push</code> localmente.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">12</span> Rodando testes com Vitest (no mesmo terminal do navegador)</div>
-    <p>Clique na aba <strong>Terminal</strong> na parte inferior do StackBlitz (é um terminal real, dentro do WebContainer) e digite:</p>
+    <p>Clique na aba <strong>Terminal</strong> na parte inferior do StackBlitz (é um terminal real, dentro do WebContainer) e digite o comando abaixo, que usa o <span class="term" tabindex="0" data-tip="Node Package Manager — o &quot;gerenciador de pacotes&quot; do Node.js, usado para instalar bibliotecas prontas digitando comandos no terminal.">npm</span> para instalar o <span class="term" tabindex="0" data-tip="Ferramenta (test runner) usada para escrever e rodar testes automatizados, integrada nativamente ao Vite.">Vitest</span> e bibliotecas auxiliares de teste:</p>
     <pre><code>npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom</code></pre>
     <p>Crie o arquivo <code>src/SensorCard.test.jsx</code> (mesmo processo do passo 7: botão direito em <code>src</code> → New file):</p>
     <pre><code>import { render, screen } from '@testing-library/react';
