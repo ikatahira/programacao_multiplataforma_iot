@@ -194,7 +194,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <div class="hero-tag"><span></span> Semana 19 de 40 · Módulo 04</div>
     <div class="hero-week">MÓDULO 04 · DESENVOLVIMENTO WEB MODERNO · SEMANA 19</div>
     <h1>Consumo de APIs REST no Front-end</h1>
-    <p class="hero-sub">Use fetch, trate carregamento/erro, crie um hook useFetch reutilizável e dê os primeiros passos em GraphQL consumindo uma API pública real.</p>
+    <p class="hero-sub">Continuando no mesmo projeto StackBlitz: use fetch, trate carregamento/erro, crie um hook useFetch reutilizável e dê os primeiros passos em GraphQL.</p>
   </div>
 
 <div class="section">
@@ -203,12 +203,26 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <ul>
       <li>Revisar os conceitos de <strong>API REST</strong>: recursos, verbos HTTP, status codes e JSON;</li>
       <li>Consumir uma API pública real dentro de um componente React com <code>fetch</code>;</li>
-      <li>Tratar estados de <strong>carregando / sucesso / erro</strong> corretamente (essencial para dados de sensores que podem falhar);</li>
+      <li>Tratar estados de <strong>carregando / sucesso / erro</strong> corretamente;</li>
       <li>Criar um <strong>hook customizado</strong> (<code>useFetch</code>) para reaproveitar lógica de requisição;</li>
       <li>Comparar rapidamente REST com <strong>GraphQL</strong>, conforme previsto na ementa da disciplina.</li>
     </ul>
   </div>
 </div>
+
+
+<div class="box" style="border-left:3px solid var(--accent);">
+  <strong style="color:#fff;">🔄 Retomando de onde parou?</strong>
+  <p style="margin-top:8px;">Você está usando um <strong>computador de laboratório diferente</strong> do da semana passada? Sem problema — nada foi instalado localmente, então nada fica "preso" numa máquina.</p>
+  <ol style="margin:10px 0 0 20px;">
+    <li>Abra o Edge (ou Chrome) e acesse <a href="https://stackblitz.com" target="_blank">stackblitz.com</a>;</li>
+    <li>Clique em <strong>Sign in</strong> (canto superior direito) → <strong>Continue with GitHub</strong> → entre com a mesma conta GitHub da semana passada;</li>
+    <li>Se preferir reabrir direto pelo repositório: acesse <code>https://stackblitz.com/github/SEU-USUARIO/dashboard-iot-isw044</code> — isso importa seu repositório do GitHub direto para um ambiente StackBlitz novo, pronto para editar;</li>
+    <li>No terminal do projeto, rode <code>npm install</code> uma vez (garante que todas as dependências estão presentes) e depois <code>npm run dev</code>.</li>
+  </ol>
+  <p style="margin-top:8px;">Não lembra o passo a passo completo de configuração do ambiente? Ele está detalhado na <a href="semana18.html">Semana 18</a>.</p>
+</div>
+
 
 <div class="section">
   <h2>🧠 Revisão rápida: REST em uma página</h2>
@@ -219,26 +233,23 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <li><code>PUT/PATCH</code> — atualizar um registro existente</li>
     <li><code>DELETE</code> — remover um registro</li>
   </ul>
-  <p>As respostas normalmente vêm em <strong>JSON</strong> e trazem um <strong>status code</strong>: <code>200</code> OK, <code>201</code> criado, <code>400</code> erro do cliente, <code>404</code> não encontrado, <code>500</code> erro no servidor. Esses códigos serão importantes para tratarmos erros de conexão com sensores mais adiante.</p>
+  <p>As respostas normalmente vêm em <strong>JSON</strong> e trazem um <strong>status code</strong>: <code>200</code> OK, <code>201</code> criado, <code>400</code> erro do cliente, <code>404</code> não encontrado, <code>500</code> erro no servidor.</p>
 </div>
 
 <div class="section">
   <h2>🛠️ Passo a Passo — Consumindo uma API real no React</h2>
-  <p>Vamos usar a <strong>Open-Meteo</strong>, uma API pública de dados meteorológicos, totalmente gratuita e <strong>sem necessidade de chave de API</strong> — perfeita para simular "dados de sensores ambientais" (temperatura, vento, umidade) vindos de fora da aplicação, exatamente como viria de um broker IoT.</p>
+  <p>Vamos usar a <strong>Open-Meteo</strong>, uma API pública de dados meteorológicos, gratuita e <strong>sem necessidade de chave de API</strong> — perfeita para simular "dados de sensores ambientais" vindos de fora da aplicação.</p>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">1</span> Continue o projeto da Semana 18</div>
-    <p>Abra o projeto <code>dashboard-iot</code> criado na semana passada:</p>
-    <pre><code>cd dashboard-iot
-npm run dev</code></pre>
-    <p>Se preferir começar do zero, repita o passo <code>npm create vite@latest ... --template react</code> da Semana 18.</p>
+    <div class="step-title"><span class="step-num">1</span> Reabra seu projeto no StackBlitz</div>
+    <p>Acesse <code>stackblitz.com</code>, entre com GitHub e abra o projeto <code>dashboard-iot-isw044</code> criado na Semana 18 (veja o box "Retomando de onde parou?" acima se estiver em outro computador).</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">2</span> Teste a API direto no navegador</div>
-    <p>Cole esta URL na barra de endereços do navegador (é uma requisição <code>GET</code> pura):</p>
+    <div class="step-title"><span class="step-num">2</span> Teste a API direto em outra aba do navegador</div>
+    <p>Abra uma nova aba e cole esta URL (é uma requisição <code>GET</code> pura, dá para testar direto no navegador):</p>
     <pre><code>https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&current=temperature_2m,relative_humidity_2m,wind_speed_10m</code></pre>
-    <p>Você verá um JSON parecido com este (dados de Ourinhos/SP, mas pode trocar latitude/longitude pela sua cidade):</p>
+    <p>Você verá um JSON parecido com este (dados de Ourinhos/SP — pode trocar latitude/longitude pela sua cidade):</p>
     <pre><code>{
   "current": {
     "temperature_2m": 24.3,
@@ -246,12 +257,12 @@ npm run dev</code></pre>
     "wind_speed_10m": 9.4
   }
 }</code></pre>
-    <p>Perceba: isso é <strong>exatamente</strong> a forma como, mais adiante, você vai receber os dados de um sensor real — um objeto JSON com valores numéricos e um timestamp.</p>
+    <p>Isso é <strong>exatamente</strong> a forma como, mais adiante, você vai receber dados de um sensor real.</p>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">3</span> Criando o componente com fetch()</div>
-    <p>Crie <code>src/PainelClima.jsx</code>:</p>
+    <p>De volta ao StackBlitz, crie o arquivo <code>src/PainelClima.jsx</code> (botão direito em <code>src</code> → New file):</p>
     <pre><code>import { useState, useEffect } from 'react';
 
 function PainelClima() {
@@ -298,12 +309,13 @@ function App() {
   return &lt;PainelClima /&gt;;
 }
 export default App;</code></pre>
+    <p>Olhe o painel de <strong>Preview</strong>: em poucos segundos o texto "Carregando..." deve virar os dados reais de temperatura vindos da internet.</p>
     <div class="tip"><strong>Por que os três estados (carregando / erro / dados)?</strong> Numa aplicação real conectada a sensores, a rede pode cair, o servidor pode demorar, o sensor pode estar offline. Tratar esses três casos desde já evita uma tela em branco quando algo falhar.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">4</span> Criando um hook customizado — useFetch</div>
-    <p>Como toda requisição repete o mesmo padrão (carregando/erro/dados), vamos extrair isso para um <strong>hook reutilizável</strong>. Crie <code>src/useFetch.js</code>:</p>
+    <p>Crie <code>src/useFetch.js</code>:</p>
     <pre><code>import { useState, useEffect } from 'react';
 
 function useFetch(url) {
@@ -344,26 +356,24 @@ function PainelClima() {
   );
 }
 export default PainelClima;</code></pre>
-    <p>Esse mesmo hook <code>useFetch</code> poderá ser reaproveitado para <strong>qualquer</strong> API REST futura da disciplina — inclusive a que vocês mesmos vão construir no Módulo 07 (Semanas 33–36).</p>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">5</span> Atualização periódica (polling)</div>
-    <p>Sensores reais mandam dados repetidamente. Adicione um <code>setInterval</code> que refaz a requisição a cada 60 segundos dentro do <code>useFetch</code>, ou crie uma variante <code>usePolling</code>:</p>
     <pre><code>useEffect(() => {
   function buscar() {
-    fetch(url).then(r =&gt; r.json()).then(setDados);
+    fetch(url).then(r =&gt; r.json()).then(json =&gt; setDados(json));
   }
   buscar();
   const id = setInterval(buscar, 60000);
   return () =&gt; clearInterval(id);
 }, [url]);</code></pre>
-    <div class="tip"><strong>Isso é "polling"</strong>: o cliente pergunta ao servidor de tempos em tempos. Funciona bem, mas gasta requisições à toa quando nada mudou. Na Semana 20 veremos o <strong>WebSocket</strong>, onde é o servidor quem avisa o cliente assim que há um dado novo — muito mais eficiente para IoT em tempo real.</div>
+    <div class="tip"><strong>Isso é "polling"</strong>: o cliente pergunta ao servidor de tempos em tempos. Na Semana 20 veremos o <strong>WebSocket</strong>, onde é o servidor quem avisa o cliente assim que há um dado novo.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">6</span> Bônus — um gostinho de GraphQL</div>
-    <p>A ementa também cita GraphQL. A diferença central: em REST você recebe <em>tudo</em> que o endpoint devolve; em GraphQL você <em>pede exatamente os campos</em> que quer, em uma única requisição <code>POST</code>. Teste com a API pública de países:</p>
+    <p>A ementa também cita GraphQL. Diferença central: em REST você recebe <em>tudo</em> que o endpoint devolve; em GraphQL você <em>pede exatamente os campos</em> que quer. Cole isto no terminal do StackBlitz para testar rapidamente com Node (crie um arquivo temporário <code>teste-graphql.mjs</code> ou rode em outra aba com o console do navegador — F12 → Console):</p>
     <pre><code>fetch('https://countries.trevorblades.com/', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -373,14 +383,14 @@ export default PainelClima;</code></pre>
 })
   .then(r =&gt; r.json())
   .then(json =&gt; console.log(json.data.country));</code></pre>
-    <p>Repare que a "query" define exatamente os campos <code>name</code>, <code>capital</code> e <code>currency</code> — nada a mais é retornado. Vamos aprofundar GraphQL no Módulo 07.</p>
+    <p>Vamos aprofundar GraphQL no Módulo 07.</p>
   </div>
 </div>
 
 <div class="section">
   <h2>🧪 Checkpoint TDD</h2>
   <div class="checkpoint">
-    Teste o hook <code>useFetch</code> "mockando" (simulando) a função <code>fetch</code> global, sem depender da internet estar disponível durante os testes:
+    No terminal do StackBlitz, teste o hook <code>useFetch</code> "mockando" (simulando) a função <code>fetch</code> global, sem depender da internet estar disponível durante os testes:
   </div>
   <pre><code>import { describe, it, expect, vi } from 'vitest';
 
@@ -403,11 +413,11 @@ global.fetch = vi.fn(() =&gt;
     <ol>
       <li>Escolha uma API pública gratuita e sem necessidade de chave (Open-Meteo, ViaCEP, ou outra API REST livre à sua escolha);</li>
       <li>Implemente o hook <code>useFetch</code> reutilizável, conforme o passo a passo;</li>
-      <li>Exiba os dados em pelo menos 2 componentes diferentes (ex: <code>PainelClima</code> e outro painel de sua escolha), reaproveitando o mesmo hook;</li>
-      <li>Trate os três estados: carregando, erro (force um erro trocando a URL propositalmente e mostre a mensagem) e sucesso;</li>
+      <li>Exiba os dados em pelo menos 2 componentes diferentes, reaproveitando o mesmo hook;</li>
+      <li>Trate os três estados: carregando, erro (force um erro trocando a URL propositalmente) e sucesso;</li>
       <li>Implemente atualização automática (polling) a cada 30–60 segundos em pelo menos um dos painéis;</li>
       <li>Escreva ao menos 1 teste automatizado mockando o <code>fetch</code>;</li>
-      <li>Commit e push no mesmo repositório GitHub da Semana 18.</li>
+      <li>Salve as alterações no mesmo repositório GitHub (StackBlitz → ícone GitHub → commit/push).</li>
     </ol>
     <div class="deliverable"><strong>📦 Entregável:</strong> Link do repositório atualizado + print mostrando o estado de erro funcionando corretamente.</div>
     <h4>✅ Critérios de Avaliação:</h4>

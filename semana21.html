@@ -204,11 +204,25 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
       <li>Consolidar os conhecimentos das Semanas 18–20 em um <strong>dashboard IoT completo</strong>;</li>
       <li>Entender a arquitetura ponta a ponta: <strong>sensor (ESP32/Arduino) → broker/servidor → WebSocket → React</strong>;</li>
       <li>Exibir múltiplos sensores com <strong>gráficos</strong> de histórico usando Chart.js;</li>
-      <li>Organizar o layout de forma <strong>responsiva</strong> (mobile-first), como pedido na ementa;</li>
+      <li>Organizar o layout de forma <strong>responsiva</strong> (mobile-first);</li>
       <li>Preparar o projeto para ligação com hardware real (ESP32) quando disponível no laboratório.</li>
     </ul>
   </div>
 </div>
+
+
+<div class="box" style="border-left:3px solid var(--accent);">
+  <strong style="color:#fff;">🔄 Retomando de onde parou?</strong>
+  <p style="margin-top:8px;">Você está usando um <strong>computador de laboratório diferente</strong> do da semana passada? Sem problema — nada foi instalado localmente, então nada fica "preso" numa máquina.</p>
+  <ol style="margin:10px 0 0 20px;">
+    <li>Abra o Edge (ou Chrome) e acesse <a href="https://stackblitz.com" target="_blank">stackblitz.com</a>;</li>
+    <li>Clique em <strong>Sign in</strong> (canto superior direito) → <strong>Continue with GitHub</strong> → entre com a mesma conta GitHub da semana passada;</li>
+    <li>Se preferir reabrir direto pelo repositório: acesse <code>https://stackblitz.com/github/SEU-USUARIO/dashboard-iot-isw044</code> — isso importa seu repositório do GitHub direto para um ambiente StackBlitz novo, pronto para editar;</li>
+    <li>No terminal do projeto, rode <code>npm install</code> uma vez (garante que todas as dependências estão presentes) e depois <code>npm run dev</code>.</li>
+  </ol>
+  <p style="margin-top:8px;">Não lembra o passo a passo completo de configuração do ambiente? Ele está detalhado na <a href="semana18.html">Semana 18</a>.</p>
+</div>
+
 
 <div class="section">
   <h2>🧠 Arquitetura do Dashboard IoT</h2>
@@ -216,16 +230,16 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <pre><code>[ ESP32 / Arduino ]
         │  mede temperatura, umidade, luz...
         ▼
-[ Servidor / Broker ]   ← hoje: nosso servidor Node.js com WebSocket
+[ Servidor / Broker ]   ← nosso servidor.js com WebSocket, dentro do mesmo projeto StackBlitz
         │                  (no Módulo 06 veremos MQTT/RabbitMQ/Kafka)
         ▼
-[ WebSocket ]  →  dado "empurrado" em tempo real
+[ WebSocket via /ws (proxy do Vite) ]
         ▼
 [ Dashboard React ]  ← o que vamos construir agora
         │
         ▼
   Usuário vê os gráficos ao vivo</code></pre>
-  <p>Se o laboratório já tiver placas ESP32 disponíveis, o servidor da Semana 20 pode receber dados reais via <code>HTTP POST</code> ou MQTT em vez de <code>Math.random()</code> — a interface React não muda nada, pois ela só depende do formato JSON da mensagem. Essa separação entre "quem gera o dado" e "quem exibe o dado" é um dos princípios centrais de sistemas distribuídos.</p>
+  <p>Se o laboratório já tiver placas ESP32 disponíveis, o <code>servidor.js</code> pode receber dados reais via <code>HTTP POST</code> em vez de <code>Math.random()</code> — a interface React não muda nada, pois ela só depende do formato JSON da mensagem.</p>
 </div>
 
 <div class="section">
@@ -233,7 +247,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
   <div class="step">
     <div class="step-title"><span class="step-num">1</span> Expanda o servidor para múltiplos sensores</div>
-    <p>No <code>servidor.js</code> da Semana 20, envie um objeto com vários sensores de uma vez, o que simplifica o lado do cliente:</p>
+    <p>No StackBlitz, abra <code>servidor.js</code> (raiz do projeto) e envie um objeto com vários sensores de uma vez:</p>
     <pre><code>const intervalo = setInterval(() =&gt; {
   const leitura = {
     timestamp: new Date().toISOString(),
@@ -246,21 +260,22 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">2</span> Instale o Chart.js no projeto React</div>
+    <div class="step-title"><span class="step-num">2</span> Instale o Chart.js pelo terminal do StackBlitz</div>
     <pre><code>npm install chart.js react-chartjs-2</code></pre>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">3</span> Crie um hook para acumular histórico por sensor</div>
-    <p>Ajuste (ou crie um novo) <code>useSensorStream.js</code> a partir do <code>useWebSocket</code> da Semana 20:</p>
+    <p>Crie <code>src/useSensorStream.js</code> (baseado no <code>useWebSocket</code> da Semana 20):</p>
     <pre><code>import { useState, useEffect } from 'react';
 
-function useSensorStream(url, limite = 20) {
+function useSensorStream(limite = 20) {
   const [historico, setHistorico] = useState([]);
   const [conectado, setConectado] = useState(false);
 
   useEffect(() =&gt; {
-    const socket = new WebSocket(url);
+    const protocolo = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const socket = new WebSocket(protocolo + window.location.host + '/ws');
     socket.onopen = () =&gt; setConectado(true);
     socket.onclose = () =&gt; setConectado(false);
     socket.onmessage = (evento) =&gt; {
@@ -268,7 +283,7 @@ function useSensorStream(url, limite = 20) {
       setHistorico(anterior =&gt; [...anterior.slice(-(limite - 1)), leitura]);
     };
     return () =&gt; socket.close();
-  }, [url, limite]);
+  }, [limite]);
 
   return { historico, conectado, ultimo: historico[historico.length - 1] };
 }
@@ -315,7 +330,7 @@ export default GraficoSensor;</code></pre>
 import GraficoSensor from './GraficoSensor';
 
 function Dashboard() {
-  const { historico, conectado, ultimo } = useSensorStream('ws://localhost:8080', 20);
+  const { historico, conectado, ultimo } = useSensorStream(20);
 
   return (
     &lt;div style={{ padding: 24 }}&gt;
@@ -343,18 +358,17 @@ function Dashboard() {
 }
 
 export default Dashboard;</code></pre>
-    <p>Repare no <code>gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'</code>: isso faz o layout se reorganizar sozinho conforme o tamanho da tela — a base da <strong>responsividade</strong> exigida na ementa, sem precisar escrever media queries para cada caso.</p>
+    <p>Use <code>&lt;Dashboard /&gt;</code> em <code>App.jsx</code> no lugar do componente da semana passada. Repare no <code>gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'</code>: isso faz o layout se reorganizar sozinho conforme o tamanho da tela — a base da <strong>responsividade</strong> exigida na ementa.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">6</span> (Opcional) Conectando um ESP32 real</div>
-    <p>Se sua turma já tem placas ESP32 disponíveis (materiais de apoio "ESP32 — Missão IoT" no índice do curso), o ESP32 pode enviar leituras via <code>HTTP POST</code> para um endpoint do servidor Node, que por sua vez retransmite via WebSocket para os clientes conectados:</p>
-    <pre><code>// No ESP32 (pseudocódigo em C++/Arduino, usando WiFiClient/HTTPClient)
-HTTPClient http;
-http.begin("http://IP_DO_SERVIDOR:8080/leitura");
-http.addHeader("Content-Type", "application/json");
-http.POST("{\"temperatura\":" + String(valorLido) + "}");</code></pre>
-    <p>No servidor Node, adicione uma rota HTTP simples (com <code>express</code>) que recebe esse POST e faz <code>socket.send(...)</code> para todos os clientes WebSocket conectados. Isso é opcional nesta semana — o importante é que a interface React já está pronta para receber dados reais sem qualquer alteração.</p>
+    <div class="step-title"><span class="step-num">6</span> Testando a responsividade</div>
+    <p>Abra o Preview em uma aba separada (ícone no canto do painel), pressione <strong>F12</strong> para abrir o DevTools do navegador, clique no ícone de "alternar visualização de dispositivo" (parece um celular/tablet, geralmente <kbd>Ctrl+Shift+M</kbd> no Edge/Chrome) e teste em diferentes tamanhos de tela.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">7</span> (Opcional) Conectando um ESP32 real</div>
+    <p>Se sua turma já tem placas ESP32 disponíveis (materiais de apoio "ESP32 — Missão IoT" no índice do curso), o ESP32 pode enviar leituras via <code>HTTP POST</code> para uma rota adicionada ao <code>servidor.js</code> (usando <code>express</code>), que por sua vez retransmite via WebSocket para os clientes conectados. Isso normalmente exige que o ESP32 esteja na mesma rede que consegue alcançar o endereço público do seu projeto StackBlitz — combine com o professor a melhor forma de testar isso no laboratório (pode envolver expor o servidor via um serviço de túnel, o que será visto com mais detalhe no Módulo 06).</p>
   </div>
 </div>
 
@@ -372,13 +386,13 @@ http.POST("{\"temperatura\":" + String(valorLido) + "}");</code></pre>
     <p class="desc">Entregue a versão consolidada do dashboard, com pelo menos 3 sensores, gráficos e layout responsivo.</p>
     <h4>📋 Instruções:</h4>
     <ol>
-      <li>Consolide os projetos das Semanas 18–20 em um único dashboard funcional;</li>
+      <li>Consolide os projetos das Semanas 18–20 em um único dashboard funcional (mesmo projeto StackBlitz);</li>
       <li>Exiba pelo menos 3 sensores diferentes, cada um com seu gráfico de histórico (Chart.js);</li>
-      <li>Garanta responsividade: teste redimensionando a janela do navegador e no modo de emulação mobile do DevTools (F12 → ícone de celular);</li>
+      <li>Garanta responsividade: teste redimensionando a janela do navegador e no modo de emulação mobile do DevTools;</li>
       <li>Adicione um cabeçalho com status de conexão e horário da última atualização;</li>
       <li>Escreva testes para pelo menos 2 componentes (incluindo o caso de histórico vazio);</li>
       <li>Escreva no README a arquitetura do projeto (pode reaproveitar o diagrama desta aula) e print(s) do dashboard em desktop e mobile;</li>
-      <li>Commit e push final no repositório GitHub do módulo.</li>
+      <li>Salve no GitHub.</li>
     </ol>
     <div class="deliverable"><strong>📦 Entregável:</strong> Repositório GitHub completo + prints (desktop e mobile) + README com arquitetura explicada.</div>
     <h4>✅ Critérios de Avaliação:</h4>

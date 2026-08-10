@@ -194,74 +194,76 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <div class="hero-tag"><span></span> Semana 18 de 40 · Módulo 04</div>
     <div class="hero-week">MÓDULO 04 · DESENVOLVIMENTO WEB MODERNO · SEMANA 18</div>
     <h1>React.js — Componentes e Hooks</h1>
-    <p class="hero-sub">Monte o ambiente, aprenda JSX, props, useState e useEffect construindo os primeiros cards de sensores que serão a base do dashboard IoT do módulo.</p>
+    <p class="hero-sub">Monte todo o ambiente de desenvolvimento sem instalar nada, direto no navegador com StackBlitz, e aprenda JSX, props, useState e useEffect construindo os primeiros cards de sensores.</p>
   </div>
 
 <div class="section">
   <h2>🎯 Objetivos de Aprendizagem</h2>
   <div class="box objetivos">
     <ul>
-      <li>Entender por que usamos <strong>React.js</strong> para construir aplicações web responsivas dentro da ementa de Desenvolvimento Web Moderno;</li>
-      <li>Instalar o ambiente de desenvolvimento (Node.js, npm, Vite) do zero;</li>
+      <li>Montar um ambiente de desenvolvimento React <strong>sem instalar nada</strong> no computador do laboratório;</li>
+      <li>Aprender a usar o <strong>StackBlitz</strong>, um "VS Code dentro do navegador" que roda Node.js de verdade;</li>
+      <li>Entender por que usamos <strong>React.js</strong> para aplicações web responsivas com dados em tempo real;</li>
       <li>Criar componentes funcionais e entender a sintaxe JSX;</li>
       <li>Usar os hooks <code>useState</code> e <code>useEffect</code> para controlar estado e efeitos colaterais;</li>
-      <li>Construir uma primeira "central de sensores" simulada — base para o dashboard IoT das próximas semanas;</li>
-      <li>Versionar o projeto com Git/GitHub desde o primeiro commit.</li>
+      <li>Salvar o projeto no <strong>GitHub</strong> direto do navegador, sem usar comandos de <code>git</code> instalados localmente.</li>
     </ul>
   </div>
 </div>
 
 <div class="section">
-  <h2>🧠 Por que React neste módulo?</h2>
-  <p>A ementa da disciplina pede <strong>aplicações web responsivas</strong> capazes de exibir, em tempo real, dados vindos de sensores IoT (Arduino/ESP32). Fazer isso só com HTML/CSS/JS puro é possível, mas fica difícil de manter quando a tela precisa <strong>atualizar sozinha</strong> a cada novo dado — exatamente o que um sensor faz o tempo todo.</p>
-  <p>O React resolve isso organizando a interface em <strong>componentes</strong> (peças reutilizáveis de UI) que re-renderizam automaticamente sempre que o <strong>estado</strong> (state) muda. É a base que vamos usar nas Semanas 19 a 22 para consumir APIs REST, receber dados via WebSocket e montar o dashboard IoT final.</p>
-  <div class="tags">
-    <span class="tag purple">React.js</span>
-    <span class="tag purple">JSX</span>
-    <span class="tag purple">Hooks</span>
-    <span class="tag iot">Sensores simulados</span>
-    <span class="tag green">Vite</span>
-  </div>
-</div>
-
-<div class="section">
-  <h2>🛠️ Passo a Passo — Monte o ambiente e o primeiro projeto</h2>
-  <p>Siga os passos <strong>na ordem</strong>. Todos os comandos abaixo funcionam em Windows, Linux ou Mac (terminal / PowerShell / Prompt de Comando). Você só precisa de um computador com internet — nenhuma placa física é necessária nesta semana.</p>
+  <h2>🖥️ Ambiente de Desenvolvimento — sem instalar absolutamente nada</h2>
+  <p>Nos laboratórios da FATEC os computadores rodam <strong>Windows 11</strong> e você <strong>não tem permissão para instalar programas</strong> (nem o Node.js, nem o VS Code, nem o Git). Isso não é um problema: vamos usar o <strong><a href="https://stackblitz.com" target="_blank">StackBlitz</a></strong>, um site que roda um ambiente Node.js <strong>completo dentro do próprio navegador</strong>, usando uma tecnologia chamada <em>WebContainers</em>. Na prática, para você, ele se comporta exatamente como o VS Code + terminal + Node instalados — só que 100% dentro de uma aba do Edge ou Chrome, sem precisar de permissão de administrador.</p>
+  <div class="tip"><strong>Funciona em qualquer computador:</strong> como nada é instalado localmente, você pode sair do laboratório, chegar em outro computador na próxima semana (ou em casa) e continuar exatamente de onde parou — desde que entre com a mesma conta.</div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">1</span> Verifique se o Node.js está instalado</div>
-    <p>Abra o terminal e digite:</p>
-    <pre><code>node -v
-npm -v</code></pre>
-    <p>Se aparecer um número de versão (ex: <code>v20.11.0</code>), está tudo certo. Se der erro de "comando não encontrado", baixe o instalador em <code>nodejs.org</code> (versão <strong>LTS</strong>), instale e reinicie o terminal.</p>
-    <div class="tip"><strong>Dica:</strong> nos computadores do laboratório, confirme com o professor se o Node já vem instalado na imagem padrão antes de tentar instalar por conta própria.</div>
+    <div class="step-title"><span class="step-num">1</span> Crie uma conta gratuita no GitHub (se ainda não tiver)</div>
+    <p>O GitHub é onde seu código fica salvo permanentemente — e é exigido pela ementa da disciplina (controle de versionamento). Abra o navegador e acesse:</p>
+    <pre><code>https://github.com/join</code></pre>
+    <p>Preencha e-mail, senha e um nome de usuário (ex: <code>seunome-fatec</code>). Confirme o e-mail que o GitHub envia. Isso leva menos de 3 minutos e você só precisa fazer isso <strong>uma única vez</strong> em todo o curso.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">2</span> Crie o projeto com Vite</div>
-    <p>Vite é a ferramenta mais rápida atualmente para iniciar projetos React (substitui o antigo <code>create-react-app</code>). Escolha uma pasta e rode:</p>
-    <pre><code>npm create vite@latest dashboard-iot -- --template react
-cd dashboard-iot
-npm install
-npm run dev</code></pre>
-    <p>O terminal vai mostrar um endereço como <code>http://localhost:5173</code>. Abra no navegador — você deve ver a tela padrão do Vite + React girando o logo.</p>
+    <div class="step-title"><span class="step-num">2</span> Abra o StackBlitz e entre com sua conta GitHub</div>
+    <p>No navegador (Edge já vem instalado no Windows 11; se preferir, o Chrome também funciona), acesse:</p>
+    <pre><code>https://stackblitz.com</code></pre>
+    <p>No canto superior direito, clique em <strong>Sign in</strong> e escolha <strong>Continue with GitHub</strong>. Autorize o acesso na tela que o GitHub abrir. Pronto — sua conta StackBlitz agora está ligada à sua conta GitHub, e qualquer projeto que você criar pode ser salvo lá.</p>
+    <div class="tip"><strong>Site bloqueado no laboratório?</strong> Se <code>stackblitz.com</code> estiver bloqueado pelo firewall da escola, avise o professor/técnico. Como alternativa equivalente (mesmo fluxo, mesma ideia de "IDE sem instalação"), você pode usar <code>replit.com</code> ou <code>codesandbox.io</code> — os passos de criar projeto React e usar o terminal são muito parecidos.</div>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">3</span> Entenda a estrutura de pastas</div>
-    <pre><code>dashboard-iot/
+    <div class="step-title"><span class="step-num">3</span> Crie o projeto React com Vite</div>
+    <p>Ainda na página inicial do StackBlitz, clique no botão <strong>"Create new" (ou "+ New Project" / "New")</strong>. Na galeria de templates que abrir, procure e clique no card <strong>"React"</strong> (ele já vem configurado com <strong>Vite</strong>, a ferramenta que empacota o projeto — não é necessário escolher nada a mais).</p>
+    <p>Espere alguns segundos: na primeira vez, o StackBlitz está baixando e montando um Node.js completo dentro da própria aba do navegador. Quando terminar, você verá três áreas principais na tela:</p>
+    <ul>
+      <li><strong>Esquerda:</strong> explorador de arquivos (igual ao do VS Code);</li>
+      <li><strong>Centro:</strong> o editor de código (também é o mesmo "motor" do VS Code, então os atalhos de teclado são os mesmos);</li>
+      <li><strong>Direita:</strong> a pré-visualização (<em>Preview</em>) do site rodando ao vivo, atualizando sozinha a cada alteração;</li>
+      <li><strong>Aba "Terminal"</strong> na parte de baixo/lateral: um terminal de verdade, onde vamos digitar comandos <code>npm</code> ao longo do curso.</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">4</span> Renomeie o projeto</div>
+    <p>Clique no nome do projeto no topo da página (geralmente algo como "vitejs-vite-xxxxxx") e troque para <code>dashboard-iot-isw044</code>. Isso ajuda a identificar o projeto quando você voltar nas próximas semanas.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">5</span> Entenda a estrutura de pastas</div>
+    <pre><code>dashboard-iot-isw044/
 ├── index.html
 ├── package.json
+├── vite.config.js
 ├── src/
 │   ├── main.jsx      → ponto de entrada, monta o React na página
 │   ├── App.jsx        → componente principal
 │   └── App.css</code></pre>
-    <p>Abra <code>src/App.jsx</code> no VS Code (ou editor de sua preferência). Apague todo o conteúdo — vamos escrever do zero para entender cada linha.</p>
+    <p>No explorador de arquivos (esquerda), clique em <code>src/App.jsx</code> para abrir. Apague todo o conteúdo do arquivo — vamos escrever do zero para entender cada linha.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">4</span> Seu primeiro componente e o JSX</div>
-    <p>Cole isto em <code>App.jsx</code>:</p>
+    <div class="step-title"><span class="step-num">6</span> Seu primeiro componente e o JSX</div>
+    <p>Digite (ou cole) isto em <code>App.jsx</code>:</p>
     <pre><code>function App() {
   return (
     &lt;div style={{ fontFamily: 'sans-serif', padding: 24 }}&gt;
@@ -272,13 +274,13 @@ npm run dev</code></pre>
 }
 
 export default App;</code></pre>
-    <p>Salve e olhe o navegador (ele atualiza sozinho, isso se chama <strong>Hot Module Reload</strong>). Repare que dentro do <code>return()</code> você escreve algo parecido com HTML dentro do JavaScript — isso é <strong>JSX</strong>. Por baixo dos panos, o JSX vira chamadas de função (<code>React.createElement</code>), mas escrever assim é muito mais legível.</p>
-    <div class="tip"><strong>Regra de ouro do JSX:</strong> todo componente deve retornar <em>um único elemento pai</em> (por isso a <code>&lt;div&gt;</code> envolvendo tudo), e atributos de estilo usam <code>camelCase</code> dentro de um objeto JS (<code>style={{...}}</code>).</p>
+    <p>Assim que você salva (o StackBlitz salva sozinho enquanto você digita — não existe "Ctrl+S obrigatório", mas pode usar mesmo assim), olhe o painel de <strong>Preview</strong> à direita: ele atualiza sozinho. Repare que dentro do <code>return()</code> você escreve algo parecido com HTML dentro do JavaScript — isso é <strong>JSX</strong>.</p>
+    <div class="tip"><strong>Regra de ouro do JSX:</strong> todo componente deve retornar <em>um único elemento pai</em> (por isso a <code>&lt;div&gt;</code> envolvendo tudo), e atributos de estilo usam <code>camelCase</code> dentro de um objeto JS (<code>style={{...}}</code>).</div>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">5</span> Criando um componente reutilizável — SensorCard</div>
-    <p>Crie o arquivo <code>src/SensorCard.jsx</code>:</p>
+    <div class="step-title"><span class="step-num">7</span> Criando um componente reutilizável — SensorCard</div>
+    <p>No explorador de arquivos, clique com o botão direito na pasta <code>src</code> → <strong>New file</strong> → digite <code>SensorCard.jsx</code> e pressione Enter. Cole este conteúdo:</p>
     <pre><code>function SensorCard({ nome, valor, unidade }) {
   return (
     &lt;div style={{
@@ -306,11 +308,10 @@ function App() {
 }
 
 export default App;</code></pre>
-    <p>Você acabou de reaproveitar o mesmo componente três vezes com dados diferentes — é exatamente assim que, mais adiante, cada sensor real do ESP32 vai virar um card na tela.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">6</span> Estado com useState</div>
+    <div class="step-title"><span class="step-num">8</span> Estado com useState</div>
     <p>Sensores mudam de valor. Para a tela reagir a mudanças, usamos o hook <code>useState</code>. Edite <code>App.jsx</code>:</p>
     <pre><code>import { useState } from 'react';
 import SensorCard from './SensorCard';
@@ -332,12 +333,12 @@ function App() {
 }
 
 export default App;</code></pre>
-    <p><code>useState(24.5)</code> devolve dois itens: o <strong>valor atual</strong> (<code>temperatura</code>) e uma <strong>função para atualizá-lo</strong> (<code>setTemperatura</code>). Sempre que você chama <code>setTemperatura(...)</code>, o React re-renderiza o componente com o novo valor — automaticamente, sem manipular o DOM na mão.</p>
+    <p><code>useState(24.5)</code> devolve dois itens: o <strong>valor atual</strong> (<code>temperatura</code>) e uma <strong>função para atualizá-lo</strong> (<code>setTemperatura</code>). Sempre que você chama <code>setTemperatura(...)</code>, o React re-renderiza o componente com o novo valor. Clique no botão no painel de Preview e veja o número mudar.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">7</span> Efeitos colaterais com useEffect — leitura automática</div>
-    <p>Em vez de depender de um clique, vamos simular um sensor que envia uma leitura nova a cada 2 segundos — o comportamento real de um ESP32 publicando dados periodicamente:</p>
+    <div class="step-title"><span class="step-num">9</span> Efeitos colaterais com useEffect — leitura automática</div>
+    <p>Em vez de depender de um clique, vamos simular um sensor que envia uma leitura nova a cada 2 segundos:</p>
     <pre><code>import { useState, useEffect } from 'react';
 import SensorCard from './SensorCard';
 
@@ -361,12 +362,11 @@ function App() {
 }
 
 export default App;</code></pre>
-    <div class="warn-box"><strong>Atenção:</strong> sempre que usar <code>setInterval</code>/<code>setTimeout</code>/assinaturas dentro de <code>useEffect</code>, devolva uma função de limpeza (<code>return () =&gt; clearInterval(...)</code>). Sem isso, cada vez que o componente atualizar você cria um novo intervalo "fantasma" rodando em paralelo — um bug clássico em dashboards em tempo real.</div>
+    <div class="warn-box"><strong>Atenção:</strong> sempre que usar <code>setInterval</code> dentro de <code>useEffect</code>, devolva uma função de limpeza (<code>return () =&gt; clearInterval(...)</code>). Sem isso, cada atualização do componente cria um novo intervalo "fantasma" rodando em paralelo.</div>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">8</span> Lista de sensores com <code>.map()</code></div>
-    <p>Na prática você terá vários sensores. Em vez de repetir <code>&lt;SensorCard /&gt;</code> manualmente, guarde-os em um array de estado e renderize com <code>.map()</code>:</p>
+    <div class="step-title"><span class="step-num">10</span> Lista de sensores com <code>.map()</code></div>
     <pre><code>const [sensores, setSensores] = useState([
   { id: 1, nome: 'Temperatura', valor: 24.5, unidade: '°C' },
   { id: 2, nome: 'Umidade',     valor: 60,   unidade: '%'  },
@@ -379,36 +379,32 @@ export default App;</code></pre>
     &lt;SensorCard key={s.id} nome={s.nome} valor={s.valor} unidade={s.unidade} /&gt;
   ))}
 &lt;/div&gt;</code></pre>
-    <p>O atributo <code>key</code> é obrigatório em listas — ajuda o React a saber qual item mudou sem precisar redesenhar a lista inteira.</p>
+    <p>O atributo <code>key</code> é obrigatório em listas — ajuda o React a saber qual item mudou sem redesenhar a lista inteira.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">9</span> Suba o projeto para o GitHub</div>
-    <pre><code>git init
-git add .
-git commit -m "Semana 18: primeiro dashboard React com hooks"
-git branch -M main
-git remote add origin https://github.com/SEU-USUARIO/dashboard-iot.git
-git push -u origin main</code></pre>
-    <p>Se ainda não tem repositório criado, crie um novo repositório vazio no GitHub antes do <code>git remote add</code>.</p>
+    <div class="step-title"><span class="step-num">11</span> Salvando o projeto no GitHub (sem usar git no terminal)</div>
+    <p>Na barra superior do StackBlitz, procure o ícone do <strong>GitHub</strong> (perto do nome do projeto) e clique nele — a opção pode aparecer como <strong>"Connect Repository"</strong> ou <strong>"Export to GitHub"</strong>. Escolha <strong>criar um novo repositório</strong>, dê o nome <code>dashboard-iot-isw044</code> e confirme. O StackBlitz envia todos os arquivos automaticamente para o seu GitHub — nenhum comando <code>git</code> é digitado.</p>
+    <p>A partir de agora, sempre que quiser salvar uma nova versão do trabalho, clique novamente nesse mesmo ícone e use a opção de <strong>commit/push</strong> disponível ali, escrevendo uma mensagem curta descrevendo o que mudou (ex: "adiciona SensorCard e useEffect").</p>
+    <div class="tip"><strong>Por que isso substitui o Git tradicional?</strong> O comando <code>git</code> por trás continua existindo — só que quem digita os comandos é o próprio StackBlitz, através da API do GitHub. O resultado no seu repositório é idêntico ao que você teria rodando <code>git add / commit / push</code> localmente.</div>
   </div>
-</div>
 
-<div class="section">
-  <h2>🧪 Checkpoint TDD (introdução)</h2>
-  <div class="checkpoint">
-    A ementa pede <strong>Desenvolvimento Dirigido a Testes</strong>. Você não precisa dominar TDD ainda, mas já pode instalar o <strong>Vitest</strong> (test runner que integra nativamente com Vite) para começar a se acostumar:
-  </div>
-  <pre><code>npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom</code></pre>
-  <p>Crie <code>src/SensorCard.test.jsx</code> com um teste simples que verifica se o nome do sensor aparece na tela:</p>
-  <pre><code>import { render, screen } from '@testing-library/react';
+  <div class="step">
+    <div class="step-title"><span class="step-num">12</span> Rodando testes com Vitest (no mesmo terminal do navegador)</div>
+    <p>Clique na aba <strong>Terminal</strong> na parte inferior do StackBlitz (é um terminal real, dentro do WebContainer) e digite:</p>
+    <pre><code>npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom</code></pre>
+    <p>Crie o arquivo <code>src/SensorCard.test.jsx</code> (mesmo processo do passo 7: botão direito em <code>src</code> → New file):</p>
+    <pre><code>import { render, screen } from '@testing-library/react';
 import SensorCard from './SensorCard';
 
 test('mostra o nome do sensor', () => {
   render(&lt;SensorCard nome="Temperatura" valor={25} unidade="°C" /&gt;);
   expect(screen.getByText('Temperatura')).toBeInTheDocument();
 });</code></pre>
-  <p>Rode com <code>npx vitest</code>. Vamos aprofundar TDD no Módulo 08 (Semanas 37–39), mas escrever este primeiro teste agora cria o hábito.</p>
+    <p>No terminal, rode:</p>
+    <pre><code>npx vitest run</code></pre>
+    <p>Vamos aprofundar TDD no Módulo 08 (Semanas 37–39), mas escrever este primeiro teste agora já cria o hábito.</p>
+  </div>
 </div>
 
 <div class="section">
@@ -418,23 +414,23 @@ test('mostra o nome do sensor', () => {
     <p class="desc">Aplique tudo o que foi visto para montar uma tela com pelo menos 4 "sensores" simulados que atualizam sozinhos.</p>
     <h4>📋 Instruções:</h4>
     <ol>
-      <li>Crie o projeto Vite + React seguindo o passo a passo acima (ou continue o projeto já criado);</li>
+      <li>Use o projeto <code>dashboard-iot-isw044</code> criado no StackBlitz seguindo o passo a passo acima;</li>
       <li>Crie um componente <code>SensorCard</code> reutilizável, recebendo <code>nome</code>, <code>valor</code> e <code>unidade</code> via props;</li>
       <li>Guarde os sensores em um array de estado (<code>useState</code>) com pelo menos 4 sensores diferentes (ex: temperatura, umidade, luminosidade, nível de CO₂);</li>
-      <li>Use <code>useEffect</code> + <code>setInterval</code> para atualizar os valores automaticamente a cada 2–3 segundos, simulando leituras reais de sensores;</li>
+      <li>Use <code>useEffect</code> + <code>setInterval</code> para atualizar os valores automaticamente a cada 2–3 segundos;</li>
       <li>Renderize a lista com <code>.map()</code>, usando <code>key</code> corretamente;</li>
-      <li>Adicione um pouco de estilo (pode usar CSS puro em <code>App.css</code>) para o layout ficar responsivo em telas pequenas (<code>display: flex; flex-wrap: wrap;</code>);</li>
-      <li>Escreva pelo menos 1 teste com Vitest para um dos componentes;</li>
-      <li>Faça commit e push para um repositório público no GitHub com um <code>README.md</code> explicando o projeto.</li>
+      <li>Adicione um pouco de estilo (pode ser CSS puro em <code>App.css</code>) para o layout ficar responsivo em telas pequenas (<code>display: flex; flex-wrap: wrap;</code>);</li>
+      <li>Escreva pelo menos 1 teste com Vitest;</li>
+      <li>Salve no GitHub usando o botão de exportação do StackBlitz (passo 11), com um <code>README.md</code> explicando o projeto.</li>
     </ol>
-    <div class="deliverable"><strong>📦 Entregável:</strong> Link do repositório GitHub (com README) + print da aplicação rodando no navegador, enviados na atividade da semana.</div>
+    <div class="deliverable"><strong>📦 Entregável:</strong> Link do repositório GitHub (com README) + link do projeto no StackBlitz (o próprio link da aba do navegador serve), enviados na atividade da semana.</div>
     <h4>✅ Critérios de Avaliação:</h4>
     <ul class="criteria">
       <li>Uso correto de componentes, props, useState e useEffect</li>
       <li>Atualização automática dos valores funcionando sem erros no console</li>
       <li>Renderização de lista com <code>.map()</code> e <code>key</code></li>
       <li>Ao menos um teste automatizado presente</li>
-      <li>Código organizado, commitado no Git com histórico (não um único commit gigante) e README claro</li>
+      <li>Projeto salvo no GitHub com README claro</li>
     </ul>
   </div>
 </div>
@@ -442,13 +438,13 @@ test('mostra o nome do sensor', () => {
 <div class="section">
   <h2>📚 Recursos Complementares</h2>
   <div class="res-grid">
+    <a class="res-card" href="https://stackblitz.com" target="_blank">
+      <div class="r-title">🧩 StackBlitz</div>
+      <div class="r-desc">O ambiente de desenvolvimento no navegador usado em todo o módulo.</div>
+    </a>
     <a class="res-card" href="https://react.dev/learn" target="_blank">
       <div class="r-title">📘 React.dev — Learn React</div>
       <div class="r-desc">Documentação oficial e atualizada, com tutorial interativo de componentes e hooks.</div>
-    </a>
-    <a class="res-card" href="https://vitejs.dev/guide/" target="_blank">
-      <div class="r-title">⚡ Guia oficial do Vite</div>
-      <div class="r-desc">Como criar, configurar e otimizar projetos com Vite.</div>
     </a>
     <a class="res-card" href="https://react.dev/reference/react/useState" target="_blank">
       <div class="r-title">🔧 Referência: useState</div>
@@ -462,9 +458,9 @@ test('mostra o nome do sensor', () => {
       <div class="r-title">🧪 Guia do Vitest</div>
       <div class="r-desc">Test runner usado para os primeiros testes automatizados do módulo.</div>
     </a>
-    <a class="res-card" href="https://testing-library.com/docs/react-testing-library/intro/" target="_blank">
-      <div class="r-title">🧪 React Testing Library</div>
-      <div class="r-desc">Biblioteca para testar componentes React do ponto de vista do usuário.</div>
+    <a class="res-card" href="https://docs.github.com/pt/get-started" target="_blank">
+      <div class="r-title">🐙 GitHub — Primeiros Passos</div>
+      <div class="r-desc">Guia oficial em português para quem está começando no GitHub agora.</div>
     </a>
   </div>
 </div>

@@ -202,31 +202,45 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <div class="box objetivos">
     <ul>
       <li>Entender o que é uma <strong>Progressive Web App (PWA)</strong> e por que ela importa para dashboards IoT;</li>
-      <li>Criar o <strong>manifest.json</strong> e tornar o dashboard instalável;</li>
+      <li>Criar o <strong>manifest</strong> e tornar o dashboard instalável;</li>
       <li>Registrar um <strong>Service Worker</strong> e entender estratégias de cache;</li>
       <li>Transformar o Dashboard IoT das semanas anteriores em uma PWA <strong>offline-first</strong>;</li>
-      <li>Testar o comportamento offline e fechar o Módulo 04 com o projeto completo no GitHub.</li>
+      <li>Testar o comportamento offline dentro do próprio StackBlitz e fechar o Módulo 04 com o projeto completo no GitHub.</li>
     </ul>
   </div>
 </div>
 
+
+<div class="box" style="border-left:3px solid var(--accent);">
+  <strong style="color:#fff;">🔄 Retomando de onde parou?</strong>
+  <p style="margin-top:8px;">Você está usando um <strong>computador de laboratório diferente</strong> do da semana passada? Sem problema — nada foi instalado localmente, então nada fica "preso" numa máquina.</p>
+  <ol style="margin:10px 0 0 20px;">
+    <li>Abra o Edge (ou Chrome) e acesse <a href="https://stackblitz.com" target="_blank">stackblitz.com</a>;</li>
+    <li>Clique em <strong>Sign in</strong> (canto superior direito) → <strong>Continue with GitHub</strong> → entre com a mesma conta GitHub da semana passada;</li>
+    <li>Se preferir reabrir direto pelo repositório: acesse <code>https://stackblitz.com/github/SEU-USUARIO/dashboard-iot-isw044</code> — isso importa seu repositório do GitHub direto para um ambiente StackBlitz novo, pronto para editar;</li>
+    <li>No terminal do projeto, rode <code>npm install</code> uma vez (garante que todas as dependências estão presentes) e depois <code>npm run dev</code>.</li>
+  </ol>
+  <p style="margin-top:8px;">Não lembra o passo a passo completo de configuração do ambiente? Ele está detalhado na <a href="semana18.html">Semana 18</a>.</p>
+</div>
+
+
 <div class="section">
   <h2>🧠 Por que offline-first em um dashboard IoT?</h2>
-  <p>Redes falham — Wi-Fi cai, o sinal do celular oscila, o servidor reinicia. Um dashboard de sensores que simplesmente trava numa tela branca quando a conexão cai é uma péssima experiência, especialmente em cenários reais de monitoramento (agrícola, industrial, ambiental).</p>
-  <p>Uma <strong>PWA</strong> é uma aplicação web que se comporta como um app nativo: pode ser <strong>instalada</strong> na tela inicial, funciona (ao menos parcialmente) <strong>offline</strong> e mantém em cache a última versão da interface e dos últimos dados recebidos. Isso fecha o Módulo 04 conectando de volta com a exigência de "aplicações web responsivas" da ementa — responsivo não é só sobre tamanho de tela, é também sobre resiliência de rede.</p>
+  <p>Redes falham — Wi-Fi cai, o sinal oscila, o servidor reinicia. Um dashboard de sensores que simplesmente trava numa tela branca quando a conexão cai é uma péssima experiência.</p>
+  <p>Uma <strong>PWA</strong> é uma aplicação web que se comporta como um app nativo: pode ser <strong>instalada</strong> e mantém em cache a última versão da interface e dos últimos dados recebidos. Isso fecha o Módulo 04 conectando de volta com a exigência de "aplicações web responsivas" da ementa — responsivo também é sobre resiliência de rede.</p>
 </div>
 
 <div class="section">
   <h2>🛠️ Passo a Passo — Transformando o Dashboard em PWA</h2>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">1</span> Instale o plugin oficial de PWA para Vite</div>
-    <p>No projeto <code>dashboard-iot</code>:</p>
+    <div class="step-title"><span class="step-num">1</span> Instale o plugin oficial de PWA pelo terminal do StackBlitz</div>
     <pre><code>npm install -D vite-plugin-pwa</code></pre>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">2</span> Configure o plugin em vite.config.js</div>
+    <p>Abra <code>vite.config.js</code> e acrescente o plugin de PWA, mantendo o proxy da Semana 20:</p>
     <pre><code>import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -259,81 +273,102 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    proxy: {
+      '/ws': { target: 'ws://localhost:8080', ws: true },
+    },
+  },
 });</code></pre>
-    <p>Coloque dois ícones simples (<code>icon-192.png</code> e <code>icon-512.png</code>) na pasta <code>public/</code> — podem ser um ícone gerado rapidamente em qualquer editor de imagem ou gerador online de favicon/ícone PWA.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">3</span> Entenda o que o plugin faz por trás</div>
+    <div class="step-title"><span class="step-num">3</span> Adicione os ícones do app</div>
+    <p>No explorador de arquivos, abra a pasta <code>public</code> (se não existir, crie-a na raiz). Você precisa de dois arquivos de imagem simples: <code>icon-192.png</code> (192×192 pixels) e <code>icon-512.png</code> (512×512 pixels). Gere-os rapidamente em qualquer gerador de ícone/favicon gratuito online e faça o upload arrastando os arquivos para dentro da pasta <code>public</code> no StackBlitz (o explorador de arquivos aceita arrastar e soltar do seu computador).</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">4</span> Entenda o que o plugin faz por trás</div>
     <p>O <code>vite-plugin-pwa</code> gera automaticamente, no build de produção, dois arquivos essenciais:</p>
     <ul>
-      <li><strong><code>manifest.webmanifest</code></strong> — descreve o app (nome, ícone, cor, modo de exibição) para o navegador saber como "instalá-lo";</li>
-      <li><strong><code>service-worker.js</code></strong> — um script que roda em segundo plano, intercepta requisições de rede e decide se responde com algo em cache ou busca na internet.</li>
+      <li><strong>manifest</strong> — descreve o app (nome, ícone, cor, modo de exibição) para o navegador saber como "instalá-lo";</li>
+      <li><strong>service worker</strong> — um script que roda em segundo plano, intercepta requisições de rede e decide se responde com algo em cache ou busca na internet.</li>
     </ul>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">4</span> Estratégias de cache — qual usar em cada caso</div>
+    <div class="step-title"><span class="step-num">5</span> Estratégias de cache — qual usar em cada caso</div>
     <ul>
-      <li><strong>Cache First:</strong> usa o cache se existir, só vai à rede se não tiver nada salvo. Ideal para arquivos estáticos (CSS, ícones, fontes) que raramente mudam;</li>
-      <li><strong>Network First:</strong> tenta a rede primeiro, cai para o cache se falhar. Ideal para dados de sensores/API — você quer o dado mais atual possível, mas ainda quer mostrar algo se a rede cair;</li>
-      <li><strong>Stale-While-Revalidate:</strong> mostra o cache imediatamente enquanto busca uma versão nova em segundo plano. Bom equilíbrio entre velocidade e atualização.</li>
+      <li><strong>Cache First:</strong> usa o cache se existir, só vai à rede se não tiver nada salvo. Ideal para arquivos estáticos (CSS, ícones, fontes);</li>
+      <li><strong>Network First:</strong> tenta a rede primeiro, cai para o cache se falhar. Ideal para dados de sensores/API — configuramos assim no passo 2;</li>
+      <li><strong>Stale-While-Revalidate:</strong> mostra o cache imediatamente enquanto busca uma versão nova em segundo plano.</li>
     </ul>
-    <p>Para o dashboard IoT, a recomendação é <strong>Network First</strong> nos dados de sensores (queremos o valor mais recente) e <strong>Cache First</strong> para os arquivos da própria interface (JS, CSS, ícones) — que é exatamente o que configuramos no passo 2.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">5</span> Salvando a última leitura para exibir offline</div>
-    <p>Service Worker cuida de arquivos, mas os <strong>dados do WebSocket</strong> precisam ser guardados manualmente pela aplicação. Use o <code>localStorage</code> para persistir a última leitura recebida:</p>
-    <pre><code>// dentro do useSensorStream, sempre que uma leitura chega:
-socket.onmessage = (evento) =&gt; {
+    <div class="step-title"><span class="step-num">6</span> Salvando a última leitura para exibir offline</div>
+    <p>Ajuste <code>useSensorStream.js</code> para persistir a última leitura no <code>localStorage</code>:</p>
+    <pre><code>socket.onmessage = (evento) =&gt; {
   const leitura = JSON.parse(evento.data);
   localStorage.setItem('ultimaLeitura', JSON.stringify(leitura));
   setHistorico(anterior =&gt; [...anterior.slice(-19), leitura]);
 };
 
-// ao iniciar o componente, antes de qualquer conexão:
+// ao iniciar o hook, antes de qualquer conexão:
 const [ultimaSalva] = useState(() =&gt; {
   const salvo = localStorage.getItem('ultimaLeitura');
   return salvo ? JSON.parse(salvo) : null;
 });</code></pre>
-    <p>Assim, mesmo sem internet, o dashboard abre mostrando a <strong>última leitura conhecida</strong> em vez de uma tela vazia — e um aviso claro de que os dados podem estar desatualizados.</p>
+    <p>Assim, mesmo sem internet, o dashboard abre mostrando a <strong>última leitura conhecida</strong> em vez de uma tela vazia.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">6</span> Indicando o status online/offline na interface</div>
+    <div class="step-title"><span class="step-num">7</span> Indicando o status online/offline na interface</div>
+    <p>Crie <code>src/useOnlineStatus.js</code>:</p>
     <pre><code>import { useState, useEffect } from 'react';
 
 function useOnlineStatus() {
   const [online, setOnline] = useState(navigator.onLine);
 
-  useEffect(() =&gt; {
-    const setOn = () =&gt; setOnline(true);
-    const setOff = () =&gt; setOnline(false);
+  useEffect(() => {
+    const setOn = () => setOnline(true);
+    const setOff = () => setOnline(false);
     window.addEventListener('online', setOn);
     window.addEventListener('offline', setOff);
-    return () =&gt; {
+    return () => {
       window.removeEventListener('online', setOn);
       window.removeEventListener('offline', setOff);
     };
   }, []);
 
   return online;
-}</code></pre>
-    <p>Use esse hook para exibir um banner: <code>{!online &amp;&amp; &lt;div&gt;⚠️ Você está offline — exibindo últimos dados salvos&lt;/div&gt;}</code>.</p>
+}
+
+export default useOnlineStatus;</code></pre>
+    <p>Use no Dashboard: <code>{!online &amp;&amp; &lt;div&gt;⚠️ Você está offline — exibindo últimos dados salvos&lt;/div&gt;}</code>.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">7</span> Testando o modo offline</div>
-    <p>Gere o build de produção (o Service Worker só funciona de forma completa em build, não em <code>npm run dev</code>):</p>
+    <div class="step-title"><span class="step-num">8</span> Gerando o build de produção</div>
+    <p>O Service Worker só funciona de forma completa em build de produção (não no modo <code>dev</code>). No <code>package.json</code>, ajuste também o script de preview para subir o servidor junto:</p>
+    <pre><code>"scripts": {
+  "dev": "concurrently \"node servidor.js\" \"vite\"",
+  "build": "vite build",
+  "preview": "concurrently \"node servidor.js\" \"vite preview\""
+}</code></pre>
+    <p>No terminal:</p>
     <pre><code>npm run build
 npm run preview</code></pre>
-    <p>Abra o endereço mostrado (geralmente <code>http://localhost:4173</code>), abra o DevTools (F12) → aba <strong>Application</strong> (Chrome/Edge) → <strong>Service Workers</strong> → confirme que está "activated and running". Depois vá em <strong>Network</strong> e marque a caixa <strong>Offline</strong>. Recarregue a página: ela deve continuar abrindo, mostrando a última leitura salva, mesmo sem internet.</p>
+    <p>Abra o Preview em uma aba separada do navegador.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">8</span> Instalando como app</div>
-    <p>Ainda no Chrome/Edge, clique no ícone de instalação que aparece na barra de endereço (ou menu → "Instalar app"). O dashboard abrirá em uma janela própria, sem a barra do navegador — como um aplicativo nativo instalado no computador ou celular.</p>
+    <div class="step-title"><span class="step-num">9</span> Testando o modo offline</div>
+    <p>Na aba com o Preview aberto, pressione <strong>F12</strong> para abrir o DevTools → aba <strong>Application</strong> (Chrome/Edge) → <strong>Service Workers</strong> no menu lateral → confirme que está "activated and running". Depois vá em <strong>Network</strong> e marque a caixa <strong>Offline</strong>. Recarregue a página: ela deve continuar abrindo, mostrando a última leitura salva, mesmo sem rede.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">10</span> Instalando como app</div>
+    <p>Ainda no Chrome/Edge, procure o ícone de instalação na barra de endereço (ou menu <kbd>⋮</kbd> → "Instalar app" / "Apps → Instalar este site como app"). O dashboard abrirá em uma janela própria, sem a barra do navegador.</p>
   </div>
 </div>
 
@@ -358,7 +393,7 @@ npm run preview</code></pre>
       <li>Instale o app no navegador e tire um print da janela instalada;</li>
       <li>Escreva pelo menos 1 teste relacionado ao comportamento offline;</li>
       <li>Atualize o README do repositório consolidando <strong>todo o Módulo 04</strong>: arquitetura, tecnologias usadas (React, REST, WebSocket, Chart.js, PWA) e instruções completas de execução;</li>
-      <li>Commit e push final — este repositório fecha o Módulo 04 e será a base para o Módulo 05 (Mobile, Semanas 23–27).</li>
+      <li>Salve no GitHub — este repositório fecha o Módulo 04 e será a base para o Módulo 05 (Mobile, Semanas 23–27).</li>
     </ol>
     <div class="deliverable"><strong>📦 Entregável:</strong> Repositório GitHub final do módulo + prints do Service Worker ativo, do app funcionando offline e do app instalado.</div>
     <h4>✅ Critérios de Avaliação:</h4>
@@ -396,7 +431,7 @@ npm run preview</code></pre>
 
 <div class="section">
   <h2>🚀 O que vem a seguir</h2>
-  <p>Com o Módulo 04 concluído, você tem um dashboard web completo: componentes React, consumo de API REST, dados em tempo real via WebSocket, gráficos e comportamento offline-first. No <strong>Módulo 05 (Semanas 23–27)</strong> vamos levar esses mesmos conceitos para o <strong>mobile</strong>, com React Native e Flutter, reaproveitando a lógica de consumo de dados que você já domina.</p>
+  <p>Com o Módulo 04 concluído, você tem um dashboard web completo: componentes React, consumo de API REST, dados em tempo real via WebSocket, gráficos e comportamento offline-first — tudo isso construído sem instalar uma única ferramenta no computador. No <strong>Módulo 05 (Semanas 23–27)</strong> vamos levar esses mesmos conceitos para o <strong>mobile</strong>, com React Native e Flutter, reaproveitando a lógica de consumo de dados que você já domina.</p>
 </div>
 
 </div>

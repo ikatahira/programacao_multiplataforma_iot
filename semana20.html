@@ -194,7 +194,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <div class="hero-tag"><span></span> Semana 20 de 40 · Módulo 04</div>
     <div class="hero-week">MÓDULO 04 · DESENVOLVIMENTO WEB MODERNO · SEMANA 20</div>
     <h1>WebSocket e Dados em Tempo Real</h1>
-    <p class="hero-sub">Monte um servidor WebSocket em Node.js simulando sensores e conecte um cliente React para receber dados ao vivo — a base da comunicação em tempo real de sistemas distribuídos.</p>
+    <p class="hero-sub">Monte um servidor WebSocket em Node.js rodando junto do React no mesmo projeto StackBlitz (via proxy do Vite) e receba dados de sensores simulados ao vivo.</p>
   </div>
 
 <div class="section">
@@ -203,46 +203,57 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <ul>
       <li>Entender a diferença entre <strong>polling HTTP</strong> e <strong>WebSocket</strong> para dados em tempo real;</li>
       <li>Relacionar WebSocket com os conceitos de <strong>Sistemas Distribuídos</strong> da ementa (concorrência, comunicação assíncrona);</li>
-      <li>Criar um <strong>servidor WebSocket</strong> simples em Node.js que simula um sensor publicando dados;</li>
+      <li>Criar um <strong>servidor WebSocket</strong> simples em Node.js, rodando <em>dentro do mesmo projeto StackBlitz</em>, que simula um sensor publicando dados;</li>
       <li>Conectar um componente React ao servidor e atualizar a tela em tempo real, sem recarregar a página;</li>
       <li>Entender o papel de um <strong>broker de mensageria</strong> (introdução — será aprofundado no Módulo 06).</li>
     </ul>
   </div>
 </div>
 
+
+<div class="box" style="border-left:3px solid var(--accent);">
+  <strong style="color:#fff;">🔄 Retomando de onde parou?</strong>
+  <p style="margin-top:8px;">Você está usando um <strong>computador de laboratório diferente</strong> do da semana passada? Sem problema — nada foi instalado localmente, então nada fica "preso" numa máquina.</p>
+  <ol style="margin:10px 0 0 20px;">
+    <li>Abra o Edge (ou Chrome) e acesse <a href="https://stackblitz.com" target="_blank">stackblitz.com</a>;</li>
+    <li>Clique em <strong>Sign in</strong> (canto superior direito) → <strong>Continue with GitHub</strong> → entre com a mesma conta GitHub da semana passada;</li>
+    <li>Se preferir reabrir direto pelo repositório: acesse <code>https://stackblitz.com/github/SEU-USUARIO/dashboard-iot-isw044</code> — isso importa seu repositório do GitHub direto para um ambiente StackBlitz novo, pronto para editar;</li>
+    <li>No terminal do projeto, rode <code>npm install</code> uma vez (garante que todas as dependências estão presentes) e depois <code>npm run dev</code>.</li>
+  </ol>
+  <p style="margin-top:8px;">Não lembra o passo a passo completo de configuração do ambiente? Ele está detalhado na <a href="semana18.html">Semana 18</a>.</p>
+</div>
+
+
 <div class="section">
   <h2>🧠 Por que WebSocket para IoT?</h2>
-  <p>Na Semana 19 usamos <strong>polling</strong>: o cliente pergunta "tem novidade?" de tempos em tempos. Funciona, mas gasta banda e sempre tem atraso (o tempo entre uma pergunta e outra).</p>
-  <p>O <strong>WebSocket</strong> abre uma <strong>conexão persistente e bidirecional</strong> entre cliente e servidor: depois do "aperto de mão" inicial (handshake), os dois lados podem enviar mensagens a qualquer momento, sem precisar abrir uma nova requisição HTTP a cada vez. Isso é exatamente o que sensores IoT precisam: assim que o ESP32 publica uma nova leitura, todos os painéis conectados recebem o dado <strong>imediatamente</strong>.</p>
-  <p>Esse padrão de "muitos dispositivos publicando e muitos clientes recebendo" é a essência de <strong>sistemas distribuídos com brokers de mensageria</strong> (MQTT, RabbitMQ, Kafka — que vamos estudar em detalhe no Módulo 06, Semanas 28–32). Hoje construímos uma versão simplificada com WebSocket puro para entender o conceito na prática antes de usar ferramentas prontas.</p>
-  <div class="tags">
-    <span class="tag purple">WebSocket</span>
-    <span class="tag">Node.js</span>
-    <span class="tag iot">Tempo real</span>
-    <span class="tag green">Sistemas Distribuídos</span>
-  </div>
+  <p>Na Semana 19 usamos <strong>polling</strong>: o cliente pergunta "tem novidade?" de tempos em tempos. Funciona, mas gasta banda e sempre tem atraso.</p>
+  <p>O <strong>WebSocket</strong> abre uma <strong>conexão persistente e bidirecional</strong> entre cliente e servidor: depois do "aperto de mão" inicial (handshake), os dois lados podem enviar mensagens a qualquer momento. Isso é exatamente o que sensores IoT precisam: assim que o ESP32 publica uma nova leitura, todos os painéis conectados recebem o dado <strong>imediatamente</strong>.</p>
+  <p>Esse padrão de "muitos dispositivos publicando e muitos clientes recebendo" é a essência de <strong>sistemas distribuídos com brokers de mensageria</strong> (MQTT, RabbitMQ, Kafka — Módulo 06, Semanas 28–32). Hoje construímos uma versão simplificada com WebSocket puro.</p>
+  <div class="warn-box"><strong>Detalhe importante do ambiente:</strong> como estamos num navegador sem instalação local, vamos rodar o <strong>servidor e o front-end dentro do mesmo projeto StackBlitz</strong>, usando um único endereço exposto. Isso evita o problema de portas/URLs diferentes não conseguirem "se enxergar". A técnica usada — <strong>proxy do Vite</strong> — é a mesma usada em empresas reais para evitar problemas de CORS entre front-end e back-end durante o desenvolvimento.</div>
 </div>
 
 <div class="section">
-  <h2>🛠️ Passo a Passo — Servidor WebSocket + Cliente React</h2>
+  <h2>🛠️ Passo a Passo — Servidor WebSocket + Cliente React no mesmo projeto</h2>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">1</span> Crie a pasta do servidor (fora do projeto React)</div>
-    <p>Vamos ter <strong>dois</strong> projetos rodando ao mesmo tempo: o servidor (Node.js) e o front-end React da Semana 18/19. Crie uma pasta irmã:</p>
-    <pre><code>mkdir servidor-sensores
-cd servidor-sensores
-npm init -y
-npm install ws</code></pre>
-    <p><code>ws</code> é a biblioteca mais usada para WebSocket em Node.js.</p>
+    <div class="step-title"><span class="step-num">1</span> Reabra o projeto e instale as bibliotecas necessárias</div>
+    <p>No StackBlitz, projeto <code>dashboard-iot-isw044</code>, abra a aba <strong>Terminal</strong> e rode:</p>
+    <pre><code>npm install ws concurrently</code></pre>
+    <p><code>ws</code> é a biblioteca de WebSocket para Node.js. <code>concurrently</code> permite rodar dois comandos (o servidor e o Vite) ao mesmo tempo com um único <code>npm run dev</code>.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">2</span> Escreva o servidor que simula um sensor</div>
-    <p>Crie <code>servidor.js</code>:</p>
-    <pre><code>const { WebSocketServer } = require('ws');
+    <div class="step-title"><span class="step-num">2</span> Verifique o tipo de módulo do projeto</div>
+    <p>Abra o arquivo <code>package.json</code> na raiz do projeto e veja se existe a linha <code>"type": "module"</code>. Os templates atuais de Vite + React no StackBlitz normalmente já vêm assim. Isso significa que arquivos <code>.js</code> na raiz usam a sintaxe moderna <code>import</code>/<code>export</code> (e não <code>require</code>).</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">3</span> Crie o servidor que simula um sensor</div>
+    <p>No explorador de arquivos, clique com o botão direito <strong>na raiz do projeto</strong> (não dentro de <code>src</code> — o servidor não faz parte do código que o Vite empacota) → <strong>New file</strong> → <code>servidor.js</code>:</p>
+    <pre><code>import { WebSocketServer } from 'ws';
 
 const wss = new WebSocketServer({ port: 8080 });
-console.log('Servidor WebSocket rodando em ws://localhost:8080');
+console.log('Servidor WebSocket rodando na porta 8080');
 
 wss.on('connection', (socket) => {
   console.log('Novo cliente conectado. Total:', wss.clients.size);
@@ -261,30 +272,55 @@ wss.on('connection', (socket) => {
     console.log('Cliente desconectado');
   });
 });</code></pre>
-    <p>Rode em um terminal separado (deixe ele aberto):</p>
-    <pre><code>node servidor.js</code></pre>
-    <p>Esse servidor simula exatamente o que um <strong>ESP32 real</strong> faria: a cada 2 segundos, "publica" uma nova leitura para quem estiver escutando.</p>
+    <div class="tip"><strong>Erro "require is not defined" ou "Cannot use import"?</strong> Confira o <code>package.json</code>: se não houver <code>"type": "module"</code>, adicione a linha manualmente (<code>"type": "module",</code> logo abaixo de <code>"name"</code>) e salve.</div>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">3</span> Teste o servidor com um cliente de linha de comando (opcional)</div>
-    <p>Antes de mexer no React, você pode testar rapidamente com a ferramenta <code>wscat</code>:</p>
-    <pre><code>npm install -g wscat
-wscat -c ws://localhost:8080</code></pre>
-    <p>Você deve ver mensagens JSON chegando a cada 2 segundos direto no terminal.</p>
+    <div class="step-title"><span class="step-num">4</span> Configure o proxy no vite.config.js</div>
+    <p>Abra <code>vite.config.js</code> na raiz e ajuste para incluir a seção <code>server.proxy</code>:</p>
+    <pre><code>import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/ws': {
+        target: 'ws://localhost:8080',
+        ws: true,
+      },
+    },
+  },
+})</code></pre>
+    <p>Isso diz ao Vite: "toda vez que o navegador tentar abrir um WebSocket no caminho <code>/ws</code>, encaminhe essa conexão para o processo que está escutando na porta 8080" — mesmo que, para o navegador, tudo pareça vir do mesmo endereço único do Preview.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">4</span> Conectando o React ao WebSocket</div>
-    <p>No projeto <code>dashboard-iot</code> (o mesmo das semanas anteriores), crie <code>src/useWebSocket.js</code>:</p>
+    <div class="step-title"><span class="step-num">5</span> Rode os dois processos com um único comando</div>
+    <p>Abra <code>package.json</code> e localize a seção <code>"scripts"</code>. Troque a linha <code>"dev"</code> por:</p>
+    <pre><code>"scripts": {
+  "dev": "concurrently \"node servidor.js\" \"vite\"",
+  "build": "vite build",
+  "preview": "vite preview"
+}</code></pre>
+    <p>No terminal, pare o processo atual se estiver rodando (clique no terminal e pressione <code>Ctrl+C</code>) e rode:</p>
+    <pre><code>npm run dev</code></pre>
+    <p>Você deve ver, no mesmo terminal, tanto a mensagem <code>Servidor WebSocket rodando na porta 8080</code> quanto o log normal do Vite — os dois processos rodando lado a lado dentro do mesmo container.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">6</span> Conectando o React ao WebSocket via o caminho /ws</div>
+    <p>Crie <code>src/useWebSocket.js</code>:</p>
     <pre><code>import { useState, useEffect, useRef } from 'react';
 
-function useWebSocket(url) {
+function useWebSocket() {
   const [ultimaLeitura, setUltimaLeitura] = useState(null);
   const [conectado, setConectado] = useState(false);
   const socketRef = useRef(null);
 
   useEffect(() => {
+    const protocolo = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const url = protocolo + window.location.host + '/ws';
     const socket = new WebSocket(url);
     socketRef.current = socket;
 
@@ -298,22 +334,23 @@ function useWebSocket(url) {
     socket.onclose = () => setConectado(false);
     socket.onerror = (err) => console.error('Erro no WebSocket:', err);
 
-    return () => socket.close(); // fecha a conexão ao desmontar o componente
-  }, [url]);
+    return () => socket.close();
+  }, []);
 
   return { ultimaLeitura, conectado };
 }
 
 export default useWebSocket;</code></pre>
+    <div class="tip"><strong>Por que <code>window.location.host</code> em vez de "localhost:8080" fixo?</strong> No StackBlitz (e em qualquer ambiente hospedado), o endereço público do seu Preview não é literalmente "localhost" — é uma URL gerada dinamicamente. Usar <code>window.location.host</code> faz o código funcionar tanto no StackBlitz quanto, futuramente, em um computador local ou em produção, sem precisar trocar nada.</div>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">5</span> Exibindo o dado em tempo real</div>
+    <div class="step-title"><span class="step-num">7</span> Exibindo o dado em tempo real</div>
     <p>Crie <code>src/SensorAoVivo.jsx</code>:</p>
     <pre><code>import useWebSocket from './useWebSocket';
 
 function SensorAoVivo() {
-  const { ultimaLeitura, conectado } = useWebSocket('ws://localhost:8080');
+  const { ultimaLeitura, conectado } = useWebSocket();
 
   return (
     &lt;div style={{ padding: 20, border: '1px solid #333', borderRadius: 10 }}&gt;
@@ -331,31 +368,24 @@ function SensorAoVivo() {
 }
 
 export default SensorAoVivo;</code></pre>
-    <p>Com o <code>servidor.js</code> rodando em um terminal e <code>npm run dev</code> rodando em outro, abra o navegador: o valor da temperatura deve mudar sozinho a cada 2 segundos, <strong>sem nenhum <code>fetch</code> manual</strong> — o servidor é quem "empurra" o dado.</p>
+    <p>Use este componente em <code>App.jsx</code> e abra o <strong>Preview</strong>: o valor da temperatura deve mudar sozinho a cada 2 segundos.</p>
+    <div class="warn-box"><strong>Não conectou?</strong> Clique no botão de abrir o Preview em uma <strong>aba nova do navegador</strong> (ícone de seta/quadrado no canto do painel de Preview do StackBlitz) em vez de deixar só no iframe embutido — em alguns casos o WebSocket dentro do iframe do editor tem restrições extras, e a aba separada resolve.</div>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">6</span> Mantendo um histórico de leituras</div>
-    <p>Um dashboard fica mais útil mostrando as últimas leituras, não só a atual. Ajuste o hook para acumular um histórico limitado:</p>
+    <div class="step-title"><span class="step-num">8</span> Mantendo um histórico de leituras</div>
     <pre><code>const [historico, setHistorico] = useState([]);
 
 socket.onmessage = (evento) => {
   const dado = JSON.parse(evento.data);
   setHistorico(anterior =&gt; [...anterior.slice(-19), dado]); // mantém só as últimas 20 leituras
 };</code></pre>
-    <div class="tip"><strong>Por que <code>slice(-19)</code>?</strong> Sem limitar o tamanho do array, um dashboard que fica ligado por horas acumularia milhares de itens em memória — outro cuidado importante de performance em aplicações de streaming de dados.</div>
+    <div class="tip"><strong>Por que <code>slice(-19)</code>?</strong> Sem limitar o tamanho do array, um dashboard ligado por horas acumularia milhares de itens em memória.</div>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">7</span> Reconexão automática (robustez)</div>
-    <p>Redes IoT caem. Adicione uma tentativa de reconexão simples:</p>
-    <pre><code>socket.onclose = () => {
-  setConectado(false);
-  setTimeout(() =&gt; {
-    // reexecuta o efeito criando uma nova conexão
-  }, 3000);
-};</code></pre>
-    <p>Uma forma prática de implementar isso é guardar um contador de "tentativa" no estado e incluí-lo nas dependências do <code>useEffect</code>, forçando o efeito a rodar de novo após o timeout.</p>
+    <div class="step-title"><span class="step-num">9</span> Salve no GitHub</div>
+    <p>Use o ícone do GitHub no topo do StackBlitz (mesmo processo da Semana 18) para commitar e enviar as mudanças.</p>
   </div>
 </div>
 
@@ -370,18 +400,17 @@ socket.onmessage = (evento) => {
   <h2>💻 Atividade Prática da Semana</h2>
   <div class="activity">
     <h3>📡 Sensor ao Vivo</h3>
-    <p class="desc">Construa o par servidor WebSocket + cliente React funcionando localmente, com histórico de leituras.</p>
+    <p class="desc">Faça o servidor WebSocket e o cliente React funcionarem juntos, dentro do mesmo projeto StackBlitz, com histórico de leituras.</p>
     <h4>📋 Instruções:</h4>
     <ol>
-      <li>Crie o servidor <code>servidor.js</code> simulando <strong>pelo menos 2 sensores diferentes</strong> (ex: temperatura e umidade), enviando leituras separadas a cada 1–3 segundos;</li>
-      <li>Implemente o hook <code>useWebSocket</code> no React consumindo essas leituras;</li>
-      <li>Exiba um histórico das últimas 10–20 leituras de cada sensor (pode ser uma lista simples, não precisa de gráfico ainda — isso vem na Semana 21);</li>
+      <li>No <code>servidor.js</code>, simule <strong>pelo menos 2 sensores diferentes</strong> (ex: temperatura e umidade), enviando leituras separadas a cada 1–3 segundos;</li>
+      <li>Implemente o hook <code>useWebSocket</code> no React consumindo essas leituras (via <code>/ws</code>, como no passo a passo);</li>
+      <li>Exiba um histórico das últimas 10–20 leituras de cada sensor (lista simples — gráfico vem na Semana 21);</li>
       <li>Mostre visualmente o status da conexão (conectado/desconectado);</li>
-      <li>Implemente alguma forma de reconexão ou, no mínimo, uma mensagem clara de erro quando o servidor cai;</li>
-      <li>Documente no README como rodar os dois projetos (servidor e front-end) juntos;</li>
-      <li>Commit e push no mesmo repositório GitHub.</li>
+      <li>Documente no README como rodar o projeto (<code>npm install</code> + <code>npm run dev</code> — um único comando, já que servidor e front-end sobem juntos);</li>
+      <li>Salve no GitHub.</li>
     </ol>
-    <div class="deliverable"><strong>📦 Entregável:</strong> Repositório GitHub com os dois projetos (ou pastas <code>servidor/</code> e <code>frontend/</code>) + vídeo curto (1–2 min) ou GIF mostrando os dados atualizando ao vivo.</div>
+    <div class="deliverable"><strong>📦 Entregável:</strong> Link do repositório GitHub atualizado + vídeo curto (1–2 min) ou GIF mostrando os dados atualizando ao vivo no Preview do StackBlitz.</div>
     <h4>✅ Critérios de Avaliação:</h4>
     <ul class="criteria">
       <li>Servidor WebSocket funcionando com pelo menos 2 sensores simulados</li>
@@ -404,9 +433,9 @@ socket.onmessage = (evento) => {
       <div class="r-title">📦 Biblioteca ws (Node.js)</div>
       <div class="r-desc">Repositório oficial da biblioteca usada no servidor desta aula.</div>
     </a>
-    <a class="res-card" href="https://ably.com/topic/websockets-vs-long-polling" target="_blank">
-      <div class="r-title">⚖️ WebSocket vs Polling</div>
-      <div class="r-desc">Comparação técnica entre as duas abordagens de dados em tempo real.</div>
+    <a class="res-card" href="https://vitejs.dev/config/server-options.html#server-proxy" target="_blank">
+      <div class="r-title">🔀 Vite — server.proxy</div>
+      <div class="r-desc">Documentação oficial da opção de proxy usada para ligar front-end e back-end.</div>
     </a>
     <a class="res-card" href="https://mqtt.org/" target="_blank">
       <div class="r-title">⬡ MQTT.org</div>
