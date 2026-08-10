@@ -255,7 +255,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
 
 <details class="glossario">
-  <summary>📖 Glossário desta semana — clique para expandir (15 termos)</summary>
+  <summary>📖 Glossário desta semana — clique para expandir (18 termos)</summary>
   <div class="glossario-grid">
     <div class="gloss-item"><div class="g-term">WebSocket</div><div class="g-def">Um protocolo que abre uma conexão persistente e bidirecional entre cliente e servidor, permitindo que o servidor envie dados a qualquer momento, sem o cliente precisar pedir.</div></div>
 <div class="gloss-item"><div class="g-term">handshake</div><div class="g-def">O "aperto de mão" inicial entre cliente e servidor para abrir a conexão WebSocket, feito uma única vez no começo.</div></div>
@@ -272,6 +272,9 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 <div class="gloss-item"><div class="g-term">Web Serial API</div><div class="g-def">Um recurso nativo do Chrome/Edge que permite que uma página web converse diretamente com um dispositivo USB (como um Arduino), sem instalar drivers nem programas.</div></div>
 <div class="gloss-item"><div class="g-term">baud rate</div><div class="g-def">A velocidade de comunicação serial, medida em bits por segundo — o Arduino e o computador precisam usar o mesmo valor (ex: 115200) para se entenderem.</div></div>
 <div class="gloss-item"><div class="g-term">fototransistor</div><div class="g-def">Um componente eletrônico que muda sua resistência elétrica de acordo com a quantidade de luz que recebe — é o "sensor de luz" físico usado no circuito desta aula.</div></div>
+<div class="gloss-item"><div class="g-term">escalabilidade horizontal</div><div class="g-def">Aumentar a capacidade de um sistema adicionando mais instâncias/máquinas rodando em paralelo, em vez de deixar uma única máquina mais potente.</div></div>
+<div class="gloss-item"><div class="g-term">stateless</div><div class="g-def">Um serviço que não guarda estado/memória entre requisições — cada requisição é independente, o que facilita rodar várias cópias em paralelo.</div></div>
+<div class="gloss-item"><div class="g-term">load balancer</div><div class="g-def">Componente que distribui as requisições/conexões recebidas entre várias instâncias de um mesmo serviço, para nenhuma delas sobrecarregar.</div></div>
   </div>
   <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
 </details>
@@ -294,6 +297,19 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <p>Na Semana 19 usamos <strong>polling</strong>: o cliente pergunta "tem novidade?" de tempos em tempos. Funciona, mas gasta banda e sempre tem atraso.</p>
   <p>O <strong>WebSocket</strong> abre uma <strong>conexão persistente e bidirecional</strong> entre cliente e servidor: depois do <span class="term" tabindex="0" data-tip="O &quot;aperto de mão&quot; inicial entre cliente e servidor para abrir a conexão, feito uma única vez no começo.">handshake</span> ("aperto de mão") inicial, os dois lados podem enviar mensagens a qualquer momento. Isso é exatamente o que sensores IoT precisam: assim que o ESP32 publica uma nova leitura, todos os painéis conectados recebem o dado <strong>imediatamente</strong>.</p>
   <p>Esse padrão de "muitos dispositivos publicando e muitos clientes recebendo" é a essência de sistemas distribuídos com brokers de mensageria (<span class="term" tabindex="0" data-tip="Protocolo de mensageria leve, muito usado em IoT, baseado no padrão &quot;publish/subscribe&quot;.">MQTT</span>, RabbitMQ, Kafka — Módulo 06, Semanas 28–32). Hoje construímos uma versão simplificada com WebSocket puro.</p>
+
+  <div class="box" style="border-left:3px solid var(--warn);">
+    <strong style="color:#fff;">🧠 Discussão: isso escala?</strong>
+    <p style="margin-top:8px;">O <code>servidor.js</code> que vamos construir guarda tudo <strong>em memória, em um único processo Node</strong>. Funciona perfeitamente para uma turma de 30 alunos testando em laboratório. Mas vale parar e pensar: <strong>e se fossem 10 mil sensores e 5 mil dashboards conectados ao mesmo tempo?</strong></p>
+    <p style="margin-top:8px;">Alguns problemas apareceriam rapidamente:</p>
+    <ul>
+      <li><strong>Um processo só, um núcleo de CPU só</strong> — o Node é single-threaded para o código JavaScript; um único servidor não consegue processar dezenas de milhares de conexões simultâneas sozinho;</li>
+      <li><strong>Estado em memória não é compartilhável</strong> — se você subir uma <em>segunda</em> instância do servidor para dividir a carga (<span class="term" tabindex="0" data-tip="Aumentar a capacidade de um sistema adicionando mais instâncias/máquinas rodando em paralelo, em vez de deixar uma única máquina mais potente.">escalabilidade horizontal</span>, ou <em>scale-out</em>), cada instância teria seu próprio histórico de leituras, e um cliente conectado na instância A nunca veria os dados que chegaram na instância B;</li>
+      <li><strong>Um serviço <span class="term" tabindex="0" data-tip="Um serviço que não guarda estado/memória entre requisições — cada requisição é independente, o que facilita rodar várias cópias em paralelo sem elas 'brigarem' entre si.">stateless</span> escala melhor</strong> — se o servidor não guardasse nada localmente (o estado ficasse em um banco ou broker externo, compartilhado), poderíamos rodar 50 cópias idênticas dele atrás de um <span class="term" tabindex="0" data-tip="Um componente que distribui as requisições/conexões recebidas entre várias instâncias de um mesmo serviço, para nenhuma delas sobrecarregar.">load balancer</span> (balanceador de carga) sem esse problema.</li>
+    </ul>
+    <p style="margin-top:10px;">É exatamente para resolver isso que existem os <strong>brokers de mensageria</strong> que veremos no Módulo 06: em vez de cada servidor guardar o histórico na própria memória, todos publicam e consomem de um broker central (ou de um cluster de brokers) — desacoplando "quem gera o dado" de "quantas instâncias estão de pé para atendê-lo". Guarde essa pergunta ("isso escala?") — ela vai voltar com respostas concretas nas Semanas 28–32.</p>
+  </div>
+
   <div class="warn-box"><strong>Detalhe importante do ambiente:</strong> como estamos num navegador sem instalação local, vamos rodar o <strong>servidor e o front-end dentro do mesmo projeto StackBlitz</strong>, usando um único endereço exposto. Isso evita o problema de <span class="term" tabindex="0" data-tip="Um &quot;número de canal&quot; que identifica um serviço rodando em um computador/servidor.">portas</span>/URLs diferentes não conseguirem "se enxergar". A técnica usada — <span class="term" tabindex="0" data-tip="Um &quot;intermediário&quot; que recebe uma requisição e a repassa para outro endereço/porta por trás dos panos.">proxy</span> do Vite — é a mesma usada em empresas reais para evitar problemas de <span class="term" tabindex="0" data-tip="Regra de segurança do navegador que restringe requisições entre origens diferentes, a menos que o servidor autorize.">CORS</span> entre front-end e back-end durante o desenvolvimento.</div>
 </div>
 

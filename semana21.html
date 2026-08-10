@@ -255,7 +255,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
 
 <details class="glossario">
-  <summary>📖 Glossário desta semana — clique para expandir (8 termos)</summary>
+  <summary>📖 Glossário desta semana — clique para expandir (11 termos)</summary>
   <div class="glossario-grid">
     <div class="gloss-item"><div class="g-term">arquitetura (de software)</div><div class="g-def">O "desenho" geral de como as partes de um sistema se conectam e se comunicam — ex: sensor → servidor → WebSocket → dashboard.</div></div>
 <div class="gloss-item"><div class="g-term">Chart.js</div><div class="g-def">Uma biblioteca JavaScript popular para desenhar gráficos (linhas, barras, pizza) em páginas web.</div></div>
@@ -265,6 +265,9 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 <div class="gloss-item"><div class="g-term">CSS Grid</div><div class="g-def">Um sistema de layout do CSS que organiza elementos em linhas e colunas, útil para grades de cards e painéis responsivos.</div></div>
 <div class="gloss-item"><div class="g-term">DevTools</div><div class="g-def">Developer Tools — o painel de ferramentas para desenvolvedores embutido no navegador (abre com a tecla F12), usado para inspecionar, depurar e testar sites.</div></div>
 <div class="gloss-item"><div class="g-term">caso de borda (edge case)</div><div class="g-def">Uma situação incomum ou extrema que o código precisa tratar corretamente — ex: uma lista de histórico vazia antes do primeiro dado chegar.</div></div>
+<div class="gloss-item"><div class="g-term">mineração de dados em tempo real</div><div class="g-def">Extrair informações úteis (médias, tendências, alertas) de um fluxo contínuo de dados, à medida que eles chegam — em vez de só armazená-los sem análise.</div></div>
+<div class="gloss-item"><div class="g-term">useMemo</div><div class="g-def">Hook do React que guarda em cache (memoriza) o resultado de um cálculo, refazendo-o só quando algo do qual ele depende realmente muda.</div></div>
+<div class="gloss-item"><div class="g-term">escalabilidade horizontal</div><div class="g-def">Aumentar a capacidade de um sistema adicionando mais instâncias/máquinas rodando em paralelo, em vez de deixar uma única máquina mais potente.</div></div>
   </div>
   <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
 </details>
@@ -396,7 +399,55 @@ export default useSensorStream;</code></pre>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">4</span> Componente de gráfico reutilizável</div>
+    <div class="step-title"><span class="step-num">4</span> Mineração de dados em tempo real: média, mínimo e máximo</div>
+    <p>Só <em>mostrar</em> o dado bruto que chega já é útil, mas a ementa da disciplina pede especificamente <span class="term" tabindex="0" data-tip="Extrair informações úteis (médias, tendências, alertas) de um fluxo contínuo de dados, à medida que eles chegam — em vez de só armazená-los.">mineração de dados em tempo real (data streaming)</span> — ou seja, extrair informação do fluxo de dados, não só empilhar leituras. Vamos calcular estatísticas simples sobre o histórico que já estamos guardando. Ajuste <code>useSensorStream.js</code>:</p>
+    <pre><code>import { useState, useEffect, useMemo } from 'react';
+
+function useSensorStream(limite = 20) {
+  const [historico, setHistorico] = useState([]);
+  const [conectado, setConectado] = useState(false);
+
+  useEffect(() => {
+    const protocolo = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const socket = new WebSocket(protocolo + window.location.host + '/ws');
+    socket.onopen = () => setConectado(true);
+    socket.onclose = () => setConectado(false);
+    socket.onmessage = (evento) => {
+      const leitura = JSON.parse(evento.data);
+      setHistorico(anterior => [...anterior.slice(-(limite - 1)), leitura]);
+    };
+    return () => socket.close();
+  }, [limite]);
+
+  // "Mineração" simples: calcula estatísticas do fluxo sempre que o histórico muda
+  const estatisticas = useMemo(() => {
+    function calcular(campo) {
+      const valores = historico.map(h => h[campo]).filter(v => typeof v === 'number');
+      if (valores.length === 0) return null;
+      const soma = valores.reduce((acc, v) => acc + v, 0);
+      return {
+        media: +(soma / valores.length).toFixed(1),
+        minimo: Math.min(...valores),
+        maximo: Math.max(...valores),
+      };
+    }
+    return {
+      temperatura: calcular('temperatura'),
+      umidade: calcular('umidade'),
+      luminosidade: calcular('luminosidade'),
+    };
+  }, [historico]);
+
+  return { historico, conectado, ultimo: historico[historico.length - 1], estatisticas };
+}
+
+export default useSensorStream;</code></pre>
+    <p>O hook <code>useMemo</code> recalcula a média/mínimo/máximo <strong>somente quando o histórico muda</strong>, evitando refazer essa conta a cada re-renderização sem necessidade. Isso é o começo de uma pipeline de streaming analytics — ferramentas como o InfluxDB/Grafana do Módulo 07 (Semanas 33–36) fazem exatamente esse tipo de agregação, só que em escala e com janelas de tempo configuráveis (última hora, último dia, etc.), em vez de só as últimas N leituras em memória.</p>
+    <div class="tip"><strong>Vá além (opcional):</strong> tente adicionar um alerta simples — por exemplo, destacar em vermelho quando <code>estatisticas.temperatura.maximo</code> ultrapassar um limiar, tipo 30°C. Isso já é uma forma (bem simples) de detecção de padrão em tempo real.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">5</span> Componente de gráfico reutilizável</div>
     <p>Crie <code>src/GraficoSensor.jsx</code>:</p>
     <pre><code>import { Line } from 'react-chartjs-2';
 import {
@@ -406,12 +457,12 @@ import {
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip);
 
-function GraficoSensor({ titulo, historico, campo, cor }) {
+function GraficoSensor({ titulo, historico, campo, cor, estatisticas }) {
   const dados = {
-    labels: historico.map(h =&gt; new Date(h.timestamp).toLocaleTimeString()),
+    labels: historico.map(h => new Date(h.timestamp).toLocaleTimeString()),
     datasets: [{
       label: titulo,
-      data: historico.map(h =&gt; h[campo]),
+      data: historico.map(h => h[campo]),
       borderColor: cor,
       tension: 0.3,
     }],
@@ -421,6 +472,11 @@ function GraficoSensor({ titulo, historico, campo, cor }) {
     &lt;div style={{ background: '#181d2f', padding: 16, borderRadius: 10 }}&gt;
       &lt;h3&gt;{titulo}&lt;/h3&gt;
       &lt;Line data={dados} /&gt;
+      {estatisticas &amp;&amp; (
+        &lt;p style={{ fontSize: 12, opacity: 0.8, marginTop: 8 }}&gt;
+          média: {estatisticas.media} · mín: {estatisticas.minimo} · máx: {estatisticas.maximo}
+        &lt;/p&gt;
+      )}
     &lt;/div&gt;
   );
 }
@@ -429,12 +485,12 @@ export default GraficoSensor;</code></pre>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">5</span> Montando o dashboard final</div>
+    <div class="step-title"><span class="step-num">6</span> Montando o dashboard final</div>
     <pre><code>import useSensorStream from './useSensorStream';
 import GraficoSensor from './GraficoSensor';
 
 function Dashboard() {
-  const { historico, conectado, ultimo } = useSensorStream(20);
+  const { historico, conectado, ultimo, estatisticas } = useSensorStream(20);
 
   return (
     &lt;div style={{ padding: 24 }}&gt;
@@ -453,9 +509,9 @@ function Dashboard() {
         gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
         gap: 20
       }}&gt;
-        &lt;GraficoSensor titulo="Temperatura (°C)" historico={historico} campo="temperatura" cor="#f97316" /&gt;
-        &lt;GraficoSensor titulo="Umidade (%)" historico={historico} campo="umidade" cor="#4f8cff" /&gt;
-        &lt;GraficoSensor titulo="Luminosidade (lux)" historico={historico} campo="luminosidade" cor="#fbbf24" /&gt;
+        &lt;GraficoSensor titulo="Temperatura (°C)" historico={historico} campo="temperatura" cor="#f97316" estatisticas={estatisticas.temperatura} /&gt;
+        &lt;GraficoSensor titulo="Umidade (%)" historico={historico} campo="umidade" cor="#4f8cff" estatisticas={estatisticas.umidade} /&gt;
+        &lt;GraficoSensor titulo="Luminosidade (lux)" historico={historico} campo="luminosidade" cor="#fbbf24" estatisticas={estatisticas.luminosidade} /&gt;
       &lt;/div&gt;
     &lt;/div&gt;
   );
@@ -466,12 +522,12 @@ export default Dashboard;</code></pre>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">6</span> Testando a responsividade</div>
+    <div class="step-title"><span class="step-num">7</span> Testando a responsividade</div>
     <p>Abra o Preview em uma aba separada (ícone no canto do painel), pressione <strong>F12</strong> para abrir o <span class="term" tabindex="0" data-tip="Painel de ferramentas para desenvolvedores embutido no navegador, usado para inspecionar, depurar e testar sites.">DevTools</span> do navegador, clique no ícone de "alternar visualização de dispositivo" (parece um celular/tablet, geralmente <kbd>Ctrl+Shift+M</kbd> no Edge/Chrome) e teste em diferentes tamanhos de tela.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">7</span> (Opcional) Combinando com o sensor real do Arduino</div>
+    <div class="step-title"><span class="step-num">8</span> (Opcional) Combinando com o sensor real do Arduino</div>
     <p>Se você já fez o bônus da Semana 20 com o Arduino Uno + fototransistor ("Magnificent Hango"), reaproveite o <code>useSerialSensor</code> aqui: adicione um <code>GraficoSensor</code> alimentado pelo histórico das leituras reais (basta acumular cada <code>leitura</code> recebida num array de estado, do mesmo jeito que fizemos com o WebSocket). Assim seu dashboard final mostra, lado a lado, um gráfico com dados simulados e outro com dados 100% reais vindos de um sensor físico.</p>
     <p>Se sua turma tiver placas <strong>ESP32</strong> disponíveis (materiais de apoio "ESP32 — Missão IoT" no índice do curso) conectadas à mesma rede Wi-Fi, o caminho é diferente do Arduino via USB: o ESP32 enviaria leituras via <code>HTTP POST</code> para uma rota adicionada ao <code>servidor.js</code>, que retransmite via WebSocket para os clientes — isso será formalizado com um broker de verdade (MQTT) no <strong>Módulo 06</strong>.</p>
   </div>
@@ -493,6 +549,7 @@ export default Dashboard;</code></pre>
     <ol>
       <li>Consolide os projetos das Semanas 18–20 em um único dashboard funcional (mesmo projeto StackBlitz);</li>
       <li>Exiba pelo menos 3 sensores diferentes, cada um com seu gráfico de histórico (Chart.js);</li>
+      <li>Implemente o cálculo de média/mínimo/máximo (<code>estatisticas</code>) e exiba junto de cada gráfico — essa é a parte de "mineração de dados em tempo real" da ementa;</li>
       <li>Garanta responsividade: teste redimensionando a janela do navegador e no modo de emulação mobile do DevTools;</li>
       <li>Adicione um cabeçalho com status de conexão e horário da última atualização;</li>
       <li>Escreva testes para pelo menos 2 componentes (incluindo o caso de histórico vazio);</li>
@@ -504,6 +561,7 @@ export default Dashboard;</code></pre>
     <h4>✅ Critérios de Avaliação:</h4>
     <ul class="criteria">
       <li>Dashboard funcional com no mínimo 3 sensores e gráficos de histórico</li>
+      <li>Cálculo de média/mínimo/máximo implementado e exibido corretamente</li>
       <li>Layout responsivo comprovado com prints</li>
       <li>Código organizado em componentes e hooks reutilizáveis</li>
       <li>Testes cobrindo casos de borda (ex: histórico vazio)</li>
