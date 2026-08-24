@@ -853,7 +853,19 @@ export default App;</code></pre>
 
   <div class="step">
     <div class="step-title"><span class="step-num">11</span> Salvando o projeto no GitHub (sem usar git no terminal)</div>
-    <p>No painel <strong>PROJECT</strong>, à esquerda (o mesmo onde fica a lista de arquivos), há um botão com o ícone do octocat 🐙 escrito <strong>"Create a repository"</strong> — é ele que vamos usar, e não um ícone no topo da página. Clique nele, escolha <strong>criar um novo repositório</strong>, dê o nome <code>dashboard-iot-isw044</code> e confirme. O StackBlitz envia todos os arquivos automaticamente para o seu GitHub — nenhum comando <code>git</code> é digitado.</p>
+    <p>No painel <strong>PROJECT</strong>, à esquerda (o mesmo onde fica a lista de arquivos), há um botão com o ícone do octocat 🐙 escrito <strong>"Create a repository"</strong> — é ele que vamos usar, e não um ícone no topo da página. Clique nele, escolha <strong>criar um novo repositório</strong>, dê o nome <code>dashboard-iot-isw044</code> e confirme.</p>
+
+    <div class="tip"><strong>🔐 Apareceu a tela "GitHub App configuration required"?</strong> É normal na <strong>primeira vez</strong> que você conecta um repositório — o login do passo 2 só autoriza o StackBlitz a <em>ler</em> sua conta, mas criar/enviar repositórios exige uma permissão extra de <em>escrita</em>, concedida separadamente por segurança. Resolva assim:
+      <ol style="margin:8px 0 0 20px;">
+        <li>Clique em <strong>"Configure App"</strong> (azul) — vai abrir uma aba nova no GitHub;</li>
+        <li>Escolha sua conta pessoal (não uma organização) e, na tela de permissões, deixe marcado <strong>"All repositories"</strong> (ou selecione manualmente os repositórios que quer liberar) e clique em <strong>Install</strong>/<strong>Save</strong>;</li>
+        <li>Volte para a aba do StackBlitz — o aviso <span style="color:var(--red);">"App is not installed"</span> deve sumir. Se não sumir sozinho, clique em <strong>"Update status"</strong>;</li>
+        <li>Com o status atualizado, o botão <strong>"Proceed"</strong> (antes cinza/desabilitado) fica clicável — clique nele para continuar criando o repositório.</li>
+      </ol>
+      Esse passo só aparece uma vez por conta; nas próximas vezes o "Create a repository" funciona direto.
+    </div>
+
+    <p>O StackBlitz envia todos os arquivos automaticamente para o seu GitHub — nenhum comando <code>git</code> é digitado.</p>
     <p>A partir de agora, sempre que quiser salvar uma nova versão do trabalho, clique novamente nesse mesmo botão (que depois de conectado passa a mostrar a opção de <span class="term" tabindex="0" data-tip="Um &quot;registro&quot; de uma versão do seu código, com uma mensagem descrevendo o que mudou.">commit</span>/<span class="term" tabindex="0" data-tip="Ação de enviar seus commits para o repositório no GitHub, tornando-os visíveis para quem tiver acesso.">push</span>), escrevendo uma mensagem curta descrevendo o que mudou (ex: "adiciona SensorCard e useEffect"). Faça isso com frequência — ao final de cada passo importante, não só no fim da atividade — para ter um histórico de versões que mostra sua evolução.</p>
 
     <div class="figure">
