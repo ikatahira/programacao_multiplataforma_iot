@@ -853,20 +853,49 @@ export default App;</code></pre>
 
   <div class="step">
     <div class="step-title"><span class="step-num">11</span> Salvando o projeto no GitHub (sem usar git no terminal)</div>
-    <p>No painel <strong>PROJECT</strong>, à esquerda (o mesmo onde fica a lista de arquivos), há um botão com o ícone do octocat 🐙 escrito <strong>"Create a repository"</strong> — é ele que vamos usar, e não um ícone no topo da página. Clique nele, escolha <strong>criar um novo repositório</strong>, dê o nome <code>dashboard-iot-isw044</code> e confirme.</p>
+    <p>No painel <strong>PROJECT</strong>, à esquerda (o mesmo onde fica a lista de arquivos), há um botão com o ícone do octocat 🐙 escrito <strong>"Create a repository"</strong> — é ele que vamos usar, e não um ícone no topo da página. Clique nele.</p>
 
-    <div class="tip"><strong>🔐 Apareceu a tela "GitHub App configuration required"?</strong> É normal na <strong>primeira vez</strong> que você conecta um repositório — o login do passo 2 só autoriza o StackBlitz a <em>ler</em> sua conta, mas criar/enviar repositórios exige uma permissão extra de <em>escrita</em>, concedida separadamente por segurança. Resolva assim:
+    <div class="tip"><strong>🔐 Apareceu um aviso pedindo para configurar o GitHub App?</strong> É normal na <strong>primeira vez</strong> que você conecta um repositório — o login do passo 2 só autoriza o StackBlitz a <em>ler</em> sua conta, mas criar/enviar repositórios exige uma permissão extra de <em>escrita</em>, concedida separadamente por segurança. Esse aviso pode aparecer de duas formas: um <strong>modal</strong> no meio da tela ("GitHub App configuration required") ou um <strong>painel na barra lateral</strong> (ícone de plugue 🔌), com o texto "Configure StackBlitz GitHub app to create repositories." e um botão <strong>Configure</strong>. Nos dois casos, resolve-se do mesmo jeito:
       <ol style="margin:8px 0 0 20px;">
-        <li>Clique em <strong>"Configure App"</strong> (azul) — vai abrir uma aba nova no GitHub;</li>
+        <li>Clique no botão <strong>"Configure"</strong> (ou <strong>"Configure App"</strong>, no modal) — vai abrir uma aba nova no GitHub;</li>
         <li>Escolha sua conta pessoal (não uma organização) e, na tela de permissões, deixe marcado <strong>"All repositories"</strong> (ou selecione manualmente os repositórios que quer liberar) e clique em <strong>Install</strong>/<strong>Save</strong>;</li>
-        <li>Volte para a aba do StackBlitz — o aviso <span style="color:var(--red);">"App is not installed"</span> deve sumir. Se não sumir sozinho, clique em <strong>"Update status"</strong>;</li>
-        <li>Com o status atualizado, o botão <strong>"Proceed"</strong> (antes cinza/desabilitado) fica clicável — clique nele para continuar criando o repositório.</li>
+        <li>Volte para a aba do StackBlitz — o aviso deve sumir sozinho em alguns segundos. Se não sumir, clique em <strong>"Update status"</strong> (se aparecer) ou recarregue a aba inteira com <code>F5</code> — nada se perde, o projeto salva sozinho;</li>
+        <li>Com o status atualizado, clique em <strong>"Create a repository"</strong> de novo — agora abre a janela final, descrita a seguir.</li>
       </ol>
-      Esse passo só aparece uma vez por conta; nas próximas vezes o "Create a repository" funciona direto.
+      Esse passo só aparece uma vez por conta; nas próximas vezes o "Create a repository" já pula direto para a próxima etapa.
     </div>
 
-    <p>O StackBlitz envia todos os arquivos automaticamente para o seu GitHub — nenhum comando <code>git</code> é digitado.</p>
+    <p>Com o app configurado, abre a janela <strong>"Connect your project to a GitHub repository"</strong> — é aqui que o repositório é criado de fato:</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="698" height="258" rx="14" fill="var(--surface)" stroke="var(--border)"/>
+        <text x="24" y="34" font-family="Syne, sans-serif" font-size="13" fill="#fff" font-weight="700">CONNECT YOUR PROJECT TO A GITHUB REPOSITORY</text>
+        <line x1="16" y1="46" x2="684" y2="46" stroke="var(--border)"/>
+
+        <text x="24" y="76" font-family="DM Mono, monospace" font-size="10.5" fill="var(--muted2)">Name your new repository</text>
+        <rect x="24" y="86" width="640" height="34" rx="6" fill="#0a0d17" stroke="var(--accent2)" stroke-width="2"/>
+        <text x="34" y="108" font-family="DM Mono, monospace" font-size="11" fill="var(--muted)">ikatahira/</text>
+        <text x="112" y="108" font-family="DM Mono, monospace" font-size="11" fill="#fff">dashboard-iot-isw044</text>
+        <text x="500" y="108" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">← troque aqui</text>
+
+        <rect x="24" y="136" width="16" height="16" rx="3" fill="none" stroke="var(--muted2)" stroke-width="1.5"/>
+        <text x="48" y="149" font-family="Space Grotesk, sans-serif" font-size="11" fill="var(--muted2)">Make this repository private</text>
+        <text x="330" y="149" font-family="DM Mono, monospace" font-size="9" fill="var(--iot)">← deixe DESMARCADO</text>
+
+        <rect x="24" y="168" width="640" height="42" rx="8" fill="rgba(167,139,250,.08)" stroke="var(--warn)"/>
+        <text x="70" y="185" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">New GitHub-connected projects now open in StackBlitz next</text>
+        <text x="70" y="200" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">generation editor and include an updated GitHub integration.</text>
+
+        <rect x="24" y="222" width="200" height="30" rx="7" fill="var(--accent)"/>
+        <text x="124" y="242" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#0c0f1a" font-weight="700">🔗 Create a repository</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 5.1 —</strong> antes de confirmar: (1) apague o nome sugerido (algo como <code>vitejs-vite-xxxxx</code>) e digite <code>dashboard-iot-isw044</code>; (2) deixe <strong>"Make this repository private"</strong> desmarcado, para o professor conseguir acessar o link sem precisar de convite; (3) clique no botão azul <strong>"Create a repository"</strong>.</p>
+    </div>
+
+    <p>O StackBlitz cria o repositório e envia todos os arquivos automaticamente para o seu GitHub — nenhum comando <code>git</code> é digitado. Para conferir, acesse <code>github.com/SEU-USUARIO/dashboard-iot-isw044</code> no navegador e veja os arquivos do projeto lá.</p>
     <p>A partir de agora, sempre que quiser salvar uma nova versão do trabalho, clique novamente nesse mesmo botão (que depois de conectado passa a mostrar a opção de <span class="term" tabindex="0" data-tip="Um &quot;registro&quot; de uma versão do seu código, com uma mensagem descrevendo o que mudou.">commit</span>/<span class="term" tabindex="0" data-tip="Ação de enviar seus commits para o repositório no GitHub, tornando-os visíveis para quem tiver acesso.">push</span>), escrevendo uma mensagem curta descrevendo o que mudou (ex: "adiciona SensorCard e useEffect"). Faça isso com frequência — ao final de cada passo importante, não só no fim da atividade — para ter um histórico de versões que mostra sua evolução.</p>
+
 
     <div class="figure">
       <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
