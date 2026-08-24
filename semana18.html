@@ -77,6 +77,7 @@ body::before {
   padding-bottom:12px; border-bottom:1px solid var(--border);
 }
 .section h3 { font-family:'Syne', sans-serif; font-size:1.08rem; color:var(--accent2); margin:26px 0 10px; }
+.section h4 { font-family:'Syne', sans-serif; font-size:.95rem; color:#fff; margin:18px 0 8px; }
 .section p { color:var(--muted2); line-height:1.8; margin:10px 0; font-size:.95rem; }
 .section ul, .section ol { margin:10px 0 10px 22px; color:var(--muted2); font-size:.95rem; line-height:1.85; }
 .section li { margin:6px 0; }
@@ -123,11 +124,25 @@ pre code { background:none; color:inherit; padding:0; }
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
 }
 .warn-box strong { color:var(--red); }
+.warn-box ul { margin:8px 0 0 18px; }
 .checkpoint {
   border-left:3px solid var(--warn); background:rgba(167,139,250,.06);
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
 }
 .checkpoint strong { color:var(--warn); }
+.checkpoint ul { margin:8px 0 0 18px; }
+
+/* FIGURES / DIAGRAMS */
+.figure {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:18px 18px 14px; margin:18px 0;
+}
+.figure svg { width:100%; height:auto; display:block; }
+.figure-caption {
+  margin-top:12px; font-size:.8rem; color:var(--muted2); text-align:center;
+  font-style:italic; line-height:1.5;
+}
+.figure-caption strong { color:var(--muted2); font-style:normal; }
 
 .activity {
   background:var(--card); border:1px solid var(--border); border-radius:14px;
@@ -144,6 +159,13 @@ pre code { background:none; color:inherit; padding:0; }
 .criteria li { padding:8px 0 8px 26px; position:relative; color:var(--muted2); font-size:.9rem; border-bottom:1px solid rgba(34,40,67,.6); }
 .criteria li:last-child { border-bottom:none; }
 .criteria li::before { content:'✓'; position:absolute; left:0; color:var(--green); font-weight:700; }
+
+.bonus {
+  border-left:3px solid var(--accent2); background:rgba(56,224,192,.06);
+  padding:16px 18px; border-radius:0 8px 8px 0; margin:16px 0; font-size:.9rem; color:var(--muted2);
+}
+.bonus strong { color:var(--accent2); }
+.bonus ul { margin:8px 0 0 18px; }
 
 /* GLOSSARY TOOLTIPS */
 .term {
@@ -237,7 +259,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <div class="hero-tag"><span></span> Semana 18 de 40 · Módulo 04</div>
     <div class="hero-week">MÓDULO 04 · DESENVOLVIMENTO WEB MODERNO · SEMANA 18</div>
     <h1>React.js — Componentes e Hooks</h1>
-    <p class="hero-sub">Monte todo o ambiente de desenvolvimento sem instalar nada, direto no navegador com StackBlitz, e aprenda JSX, props, useState e useEffect construindo os primeiros cards de sensores.</p>
+    <p class="hero-sub">Monte todo o ambiente de desenvolvimento sem instalar nada, direto no navegador com StackBlitz, e aprenda JSX, props, useState e useEffect construindo os primeiros cards de sensores. Esta versão traz o passo a passo bem mais detalhado, com diagramas explicando cada conceito e checkpoints para você conferir se está no caminho certo.</p>
   </div>
 
 <div class="section">
@@ -248,15 +270,17 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
       <li>Aprender a usar o <span class="term" tabindex="0" data-tip="Site que roda um ambiente de programação completo (editor + terminal + Node.js) dentro do navegador, sem precisar instalar nada no computador.">StackBlitz</span>, um "VS Code dentro do navegador" que roda Node.js de verdade;</li>
       <li>Entender por que usamos <span class="term" tabindex="0" data-tip="Biblioteca JavaScript para construir interfaces organizadas em pequenas peças reutilizáveis chamadas componentes.">React.js</span> para aplicações web responsivas com dados em tempo real;</li>
       <li>Criar <span class="term" tabindex="0" data-tip="Peças reutilizáveis de interface, escritas como funções JavaScript que retornam o que deve aparecer na tela.">componentes</span> funcionais e entender a sintaxe <span class="term" tabindex="0" data-tip="Extensão de sintaxe do JavaScript que permite escrever algo parecido com HTML dentro do código.">JSX</span>;</li>
-      <li>Usar os <span class="term" tabindex="0" data-tip="Funções especiais do React (começam com &quot;use&quot;) que dão superpoderes a um componente, como guardar estado ou reagir a mudanças.">hooks</span> <code>useState</code> e <code>useEffect</code> para controlar estado e efeitos colaterais;</li>
-      <li>Salvar o projeto no <strong>GitHub</strong> direto do navegador, sem usar comandos de <code>git</code> instalados localmente.</li>
+      <li>Entender como os dados fluem entre componentes através de <code>props</code>, e visualizar isso em um diagrama;</li>
+      <li>Usar os <span class="term" tabindex="0" data-tip="Funções especiais do React (começam com &quot;use&quot;) que dão superpoderes a um componente, como guardar estado ou reagir a mudanças.">hooks</span> <code>useState</code> e <code>useEffect</code> para controlar estado e efeitos colaterais, entendendo o ciclo completo (o que acontece antes, durante e depois de cada atualização);</li>
+      <li>Salvar o projeto no <strong>GitHub</strong> direto do navegador, sem usar comandos de <code>git</code> instalados localmente;</li>
+      <li>Escrever e rodar o primeiro teste automatizado do curso.</li>
     </ul>
   </div>
 </div>
 
 
 <details class="glossario">
-  <summary>📖 Glossário desta semana — clique para expandir (20 termos)</summary>
+  <summary>📖 Glossário desta semana — clique para expandir (23 termos)</summary>
   <div class="glossario-grid">
     <div class="gloss-item"><div class="g-term">StackBlitz</div><div class="g-def">Site que roda um ambiente de programação completo (editor + terminal + Node.js) dentro do navegador, sem precisar instalar nada no computador.</div></div>
 <div class="gloss-item"><div class="g-term">WebContainer</div><div class="g-def">A tecnologia por trás do StackBlitz: um "computador virtual" com Node.js rodando dentro da própria aba do navegador, usando WebAssembly.</div></div>
@@ -267,12 +291,16 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 <div class="gloss-item"><div class="g-term">componente</div><div class="g-def">Uma peça reutilizável de interface (um pedaço de tela) escrita como uma função JavaScript que retorna o que deve aparecer na página.</div></div>
 <div class="gloss-item"><div class="g-term">JSX</div><div class="g-def">Uma extensão de sintaxe do JavaScript que permite escrever algo parecido com HTML dentro do código — é convertido em JavaScript puro por trás dos panos.</div></div>
 <div class="gloss-item"><div class="g-term">props</div><div class="g-def">Abreviação de "properties" (propriedades) — são os dados que um componente recebe de fora, como parâmetros de uma função.</div></div>
+<div class="gloss-item"><div class="g-term">children</div><div class="g-def">Uma prop especial e automática que representa o conteúdo colocado entre as tags de abertura e fechamento de um componente.</div></div>
 <div class="gloss-item"><div class="g-term">hook</div><div class="g-def">Uma função especial do React (sempre começa com "use", como useState) que permite componentes de função usar recursos como estado e efeitos colaterais.</div></div>
 <div class="gloss-item"><div class="g-term">estado (state)</div><div class="g-def">Um dado que pertence a um componente e que, quando muda, faz a tela se atualizar sozinha automaticamente.</div></div>
 <div class="gloss-item"><div class="g-term">useState</div><div class="g-def">Hook do React que cria uma variável de estado: guarda um valor e fornece uma função para atualizá-lo.</div></div>
+<div class="gloss-item"><div class="g-term">re-renderização</div><div class="g-def">O processo pelo qual o React roda de novo a função do componente para calcular a nova versão da tela, depois de um estado mudar.</div></div>
 <div class="gloss-item"><div class="g-term">useEffect</div><div class="g-def">Hook do React que executa código em resposta a mudanças (ex: buscar dados, iniciar um temporizador) — os chamados "efeitos colaterais".</div></div>
 <div class="gloss-item"><div class="g-term">efeito colateral</div><div class="g-def">Qualquer ação que um componente faz além de simplesmente desenhar a tela — como buscar dados na internet, ligar um temporizador ou mexer no armazenamento do navegador.</div></div>
+<div class="gloss-item"><div class="g-term">função de limpeza (cleanup)</div><div class="g-def">Código que o useEffect executa antes de rodar de novo ou quando o componente é removido da tela, usado para "desligar" o que foi ligado (ex: parar um setInterval).</div></div>
 <div class="gloss-item"><div class="g-term">setInterval</div><div class="g-def">Função nativa do JavaScript que repete uma ação de tempos em tempos (ex: a cada 2000 milissegundos = 2 segundos).</div></div>
+<div class="gloss-item"><div class="g-term">reconciliação (diffing)</div><div class="g-def">Processo interno do React que compara a versão antiga e a nova da tela e atualiza no navegador só o que realmente mudou, usando a prop key para reconhecer itens em listas.</div></div>
 <div class="gloss-item"><div class="g-term">Hot Module Reload</div><div class="g-def">Recurso do Vite que atualiza a página no navegador automaticamente assim que você salva uma alteração no código, sem precisar recarregar tudo.</div></div>
 <div class="gloss-item"><div class="g-term">Vitest</div><div class="g-def">Ferramenta (test runner) usada para escrever e rodar testes automatizados no projeto, integrada nativamente ao Vite.</div></div>
 <div class="gloss-item"><div class="g-term">commit</div><div class="g-def">Um "registro" de uma versão do seu código no Git/GitHub, com uma mensagem descrevendo o que mudou.</div></div>
@@ -288,49 +316,122 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <p>Nos laboratórios da FATEC os computadores rodam <strong>Windows 11</strong> e você <strong>não tem permissão para instalar programas</strong> (nem o <span class="term" tabindex="0" data-tip="Programa que permite rodar código JavaScript fora do navegador — é o &quot;motor&quot; que executa o servidor e as ferramentas de build.">Node.js</span>, nem o VS Code, nem o Git). Isso não é um problema: vamos usar o <strong><a href="https://stackblitz.com" target="_blank">StackBlitz</a></strong>, um site que roda um ambiente Node.js <strong>completo dentro do próprio navegador</strong>, usando uma tecnologia chamada <span class="term" tabindex="0" data-tip="Tecnologia que roda um &quot;computador virtual&quot; com Node.js dentro da própria aba do navegador, usando WebAssembly — sem precisar de instalação nem de servidor externo.">WebContainers</span>. Na prática, para você, ele se comporta exatamente como o VS Code + terminal + Node instalados — só que 100% dentro de uma aba do Edge ou Chrome, sem precisar de permissão de administrador.</p>
   <div class="tip"><strong>Funciona em qualquer computador:</strong> como nada é instalado localmente, você pode sair do laboratório, chegar em outro computador na próxima semana (ou em casa) e continuar exatamente de onde parou — desde que entre com a mesma conta.</div>
 
+  <div class="figure">
+    <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="698" height="398" rx="14" fill="var(--surface)" stroke="var(--border)"/>
+      <!-- browser chrome -->
+      <rect x="1" y="1" width="698" height="34" rx="14" fill="var(--card)"/>
+      <rect x="1" y="18" width="698" height="17" fill="var(--card)"/>
+      <circle cx="20" cy="18" r="5" fill="var(--red)"/>
+      <circle cx="38" cy="18" r="5" fill="var(--yellow)"/>
+      <circle cx="56" cy="18" r="5" fill="var(--green)"/>
+      <rect x="90" y="9" width="420" height="18" rx="9" fill="var(--bg)" stroke="var(--border)"/>
+      <text x="104" y="22" font-family="DM Mono, monospace" font-size="10.5" fill="var(--muted2)">stackblitz.com/edit/dashboard-iot-isw044</text>
+
+      <!-- explorer -->
+      <rect x="14" y="48" width="130" height="230" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="24" y="66" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">EXPLORER</text>
+      <text x="24" y="86" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📁 src</text>
+      <text x="34" y="102" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent)">📄 App.jsx</text>
+      <text x="34" y="118" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📄 SensorCard.jsx</text>
+      <text x="34" y="134" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📄 App.css</text>
+      <text x="24" y="152" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📄 package.json</text>
+      <text x="24" y="168" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📄 index.html</text>
+
+      <!-- editor -->
+      <rect x="152" y="48" width="242" height="230" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="162" y="66" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">EDITOR</text>
+      <rect x="162" y="76" width="150" height="7" rx="3" fill="rgba(79,140,255,.35)"/>
+      <rect x="162" y="90" width="200" height="7" rx="3" fill="rgba(148,163,184,.25)"/>
+      <rect x="180" y="104" width="170" height="7" rx="3" fill="rgba(148,163,184,.25)"/>
+      <rect x="180" y="118" width="120" height="7" rx="3" fill="rgba(56,224,192,.3)"/>
+      <rect x="162" y="132" width="90" height="7" rx="3" fill="rgba(148,163,184,.25)"/>
+      <rect x="162" y="150" width="210" height="7" rx="3" fill="rgba(148,163,184,.18)"/>
+      <rect x="162" y="164" width="140" height="7" rx="3" fill="rgba(148,163,184,.18)"/>
+
+      <!-- terminal -->
+      <rect x="152" y="288" width="242" height="66" rx="8" fill="#0a0d17" stroke="var(--border)"/>
+      <text x="162" y="304" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">TERMINAL</text>
+      <text x="162" y="322" font-family="DM Mono, monospace" font-size="9.5" fill="#9fe6c8">$ npm run dev</text>
+      <text x="162" y="336" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted)">VITE ready in 812 ms</text>
+
+      <!-- preview -->
+      <rect x="406" y="48" width="280" height="306" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="416" y="66" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">PREVIEW (ao vivo)</text>
+      <rect x="416" y="80" width="120" height="70" rx="8" fill="var(--bg)" stroke="var(--iot)"/>
+      <text x="426" y="98" font-family="Space Grotesk, sans-serif" font-size="9" fill="var(--muted2)">Temperatura</text>
+      <text x="426" y="122" font-family="Space Grotesk, sans-serif" font-size="16" fill="var(--iot)">24.5 °C</text>
+      <rect x="546" y="80" width="120" height="70" rx="8" fill="var(--bg)" stroke="var(--accent)"/>
+      <text x="556" y="98" font-family="Space Grotesk, sans-serif" font-size="9" fill="var(--muted2)">Umidade</text>
+      <text x="556" y="122" font-family="Space Grotesk, sans-serif" font-size="16" fill="var(--accent)">62 %</text>
+      <rect x="416" y="160" width="250" height="34" rx="8" fill="rgba(56,224,192,.12)" stroke="var(--accent2)"/>
+      <text x="428" y="181" font-family="Space Grotesk, sans-serif" font-size="10" fill="var(--accent2)">🔁 atualiza sozinho a cada 2s</text>
+
+      <!-- labels/arrows -->
+      <text x="79" y="292" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">1</text>
+      <text x="273" y="292" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">2</text>
+      <text x="273" y="386" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">4</text>
+      <text x="546" y="382" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">3</text>
+    </svg>
+    <p class="figure-caption"><strong>Figura 1 —</strong> as quatro áreas do StackBlitz que você vai usar o curso inteiro: <strong>1</strong> explorador de arquivos, <strong>2</strong> editor de código, <strong>3</strong> preview ao vivo do site rodando, <strong>4</strong> terminal real para comandos <code>npm</code>.</p>
+  </div>
+
   <div class="step">
     <div class="step-title"><span class="step-num">1</span> Crie uma conta gratuita no GitHub (se ainda não tiver)</div>
     <p>O GitHub é onde seu código fica salvo permanentemente — e é exigido pela ementa da disciplina (controle de versionamento). Abra o navegador e acesse:</p>
     <pre><code>https://github.com/join</code></pre>
-    <p>Preencha e-mail, senha e um nome de usuário (ex: <code>seunome-fatec</code>). Confirme o e-mail que o GitHub envia. Isso leva menos de 3 minutos e você só precisa fazer isso <strong>uma única vez</strong> em todo o curso.</p>
+    <p>Preencha e-mail, senha e um nome de usuário. Algumas dicas para o nome de usuário, já que ele fica público e vai te acompanhar durante toda a faculdade:</p>
+    <ul>
+      <li>Use algo profissional, sem apelidos — ex: <code>joaosilva-dev</code> ou <code>joaosilva-fatec</code>, e não <code>joaogamer2010</code>;</li>
+      <li>Evite trocar de usuário depois: alterá-lo pode quebrar links de repositórios já compartilhados;</li>
+      <li>Use um e-mail que você acessa com frequência, pois o GitHub envia um código de confirmação para validar a conta.</li>
+    </ul>
+    <p>Confirme o e-mail que o GitHub envia (pode levar 1–2 minutos para chegar; verifique a caixa de spam). Isso leva menos de 3 minutos e você só precisa fazer isso <strong>uma única vez</strong> em todo o curso.</p>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> ao acessar <code>github.com</code> e fazer login, você deve ver seu nome de usuário no canto superior direito da página, com um menu de avatar.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">2</span> Abra o StackBlitz e entre com sua conta GitHub</div>
     <p>No navegador (Edge já vem instalado no Windows 11; se preferir, o Chrome também funciona), acesse:</p>
     <pre><code>https://stackblitz.com</code></pre>
-    <p>No canto superior direito, clique em <strong>Sign in</strong> e escolha <strong>Continue with GitHub</strong>. Autorize o acesso na tela que o GitHub abrir. Pronto — sua conta StackBlitz agora está ligada à sua conta GitHub, e qualquer projeto que você criar pode ser salvo lá.</p>
+    <p>No canto superior direito, clique em <strong>Sign in</strong> e escolha <strong>Continue with GitHub</strong>. O navegador vai abrir uma nova tela (ou uma janela pop-up) pedindo para você autorizar o StackBlitz a acessar sua conta GitHub — clique em <strong>Authorize</strong>. Pronto — sua conta StackBlitz agora está ligada à sua conta GitHub, e qualquer projeto que você criar pode ser salvo lá.</p>
     <div class="tip"><strong>Site bloqueado no laboratório?</strong> Se <code>stackblitz.com</code> estiver bloqueado pelo firewall da escola, avise o professor/técnico. Como alternativa equivalente (mesmo fluxo, mesma ideia de "IDE sem instalação"), você pode usar <code>replit.com</code> ou <code>codesandbox.io</code> — os passos de criar projeto React e usar o terminal são muito parecidos.</div>
+    <div class="warn-box"><strong>Pop-up não abriu / autorização não aparece?</strong>
+      <ul>
+        <li>Verifique se o navegador não bloqueou o pop-up (ícone de bloqueio na barra de endereço) e permita pop-ups para <code>stackblitz.com</code>;</li>
+        <li>Tente em uma aba anônima/privada para descartar extensões de bloqueio de anúncios interferindo;</li>
+        <li>Confirme que você já confirmou o e-mail no GitHub (contas não confirmadas às vezes falham na autorização de apps externos).</li>
+      </ul>
+    </div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">3</span> Crie o projeto React com Vite</div>
-    <p>Ainda na página inicial do StackBlitz, clique no botão <strong>"Create new" (ou "+ New Project" / "New")</strong>. Na galeria de templates que abrir, procure e clique no card <strong>"React"</strong> (ele já vem configurado com <span class="term" tabindex="0" data-tip="Ferramenta que organiza, empacota e serve seu projeto React durante o desenvolvimento, com atualização automática no navegador a cada alteração.">Vite</span>, a ferramenta que empacota o projeto — não é necessário escolher nada a mais).</p>
-    <p>Espere alguns segundos: na primeira vez, o StackBlitz está baixando e montando um Node.js completo dentro da própria aba do navegador. Quando terminar, você verá três áreas principais na tela:</p>
-    <ul>
-      <li><strong>Esquerda:</strong> explorador de arquivos (igual ao do VS Code);</li>
-      <li><strong>Centro:</strong> o editor de código (também é o mesmo "motor" do VS Code, então os atalhos de teclado são os mesmos);</li>
-      <li><strong>Direita:</strong> a pré-visualização (<em>Preview</em>) do site rodando ao vivo, atualizando sozinha a cada alteração;</li>
-      <li><strong>Aba "Terminal"</strong> na parte de baixo/lateral: um terminal de verdade, onde vamos digitar comandos <code>npm</code> ao longo do curso.</li>
-    </ul>
+    <p>Ainda na página inicial do StackBlitz, clique no botão <strong>"Create new" (ou "+ New Project" / "New")</strong>. Na galeria de templates que abrir, procure e clique no card <strong>"React"</strong> (ele já vem configurado com <span class="term" tabindex="0" data-tip="Ferramenta que organiza, empacota e serve seu projeto React durante o desenvolvimento, com atualização automática no navegador a cada alteração.">Vite</span>, a ferramenta que empacota o projeto — não é necessário escolher nada a mais). Se aparecer mais de uma opção de React (com TypeScript, por exemplo), escolha a versão <strong>JavaScript simples</strong>, sem TypeScript — vamos usar TypeScript só mais adiante no curso.</p>
+    <p>Espere alguns segundos: na primeira vez, o StackBlitz está baixando e montando um Node.js completo dentro da própria aba do navegador (uma barra de progresso aparece). Quando terminar, a tela se organiza nas quatro áreas mostradas na Figura 1 acima: explorador de arquivos à esquerda, editor no centro, preview à direita e o terminal na parte inferior/lateral (pode estar recolhido — clique na aba "Terminal" para abri-lo).</p>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o painel de Preview à direita já deve mostrar uma página com o logo do React girando e o texto "Vite + React", sem nenhum erro em vermelho no editor ou no terminal.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">4</span> Renomeie o projeto</div>
-    <p>Clique no nome do projeto no topo da página (geralmente algo como "vitejs-vite-xxxxxx") e troque para <code>dashboard-iot-isw044</code>. Isso ajuda a identificar o projeto quando você voltar nas próximas semanas.</p>
+    <p>Clique no nome do projeto no topo da página (geralmente algo como "vitejs-vite-xxxxxx") e troque para <code>dashboard-iot-isw044</code>. Isso ajuda a identificar o projeto quando você voltar nas próximas semanas — e como todo o módulo 04 vai evoluir <em>dentro desse mesmo projeto</em>, um nome consistente evita confusão quando você tiver vários projetos StackBlitz na sua conta.</p>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">5</span> Entenda a estrutura de pastas</div>
     <pre><code>dashboard-iot-isw044/
-├── index.html
-├── package.json
-├── vite.config.js
+├── index.html         → página HTML "casca", carrega o main.jsx
+├── package.json        → lista de dependências e scripts (npm run dev, etc.)
+├── vite.config.js      → configuração do Vite
 ├── src/
-│   ├── main.jsx      → ponto de entrada, monta o React na página
-│   ├── App.jsx        → componente principal
-│   └── App.css</code></pre>
+│   ├── main.jsx         → ponto de entrada: monta o componente App na página
+│   ├── App.jsx          → componente principal (a "raiz" da nossa árvore de componentes)
+│   ├── App.css          → estilos do App
+│   └── SensorCard.jsx   → componente que vamos criar no passo 7
+└── public/
+    └── (arquivos estáticos, ex: ícones — não mexeremos aqui por enquanto)</code></pre>
     <p>No explorador de arquivos (esquerda), clique em <code>src/App.jsx</code> para abrir. Apague todo o conteúdo do arquivo — vamos escrever do zero para entender cada linha.</p>
+    <div class="tip"><strong>Por que apagar tudo?</strong> O template já vem com um contador de cliques de exemplo. Ele é útil como referência, mas escrever do zero obriga você a entender cada linha em vez de só ler código pronto — é assim que o aprendizado gruda.</div>
   </div>
 
   <div class="step">
@@ -346,8 +447,22 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 }
 
 export default App;</code></pre>
-    <p>Assim que você salva (o StackBlitz salva sozinho enquanto você digita graças ao <span class="term" tabindex="0" data-tip="Recurso do Vite que atualiza a página no navegador automaticamente assim que você salva uma alteração, sem precisar recarregar tudo.">Hot Module Reload</span> — não existe "Ctrl+S obrigatório", mas pode usar mesmo assim), olhe o painel de <strong>Preview</strong> à direita: ele atualiza sozinho. Repare que dentro do <code>return()</code> você escreve algo parecido com HTML dentro do JavaScript — isso é <strong>JSX</strong>.</p>
-    <div class="tip"><strong>Regra de ouro do JSX:</strong> todo componente deve retornar <em>um único elemento pai</em> (por isso a <code>&lt;div&gt;</code> envolvendo tudo), e atributos de estilo usam <code>camelCase</code> dentro de um objeto JS (<code>style={{...}}</code>).</div>
+    <p>Assim que você salva (o StackBlitz salva sozinho enquanto você digita graças ao <span class="term" tabindex="0" data-tip="Recurso do Vite que atualiza a página no navegador automaticamente assim que você salva uma alteração, sem precisar recarregar tudo.">Hot Module Reload</span> — não existe "Ctrl+S obrigatório", mas pode usar mesmo assim), olhe o painel de <strong>Preview</strong> à direita: ele atualiza sozinho, mostrando o título "Central de Sensores" e o parágrafo abaixo. Repare que dentro do <code>return()</code> você escreve algo parecido com HTML dentro do JavaScript — isso é <strong>JSX</strong>.</p>
+    <p>Uma dúvida comum de quem está começando: "isso é HTML de verdade?" Não é. Por trás dos panos, uma ferramenta chamada <em>Babel</em> transforma cada "tag" JSX em uma chamada de função JavaScript. A linha <code>&lt;h1&gt;Central de Sensores&lt;/h1&gt;</code> vira, na prática, algo como <code>React.createElement('h1', null, 'Central de Sensores')</code>. Você nunca precisa escrever isso manualmente — só precisa entender que é <strong>JavaScript por baixo</strong>, o que explica por que:</p>
+    <ul>
+      <li>toda expressão JavaScript dentro do JSX vai entre chaves <code>{ }</code> — ex: <code>{2 + 2}</code>, <code>{nomeDaVariavel}</code>;</li>
+      <li>atributos usam nomes em <code>camelCase</code> (<code>className</code> em vez de <code>class</code>, <code>onClick</code> em vez de <code>onclick</code>);</li>
+      <li>você não pode usar a palavra reservada <code>class</code> nem <code>for</code> diretamente (por isso <code>className</code> e <code>htmlFor</code>).</li>
+    </ul>
+    <div class="tip"><strong>Regra de ouro do JSX:</strong> todo componente deve retornar <em>um único elemento pai</em> (por isso a <code>&lt;div&gt;</code> envolvendo tudo), e atributos de estilo usam <code>camelCase</code> dentro de um objeto JS (<code>style={{...}}</code>) — repare nas chaves duplas: a de fora entra no modo JavaScript, a de dentro é o objeto de estilo em si.</p>
+    </div>
+    <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
+      <ul>
+        <li><em>"Adjacent JSX elements must be wrapped in an enclosing tag"</em> → você esqueceu de colocar tudo dentro de uma única <code>&lt;div&gt;</code> (ou de um <code>&lt;&gt;...&lt;/&gt;</code>, chamado Fragment);</li>
+        <li>Preview em branco e erro no terminal → confira se não falta fechar alguma tag ou alguma chave <code>{ }</code>;</li>
+        <li>Esqueceu o <code>export default App;</code> no final → o arquivo <code>main.jsx</code> não vai conseguir importar o componente.</li>
+      </ul>
+    </div>
   </div>
 
   <div class="step">
@@ -366,7 +481,7 @@ export default App;</code></pre>
 }
 
 export default SensorCard;</code></pre>
-    <p>Este componente recebe <span class="term" tabindex="0" data-tip="Abreviação de &quot;properties&quot; — os dados que um componente recebe de fora, como parâmetros de uma função.">props</span> (<code>nome</code>, <code>valor</code>, <code>unidade</code>) — são os "parâmetros" de um componente, exatamente como parâmetros de uma função. Agora use-o em <code>App.jsx</code>:</p>
+    <p>Este componente recebe <span class="term" tabindex="0" data-tip="Abreviação de &quot;properties&quot; — os dados que um componente recebe de fora, como parâmetros de uma função.">props</span> (<code>nome</code>, <code>valor</code>, <code>unidade</code>) — são os "parâmetros" de um componente, exatamente como parâmetros de uma função. A sintaxe <code>{ nome, valor, unidade }</code> é <em>destructuring</em>: em vez de receber um único objeto <code>props</code> e escrever <code>props.nome</code>, <code>props.valor</code> etc., já "desempacotamos" cada propriedade direto no parâmetro da função. Agora use-o em <code>App.jsx</code>:</p>
     <pre><code>import SensorCard from './SensorCard';
 
 function App() {
@@ -380,6 +495,64 @@ function App() {
 }
 
 export default App;</code></pre>
+    <p>Repare que cada <code>&lt;SensorCard ... /&gt;</code> passa valores diferentes para <strong>o mesmo componente</strong> — é assim que reaproveitamos código em vez de copiar e colar três blocos de HTML parecidos.</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow7" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="278" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+
+        <!-- App box -->
+        <rect x="290" y="20" width="120" height="46" rx="8" fill="var(--card)" stroke="var(--accent)"/>
+        <text x="350" y="47" text-anchor="middle" font-family="DM Mono, monospace" font-size="12" fill="#fff">&lt;App /&gt;</text>
+
+        <!-- three arrows down with props labels -->
+        <path d="M320,66 C260,110 150,110 90,150" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrow7)"/>
+        <path d="M350,66 L350,150" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrow7)"/>
+        <path d="M380,66 C440,110 550,110 610,150" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrow7)"/>
+
+        <text x="150" y="112" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">nome="Temperatura"</text>
+        <text x="150" y="124" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">valor={'{24.5}'}  unidade="°C"</text>
+
+        <text x="350" y="100" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">nome="Umidade"</text>
+        <text x="350" y="112" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">valor={'{62}'}  unidade="%"</text>
+
+        <text x="550" y="112" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">nome="Luminosidade"</text>
+        <text x="550" y="124" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">valor={'{310}'}  unidade="lux"</text>
+
+        <!-- three SensorCard instances -->
+        <rect x="30" y="150" width="120" height="90" rx="8" fill="var(--card)" stroke="var(--iot)"/>
+        <text x="90" y="170" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="var(--iot)">SensorCard</text>
+        <text x="90" y="192" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="9" fill="var(--muted2)">Temperatura</text>
+        <text x="90" y="216" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" fill="#fff">24.5 °C</text>
+
+        <rect x="290" y="150" width="120" height="90" rx="8" fill="var(--card)" stroke="var(--iot)"/>
+        <text x="350" y="170" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="var(--iot)">SensorCard</text>
+        <text x="350" y="192" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="9" fill="var(--muted2)">Umidade</text>
+        <text x="350" y="216" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" fill="#fff">62 %</text>
+
+        <rect x="550" y="150" width="120" height="90" rx="8" fill="var(--card)" stroke="var(--iot)"/>
+        <text x="610" y="170" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="var(--iot)">SensorCard</text>
+        <text x="610" y="192" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="9" fill="var(--muted2)">Luminosidade</text>
+        <text x="610" y="216" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" fill="#fff">310 lux</text>
+
+        <text x="350" y="264" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted)">o mesmo componente, renderizado 3x com props diferentes</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 2 —</strong> fluxo de dados por <code>props</code>: o componente-pai <code>App</code> passa valores diferentes para três instâncias do mesmo componente-filho <code>SensorCard</code>. Props sempre viajam <strong>de cima para baixo</strong> (pai → filho), nunca ao contrário.</p>
+    </div>
+
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o Preview deve mostrar três cartões escuros lado a lado, cada um com um título diferente (Temperatura, Umidade, Luminosidade) e um número grande abaixo.</div>
+    <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
+      <ul>
+        <li><em>"nome is not defined"</em> ou similar → esqueceu de colocar <code>{ nome, valor, unidade }</code> entre parênteses na declaração da função <code>SensorCard</code>;</li>
+        <li>Cartões aparecem empilhados um embaixo do outro → confira se o <code>&lt;div&gt;</code> do <code>App.jsx</code> realmente tem <code>display: 'flex'</code> no <code>style</code>;</li>
+        <li>Erro <em>"Cannot find module './SensorCard'"</em> → o arquivo precisa se chamar exatamente <code>SensorCard.jsx</code> e estar dentro da pasta <code>src</code>, no mesmo nível de <code>App.jsx</code>.</li>
+      </ul>
+    </div>
   </div>
 
   <div class="step">
@@ -405,7 +578,43 @@ function App() {
 }
 
 export default App;</code></pre>
-    <p><code>useState(24.5)</code> devolve dois itens: o <span class="term" tabindex="0" data-tip="O &quot;estado&quot; (state) é um dado que pertence ao componente. Quando ele muda, a tela se atualiza sozinha.">valor atual do estado</span> (<code>temperatura</code>) e uma <strong>função para atualizá-lo</strong> (<code>setTemperatura</code>). Sempre que você chama <code>setTemperatura(...)</code>, o React re-renderiza (redesenha) o componente com o novo valor. Clique no botão no painel de Preview e veja o número mudar.</p>
+    <p><code>useState(24.5)</code> devolve dois itens: o <span class="term" tabindex="0" data-tip="O &quot;estado&quot; (state) é um dado que pertence ao componente. Quando ele muda, a tela se atualiza sozinha.">valor atual do estado</span> (<code>temperatura</code>) e uma <strong>função para atualizá-lo</strong> (<code>setTemperatura</code>). O número <code>24.5</code> entre parênteses é o <strong>valor inicial</strong>, usado apenas na primeira renderização. Sempre que você chama <code>setTemperatura(...)</code>, o React re-renderiza (redesenha) o componente com o novo valor. Clique no botão no painel de Preview e veja o número mudar.</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow8" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent2)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="228" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+
+        <rect x="30" y="90" width="150" height="60" rx="10" fill="var(--card)" stroke="var(--iot)"/>
+        <text x="105" y="115" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">1. usuário clica</text>
+        <text x="105" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">no botão</text>
+
+        <path d="M180,120 L255,120" fill="none" stroke="var(--accent2)" stroke-width="1.5" marker-end="url(#arrow8)"/>
+
+        <rect x="260" y="90" width="180" height="60" rx="10" fill="var(--card)" stroke="var(--accent2)"/>
+        <text x="350" y="112" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">2. setTemperatura(novoValor)</text>
+        <text x="350" y="132" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">React agenda a atualização</text>
+
+        <path d="M440,120 L515,120" fill="none" stroke="var(--accent2)" stroke-width="1.5" marker-end="url(#arrow8)"/>
+
+        <rect x="520" y="90" width="150" height="60" rx="10" fill="var(--card)" stroke="var(--accent)"/>
+        <text x="595" y="112" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">3. re-render</text>
+        <text x="595" y="132" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">App() roda de novo</text>
+
+        <path d="M595,150 C595,195 250,195 105,195 C90,195 90,180 90,150" fill="none" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#arrow8)"/>
+        <text x="350" y="212" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">4. tela é redesenhada com o novo valor — pronta para o próximo clique</text>
+
+        <text x="350" y="30" text-anchor="middle" font-family="Syne, sans-serif" font-size="13" fill="var(--accent2)">Ciclo do useState</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 3 —</strong> toda vez que você chama a função "setter" (<code>setTemperatura</code>), o React não muda a tela na hora: ele agenda uma nova execução do componente, calcula a nova versão da interface e só então atualiza o navegador. É por isso que a variável de estado nunca deve ser alterada diretamente (ex: <code>temperatura = 30</code> não funciona).</p>
+    </div>
+
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> a cada clique no botão "Simular nova leitura", o número dentro do cartão de Temperatura muda para um valor aleatório entre 20.0 e 30.0.</div>
+    <div class="warn-box"><strong>Erro comum:</strong> tentar mudar o estado diretamente com <code>temperatura = novoValor</code> em vez de <code>setTemperatura(novoValor)</code>. Isso <strong>não</strong> causa erro no console, mas também <strong>não</strong> atualiza a tela — o React só percebe mudanças quando você usa a função retornada pelo <code>useState</code>.</div>
   </div>
 
   <div class="step">
@@ -434,11 +643,64 @@ function App() {
 }
 
 export default App;</code></pre>
-    <div class="warn-box"><strong>Atenção:</strong> sempre que usar <code>setInterval</code> dentro de <code>useEffect</code>, devolva uma função de limpeza (<code>return () =&gt; clearInterval(...)</code>). Sem isso, cada atualização do componente cria um novo intervalo "fantasma" rodando em paralelo.</div>
+    <p>Repare nos <strong>três pedaços</strong> do <code>useEffect</code>: a função que roda o efeito (liga o <code>setInterval</code>), a função de retorno (a limpeza, que desliga o <code>setInterval</code>) e o array de dependências <code>[]</code> no final, que controla <strong>quando</strong> o efeito roda de novo.</p>
+    <ul>
+      <li><code>[]</code> (array vazio) → o efeito roda <strong>uma única vez</strong>, quando o componente aparece na tela pela primeira vez (chamado de "montar"/<em>mount</em>);</li>
+      <li><code>[temperatura]</code> → o efeito roda de novo toda vez que a variável <code>temperatura</code> mudar;</li>
+      <li>sem array nenhum → o efeito roda depois de <strong>toda</strong> renderização (raramente é o que você quer).</li>
+    </ul>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow9" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--warn)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="258" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+        <text x="350" y="30" text-anchor="middle" font-family="Syne, sans-serif" font-size="13" fill="var(--warn)">Linha do tempo do useEffect</text>
+
+        <!-- timeline -->
+        <line x1="50" y1="130" x2="650" y2="130" stroke="var(--border)" stroke-width="2"/>
+
+        <!-- mount -->
+        <circle cx="90" cy="130" r="7" fill="var(--accent2)"/>
+        <text x="90" y="100" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10.5" fill="#fff">componente monta</text>
+        <text x="90" y="155" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">useEffect roda</text>
+        <text x="90" y="168" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">setInterval liga</text>
+
+        <!-- ticks -->
+        <circle cx="260" cy="130" r="5" fill="var(--accent)"/>
+        <text x="260" y="155" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent)">tick 2s</text>
+        <text x="260" y="168" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">setTemperatura()</text>
+
+        <circle cx="400" cy="130" r="5" fill="var(--accent)"/>
+        <text x="400" y="155" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent)">tick 4s</text>
+        <text x="400" y="168" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">setTemperatura()</text>
+
+        <circle cx="540" cy="130" r="5" fill="var(--accent)"/>
+        <text x="540" y="155" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent)">tick 6s</text>
+        <text x="540" y="168" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">setTemperatura()</text>
+
+        <!-- unmount / cleanup -->
+        <circle cx="620" cy="130" r="7" fill="var(--red)"/>
+        <text x="620" y="100" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10.5" fill="#fff">componente sai da tela</text>
+        <text x="620" y="155" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--red)">cleanup roda</text>
+        <text x="620" y="168" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--red)">clearInterval()</text>
+
+        <path d="M90,130 L620,130" fill="none" stroke="var(--warn)" stroke-width="1" stroke-dasharray="2 5" marker-end="url(#arrow9)"/>
+        <text x="350" y="225" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">sem a limpeza (return), o intervalo continuaria rodando "fantasma" mesmo depois do componente sumir</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 4 —</strong> ciclo de vida do efeito: ele liga um timer quando o componente aparece e o desliga quando o componente desaparece. Cada "tick" do <code>setInterval</code> chama <code>setTemperatura</code>, disparando o ciclo de re-renderização visto na Figura 3.</p>
+    </div>
+
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> sem clicar em nada, o número de temperatura no Preview muda sozinho a cada 2 segundos, indefinidamente.</div>
+    <div class="warn-box"><strong>Atenção:</strong> sempre que usar <code>setInterval</code> dentro de <code>useEffect</code>, devolva uma função de limpeza (<code>return () =&gt; clearInterval(...)</code>). Sem isso, cada atualização do componente cria um novo intervalo "fantasma" rodando em paralelo — depois de alguns minutos você teria dezenas de intervalos simultâneos, deixando a página cada vez mais lenta.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">10</span> Lista de sensores com <code>.map()</code></div>
+    <p>Até agora criamos um cartão por vez, copiando e colando <code>&lt;SensorCard /&gt;</code>. Isso não escala: se você tiver 20 sensores, não vai escrever 20 linhas repetidas. A solução é guardar os sensores em um <strong>array</strong> e usar <code>.map()</code> para transformar cada item do array em um componente:</p>
     <pre><code>const [sensores, setSensores] = useState([
   { id: 1, nome: 'Temperatura', valor: 24.5, unidade: '°C' },
   { id: 2, nome: 'Umidade',     valor: 60,   unidade: '%'  },
@@ -451,20 +713,70 @@ export default App;</code></pre>
     &lt;SensorCard key={s.id} nome={s.nome} valor={s.valor} unidade={s.unidade} /&gt;
   ))}
 &lt;/div&gt;</code></pre>
-    <p>O atributo <code>key</code> é obrigatório em listas — ajuda o React a saber qual item mudou sem redesenhar a lista inteira.</p>
+    <p>O atributo <code>key</code> é <strong>obrigatório</strong> em listas — ele não aparece na tela, mas ajuda o React a identificar de forma única cada item durante a <span class="term" tabindex="0" data-tip="Processo interno do React que compara a versão antiga e a nova da tela e atualiza no navegador só o que realmente mudou, usando a prop key para reconhecer itens em listas.">reconciliação</span>: assim, quando um sensor mudar de valor, o React sabe exatamente qual cartão redesenhar, sem precisar refazer a lista inteira do zero. Use sempre um identificador estável (como um <code>id</code>), nunca o índice da posição no array quando a lista pode ser reordenada ou ter itens removidos.</p>
+
+    <div class="tip"><strong>Combinando com o passo anterior:</strong> troque o <code>useEffect</code> do passo 9 para, a cada 2 segundos, percorrer o array <code>sensores</code> com <code>.map()</code> e gerar um novo valor aleatório para cada um, chamando <code>setSensores</code> com o array atualizado — é exatamente isso que a Atividade Prática desta semana pede.</div>
+
+    <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
+      <ul>
+        <li><em>"Warning: Each child in a list should have a unique key prop"</em> no console → falta o atributo <code>key</code> em algum item gerado pelo <code>.map()</code>;</li>
+        <li>Usar <code>key={'{index}'}</code> (a posição no array) funciona sem warnings, mas pode causar bugs sutis de reordenação — prefira sempre um <code>id</code> real do dado.</li>
+      </ul>
+    </div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">11</span> Salvando o projeto no GitHub (sem usar git no terminal)</div>
     <p>Na barra superior do StackBlitz, procure o ícone do <strong>GitHub</strong> (perto do nome do projeto) e clique nele — a opção pode aparecer como <strong>"Connect Repository"</strong> ou <strong>"Export to GitHub"</strong>. Escolha <strong>criar um novo repositório</strong>, dê o nome <code>dashboard-iot-isw044</code> e confirme. O StackBlitz envia todos os arquivos automaticamente para o seu GitHub — nenhum comando <code>git</code> é digitado.</p>
-    <p>A partir de agora, sempre que quiser salvar uma nova versão do trabalho, clique novamente nesse mesmo ícone e use a opção de <span class="term" tabindex="0" data-tip="Um &quot;registro&quot; de uma versão do seu código, com uma mensagem descrevendo o que mudou.">commit</span>/<span class="term" tabindex="0" data-tip="Ação de enviar seus commits para o repositório no GitHub, tornando-os visíveis para quem tiver acesso.">push</span> disponível ali, escrevendo uma mensagem curta descrevendo o que mudou (ex: "adiciona SensorCard e useEffect").</p>
+    <p>A partir de agora, sempre que quiser salvar uma nova versão do trabalho, clique novamente nesse mesmo ícone e use a opção de <span class="term" tabindex="0" data-tip="Um &quot;registro&quot; de uma versão do seu código, com uma mensagem descrevendo o que mudou.">commit</span>/<span class="term" tabindex="0" data-tip="Ação de enviar seus commits para o repositório no GitHub, tornando-os visíveis para quem tiver acesso.">push</span> disponível ali, escrevendo uma mensagem curta descrevendo o que mudou (ex: "adiciona SensorCard e useEffect"). Faça isso com frequência — ao final de cada passo importante, não só no fim da atividade — para ter um histórico de versões que mostra sua evolução.</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow11" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent2)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="218" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+        <text x="350" y="28" text-anchor="middle" font-family="Syne, sans-serif" font-size="13" fill="var(--accent2)">Fluxo: do editor ao GitHub, sem terminal</text>
+
+        <rect x="30" y="70" width="150" height="70" rx="10" fill="var(--card)" stroke="var(--accent)"/>
+        <text x="105" y="98" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">Você edita</text>
+        <text x="105" y="116" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">App.jsx no StackBlitz</text>
+
+        <path d="M180,105 L255,105" fill="none" stroke="var(--accent2)" stroke-width="1.5" marker-end="url(#arrow11)"/>
+
+        <rect x="260" y="70" width="170" height="70" rx="10" fill="var(--card)" stroke="var(--accent2)"/>
+        <text x="345" y="94" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">Clica no ícone GitHub</text>
+        <text x="345" y="112" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">escreve a mensagem</text>
+        <text x="345" y="126" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">de commit</text>
+
+        <path d="M430,105 L505,105" fill="none" stroke="var(--accent2)" stroke-width="1.5" marker-end="url(#arrow11)"/>
+
+        <rect x="510" y="70" width="160" height="70" rx="10" fill="var(--card)" stroke="var(--iot)"/>
+        <text x="590" y="98" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">GitHub recebe</text>
+        <text x="590" y="116" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">o commit + push</text>
+
+        <text x="345" y="175" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">por trás dos panos, o StackBlitz roda "git add · git commit · git push" pela API do GitHub</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 5 —</strong> o comando <code>git</code> continua existindo — só que quem digita é o próprio StackBlitz. O resultado no seu repositório é idêntico ao que você teria rodando os comandos localmente.</p>
+    </div>
+
     <div class="tip"><strong>Por que isso substitui o Git tradicional?</strong> O comando <code>git</code> por trás continua existindo — só que quem digita os comandos é o próprio StackBlitz, através da API do GitHub. O resultado no seu repositório é idêntico ao que você teria rodando <code>git add / commit / push</code> localmente.</div>
+    <div class="warn-box"><strong>Não achou o ícone do GitHub?</strong>
+      <ul>
+        <li>Confira se você fez login com <strong>Continue with GitHub</strong> no passo 2 — sem isso, a opção de exportar não aparece;</li>
+        <li>Em telas menores, o ícone pode estar escondido dentro de um menu "⋮" (mais opções) no topo da página;</li>
+        <li>Se o repositório já existir de uma tentativa anterior, escolha "usar repositório existente" em vez de criar um novo, para não duplicar o projeto.</li>
+      </ul>
+    </div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">12</span> Rodando testes com Vitest (no mesmo terminal do navegador)</div>
     <p>Clique na aba <strong>Terminal</strong> na parte inferior do StackBlitz (é um terminal real, dentro do WebContainer) e digite o comando abaixo, que usa o <span class="term" tabindex="0" data-tip="Node Package Manager — o &quot;gerenciador de pacotes&quot; do Node.js, usado para instalar bibliotecas prontas digitando comandos no terminal.">npm</span> para instalar o <span class="term" tabindex="0" data-tip="Ferramenta (test runner) usada para escrever e rodar testes automatizados, integrada nativamente ao Vite.">Vitest</span> e bibliotecas auxiliares de teste:</p>
     <pre><code>npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom</code></pre>
+    <p>A instalação pode levar 20-40 segundos (o WebContainer está baixando pacotes reais do npm). Enquanto isso não termina, aparece um cursor piscando no terminal — não digite nada até ele voltar ao prompt normal (<code>$</code>).</p>
     <p>Crie o arquivo <code>src/SensorCard.test.jsx</code> (mesmo processo do passo 7: botão direito em <code>src</code> → New file):</p>
     <pre><code>import { render, screen } from '@testing-library/react';
 import SensorCard from './SensorCard';
@@ -473,9 +785,12 @@ test('mostra o nome do sensor', () => {
   render(&lt;SensorCard nome="Temperatura" valor={25} unidade="°C" /&gt;);
   expect(screen.getByText('Temperatura')).toBeInTheDocument();
 });</code></pre>
+    <p>Em palavras simples, o teste faz três coisas: <strong>renderiza</strong> o componente <code>SensorCard</code> como se ele estivesse em uma tela real, <strong>procura</strong> na tela renderizada um texto chamado "Temperatura" e depois <strong>verifica</strong> (assert) que esse texto realmente apareceu. Se alguém mudar o componente e o nome do sensor sumir da tela por engano, este teste vai falhar e avisar antes que o erro chegue ao usuário final.</p>
     <p>No terminal, rode:</p>
     <pre><code>npx vitest run</code></pre>
     <p>Vamos aprofundar TDD no Módulo 08 (Semanas 37–39), mas escrever este primeiro teste agora já cria o hábito.</p>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o terminal mostra uma linha verde com "✓ mostra o nome do sensor" e, ao final, um resumo do tipo "1 passed".</div>
+    <div class="warn-box"><strong>Erro comum:</strong> <em>"test is not defined"</em> — normalmente significa que o Vitest ainda não terminou de instalar, ou que o arquivo de teste não está na pasta <code>src</code>. Confira também se o nome do arquivo termina exatamente em <code>.test.jsx</code>.</div>
   </div>
 </div>
 
@@ -489,12 +804,19 @@ test('mostra o nome do sensor', () => {
       <li>Use o projeto <code>dashboard-iot-isw044</code> criado no StackBlitz seguindo o passo a passo acima;</li>
       <li>Crie um componente <code>SensorCard</code> reutilizável, recebendo <code>nome</code>, <code>valor</code> e <code>unidade</code> via props;</li>
       <li>Guarde os sensores em um array de estado (<code>useState</code>) com pelo menos 4 sensores diferentes (ex: temperatura, umidade, luminosidade, nível de CO₂);</li>
-      <li>Use <code>useEffect</code> + <code>setInterval</code> para atualizar os valores automaticamente a cada 2–3 segundos;</li>
+      <li>Use <code>useEffect</code> + <code>setInterval</code> para atualizar os valores automaticamente a cada 2–3 segundos, gerando um novo array com <code>.map()</code> a cada "tick" (veja a dica no passo 10);</li>
       <li>Renderize a lista com <code>.map()</code>, usando <code>key</code> corretamente;</li>
       <li>Adicione um pouco de estilo (pode ser CSS puro em <code>App.css</code>) para o layout ficar responsivo em telas pequenas (<code>display: flex; flex-wrap: wrap;</code>);</li>
       <li>Escreva pelo menos 1 teste com Vitest;</li>
-      <li>Salve no GitHub usando o botão de exportação do StackBlitz (passo 11), com um <code>README.md</code> explicando o projeto.</li>
+      <li>Salve no GitHub usando o botão de exportação do StackBlitz (passo 11), com um <code>README.md</code> explicando o projeto (o que ele faz, quais tecnologias usa e como rodar localmente).</li>
     </ol>
+    <div class="bonus"><strong>🌟 Desafios opcionais (não valem nota extra, mas ajudam a fixar o conteúdo):</strong>
+      <ul>
+        <li>Faça o valor de cada sensor mudar de cor quando ultrapassar um limite (ex: temperatura acima de 28°C fica vermelha) usando lógica condicional dentro do JSX;</li>
+        <li>Adicione um botão "pausar/retomar" que liga e desliga a atualização automática, controlando o <code>setInterval</code> com mais uma variável de estado;</li>
+        <li>Escreva um segundo teste que verifique se o valor e a unidade também aparecem na tela.</li>
+      </ul>
+    </div>
     <div class="deliverable"><strong>📦 Entregável:</strong> Link do repositório GitHub (com README) + link do projeto no StackBlitz (o próprio link da aba do navegador serve), enviados na atividade da semana.</div>
     <h4>✅ Critérios de Avaliação:</h4>
     <ul class="criteria">
@@ -518,6 +840,10 @@ test('mostra o nome do sensor', () => {
       <div class="r-title">📘 React.dev — Learn React</div>
       <div class="r-desc">Documentação oficial e atualizada, com tutorial interativo de componentes e hooks.</div>
     </a>
+    <a class="res-card" href="https://react.dev/learn/passing-props-to-a-component" target="_blank">
+      <div class="r-title">🔧 Referência: Passing Props</div>
+      <div class="r-desc">Guia oficial sobre como dados fluem entre componentes.</div>
+    </a>
     <a class="res-card" href="https://react.dev/reference/react/useState" target="_blank">
       <div class="r-title">🔧 Referência: useState</div>
       <div class="r-desc">Documentação detalhada do hook de estado.</div>
@@ -526,9 +852,17 @@ test('mostra o nome do sensor', () => {
       <div class="r-title">🔧 Referência: useEffect</div>
       <div class="r-desc">Quando e como usar efeitos colaterais corretamente.</div>
     </a>
+    <a class="res-card" href="https://react.dev/learn/rendering-lists" target="_blank">
+      <div class="r-title">🔧 Referência: Rendering Lists</div>
+      <div class="r-desc">Explica em detalhe por que a prop key é necessária.</div>
+    </a>
     <a class="res-card" href="https://vitest.dev/guide/" target="_blank">
       <div class="r-title">🧪 Guia do Vitest</div>
       <div class="r-desc">Test runner usado para os primeiros testes automatizados do módulo.</div>
+    </a>
+    <a class="res-card" href="https://testing-library.com/docs/react-testing-library/intro/" target="_blank">
+      <div class="r-title">🧪 React Testing Library</div>
+      <div class="r-desc">Biblioteca usada junto ao Vitest para renderizar e consultar componentes nos testes.</div>
     </a>
     <a class="res-card" href="https://docs.github.com/pt/get-started" target="_blank">
       <div class="r-title">🐙 GitHub — Primeiros Passos</div>
