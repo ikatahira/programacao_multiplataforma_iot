@@ -552,6 +552,15 @@ export default App;</code></pre>
         <li>Esqueceu o <code>export default App;</code> no final → o arquivo <code>main.tsx</code> não vai conseguir importar o componente.</li>
       </ul>
     </div>
+    <div class="warn-box"><strong>Editou tudo certinho, mas o Preview continua mostrando a tela padrão do Vite ("Get started", "Count is 0")?</strong>
+      <p style="margin:8px 0 0;">Isso não é erro no seu código — é o Preview que ficou "desconectado" e não aplicou a atualização, mesmo o terminal mostrando <code>hmr update /src/App.tsx</code>. É comum em redes de escola/corporativas, que às vezes atrapalham a conexão ao vivo (WebSocket) que o Vite usa para empurrar as mudanças. A correção é rápida:</p>
+      <ul>
+        <li>Clique no ícone circular <strong>⟳ (recarregar)</strong> que fica no topo do painel de Preview, ao lado do cadeado e da URL — é o suficiente na maioria das vezes;</li>
+        <li>Se não resolver, clique no ícone <strong>↗ (abrir em nova aba)</strong> ao lado dele e dê um <code>Ctrl+Shift+R</code> na aba que abrir;</li>
+        <li>Se ainda assim persistir, clique no terminal, pressione <code>Ctrl+C</code> para parar o servidor e rode <code>npm run dev</code> de novo;</li>
+        <li>Em último caso, recarregue a aba inteira do StackBlitz (<code>F5</code>) — nada se perde, pois o projeto salva sozinho.</li>
+      </ul>
+    </div>
   </div>
 
   <div class="step">
