@@ -565,7 +565,8 @@ export default App;</code></pre>
 
   <div class="step">
     <div class="step-title"><span class="step-num">7</span> Criando um componente reutilizável — SensorCard</div>
-    <p>No painel FILES, clique com o botão direito na pasta <code>src</code> → <strong>New file</strong> → digite <code>SensorCard.tsx</code> e pressione Enter. Cole este conteúdo (não esqueça do <code>// @ts-nocheck</code> na primeira linha):</p>
+    <p>No painel FILES, clique com o botão direito <strong>na pasta <code>src</code></strong> (não na raiz do projeto, nem em <code>public</code>) → <strong>New file</strong> → digite <code>SensorCard.tsx</code> e pressione Enter. Cole este conteúdo (não esqueça do <code>// @ts-nocheck</code> na primeira linha):</p>
+    <div class="tip"><strong>📁 O arquivo precisa ficar na mesma pasta que o <code>App.tsx</code>:</strong> repare, no painel FILES, que <code>SensorCard.tsx</code> deve aparecer <strong>dentro de <code>src</code></strong>, no mesmo nível de <code>App.tsx</code>, <code>App.css</code> e <code>main.tsx</code> — e não dentro de <code>src/assets</code>, nem solto na raiz do projeto. É essa localização que faz o <code>import SensorCard from './SensorCard'</code> funcionar, porque <code>./</code> significa "a mesma pasta de quem está importando".</div>
     <pre><code>// @ts-nocheck
 function SensorCard({ nome, valor, unidade }) {
   return (
