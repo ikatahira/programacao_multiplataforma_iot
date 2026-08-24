@@ -319,61 +319,79 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <div class="figure">
     <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="698" height="398" rx="14" fill="var(--surface)" stroke="var(--border)"/>
-      <!-- browser chrome -->
+      <!-- top bar -->
       <rect x="1" y="1" width="698" height="34" rx="14" fill="var(--card)"/>
       <rect x="1" y="18" width="698" height="17" fill="var(--card)"/>
-      <circle cx="20" cy="18" r="5" fill="var(--red)"/>
-      <circle cx="38" cy="18" r="5" fill="var(--yellow)"/>
-      <circle cx="56" cy="18" r="5" fill="var(--green)"/>
-      <rect x="90" y="9" width="420" height="18" rx="9" fill="var(--bg)" stroke="var(--border)"/>
-      <text x="104" y="22" font-family="DM Mono, monospace" font-size="10.5" fill="var(--muted2)">stackblitz.com/edit/dashboard-iot-isw044</text>
+      <text x="18" y="22" font-family="DM Mono, monospace" font-size="10" fill="var(--muted2)">💾 Save</text>
+      <text x="70" y="22" font-family="DM Mono, monospace" font-size="10" fill="var(--muted2)">⑂ Fork</text>
+      <text x="118" y="22" font-family="DM Mono, monospace" font-size="10" fill="var(--muted2)">↗ Share</text>
+      <rect x="530" y="8" width="150" height="18" rx="9" fill="var(--bg)" stroke="var(--accent2)"/>
+      <text x="545" y="21" font-family="DM Mono, monospace" font-size="9.5" fill="#fff">dashboard-iot-isw044 🔒▾</text>
 
-      <!-- explorer -->
-      <rect x="14" y="48" width="130" height="230" rx="8" fill="var(--card)" stroke="var(--border)"/>
-      <text x="24" y="66" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">EXPLORER</text>
-      <text x="24" y="86" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📁 src</text>
-      <text x="34" y="102" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent)">📄 App.jsx</text>
-      <text x="34" y="118" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📄 SensorCard.jsx</text>
-      <text x="34" y="134" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📄 App.css</text>
-      <text x="24" y="152" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📄 package.json</text>
-      <text x="24" y="168" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">📄 index.html</text>
+      <!-- icon rail -->
+      <rect x="1" y="35" width="34" height="364" fill="var(--card)"/>
+      <text x="18" y="60" text-anchor="middle" font-family="DM Mono, monospace" font-size="12" fill="var(--accent2)">▤</text>
+      <text x="18" y="90" text-anchor="middle" font-family="DM Mono, monospace" font-size="12" fill="var(--muted2)">🔍</text>
+      <text x="18" y="120" text-anchor="middle" font-family="DM Mono, monospace" font-size="12" fill="var(--muted2)">🔌</text>
+      <text x="18" y="150" text-anchor="middle" font-family="DM Mono, monospace" font-size="12" fill="var(--muted2)">⚙</text>
+
+      <!-- PROJECT / FILES panel -->
+      <rect x="38" y="42" width="150" height="230" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="48" y="60" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted)">PROJECT</text>
+      <rect x="46" y="68" width="130" height="22" rx="6" fill="var(--bg)" stroke="var(--accent2)"/>
+      <text x="55" y="83" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">🐙 Create a repository</text>
+      <text x="48" y="106" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted)">FILES</text>
+      <text x="52" y="122" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">📁 src</text>
+      <text x="62" y="137" font-family="DM Mono, monospace" font-size="9" fill="var(--accent)">📄 App.tsx</text>
+      <text x="62" y="152" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">📄 SensorCard.tsx</text>
+      <text x="52" y="167" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">📄 index.html</text>
+      <text x="52" y="182" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">📄 package.json</text>
+
+      <!-- Ask bolt.new box -->
+      <rect x="38" y="282" width="150" height="90" rx="8" fill="#0a0d17" stroke="var(--accent2)"/>
+      <text x="113" y="308" text-anchor="middle" font-family="Syne, sans-serif" font-size="10" fill="#fff">Ask bolt.new</text>
+      <text x="113" y="326" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="var(--muted2)">assistente de IA</text>
+      <text x="113" y="342" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="var(--muted)">(não usaremos por</text>
+      <text x="113" y="354" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="var(--muted)">enquanto — vamos</text>
+      <text x="113" y="366" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="var(--muted)">escrever o código à mão)</text>
 
       <!-- editor -->
-      <rect x="152" y="48" width="242" height="230" rx="8" fill="var(--card)" stroke="var(--border)"/>
-      <text x="162" y="66" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">EDITOR</text>
-      <rect x="162" y="76" width="150" height="7" rx="3" fill="rgba(79,140,255,.35)"/>
-      <rect x="162" y="90" width="200" height="7" rx="3" fill="rgba(148,163,184,.25)"/>
-      <rect x="180" y="104" width="170" height="7" rx="3" fill="rgba(148,163,184,.25)"/>
-      <rect x="180" y="118" width="120" height="7" rx="3" fill="rgba(56,224,192,.3)"/>
-      <rect x="162" y="132" width="90" height="7" rx="3" fill="rgba(148,163,184,.25)"/>
-      <rect x="162" y="150" width="210" height="7" rx="3" fill="rgba(148,163,184,.18)"/>
-      <rect x="162" y="164" width="140" height="7" rx="3" fill="rgba(148,163,184,.18)"/>
+      <rect x="196" y="42" width="242" height="230" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="206" y="60" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">EDITOR — App.tsx</text>
+      <rect x="206" y="70" width="150" height="7" rx="3" fill="rgba(79,140,255,.35)"/>
+      <rect x="206" y="84" width="200" height="7" rx="3" fill="rgba(148,163,184,.25)"/>
+      <rect x="224" y="98" width="170" height="7" rx="3" fill="rgba(148,163,184,.25)"/>
+      <rect x="224" y="112" width="120" height="7" rx="3" fill="rgba(56,224,192,.3)"/>
+      <rect x="206" y="126" width="90" height="7" rx="3" fill="rgba(148,163,184,.25)"/>
+      <rect x="206" y="144" width="210" height="7" rx="3" fill="rgba(148,163,184,.18)"/>
+      <rect x="206" y="158" width="140" height="7" rx="3" fill="rgba(148,163,184,.18)"/>
 
-      <!-- terminal -->
-      <rect x="152" y="288" width="242" height="66" rx="8" fill="#0a0d17" stroke="var(--border)"/>
-      <text x="162" y="304" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">TERMINAL</text>
-      <text x="162" y="322" font-family="DM Mono, monospace" font-size="9.5" fill="#9fe6c8">$ npm run dev</text>
-      <text x="162" y="336" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted)">VITE ready in 812 ms</text>
+      <!-- terminal (bottom-right, small/collapsed like in the real UI) -->
+      <rect x="196" y="282" width="242" height="90" rx="8" fill="#0a0d17" stroke="var(--border)"/>
+      <text x="206" y="300" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">Terminal ⊕</text>
+      <text x="206" y="320" font-family="DM Mono, monospace" font-size="9.5" fill="#9fe6c8">$ npm run dev</text>
+      <text x="206" y="336" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted)">VITE ready in 812 ms</text>
 
       <!-- preview -->
-      <rect x="406" y="48" width="280" height="306" rx="8" fill="var(--card)" stroke="var(--border)"/>
-      <text x="416" y="66" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">PREVIEW (ao vivo)</text>
-      <rect x="416" y="80" width="120" height="70" rx="8" fill="var(--bg)" stroke="var(--iot)"/>
-      <text x="426" y="98" font-family="Space Grotesk, sans-serif" font-size="9" fill="var(--muted2)">Temperatura</text>
-      <text x="426" y="122" font-family="Space Grotesk, sans-serif" font-size="16" fill="var(--iot)">24.5 °C</text>
-      <rect x="546" y="80" width="120" height="70" rx="8" fill="var(--bg)" stroke="var(--accent)"/>
-      <text x="556" y="98" font-family="Space Grotesk, sans-serif" font-size="9" fill="var(--muted2)">Umidade</text>
-      <text x="556" y="122" font-family="Space Grotesk, sans-serif" font-size="16" fill="var(--accent)">62 %</text>
-      <rect x="416" y="160" width="250" height="34" rx="8" fill="rgba(56,224,192,.12)" stroke="var(--accent2)"/>
-      <text x="428" y="181" font-family="Space Grotesk, sans-serif" font-size="10" fill="var(--accent2)">🔁 atualiza sozinho a cada 2s</text>
+      <rect x="450" y="42" width="238" height="330" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="460" y="60" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">PREVIEW (ao vivo)</text>
+      <rect x="460" y="74" width="100" height="68" rx="8" fill="var(--bg)" stroke="var(--iot)"/>
+      <text x="468" y="92" font-family="Space Grotesk, sans-serif" font-size="8.5" fill="var(--muted2)">Temperatura</text>
+      <text x="468" y="115" font-family="Space Grotesk, sans-serif" font-size="14" fill="var(--iot)">24.5 °C</text>
+      <rect x="572" y="74" width="100" height="68" rx="8" fill="var(--bg)" stroke="var(--accent)"/>
+      <text x="580" y="92" font-family="Space Grotesk, sans-serif" font-size="8.5" fill="var(--muted2)">Umidade</text>
+      <text x="580" y="115" font-family="Space Grotesk, sans-serif" font-size="14" fill="var(--accent)">62 %</text>
+      <rect x="460" y="152" width="212" height="30" rx="8" fill="rgba(56,224,192,.12)" stroke="var(--accent2)"/>
+      <text x="468" y="171" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--accent2)">🔁 atualiza sozinho a cada 2s</text>
 
-      <!-- labels/arrows -->
-      <text x="79" y="292" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">1</text>
-      <text x="273" y="292" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">2</text>
-      <text x="273" y="386" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">4</text>
-      <text x="546" y="382" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">3</text>
+      <!-- labels -->
+      <text x="113" y="34" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">1</text>
+      <text x="317" y="34" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">3</text>
+      <text x="317" y="392" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">4</text>
+      <text x="569" y="392" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">2</text>
+      <text x="20" y="392" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)">•</text>
     </svg>
-    <p class="figure-caption"><strong>Figura 1 —</strong> as quatro áreas do StackBlitz que você vai usar o curso inteiro: <strong>1</strong> explorador de arquivos, <strong>2</strong> editor de código, <strong>3</strong> preview ao vivo do site rodando, <strong>4</strong> terminal real para comandos <code>npm</code>.</p>
+    <p class="figure-caption"><strong>Figura 1 —</strong> a tela do StackBlitz hoje em dia (versão "bolt"): <strong>1</strong> painel PROJECT/FILES com o botão <em>Create a repository</em> (é ele que vamos usar no passo 11), <strong>2</strong> preview ao vivo do site rodando, <strong>3</strong> editor de código, <strong>4</strong> terminal real (recolhido por padrão — clique no <code>+</code> ao lado de "Terminal" para abrir). O nome do projeto e o cadeado de visibilidade ficam no topo, à direita.</p>
   </div>
 
   <div class="step">
@@ -394,7 +412,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <div class="step-title"><span class="step-num">2</span> Abra o StackBlitz e entre com sua conta GitHub</div>
     <p>No navegador (Edge já vem instalado no Windows 11; se preferir, o Chrome também funciona), acesse:</p>
     <pre><code>https://stackblitz.com</code></pre>
-    <p>No canto superior direito, clique em <strong>Sign in</strong> e escolha <strong>Continue with GitHub</strong>. O navegador vai abrir uma nova tela (ou uma janela pop-up) pedindo para você autorizar o StackBlitz a acessar sua conta GitHub — clique em <strong>Authorize</strong>. Pronto — sua conta StackBlitz agora está ligada à sua conta GitHub, e qualquer projeto que você criar pode ser salvo lá.</p>
+    <p>No canto superior direito, clique em <strong>Sign in</strong>. Hoje a tela de login do StackBlitz se chama "StackBlitz / bolt" e mostra o texto <strong>"Welcome back"</strong> com algumas opções — escolha o primeiro botão, <strong>Continue with GitHub</strong> (não use "Continue with Google" nem o formulário de e-mail/senha logo abaixo, para manter tudo ligado à mesma conta GitHub usada no controle de versionamento). O navegador vai abrir uma nova tela pedindo para você autorizar o StackBlitz a acessar sua conta GitHub — clique em <strong>Authorize</strong>. Pronto — sua conta StackBlitz agora está ligada à sua conta GitHub, e qualquer projeto que você criar pode ser salvo lá.</p>
     <div class="tip"><strong>Site bloqueado no laboratório?</strong> Se <code>stackblitz.com</code> estiver bloqueado pelo firewall da escola, avise o professor/técnico. Como alternativa equivalente (mesmo fluxo, mesma ideia de "IDE sem instalação"), você pode usar <code>replit.com</code> ou <code>codesandbox.io</code> — os passos de criar projeto React e usar o terminal são muito parecidos.</div>
     <div class="warn-box"><strong>Pop-up não abriu / autorização não aparece?</strong>
       <ul>
@@ -407,37 +425,87 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
   <div class="step">
     <div class="step-title"><span class="step-num">3</span> Crie o projeto React com Vite</div>
-    <p>Ainda na página inicial do StackBlitz, clique no botão <strong>"Create new" (ou "+ New Project" / "New")</strong>. Na galeria de templates que abrir, procure e clique no card <strong>"React"</strong> (ele já vem configurado com <span class="term" tabindex="0" data-tip="Ferramenta que organiza, empacota e serve seu projeto React durante o desenvolvimento, com atualização automática no navegador a cada alteração.">Vite</span>, a ferramenta que empacota o projeto — não é necessário escolher nada a mais). Se aparecer mais de uma opção de React (com TypeScript, por exemplo), escolha a versão <strong>JavaScript simples</strong>, sem TypeScript — vamos usar TypeScript só mais adiante no curso.</p>
-    <p>Espere alguns segundos: na primeira vez, o StackBlitz está baixando e montando um Node.js completo dentro da própria aba do navegador (uma barra de progresso aparece). Quando terminar, a tela se organiza nas quatro áreas mostradas na Figura 1 acima: explorador de arquivos à esquerda, editor no centro, preview à direita e o terminal na parte inferior/lateral (pode estar recolhido — clique na aba "Terminal" para abri-lo).</p>
-    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o painel de Preview à direita já deve mostrar uma página com o logo do React girando e o texto "Vite + React", sem nenhum erro em vermelho no editor ou no terminal.</div>
+    <p>Ainda no dashboard do StackBlitz (a página inicial depois do login, com o menu <strong>Dashboard / Repositories / Projects / Collections / Settings</strong> à esquerda), clique no card <strong>"New project"</strong> ("from one of StackBlitz starter templates"). Vai abrir uma janela <strong>"Add to [seu usuário]"</strong> com abas no topo (Popular, Frontend, Backend, Fullstack, Docs/Blogs & Slides, Creative, Mobile & VR, Vanilla, Native Languages). Na aba <strong>Popular</strong>, clique no card <strong>"React"</strong> (ícone azul do átomo, com a etiqueta <strong>TypeScript</strong> embaixo do nome).</p>
+    <div class="tip"><strong>Por que "React · TypeScript" se ainda não vimos TypeScript?</strong> Hoje o StackBlitz só oferece o template rápido de React já com TypeScript configurado. Isso não é problema: TypeScript é só JavaScript com um sistema de tipos por cima, e para não misturar dois assuntos novos ao mesmo tempo, vamos <strong>desligar a checagem de tipos</strong> nesta semana. Assim que criar cada arquivo <code>.tsx</code> (<code>App.tsx</code>, <code>SensorCard.tsx</code>, etc.), cole <code>// @ts-nocheck</code> como a <strong>primeira linha</strong> do arquivo. Com isso o TypeScript para de exigir tipos e você escreve exatamente o JavaScript deste guia, sem nenhuma mudança. Vamos estudar TypeScript de verdade em um módulo futuro.</div>
+    <p>Espere alguns segundos: na primeira vez, o StackBlitz está baixando e montando um Node.js completo dentro da própria aba do navegador (uma barra de progresso aparece). Quando terminar, a tela se organiza nas áreas mostradas na Figura 1 acima: painel PROJECT/FILES à esquerda, editor no centro, preview à direita e o terminal recolhido no canto inferior (clique no <code>+</code> ao lado de "Terminal" para abri-lo).</p>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o painel de Preview à direita já deve mostrar uma página com o logo do React girando e o texto "Vite + React + TS", sem nenhum erro em vermelho no editor ou no terminal.</div>
+  </div>
+
+  <div class="figure">
+    <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="698" height="298" rx="14" fill="var(--surface)" stroke="var(--border)"/>
+      <text x="24" y="34" font-family="Syne, sans-serif" font-size="13" fill="#fff">Add to <tspan fill="var(--accent2)">seu-usuario</tspan> ▾</text>
+      <line x1="16" y1="48" x2="684" y2="48" stroke="var(--border)"/>
+      <text x="30" y="70" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent2)">Popular</text>
+      <text x="100" y="70" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">Frontend</text>
+      <text x="175" y="70" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">Backend</text>
+      <text x="245" y="70" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">Fullstack</text>
+      <line x1="16" y1="80" x2="684" y2="80" stroke="var(--border)"/>
+      <line x1="16" y1="80" x2="76" y2="80" stroke="var(--accent2)" stroke-width="2"/>
+
+      <rect x="30" y="100" width="150" height="70" rx="8" fill="var(--card)" stroke="var(--accent)" stroke-width="2"/>
+      <text x="105" y="130" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#fff">⚛ React</text>
+      <text x="105" y="150" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent)">TypeScript ← use este</text>
+
+      <rect x="210" y="100" width="150" height="70" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="285" y="130" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#fff">Ⓝ Next.js</text>
+      <text x="285" y="150" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">Node.js</text>
+
+      <rect x="390" y="100" width="150" height="70" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="465" y="130" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#fff">▲ Nuxt</text>
+      <text x="465" y="150" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">Node.js</text>
+
+      <rect x="30" y="190" width="150" height="70" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="105" y="220" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#fff">JS Vanilla</text>
+      <text x="105" y="240" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">JavaScript</text>
+
+      <rect x="210" y="190" width="150" height="70" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="285" y="220" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#fff">Angular</text>
+      <text x="285" y="240" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">TypeScript</text>
+
+      <rect x="390" y="190" width="150" height="70" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="465" y="220" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#fff">Vue</text>
+      <text x="465" y="240" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">JavaScript</text>
+    </svg>
+    <p class="figure-caption"><strong>Figura 1.1 —</strong> galeria de templates que abre ao clicar em "New project". Use a aba <strong>Popular</strong> e o card <strong>React</strong> — mesmo com a etiqueta TypeScript, funciona perfeitamente para este guia com o truque do <code>// @ts-nocheck</code> explicado acima.</p>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">4</span> Renomeie o projeto</div>
-    <p>Clique no nome do projeto no topo da página (geralmente algo como "vitejs-vite-xxxxxx") e troque para <code>dashboard-iot-isw044</code>. Isso ajuda a identificar o projeto quando você voltar nas próximas semanas — e como todo o módulo 04 vai evoluir <em>dentro desse mesmo projeto</em>, um nome consistente evita confusão quando você tiver vários projetos StackBlitz na sua conta.</p>
+    <p>No topo da página, ao lado direito, há o nome do projeto (algo como "Vitejs - Vite") com um ícone de cadeado 🔒 e uma setinha ▾. Clique nesse nome (ou na setinha) para abrir o painel de configurações do projeto, com os campos:</p>
+    <ul>
+      <li><strong>Title</strong> — troque para <code>dashboard-iot-isw044</code>: é o nome de exibição do projeto;</li>
+      <li><strong>Description</strong> — escreva algo curto, ex: "Central de sensores IoT (mock) — ISW044";</li>
+      <li><strong>Project URL</strong> — o "apelido" técnico usado no link (ex: <code>stackblitz.com/edit/vitejs-vite-w9k2tbjh</code>); pode deixar como está, não precisa bater com o Title;</li>
+      <li><strong>Visibility</strong> — deixe marcado <strong>Public</strong>, para que o professor consiga acessar o link sem precisar de convite.</li>
+    </ul>
+    <p>Feche o painel clicando fora dele ou no <code>×</code>. Isso ajuda a identificar o projeto quando você voltar nas próximas semanas — e como todo o módulo 04 vai evoluir <em>dentro desse mesmo projeto</em>, um nome consistente evita confusão quando você tiver vários projetos StackBlitz na sua conta.</p>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">5</span> Entenda a estrutura de pastas</div>
     <pre><code>dashboard-iot-isw044/
-├── index.html         → página HTML "casca", carrega o main.jsx
+├── index.html         → página HTML "casca", carrega o main.tsx
 ├── package.json        → lista de dependências e scripts (npm run dev, etc.)
-├── vite.config.js      → configuração do Vite
+├── vite.config.ts      → configuração do Vite
+├── tsconfig.json etc.  → configuração do TypeScript (vamos desligá-la com @ts-nocheck)
 ├── src/
-│   ├── main.jsx         → ponto de entrada: monta o componente App na página
-│   ├── App.jsx          → componente principal (a "raiz" da nossa árvore de componentes)
+│   ├── main.tsx         → ponto de entrada: monta o componente App na página
+│   ├── App.tsx          → componente principal (a "raiz" da nossa árvore de componentes)
 │   ├── App.css          → estilos do App
-│   └── SensorCard.jsx   → componente que vamos criar no passo 7
+│   └── SensorCard.tsx   → componente que vamos criar no passo 7
 └── public/
     └── (arquivos estáticos, ex: ícones — não mexeremos aqui por enquanto)</code></pre>
-    <p>No explorador de arquivos (esquerda), clique em <code>src/App.jsx</code> para abrir. Apague todo o conteúdo do arquivo — vamos escrever do zero para entender cada linha.</p>
+    <p>No explorador de arquivos (painel FILES à esquerda), clique em <code>src/App.tsx</code> para abrir. Apague todo o conteúdo do arquivo — vamos escrever do zero para entender cada linha.</p>
+    <div class="tip"><strong>Extensão .tsx em vez de .jsx:</strong> como o template desta semana vem em TypeScript, os arquivos de componente terminam em <code>.tsx</code> em vez de <code>.jsx</code>. Não muda nada no que você escreve — é só o nome do arquivo. Onde este guia mostrar "<code>App.jsx</code>" ou "<code>SensorCard.jsx</code>", leia como <code>App.tsx</code> / <code>SensorCard.tsx</code>.</div>
     <div class="tip"><strong>Por que apagar tudo?</strong> O template já vem com um contador de cliques de exemplo. Ele é útil como referência, mas escrever do zero obriga você a entender cada linha em vez de só ler código pronto — é assim que o aprendizado gruda.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">6</span> Seu primeiro componente e o JSX</div>
-    <p>Digite (ou cole) isto em <code>App.jsx</code>:</p>
-    <pre><code>function App() {
+    <p>Digite (ou cole) isto em <code>App.tsx</code> — repare na primeira linha, <code>// @ts-nocheck</code>, que desliga a checagem de tipos do TypeScript nesta semana (explicado no passo 3):</p>
+    <pre><code>// @ts-nocheck
+function App() {
   return (
     &lt;div style={{ fontFamily: 'sans-serif', padding: 24 }}&gt;
       &lt;h1&gt;Central de Sensores&lt;/h1&gt;
@@ -460,15 +528,16 @@ export default App;</code></pre>
       <ul>
         <li><em>"Adjacent JSX elements must be wrapped in an enclosing tag"</em> → você esqueceu de colocar tudo dentro de uma única <code>&lt;div&gt;</code> (ou de um <code>&lt;&gt;...&lt;/&gt;</code>, chamado Fragment);</li>
         <li>Preview em branco e erro no terminal → confira se não falta fechar alguma tag ou alguma chave <code>{ }</code>;</li>
-        <li>Esqueceu o <code>export default App;</code> no final → o arquivo <code>main.jsx</code> não vai conseguir importar o componente.</li>
+        <li>Esqueceu o <code>export default App;</code> no final → o arquivo <code>main.tsx</code> não vai conseguir importar o componente.</li>
       </ul>
     </div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">7</span> Criando um componente reutilizável — SensorCard</div>
-    <p>No explorador de arquivos, clique com o botão direito na pasta <code>src</code> → <strong>New file</strong> → digite <code>SensorCard.jsx</code> e pressione Enter. Cole este conteúdo:</p>
-    <pre><code>function SensorCard({ nome, valor, unidade }) {
+    <p>No painel FILES, clique com o botão direito na pasta <code>src</code> → <strong>New file</strong> → digite <code>SensorCard.tsx</code> e pressione Enter. Cole este conteúdo (não esqueça do <code>// @ts-nocheck</code> na primeira linha):</p>
+    <pre><code>// @ts-nocheck
+function SensorCard({ nome, valor, unidade }) {
   return (
     &lt;div style={{
       border: '1px solid #333', borderRadius: 10,
@@ -481,7 +550,7 @@ export default App;</code></pre>
 }
 
 export default SensorCard;</code></pre>
-    <p>Este componente recebe <span class="term" tabindex="0" data-tip="Abreviação de &quot;properties&quot; — os dados que um componente recebe de fora, como parâmetros de uma função.">props</span> (<code>nome</code>, <code>valor</code>, <code>unidade</code>) — são os "parâmetros" de um componente, exatamente como parâmetros de uma função. A sintaxe <code>{ nome, valor, unidade }</code> é <em>destructuring</em>: em vez de receber um único objeto <code>props</code> e escrever <code>props.nome</code>, <code>props.valor</code> etc., já "desempacotamos" cada propriedade direto no parâmetro da função. Agora use-o em <code>App.jsx</code>:</p>
+    <p>Este componente recebe <span class="term" tabindex="0" data-tip="Abreviação de &quot;properties&quot; — os dados que um componente recebe de fora, como parâmetros de uma função.">props</span> (<code>nome</code>, <code>valor</code>, <code>unidade</code>) — são os "parâmetros" de um componente, exatamente como parâmetros de uma função. A sintaxe <code>{ nome, valor, unidade }</code> é <em>destructuring</em>: em vez de receber um único objeto <code>props</code> e escrever <code>props.nome</code>, <code>props.valor</code> etc., já "desempacotamos" cada propriedade direto no parâmetro da função. Agora use-o em <code>App.tsx</code>:</p>
     <pre><code>import SensorCard from './SensorCard';
 
 function App() {
@@ -549,16 +618,17 @@ export default App;</code></pre>
     <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
       <ul>
         <li><em>"nome is not defined"</em> ou similar → esqueceu de colocar <code>{ nome, valor, unidade }</code> entre parênteses na declaração da função <code>SensorCard</code>;</li>
-        <li>Cartões aparecem empilhados um embaixo do outro → confira se o <code>&lt;div&gt;</code> do <code>App.jsx</code> realmente tem <code>display: 'flex'</code> no <code>style</code>;</li>
-        <li>Erro <em>"Cannot find module './SensorCard'"</em> → o arquivo precisa se chamar exatamente <code>SensorCard.jsx</code> e estar dentro da pasta <code>src</code>, no mesmo nível de <code>App.jsx</code>.</li>
+        <li>Cartões aparecem empilhados um embaixo do outro → confira se o <code>&lt;div&gt;</code> do <code>App.tsx</code> realmente tem <code>display: 'flex'</code> no <code>style</code>;</li>
+        <li>Erro <em>"Cannot find module './SensorCard'"</em> → o arquivo precisa se chamar exatamente <code>SensorCard.tsx</code> e estar dentro da pasta <code>src</code>, no mesmo nível de <code>App.tsx</code>.</li>
       </ul>
     </div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">8</span> Estado com useState</div>
-    <p>Sensores mudam de valor. Para a tela reagir a mudanças, usamos o <span class="term" tabindex="0" data-tip="Função especial do React (sempre começa com &quot;use&quot;) que dá superpoderes a um componente, como guardar estado ou reagir a mudanças.">hook</span> <code>useState</code>. Edite <code>App.jsx</code>:</p>
-    <pre><code>import { useState } from 'react';
+    <p>Sensores mudam de valor. Para a tela reagir a mudanças, usamos o <span class="term" tabindex="0" data-tip="Função especial do React (sempre começa com &quot;use&quot;) que dá superpoderes a um componente, como guardar estado ou reagir a mudanças.">hook</span> <code>useState</code>. Edite <code>App.tsx</code> (mantendo o <code>// @ts-nocheck</code> na primeira linha):</p>
+    <pre><code>// @ts-nocheck
+import { useState } from 'react';
 import SensorCard from './SensorCard';
 
 function App() {
@@ -619,8 +689,9 @@ export default App;</code></pre>
 
   <div class="step">
     <div class="step-title"><span class="step-num">9</span> Efeitos colaterais com useEffect — leitura automática</div>
-    <p>Em vez de depender de um clique, vamos simular um sensor que envia uma leitura nova a cada 2 segundos:</p>
-    <pre><code>import { useState, useEffect } from 'react';
+    <p>Em vez de depender de um clique, vamos simular um sensor que envia uma leitura nova a cada 2 segundos. Continue em <code>App.tsx</code>:</p>
+    <pre><code>// @ts-nocheck
+import { useState, useEffect } from 'react';
 import SensorCard from './SensorCard';
 
 function App() {
@@ -727,8 +798,8 @@ export default App;</code></pre>
 
   <div class="step">
     <div class="step-title"><span class="step-num">11</span> Salvando o projeto no GitHub (sem usar git no terminal)</div>
-    <p>Na barra superior do StackBlitz, procure o ícone do <strong>GitHub</strong> (perto do nome do projeto) e clique nele — a opção pode aparecer como <strong>"Connect Repository"</strong> ou <strong>"Export to GitHub"</strong>. Escolha <strong>criar um novo repositório</strong>, dê o nome <code>dashboard-iot-isw044</code> e confirme. O StackBlitz envia todos os arquivos automaticamente para o seu GitHub — nenhum comando <code>git</code> é digitado.</p>
-    <p>A partir de agora, sempre que quiser salvar uma nova versão do trabalho, clique novamente nesse mesmo ícone e use a opção de <span class="term" tabindex="0" data-tip="Um &quot;registro&quot; de uma versão do seu código, com uma mensagem descrevendo o que mudou.">commit</span>/<span class="term" tabindex="0" data-tip="Ação de enviar seus commits para o repositório no GitHub, tornando-os visíveis para quem tiver acesso.">push</span> disponível ali, escrevendo uma mensagem curta descrevendo o que mudou (ex: "adiciona SensorCard e useEffect"). Faça isso com frequência — ao final de cada passo importante, não só no fim da atividade — para ter um histórico de versões que mostra sua evolução.</p>
+    <p>No painel <strong>PROJECT</strong>, à esquerda (o mesmo onde fica a lista de arquivos), há um botão com o ícone do octocat 🐙 escrito <strong>"Create a repository"</strong> — é ele que vamos usar, e não um ícone no topo da página. Clique nele, escolha <strong>criar um novo repositório</strong>, dê o nome <code>dashboard-iot-isw044</code> e confirme. O StackBlitz envia todos os arquivos automaticamente para o seu GitHub — nenhum comando <code>git</code> é digitado.</p>
+    <p>A partir de agora, sempre que quiser salvar uma nova versão do trabalho, clique novamente nesse mesmo botão (que depois de conectado passa a mostrar a opção de <span class="term" tabindex="0" data-tip="Um &quot;registro&quot; de uma versão do seu código, com uma mensagem descrevendo o que mudou.">commit</span>/<span class="term" tabindex="0" data-tip="Ação de enviar seus commits para o repositório no GitHub, tornando-os visíveis para quem tiver acesso.">push</span>), escrevendo uma mensagem curta descrevendo o que mudou (ex: "adiciona SensorCard e useEffect"). Faça isso com frequência — ao final de cada passo importante, não só no fim da atividade — para ter um histórico de versões que mostra sua evolução.</p>
 
     <div class="figure">
       <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
@@ -742,14 +813,14 @@ export default App;</code></pre>
 
         <rect x="30" y="70" width="150" height="70" rx="10" fill="var(--card)" stroke="var(--accent)"/>
         <text x="105" y="98" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">Você edita</text>
-        <text x="105" y="116" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">App.jsx no StackBlitz</text>
+        <text x="105" y="116" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">App.tsx no StackBlitz</text>
 
         <path d="M180,105 L255,105" fill="none" stroke="var(--accent2)" stroke-width="1.5" marker-end="url(#arrow11)"/>
 
         <rect x="260" y="70" width="170" height="70" rx="10" fill="var(--card)" stroke="var(--accent2)"/>
-        <text x="345" y="94" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">Clica no ícone GitHub</text>
-        <text x="345" y="112" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">escreve a mensagem</text>
-        <text x="345" y="126" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">de commit</text>
+        <text x="345" y="94" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">Clica em "Create a</text>
+        <text x="345" y="108" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">repository" 🐙</text>
+        <text x="345" y="126" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">(painel PROJECT)</text>
 
         <path d="M430,105 L505,105" fill="none" stroke="var(--accent2)" stroke-width="1.5" marker-end="url(#arrow11)"/>
 
@@ -763,10 +834,10 @@ export default App;</code></pre>
     </div>
 
     <div class="tip"><strong>Por que isso substitui o Git tradicional?</strong> O comando <code>git</code> por trás continua existindo — só que quem digita os comandos é o próprio StackBlitz, através da API do GitHub. O resultado no seu repositório é idêntico ao que você teria rodando <code>git add / commit / push</code> localmente.</div>
-    <div class="warn-box"><strong>Não achou o ícone do GitHub?</strong>
+    <div class="warn-box"><strong>Não achou o botão "Create a repository"?</strong>
       <ul>
         <li>Confira se você fez login com <strong>Continue with GitHub</strong> no passo 2 — sem isso, a opção de exportar não aparece;</li>
-        <li>Em telas menores, o ícone pode estar escondido dentro de um menu "⋮" (mais opções) no topo da página;</li>
+        <li>Ele fica logo abaixo da faixa <strong>"Open in bolt.new | AI"</strong>, no topo do painel PROJECT à esquerda — em telas estreitas, talvez seja preciso expandir a barra lateral clicando no ícone de arquivos (o primeiro da coluna de ícones bem à esquerda);</li>
         <li>Se o repositório já existir de uma tentativa anterior, escolha "usar repositório existente" em vez de criar um novo, para não duplicar o projeto.</li>
       </ul>
     </div>
@@ -777,8 +848,9 @@ export default App;</code></pre>
     <p>Clique na aba <strong>Terminal</strong> na parte inferior do StackBlitz (é um terminal real, dentro do WebContainer) e digite o comando abaixo, que usa o <span class="term" tabindex="0" data-tip="Node Package Manager — o &quot;gerenciador de pacotes&quot; do Node.js, usado para instalar bibliotecas prontas digitando comandos no terminal.">npm</span> para instalar o <span class="term" tabindex="0" data-tip="Ferramenta (test runner) usada para escrever e rodar testes automatizados, integrada nativamente ao Vite.">Vitest</span> e bibliotecas auxiliares de teste:</p>
     <pre><code>npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom</code></pre>
     <p>A instalação pode levar 20-40 segundos (o WebContainer está baixando pacotes reais do npm). Enquanto isso não termina, aparece um cursor piscando no terminal — não digite nada até ele voltar ao prompt normal (<code>$</code>).</p>
-    <p>Crie o arquivo <code>src/SensorCard.test.jsx</code> (mesmo processo do passo 7: botão direito em <code>src</code> → New file):</p>
-    <pre><code>import { render, screen } from '@testing-library/react';
+    <p>Crie o arquivo <code>src/SensorCard.test.tsx</code> (mesmo processo do passo 7: botão direito em <code>src</code> → New file):</p>
+    <pre><code>// @ts-nocheck
+import { render, screen } from '@testing-library/react';
 import SensorCard from './SensorCard';
 
 test('mostra o nome do sensor', () => {
@@ -790,7 +862,7 @@ test('mostra o nome do sensor', () => {
     <pre><code>npx vitest run</code></pre>
     <p>Vamos aprofundar TDD no Módulo 08 (Semanas 37–39), mas escrever este primeiro teste agora já cria o hábito.</p>
     <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o terminal mostra uma linha verde com "✓ mostra o nome do sensor" e, ao final, um resumo do tipo "1 passed".</div>
-    <div class="warn-box"><strong>Erro comum:</strong> <em>"test is not defined"</em> — normalmente significa que o Vitest ainda não terminou de instalar, ou que o arquivo de teste não está na pasta <code>src</code>. Confira também se o nome do arquivo termina exatamente em <code>.test.jsx</code>.</div>
+    <div class="warn-box"><strong>Erro comum:</strong> <em>"test is not defined"</em> — normalmente significa que o Vitest ainda não terminou de instalar, ou que o arquivo de teste não está na pasta <code>src</code>. Confira também se o nome do arquivo termina exatamente em <code>.test.tsx</code>.</div>
   </div>
 </div>
 
