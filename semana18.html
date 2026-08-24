@@ -714,7 +714,7 @@ export default App;</code></pre>
       <p class="figure-caption"><strong>Figura 3 —</strong> toda vez que você chama a função "setter" (<code>setTemperatura</code>), o React não muda a tela na hora: ele agenda uma nova execução do componente, calcula a nova versão da interface e só então atualiza o navegador. É por isso que a variável de estado nunca deve ser alterada diretamente (ex: <code>temperatura = 30</code> não funciona).</p>
     </div>
 
-    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> a cada clique no botão "Simular nova leitura", o número dentro do cartão de Temperatura muda para um valor aleatório entre 20.0 e 30.0.</div>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> a cada clique no botão "Simular nova leitura", o número dentro do cartão de Temperatura muda para um valor aleatório entre 20.0 e 30.0 — por exemplo, de <strong>24.5 °C</strong> para algo como <strong>20.3 °C</strong>. No terminal, você também deve ver linhas <code>hmr update /src/App.tsx</code> confirmando que o arquivo foi salvo e recarregado.</div>
     <div class="warn-box"><strong>Erro comum:</strong> tentar mudar o estado diretamente com <code>temperatura = novoValor</code> em vez de <code>setTemperatura(novoValor)</code>. Isso <strong>não</strong> causa erro no console, mas também <strong>não</strong> atualiza a tela — o React só percebe mudanças quando você usa a função retornada pelo <code>useState</code>.</div>
   </div>
 
@@ -796,7 +796,7 @@ export default App;</code></pre>
       <p class="figure-caption"><strong>Figura 4 —</strong> ciclo de vida do efeito: ele liga um timer quando o componente aparece e o desliga quando o componente desaparece. Cada "tick" do <code>setInterval</code> chama <code>setTemperatura</code>, disparando o ciclo de re-renderização visto na Figura 3.</p>
     </div>
 
-    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> sem clicar em nada, o número de temperatura no Preview muda sozinho a cada 2 segundos, indefinidamente.</div>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> sem clicar em nada, o número de temperatura no Preview muda sozinho a cada 2 segundos, indefinidamente — por exemplo, de <strong>21.3 °C</strong> para <strong>26.2 °C</strong> alguns segundos depois, e assim por diante. Repare que não existe mais o botão "Simular nova leitura": o cartão agora atualiza <strong>sozinho</strong>, sem nenhuma ação sua. No terminal, cada troca de código gera uma nova linha <code>hmr update /src/App.tsx</code> — mas as mudanças de valor do sensor em si acontecem só na tela, sem gerar linhas novas no terminal (elas são o <code>setInterval</code> rodando dentro do próprio navegador).</div>
     <div class="warn-box"><strong>Atenção:</strong> sempre que usar <code>setInterval</code> dentro de <code>useEffect</code>, devolva uma função de limpeza (<code>return () =&gt; clearInterval(...)</code>). Sem isso, cada atualização do componente cria um novo intervalo "fantasma" rodando em paralelo — depois de alguns minutos você teria dezenas de intervalos simultâneos, deixando a página cada vez mais lenta.</div>
   </div>
 
