@@ -114,6 +114,27 @@ pre {
 code { font-family:'DM Mono', monospace; background:rgba(79,140,255,.12); color:var(--accent); padding:2px 6px; border-radius:4px; font-size:.85em; }
 pre code { background:none; color:inherit; padding:0; }
 
+/* CODE BLOCK WRAPPER + COPY BUTTON */
+.code-wrap { margin:14px 0; border-radius:10px; overflow:hidden; border:1px solid var(--border); }
+.code-wrap pre { margin:0; border:none; border-radius:0; }
+.code-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  background:#0d1120; padding:7px 14px; border-bottom:1px solid var(--border);
+}
+.code-lang { font-family:'DM Mono', monospace; font-size:.66rem; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.copy-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  background:transparent; border:1px solid var(--border); color:var(--muted2);
+  font-family:'DM Mono', monospace; font-size:.7rem; padding:4px 11px; border-radius:6px;
+  cursor:pointer; transition:.15s;
+}
+.copy-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+.copy-btn.copied { border-color:var(--green); color:var(--green); }
+@media (max-width:640px) {
+  .code-bar { padding:6px 10px; }
+  .copy-btn { font-size:.65rem; padding:3px 8px; }
+}
+
 .tip {
   border-left:3px solid var(--yellow); background:rgba(251,191,36,.06);
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
@@ -950,5 +971,62 @@ test('mostra o nome do sensor', () => {
   <a href="semana19.html" class="nav-button primary">Próxima Semana →</a>
 </div>
 <footer>ISW044 · PROGRAMAÇÃO MULTIPLATAFORMA · FATEC OURINHOS · CENTRO PAULA SOUZA · 2026</footer>
+
+<script>
+(function () {
+  function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    done();
+  }
+
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var wrap = document.createElement('div');
+    wrap.className = 'code-wrap';
+    pre.parentNode.insertBefore(wrap, pre);
+
+    var bar = document.createElement('div');
+    bar.className = 'code-bar';
+
+    var label = document.createElement('span');
+    label.className = 'code-lang';
+    label.textContent = 'código';
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy-btn';
+    btn.innerHTML = '📋 Copiar';
+
+    btn.addEventListener('click', function () {
+      var text = pre.innerText;
+      function done() {
+        btn.innerHTML = '✓ Copiado!';
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = '📋 Copiar';
+          btn.classList.remove('copied');
+        }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+      } else {
+        fallbackCopy(text, done);
+      }
+    });
+
+    bar.appendChild(label);
+    bar.appendChild(btn);
+    wrap.appendChild(bar);
+    wrap.appendChild(pre);
+  });
+})();
+</script>
 </body>
 </html>
