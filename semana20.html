@@ -77,6 +77,7 @@ body::before {
   padding-bottom:12px; border-bottom:1px solid var(--border);
 }
 .section h3 { font-family:'Syne', sans-serif; font-size:1.08rem; color:var(--accent2); margin:26px 0 10px; }
+.section h4 { font-family:'Syne', sans-serif; font-size:.95rem; color:#fff; margin:18px 0 8px; }
 .section p { color:var(--muted2); line-height:1.8; margin:10px 0; font-size:.95rem; }
 .section ul, .section ol { margin:10px 0 10px 22px; color:var(--muted2); font-size:.95rem; line-height:1.85; }
 .section li { margin:6px 0; }
@@ -113,6 +114,27 @@ pre {
 code { font-family:'DM Mono', monospace; background:rgba(79,140,255,.12); color:var(--accent); padding:2px 6px; border-radius:4px; font-size:.85em; }
 pre code { background:none; color:inherit; padding:0; }
 
+/* CODE BLOCK WRAPPER + COPY BUTTON */
+.code-wrap { margin:14px 0; border-radius:10px; overflow:hidden; border:1px solid var(--border); }
+.code-wrap pre { margin:0; border:none; border-radius:0; }
+.code-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  background:#0d1120; padding:7px 14px; border-bottom:1px solid var(--border);
+}
+.code-lang { font-family:'DM Mono', monospace; font-size:.66rem; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.copy-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  background:transparent; border:1px solid var(--border); color:var(--muted2);
+  font-family:'DM Mono', monospace; font-size:.7rem; padding:4px 11px; border-radius:6px;
+  cursor:pointer; transition:.15s;
+}
+.copy-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+.copy-btn.copied { border-color:var(--green); color:var(--green); }
+@media (max-width:640px) {
+  .code-bar { padding:6px 10px; }
+  .copy-btn { font-size:.65rem; padding:3px 8px; }
+}
+
 .tip {
   border-left:3px solid var(--yellow); background:rgba(251,191,36,.06);
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
@@ -123,11 +145,25 @@ pre code { background:none; color:inherit; padding:0; }
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
 }
 .warn-box strong { color:var(--red); }
+.warn-box ul { margin:8px 0 0 18px; }
 .checkpoint {
   border-left:3px solid var(--warn); background:rgba(167,139,250,.06);
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
 }
 .checkpoint strong { color:var(--warn); }
+.checkpoint ul { margin:8px 0 0 18px; }
+
+/* FIGURES / DIAGRAMS */
+.figure {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:18px 18px 14px; margin:18px 0;
+}
+.figure svg { width:100%; height:auto; display:block; }
+.figure-caption {
+  margin-top:12px; font-size:.8rem; color:var(--muted2); text-align:center;
+  font-style:italic; line-height:1.5;
+}
+.figure-caption strong { color:var(--muted2); font-style:normal; }
 
 .activity {
   background:var(--card); border:1px solid var(--border); border-radius:14px;
@@ -144,6 +180,13 @@ pre code { background:none; color:inherit; padding:0; }
 .criteria li { padding:8px 0 8px 26px; position:relative; color:var(--muted2); font-size:.9rem; border-bottom:1px solid rgba(34,40,67,.6); }
 .criteria li:last-child { border-bottom:none; }
 .criteria li::before { content:'✓'; position:absolute; left:0; color:var(--green); font-weight:700; }
+
+.bonus {
+  border-left:3px solid var(--accent2); background:rgba(56,224,192,.06);
+  padding:16px 18px; border-radius:0 8px 8px 0; margin:16px 0; font-size:.9rem; color:var(--muted2);
+}
+.bonus strong { color:var(--accent2); }
+.bonus ul { margin:8px 0 0 18px; }
 
 /* GLOSSARY TOOLTIPS */
 .term {
@@ -237,7 +280,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <div class="hero-tag"><span></span> Semana 20 de 40 · Módulo 04</div>
     <div class="hero-week">MÓDULO 04 · DESENVOLVIMENTO WEB MODERNO · SEMANA 20</div>
     <h1>WebSocket e Dados em Tempo Real</h1>
-    <p class="hero-sub">Monte um servidor WebSocket em Node.js rodando junto do React no mesmo projeto StackBlitz (via proxy do Vite) e receba dados de sensores simulados ao vivo.</p>
+    <p class="hero-sub">Monte um servidor WebSocket em Node.js rodando junto do React no mesmo projeto StackBlitz (via proxy do Vite) e receba dados de sensores simulados ao vivo. Esta versão traz o passo a passo com mais detalhes, diagramas explicando cada conceito e checkpoints para conferir se está no caminho certo.</p>
   </div>
 
 <div class="section">
@@ -247,6 +290,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
       <li>Entender a diferença entre <span class="term" tabindex="0" data-tip="Técnica em que o cliente pergunta ao servidor &quot;tem novidade?&quot; repetidamente.">polling</span> HTTP e <span class="term" tabindex="0" data-tip="Protocolo que abre uma conexão persistente e bidirecional entre cliente e servidor.">WebSocket</span> para dados em tempo real;</li>
       <li>Relacionar WebSocket com os conceitos de <span class="term" tabindex="0" data-tip="Sistemas formados por vários programas/computadores separados que se comunicam entre si.">Sistemas Distribuídos</span> da ementa (<span class="term" tabindex="0" data-tip="Capacidade de várias tarefas ou conexões acontecerem ao mesmo tempo, sem travar umas às outras.">concorrência</span>, comunicação assíncrona);</li>
       <li>Criar um <strong>servidor WebSocket</strong> simples em Node.js, rodando <em>dentro do mesmo projeto StackBlitz</em>, que simula um sensor publicando dados;</li>
+      <li>Configurar o <span class="term" tabindex="0" data-tip="Um &quot;intermediário&quot; que recebe uma requisição em um endereço e a repassa para outro endereço/porta por trás dos panos.">proxy</span> do Vite para que servidor e front-end convivam no mesmo endereço público;</li>
       <li>Conectar um componente React ao servidor e atualizar a tela em tempo real, sem recarregar a página;</li>
       <li>Entender o papel de um <span class="term" tabindex="0" data-tip="Servidor intermediário especializado em receber mensagens de quem publica e entregá-las para quem está interessado.">broker de mensageria</span> (introdução — será aprofundado no Módulo 06).</li>
     </ul>
@@ -255,7 +299,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
 
 <details class="glossario">
-  <summary>📖 Glossário desta semana — clique para expandir (18 termos)</summary>
+  <summary>📖 Glossário desta semana — clique para expandir (19 termos)</summary>
   <div class="glossario-grid">
     <div class="gloss-item"><div class="g-term">WebSocket</div><div class="g-def">Um protocolo que abre uma conexão persistente e bidirecional entre cliente e servidor, permitindo que o servidor envie dados a qualquer momento, sem o cliente precisar pedir.</div></div>
 <div class="gloss-item"><div class="g-term">handshake</div><div class="g-def">O "aperto de mão" inicial entre cliente e servidor para abrir a conexão WebSocket, feito uma única vez no começo.</div></div>
@@ -275,6 +319,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 <div class="gloss-item"><div class="g-term">escalabilidade horizontal</div><div class="g-def">Aumentar a capacidade de um sistema adicionando mais instâncias/máquinas rodando em paralelo, em vez de deixar uma única máquina mais potente.</div></div>
 <div class="gloss-item"><div class="g-term">stateless</div><div class="g-def">Um serviço que não guarda estado/memória entre requisições — cada requisição é independente, o que facilita rodar várias cópias em paralelo.</div></div>
 <div class="gloss-item"><div class="g-term">load balancer</div><div class="g-def">Componente que distribui as requisições/conexões recebidas entre várias instâncias de um mesmo serviço, para nenhuma delas sobrecarregar.</div></div>
+<div class="gloss-item"><div class="g-term">EADDRINUSE</div><div class="g-def">Erro do Node.js que significa "endereço/porta já em uso" — acontece quando você tenta iniciar um segundo servidor na mesma porta de um que já está rodando.</div></div>
   </div>
   <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
 </details>
@@ -284,8 +329,9 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <p style="margin-top:8px;">Você está usando um <strong>computador de laboratório diferente</strong> do da semana passada? Sem problema — nada foi instalado localmente, então nada fica "preso" numa máquina.</p>
   <ol style="margin:10px 0 0 20px;">
     <li>Abra o Edge (ou Chrome) e acesse <a href="https://stackblitz.com" target="_blank">stackblitz.com</a>;</li>
-    <li>Clique em <strong>Sign in</strong> (canto superior direito) → <strong>Continue with GitHub</strong> → entre com a mesma conta GitHub da semana passada;</li>
-    <li>Se preferir reabrir direto pelo repositório: acesse <code>https://stackblitz.com/github/SEU-USUARIO/dashboard-iot-isw044</code> — isso importa seu repositório do GitHub direto para um ambiente StackBlitz novo, pronto para editar;</li>
+    <li>Clique em <strong>Sign in</strong> (canto superior direito) → <strong>Continue with GitHub</strong> → entre com a mesma conta GitHub das semanas passadas;</li>
+    <li>Na página do seu perfil (<code>stackblitz.com/@seu-usuario</code>), a seção <strong>PROJECTS</strong> já mostra o <code>dashboard-iot-isw044</code> — clique nele para reabrir de onde parou;</li>
+    <li>Se preferir reabrir direto pelo repositório do GitHub: acesse <code>https://stackblitz.com/~/github.com/SEU-USUARIO/dashboard-iot-isw044</code> — é o mesmo editor "nova geração" (com abas PROBLEMS/OUTPUT/TERMINAL) que apareceu quando você conectou o projeto ao GitHub;</li>
     <li>No terminal do projeto, rode <code>npm install</code> uma vez (garante que todas as dependências estão presentes) e depois <code>npm run dev</code>.</li>
   </ol>
   <p style="margin-top:8px;">Não lembra o passo a passo completo de configuração do ambiente? Ele está detalhado na <a href="semana18.html">Semana 18</a>.</p>
@@ -297,6 +343,51 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <p>Na Semana 19 usamos <strong>polling</strong>: o cliente pergunta "tem novidade?" de tempos em tempos. Funciona, mas gasta banda e sempre tem atraso.</p>
   <p>O <strong>WebSocket</strong> abre uma <strong>conexão persistente e bidirecional</strong> entre cliente e servidor: depois do <span class="term" tabindex="0" data-tip="O &quot;aperto de mão&quot; inicial entre cliente e servidor para abrir a conexão, feito uma única vez no começo.">handshake</span> ("aperto de mão") inicial, os dois lados podem enviar mensagens a qualquer momento. Isso é exatamente o que sensores IoT precisam: assim que o ESP32 publica uma nova leitura, todos os painéis conectados recebem o dado <strong>imediatamente</strong>.</p>
   <p>Esse padrão de "muitos dispositivos publicando e muitos clientes recebendo" é a essência de sistemas distribuídos com brokers de mensageria (<span class="term" tabindex="0" data-tip="Protocolo de mensageria leve, muito usado em IoT, baseado no padrão &quot;publish/subscribe&quot;.">MQTT</span>, RabbitMQ, Kafka — Módulo 06, Semanas 28–32). Hoje construímos uma versão simplificada com WebSocket puro.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowW1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/>
+        </marker>
+        <marker id="arrowW2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent2)"/>
+        </marker>
+      </defs>
+      <rect x="1" y="1" width="698" height="258" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+
+      <text x="175" y="30" text-anchor="middle" font-family="Syne, sans-serif" font-size="12.5" fill="var(--muted2)">POLLING (Semana 19)</text>
+      <rect x="60" y="50" width="110" height="46" rx="8" fill="var(--card)" stroke="var(--accent)"/>
+      <text x="115" y="77" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10.5" fill="#fff">Cliente</text>
+      <rect x="230" y="50" width="110" height="46" rx="8" fill="var(--card)" stroke="var(--iot)"/>
+      <text x="285" y="77" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10.5" fill="#fff">Servidor</text>
+
+      <path d="M170,65 L228,65" fill="none" stroke="var(--accent)" stroke-width="1.3" marker-end="url(#arrowW1)"/>
+      <path d="M228,80 L170,80" fill="none" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#arrowW1)"/>
+      <path d="M170,105 L228,105" fill="none" stroke="var(--accent)" stroke-width="1.3" marker-end="url(#arrowW1)"/>
+      <path d="M228,120 L170,120" fill="none" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#arrowW1)"/>
+      <text x="200" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="var(--muted)">pergunta de novo, de novo...</text>
+
+      <line x1="380" y1="20" x2="380" y2="240" stroke="var(--border)" stroke-dasharray="4 4"/>
+
+      <text x="540" y="30" text-anchor="middle" font-family="Syne, sans-serif" font-size="12.5" fill="var(--accent2)">WEBSOCKET (hoje)</text>
+      <rect x="420" y="50" width="110" height="46" rx="8" fill="var(--card)" stroke="var(--accent)"/>
+      <text x="475" y="77" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10.5" fill="#fff">Cliente</text>
+      <rect x="590" y="50" width="90" height="46" rx="8" fill="var(--card)" stroke="var(--iot)"/>
+      <text x="635" y="77" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10.5" fill="#fff">Servidor</text>
+
+      <path d="M530,73 L588,73" fill="none" stroke="var(--accent2)" stroke-width="1.6" marker-end="url(#arrowW2)"/>
+      <text x="559" y="63" text-anchor="middle" font-family="DM Mono, monospace" font-size="7.5" fill="var(--accent2)">handshake</text>
+
+      <line x1="475" y1="96" x2="475" y2="235" stroke="var(--accent2)" stroke-width="1.6"/>
+      <line x1="635" y1="96" x2="635" y2="235" stroke="var(--accent2)" stroke-width="1.6"/>
+      <path d="M635,130 L478,130" fill="none" stroke="var(--accent2)" stroke-width="1.3" marker-end="url(#arrowW2)"/>
+      <path d="M635,165 L478,165" fill="none" stroke="var(--accent2)" stroke-width="1.3" marker-end="url(#arrowW2)"/>
+      <path d="M635,200 L478,200" fill="none" stroke="var(--accent2)" stroke-width="1.3" marker-end="url(#arrowW2)"/>
+      <text x="555" y="222" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="var(--accent2)">servidor envia sozinho, sem ser perguntado</text>
+    </svg>
+    <p class="figure-caption"><strong>Figura 1 —</strong> no polling, o cliente puxa a informação repetidamente. No WebSocket, depois de um único handshake a conexão fica aberta, e o servidor <strong>empurra</strong> os dados assim que eles existem — sem atraso e sem desperdiçar requisições "vazias".</p>
+  </div>
 
   <div class="box" style="border-left:3px solid var(--warn);">
     <strong style="color:#fff;">🧠 Discussão: isso escala?</strong>
@@ -318,19 +409,21 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
   <div class="step">
     <div class="step-title"><span class="step-num">1</span> Reabra o projeto e instale as bibliotecas necessárias</div>
-    <p>No StackBlitz, projeto <code>dashboard-iot-isw044</code>, abra a aba <strong>Terminal</strong> e rode:</p>
+    <p>No StackBlitz, projeto <code>dashboard-iot-isw044</code>, abra a aba <strong>Terminal</strong> (ou TERMINAL, se já estiver no editor "nova geração" ligado ao GitHub) e rode:</p>
     <pre><code>npm install ws concurrently</code></pre>
     <p><code>ws</code> é a biblioteca de WebSocket para Node.js. <span class="term" tabindex="0" data-tip="Pacote npm que permite rodar dois ou mais comandos/processos ao mesmo tempo em um único terminal.">concurrently</span> permite rodar dois comandos (o servidor e o Vite) ao mesmo tempo com um único <code>npm run dev</code>.</p>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o terminal mostra <code>added 2 packages</code> (ou similar) sem nenhuma linha vermelha de erro, e o prompt volta a ficar vazio.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">2</span> Verifique o tipo de módulo do projeto</div>
     <p>Abra o arquivo <code>package.json</code> na raiz do projeto e veja se existe a linha <code>"type": "module"</code>. Os templates atuais de Vite + React no StackBlitz normalmente já vêm assim. Isso significa que arquivos <code>.js</code> na raiz usam a sintaxe moderna <code>import</code>/<code>export</code> (e não <code>require</code>).</p>
+    <div class="tip"><strong>Se não existir essa linha:</strong> adicione <code>"type": "module",</code> logo abaixo da linha <code>"name": ...</code> e salve. Sem ela, o comando <code>node servidor.js</code> do próximo passo vai falhar com <em>"Cannot use import statement outside a module"</em>.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">3</span> Crie o servidor que simula um sensor</div>
-    <p>No explorador de arquivos, clique com o botão direito <strong>na raiz do projeto</strong> (não dentro de <code>src</code> — o servidor não faz parte do código que o Vite empacota) → <strong>New file</strong> → <code>servidor.js</code>:</p>
+    <p>No explorador de arquivos, clique com o botão direito <strong>na raiz do projeto</strong> (não dentro de <code>src</code> — o servidor não faz parte do código que o Vite empacota, e por isso continua sendo um arquivo <code>.js</code> puro, sem TypeScript) → <strong>New file</strong> → <code>servidor.js</code>:</p>
     <pre><code>import { WebSocketServer } from 'ws';
 
 const wss = new WebSocketServer({ port: 8080 });
@@ -353,17 +446,27 @@ wss.on('connection', (socket) => {
     console.log('Cliente desconectado');
   });
 });</code></pre>
-    <div class="tip"><strong>Erro "require is not defined" ou "Cannot use import"?</strong> Confira o <code>package.json</code>: se não houver <code>"type": "module"</code>, adicione a linha manualmente (<code>"type": "module",</code> logo abaixo de <code>"name"</code>) e salve.</div>
+    <p>Repare que este arquivo <strong>não</strong> leva <code>// @ts-nocheck</code>: ele roda direto pelo Node (<code>node servidor.js</code>), fora do processo de build do Vite/React, então as regras de TypeScript dos outros arquivos do curso não se aplicam aqui.</p>
+    <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
+      <ul>
+        <li><em>"Cannot use import statement outside a module"</em> → falta <code>"type": "module"</code> no <code>package.json</code> (veja o passo anterior);</li>
+        <li><em>"Error: listen EADDRINUSE: address already in use :::8080"</em> → já existe um <code>servidor.js</code> rodando na mesma porta. Pare o processo antigo no terminal com <code>Ctrl+C</code> antes de rodar de novo.</li>
+      </ul>
+    </div>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">4</span> Configure o proxy no vite.config.js</div>
-    <p>Abra <code>vite.config.js</code> na raiz e ajuste para incluir a seção <code>server.proxy</code>:</p>
-    <pre><code>import { defineConfig } from 'vite'
+    <div class="step-title"><span class="step-num">4</span> Configure o proxy no vite.config.ts</div>
+    <p>Abra <code>vite.config.ts</code> na raiz e adicione a seção <code>server.proxy</code>, <strong>sem apagar</strong> o bloco <code>test</code> que você já configurou na Semana 18 para o Vitest:</p>
+    <pre><code>/// &lt;reference types="vitest/config" /&gt;
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  test: {
+    environment: 'jsdom',
+  },
   server: {
     proxy: {
       '/ws': {
@@ -374,6 +477,38 @@ export default defineConfig({
   },
 })</code></pre>
     <p>Isso diz ao Vite: "toda vez que o navegador tentar abrir um WebSocket no caminho <code>/ws</code>, encaminhe essa conexão para o processo que está escutando na <span class="term" tabindex="0" data-tip="Número de canal que identifica um serviço rodando em um computador/servidor.">porta</span> 8080" — mesmo que, para o navegador, tudo pareça vir do mesmo endereço único do Preview.</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowPx" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="238" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+        <text x="350" y="28" text-anchor="middle" font-family="Syne, sans-serif" font-size="13" fill="var(--accent2)">Um único endereço público, dois processos por trás</text>
+
+        <rect x="40" y="80" width="150" height="60" rx="10" fill="var(--card)" stroke="var(--accent)"/>
+        <text x="115" y="105" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">Navegador</text>
+        <text x="115" y="123" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">...webcontainer.io/ws</text>
+
+        <path d="M190,110 L275,110" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowPx)"/>
+
+        <rect x="280" y="70" width="160" height="80" rx="10" fill="var(--card)" stroke="var(--accent2)"/>
+        <text x="360" y="93" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">Vite dev server</text>
+        <text x="360" y="110" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">proxy: '/ws' →</text>
+        <text x="360" y="124" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">ws://localhost:8080</text>
+
+        <path d="M440,110 L525,110" fill="none" stroke="var(--accent2)" stroke-width="1.5" marker-end="url(#arrowPx)"/>
+
+        <rect x="530" y="80" width="140" height="60" rx="10" fill="var(--card)" stroke="var(--iot)"/>
+        <text x="600" y="105" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">servidor.js</text>
+        <text x="600" y="123" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">porta 8080</text>
+
+        <text x="350" y="195" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">o navegador nunca fala direto com a porta 8080 — só enxerga o endereço único do Vite</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 2 —</strong> o proxy faz o front-end (Vite) e o back-end (<code>servidor.js</code>) parecerem "um só" para o navegador, mesmo rodando como dois processos Node separados dentro do mesmo WebContainer.</p>
+    </div>
   </div>
 
   <div class="step">
@@ -387,12 +522,14 @@ export default defineConfig({
     <p>No terminal, pare o processo atual se estiver rodando (clique no terminal e pressione <code>Ctrl+C</code>) e rode:</p>
     <pre><code>npm run dev</code></pre>
     <p>Você deve ver, no mesmo terminal, tanto a mensagem <code>Servidor WebSocket rodando na porta 8080</code> quanto o log normal do Vite — os dois processos rodando lado a lado dentro do mesmo container.</p>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> no terminal aparecem duas seções distintas (geralmente coloridas de forma diferente pelo <code>concurrently</code>, com prefixos como <code>[0]</code> e <code>[1]</code>): uma com <code>Servidor WebSocket rodando na porta 8080</code>, outra com <code>VITE ready in ...ms</code>. Se só uma delas aparecer, o outro processo travou — role o terminal para cima em busca de erro.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">6</span> Conectando o React ao WebSocket via o caminho /ws</div>
-    <p>Crie <code>src/useWebSocket.js</code>:</p>
-    <pre><code>import { useState, useEffect, useRef } from 'react';
+    <p>Crie <code>src/useWebSocket.ts</code> (sem JSX, por isso a extensão <code>.ts</code>):</p>
+    <pre><code>// @ts-nocheck
+import { useState, useEffect, useRef } from 'react';
 
 function useWebSocket() {
   const [ultimaLeitura, setUltimaLeitura] = useState(null);
@@ -427,8 +564,9 @@ export default useWebSocket;</code></pre>
 
   <div class="step">
     <div class="step-title"><span class="step-num">7</span> Exibindo o dado em tempo real</div>
-    <p>Crie <code>src/SensorAoVivo.jsx</code>:</p>
-    <pre><code>import useWebSocket from './useWebSocket';
+    <p>Crie <code>src/SensorAoVivo.tsx</code>:</p>
+    <pre><code>// @ts-nocheck
+import useWebSocket from './useWebSocket';
 
 function SensorAoVivo() {
   const { ultimaLeitura, conectado } = useWebSocket();
@@ -449,24 +587,66 @@ function SensorAoVivo() {
 }
 
 export default SensorAoVivo;</code></pre>
-    <p>Use este componente em <code>App.jsx</code> e abra o <strong>Preview</strong>: o valor da temperatura deve mudar sozinho a cada 2 segundos.</p>
-    <div class="warn-box"><strong>Não conectou?</strong> Clique no botão de abrir o Preview em uma <strong>aba nova do navegador</strong> (ícone de seta/quadrado no canto do painel de Preview do StackBlitz) em vez de deixar só no iframe embutido — em alguns casos o WebSocket dentro do iframe do editor tem restrições extras, e a aba separada resolve.</div>
+    <p>Use este componente em <code>App.tsx</code> (mesmo processo das semanas anteriores: <code>import SensorAoVivo from './SensorAoVivo'; function App() { return &lt;SensorAoVivo /&gt;; }</code>) e abra o <strong>Preview</strong>: o valor da temperatura deve mudar sozinho a cada 2 segundos.</p>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowWL" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--warn)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="218" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+        <text x="350" y="28" text-anchor="middle" font-family="Syne, sans-serif" font-size="13" fill="var(--warn)">Ciclo de vida do WebSocket no useEffect</text>
+
+        <line x1="50" y1="110" x2="650" y2="110" stroke="var(--border)" stroke-width="2"/>
+
+        <circle cx="90" cy="110" r="7" fill="var(--accent2)"/>
+        <text x="90" y="80" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10" fill="#fff">componente monta</text>
+        <text x="90" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--accent2)">new WebSocket(url)</text>
+
+        <circle cx="230" cy="110" r="5" fill="var(--accent)"/>
+        <text x="230" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--accent)">onopen</text>
+        <text x="230" y="148" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="var(--muted2)">conectado = true</text>
+
+        <circle cx="370" cy="110" r="5" fill="var(--accent)"/>
+        <circle cx="440" cy="110" r="5" fill="var(--accent)"/>
+        <circle cx="510" cy="110" r="5" fill="var(--accent)"/>
+        <text x="440" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--accent)">onmessage a cada 2s</text>
+
+        <circle cx="600" cy="110" r="7" fill="var(--red)"/>
+        <text x="600" y="80" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10" fill="#fff">componente sai da tela</text>
+        <text x="600" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--red)">socket.close()</text>
+
+        <path d="M90,110 L600,110" fill="none" stroke="var(--warn)" stroke-width="1" stroke-dasharray="2 5" marker-end="url(#arrowWL)"/>
+      </svg>
+      <p class="figure-caption"><strong>Figura 3 —</strong> assim como o <code>setInterval</code> das semanas anteriores, o <code>return () =&gt; socket.close()</code> dentro do <code>useEffect</code> é essencial: sem ele, cada remontagem do componente abriria uma nova conexão sem fechar a anterior.</p>
+    </div>
+
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o Preview mostra "Status: 🟢 conectado" e um valor de temperatura que muda sozinho a cada 2 segundos, junto com o horário da última atualização (ex: "Atualizado em 14:32:10").</div>
+    <div class="warn-box"><strong>Não conectou?</strong> Clique no botão de abrir o Preview em uma <strong>aba nova do navegador</strong> (ícone de seta/quadrado no canto do painel de Preview do StackBlitz) em vez de deixar só no iframe embutido — em alguns casos o WebSocket dentro do iframe do editor tem restrições extras, e a aba separada resolve. Se "Status" ficar travado em "🔴 desconectado", confira também se o <code>servidor.js</code> ainda está rodando (volte ao terminal) e se o <code>vite.config.ts</code> foi salvo corretamente com o bloco <code>server.proxy</code>.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">8</span> Mantendo um histórico de leituras</div>
+    <p>Em <code>useWebSocket.ts</code>, adicione um novo estado e troque o <code>onmessage</code>:</p>
     <pre><code>const [historico, setHistorico] = useState([]);
 
 socket.onmessage = (evento) => {
   const dado = JSON.parse(evento.data);
+  setUltimaLeitura(dado);
   setHistorico(anterior =&gt; [...anterior.slice(-19), dado]); // mantém só as últimas 20 leituras
-};</code></pre>
-    <div class="tip"><strong>Por que <code>slice(-19)</code>?</strong> Sem limitar o tamanho do array, um dashboard ligado por horas acumularia milhares de itens em memória.</div>
+};
+
+// não esqueça de devolver o histórico também:
+return { ultimaLeitura, historico, conectado };</code></pre>
+    <div class="tip"><strong>Por que <code>slice(-19)</code>?</strong> Sem limitar o tamanho do array, um dashboard ligado por horas acumularia milhares de itens em memória. <code>slice(-19)</code> pega só os últimos 19 itens do array atual; somando o item novo que está sendo adicionado, o resultado sempre tem no máximo 20 leituras.</div>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> se você renderizar <code>historico.length</code> na tela, o número cresce a cada 2 segundos até chegar em 20 — e a partir daí permanece fixo em 20, mesmo com o tempo passando, porque os itens mais antigos vão sendo descartados.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">9</span> Salve no GitHub</div>
-    <p>Use o ícone do GitHub no topo do StackBlitz (mesmo processo da Semana 18) para commitar e enviar as mudanças.</p>
+    <p>Use o botão <strong>Commit</strong> no topo do StackBlitz (o mesmo botão azul das semanas anteriores — aparece no lugar de "Save" assim que há alterações não enviadas) para registrar e enviar as mudanças desta semana para o repositório.</p>
   </div>
 </div>
 
@@ -531,8 +711,9 @@ void loop() {
 
   <div class="step">
     <div class="step-title"><span class="step-num">4</span> Crie o hook useSerialSensor</div>
-    <p>De volta ao editor, crie <code>src/useSerialSensor.js</code>:</p>
-    <pre><code>import { useState, useRef, useCallback } from 'react';
+    <p>De volta ao editor, crie <code>src/useSerialSensor.ts</code>:</p>
+    <pre><code>// @ts-nocheck
+import { useState, useRef, useCallback } from 'react';
 
 function useSerialSensor(baudRate = 115200) {
   const [leitura, setLeitura] = useState(null);
@@ -584,7 +765,9 @@ export default useSerialSensor;</code></pre>
 
   <div class="step">
     <div class="step-title"><span class="step-num">5</span> Exibindo a leitura real</div>
-    <pre><code>import useSerialSensor from './useSerialSensor';
+    <p>Crie <code>src/SensorReal.tsx</code>:</p>
+    <pre><code>// @ts-nocheck
+import useSerialSensor from './useSerialSensor';
 
 function SensorReal() {
   const { leitura, conectado, suportado, conectar } = useSerialSensor();
@@ -610,6 +793,14 @@ function SensorReal() {
 
 export default SensorReal;</code></pre>
     <p>Clique em <strong>"Conectar Arduino"</strong>, escolha a porta na janela que o navegador abrir (algo como "USB Serial Device (COMx)") e cubra/descubra o sensor com a mão: a mensagem deve alternar entre "Feixe detectado" e "Feixe interrompido" em tempo real.</p>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> ao clicar em "Conectar Arduino", o navegador abre uma janela nativa listando as portas USB disponíveis. Depois de escolher a porta certa e clicar em "Connect", o botão desaparece e é substituído pela mensagem do sensor, que muda ao vivo conforme você tampa/destampa o fototransistor com a mão.</div>
+    <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
+      <ul>
+        <li>Nenhuma porta aparece na janela do navegador → confira se o cabo USB está bem conectado e se é um cabo de <strong>dados</strong> (alguns cabos USB são só de carga, sem os pinos de dados);</li>
+        <li>O botão "⚠️ Seu navegador não suporta..." aparece mesmo no Chrome/Edge → confirme se está na <strong>aba separada</strong> do passo 3, e não dentro do iframe do editor do StackBlitz — a Web Serial API é bloqueada dentro de iframes por segurança;</li>
+        <li>Conecta mas a mensagem nunca muda → confira se o parâmetro <code>inverted</code> no firmware (<code>print_stateled(beamDetected, 1)</code>) bate com o circuito físico realmente montado (1 para o Circuito 1, 0 para o Circuito 2).</li>
+      </ul>
+    </div>
   </div>
 
   <div class="step">
@@ -621,8 +812,9 @@ export default SensorReal;</code></pre>
 <div class="section">
   <h2>🧪 Checkpoint TDD</h2>
   <div class="checkpoint">
-    Testar WebSocket de verdade em unidade é complexo — a prática comum é criar um <strong>mock</strong> da classe <code>WebSocket</code> global e simular eventos <code>onmessage</code> manualmente, verificando se o estado do componente atualiza como esperado. Documente no README como você testaria isso (não é obrigatório implementar o mock completo esta semana).
+    Testar WebSocket de verdade em unidade é complexo — a prática comum é criar um <span class="term" tabindex="0" data-tip="Uma versão &quot;falsa&quot;/simulada de algo, usada em testes para não depender de internet ou de um servidor real." class="term">mock</span> da classe <code>WebSocket</code> global e simular eventos <code>onmessage</code> manualmente, verificando se o estado do componente atualiza como esperado. Documente no README como você testaria isso (não é obrigatório implementar o mock completo esta semana).
   </div>
+  <div class="tip"><strong>Esboço de como seria esse mock</strong> (para referência futura, não precisa rodar esta semana): criar uma classe <code>MockWebSocket</code> com os mesmos métodos (<code>send</code>, <code>close</code>) e propriedades de evento (<code>onopen</code>, <code>onmessage</code>) do <code>WebSocket</code> real, substituir <code>global.WebSocket</code> por ela no teste, renderizar o componente, chamar manualmente <code>instancia.onmessage({'{ data: JSON.stringify(...) }'})</code> e verificar se o texto esperado aparece na tela — o mesmo princípio do <code>vi.fn()</code> usado para simular o <code>fetch</code> na Semana 19.</div>
 </div>
 
 <div class="section">
@@ -638,7 +830,7 @@ export default SensorReal;</code></pre>
       <li>Mostre visualmente o status da conexão (conectado/desconectado);</li>
       <li>Documente no README como rodar o projeto (<code>npm install</code> + <code>npm run dev</code> — um único comando, já que servidor e front-end sobem juntos);</li>
       <li><strong>Bônus (pontuação extra):</strong> se sua turma tiver um Arduino Uno com o sensor de luz "Magnificent Hango" (ou similar) disponível, implemente também o <code>useSerialSensor</code> e conecte via Web Serial API, comparando lado a lado o dado simulado e o dado real;</li>
-      <li>Salve no GitHub.</li>
+      <li>Salve no GitHub (botão <strong>Commit</strong>).</li>
     </ol>
     <div class="deliverable"><strong>📦 Entregável:</strong> Link do repositório GitHub atualizado + vídeo curto (1–2 min) ou GIF mostrando os dados atualizando ao vivo no Preview do StackBlitz.</div>
     <h4>✅ Critérios de Avaliação:</h4>
@@ -690,5 +882,62 @@ export default SensorReal;</code></pre>
   <a href="semana21.html" class="nav-button primary">Próxima Semana →</a>
 </div>
 <footer>ISW044 · PROGRAMAÇÃO MULTIPLATAFORMA · FATEC OURINHOS · CENTRO PAULA SOUZA · 2026</footer>
+
+<script>
+(function () {
+  function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    done();
+  }
+
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var wrap = document.createElement('div');
+    wrap.className = 'code-wrap';
+    pre.parentNode.insertBefore(wrap, pre);
+
+    var bar = document.createElement('div');
+    bar.className = 'code-bar';
+
+    var label = document.createElement('span');
+    label.className = 'code-lang';
+    label.textContent = 'código';
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy-btn';
+    btn.innerHTML = '📋 Copiar';
+
+    btn.addEventListener('click', function () {
+      var text = pre.innerText;
+      function done() {
+        btn.innerHTML = '✓ Copiado!';
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = '📋 Copiar';
+          btn.classList.remove('copied');
+        }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+      } else {
+        fallbackCopy(text, done);
+      }
+    });
+
+    bar.appendChild(label);
+    bar.appendChild(btn);
+    wrap.appendChild(bar);
+    wrap.appendChild(pre);
+  });
+})();
+</script>
 </body>
 </html>

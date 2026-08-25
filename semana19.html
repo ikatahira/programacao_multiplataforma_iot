@@ -77,6 +77,7 @@ body::before {
   padding-bottom:12px; border-bottom:1px solid var(--border);
 }
 .section h3 { font-family:'Syne', sans-serif; font-size:1.08rem; color:var(--accent2); margin:26px 0 10px; }
+.section h4 { font-family:'Syne', sans-serif; font-size:.95rem; color:#fff; margin:18px 0 8px; }
 .section p { color:var(--muted2); line-height:1.8; margin:10px 0; font-size:.95rem; }
 .section ul, .section ol { margin:10px 0 10px 22px; color:var(--muted2); font-size:.95rem; line-height:1.85; }
 .section li { margin:6px 0; }
@@ -113,6 +114,27 @@ pre {
 code { font-family:'DM Mono', monospace; background:rgba(79,140,255,.12); color:var(--accent); padding:2px 6px; border-radius:4px; font-size:.85em; }
 pre code { background:none; color:inherit; padding:0; }
 
+/* CODE BLOCK WRAPPER + COPY BUTTON */
+.code-wrap { margin:14px 0; border-radius:10px; overflow:hidden; border:1px solid var(--border); }
+.code-wrap pre { margin:0; border:none; border-radius:0; }
+.code-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  background:#0d1120; padding:7px 14px; border-bottom:1px solid var(--border);
+}
+.code-lang { font-family:'DM Mono', monospace; font-size:.66rem; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.copy-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  background:transparent; border:1px solid var(--border); color:var(--muted2);
+  font-family:'DM Mono', monospace; font-size:.7rem; padding:4px 11px; border-radius:6px;
+  cursor:pointer; transition:.15s;
+}
+.copy-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+.copy-btn.copied { border-color:var(--green); color:var(--green); }
+@media (max-width:640px) {
+  .code-bar { padding:6px 10px; }
+  .copy-btn { font-size:.65rem; padding:3px 8px; }
+}
+
 .tip {
   border-left:3px solid var(--yellow); background:rgba(251,191,36,.06);
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
@@ -123,11 +145,25 @@ pre code { background:none; color:inherit; padding:0; }
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
 }
 .warn-box strong { color:var(--red); }
+.warn-box ul { margin:8px 0 0 18px; }
 .checkpoint {
   border-left:3px solid var(--warn); background:rgba(167,139,250,.06);
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
 }
 .checkpoint strong { color:var(--warn); }
+.checkpoint ul { margin:8px 0 0 18px; }
+
+/* FIGURES / DIAGRAMS */
+.figure {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:18px 18px 14px; margin:18px 0;
+}
+.figure svg { width:100%; height:auto; display:block; }
+.figure-caption {
+  margin-top:12px; font-size:.8rem; color:var(--muted2); text-align:center;
+  font-style:italic; line-height:1.5;
+}
+.figure-caption strong { color:var(--muted2); font-style:normal; }
 
 .activity {
   background:var(--card); border:1px solid var(--border); border-radius:14px;
@@ -237,7 +273,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <div class="hero-tag"><span></span> Semana 19 de 40 · Módulo 04</div>
     <div class="hero-week">MÓDULO 04 · DESENVOLVIMENTO WEB MODERNO · SEMANA 19</div>
     <h1>Consumo de APIs REST no Front-end</h1>
-    <p class="hero-sub">Continuando no mesmo projeto StackBlitz: use fetch, trate carregamento/erro, crie um hook useFetch reutilizável e dê os primeiros passos em GraphQL.</p>
+    <p class="hero-sub">Continuando no mesmo projeto StackBlitz: use <code>fetch</code>, trate carregamento/erro, crie um hook <code>useFetch</code> reutilizável e dê os primeiros passos em GraphQL. Esta versão traz o passo a passo com mais detalhes, diagramas explicando cada conceito e checkpoints para conferir se está no caminho certo.</p>
   </div>
 
 <div class="section">
@@ -246,16 +282,18 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <ul>
       <li>Revisar os conceitos de <span class="term" tabindex="0" data-tip="Um estilo de API onde cada informação é um &quot;recurso&quot; acessado por uma URL, usando verbos HTTP.">API REST</span>: recursos, <span class="term" tabindex="0" data-tip="A &quot;ação&quot; de uma requisição: GET (buscar), POST (criar), PUT/PATCH (atualizar), DELETE (remover).">verbos HTTP</span>, <span class="term" tabindex="0" data-tip="Número que a API devolve indicando se a requisição deu certo, falhou ou foi criada com sucesso.">status codes</span> e <span class="term" tabindex="0" data-tip="Formato de texto simples e legível para representar dados estruturados, usado pela maioria das APIs.">JSON</span>;</li>
       <li>Consumir uma API pública real dentro de um componente React com <span class="term" tabindex="0" data-tip="Função nativa do JavaScript usada para fazer requisições HTTP (buscar dados de uma API) direto do navegador.">fetch</span>;</li>
-      <li>Tratar estados de <strong>carregando / sucesso / erro</strong> corretamente;</li>
-      <li>Criar um <span class="term" tabindex="0" data-tip="Função criada por você, começando com &quot;use&quot;, que reaproveita lógica com estado/efeitos entre vários componentes.">hook customizado</span> (<code>useFetch</code>) para reaproveitar lógica de requisição;</li>
-      <li>Comparar rapidamente REST com <span class="term" tabindex="0" data-tip="Alternativa a REST onde o cliente pede exatamente os campos que quer, em uma única requisição.">GraphQL</span>, conforme previsto na ementa da disciplina.</li>
+      <li>Tratar corretamente os <strong>três estados</strong> de uma requisição assíncrona: carregando, erro e sucesso;</li>
+      <li>Criar um <span class="term" tabindex="0" data-tip="Função criada por você, começando com &quot;use&quot;, que reaproveita lógica com estado/efeitos entre vários componentes.">hook customizado</span> (<code>useFetch</code>) para reaproveitar lógica de requisição entre componentes diferentes;</li>
+      <li>Implementar atualização periódica (<span class="term" tabindex="0" data-tip="Técnica em que o cliente pergunta ao servidor &quot;tem novidade?&quot; repetidamente, em vez de esperar o servidor avisar.">polling</span>) combinando <code>useEffect</code> e <code>setInterval</code>;</li>
+      <li>Comparar rapidamente REST com <span class="term" tabindex="0" data-tip="Alternativa a REST onde o cliente pede exatamente os campos que quer, em uma única requisição.">GraphQL</span>, conforme previsto na ementa da disciplina;</li>
+      <li>Escrever um teste automatizado que simula (<span class="term" tabindex="0" data-tip="Uma versão &quot;falsa&quot;/simulada de algo, usada em testes para não depender de internet ou de um servidor real.">mock</span>) a função <code>fetch</code>, sem depender de internet.</li>
     </ul>
   </div>
 </div>
 
 
 <details class="glossario">
-  <summary>📖 Glossário desta semana — clique para expandir (12 termos)</summary>
+  <summary>📖 Glossário desta semana — clique para expandir (14 termos)</summary>
   <div class="glossario-grid">
     <div class="gloss-item"><div class="g-term">API</div><div class="g-def">Application Programming Interface — um "conjunto de portas de entrada" que um sistema oferece para que outros programas troquem dados com ele.</div></div>
 <div class="gloss-item"><div class="g-term">API REST</div><div class="g-def">Um estilo de API muito comum na web, onde cada informação é um "recurso" acessado por uma URL, usando verbos HTTP (GET, POST, etc).</div></div>
@@ -269,6 +307,8 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 <div class="gloss-item"><div class="g-term">polling</div><div class="g-def">Técnica em que o cliente pergunta ao servidor "tem novidade?" repetidamente, de tempos em tempos, em vez de esperar o servidor avisar.</div></div>
 <div class="gloss-item"><div class="g-term">GraphQL</div><div class="g-def">Uma alternativa a REST onde o cliente pede exatamente os campos que quer, em uma única requisição, em vez de receber tudo que o endpoint devolve.</div></div>
 <div class="gloss-item"><div class="g-term">mock</div><div class="g-def">Uma versão "falsa"/simulada de algo (como a função fetch) usada em testes, para não depender de internet ou de um servidor real.</div></div>
+<div class="gloss-item"><div class="g-term">CORS</div><div class="g-def">Cross-Origin Resource Sharing — mecanismo de segurança do navegador que decide se um site pode ou não buscar dados de outro domínio diferente.</div></div>
+<div class="gloss-item"><div class="g-term">race condition</div><div class="g-def">Bug causado pela ordem imprevisível de operações assíncronas — ex: uma requisição antiga "chega" depois de uma mais nova e sobrescreve o dado certo com um errado.</div></div>
   </div>
   <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
 </details>
@@ -279,7 +319,8 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <ol style="margin:10px 0 0 20px;">
     <li>Abra o Edge (ou Chrome) e acesse <a href="https://stackblitz.com" target="_blank">stackblitz.com</a>;</li>
     <li>Clique em <strong>Sign in</strong> (canto superior direito) → <strong>Continue with GitHub</strong> → entre com a mesma conta GitHub da semana passada;</li>
-    <li>Se preferir reabrir direto pelo repositório: acesse <code>https://stackblitz.com/github/SEU-USUARIO/dashboard-iot-isw044</code> — isso importa seu repositório do GitHub direto para um ambiente StackBlitz novo, pronto para editar;</li>
+    <li>Na página do seu perfil (<code>stackblitz.com/@seu-usuario</code>), a seção <strong>PROJECTS</strong> já mostra o <code>dashboard-iot-isw044</code> — clique nele para reabrir de onde parou;</li>
+    <li>Se preferir reabrir direto pelo repositório do GitHub: acesse <code>https://stackblitz.com/~/github.com/SEU-USUARIO/dashboard-iot-isw044</code> — é o mesmo editor "nova geração" (com abas PROBLEMS/OUTPUT/TERMINAL) que apareceu quando você conectou o projeto ao GitHub na semana passada;</li>
     <li>No terminal do projeto, rode <code>npm install</code> uma vez (garante que todas as dependências estão presentes) e depois <code>npm run dev</code>.</li>
   </ol>
   <p style="margin-top:8px;">Não lembra o passo a passo completo de configuração do ambiente? Ele está detalhado na <a href="semana18.html">Semana 18</a>.</p>
@@ -296,6 +337,42 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <li><code>DELETE</code> — remover um registro</li>
   </ul>
   <p>As respostas normalmente vêm em <strong>JSON</strong> e trazem um <span class="term" tabindex="0" data-tip="Número que indica se deu certo (200), se foi criado (201), se o pedido está errado (400) ou se algo falhou no servidor (500).">status code</span>: <code>200</code> OK, <code>201</code> criado, <code>400</code> erro do cliente, <code>404</code> não encontrado, <code>500</code> erro no servidor.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowR1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/>
+        </marker>
+        <marker id="arrowR2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent2)"/>
+        </marker>
+      </defs>
+      <rect x="1" y="1" width="698" height="218" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+
+      <rect x="40" y="80" width="150" height="60" rx="10" fill="var(--card)" stroke="var(--accent)"/>
+      <text x="115" y="105" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#fff">Seu componente</text>
+      <text x="115" y="123" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">React (cliente)</text>
+
+      <path d="M190,100 L365,100" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowR1)"/>
+      <text x="277" y="90" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent)">GET /forecast?...</text>
+
+      <rect x="370" y="80" width="150" height="60" rx="10" fill="var(--card)" stroke="var(--iot)"/>
+      <text x="445" y="105" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="12" fill="#fff">API REST</text>
+      <text x="445" y="123" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">Open-Meteo</text>
+
+      <path d="M365,125 L190,125" fill="none" stroke="var(--accent2)" stroke-width="1.5" marker-end="url(#arrowR2)"/>
+      <text x="277" y="145" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent2)">200 OK + JSON</text>
+
+      <rect x="570" y="80" width="110" height="60" rx="10" fill="rgba(56,224,192,.08)" stroke="var(--accent2)"/>
+      <text x="625" y="105" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">{ "current":</text>
+      <text x="625" y="120" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">{ temp: 24.3 }</text>
+      <text x="625" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="10" fill="var(--accent2)">}</text>
+
+      <text x="350" y="185" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">o mesmo fluxo que, mais adiante no curso, vai trazer leituras de sensores reais</text>
+    </svg>
+    <p class="figure-caption"><strong>Figura 1 —</strong> ciclo básico de uma chamada REST: seu componente React pede um recurso por URL, o servidor responde com um status code (200 = deu certo) e um corpo em JSON, que você usa para montar a tela.</p>
+  </div>
 </div>
 
 <div class="section">
@@ -305,13 +382,14 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <div class="step">
     <div class="step-title"><span class="step-num">1</span> Reabra seu projeto no StackBlitz</div>
     <p>Acesse <code>stackblitz.com</code>, entre com GitHub e abra o projeto <code>dashboard-iot-isw044</code> criado na Semana 18 (veja o box "Retomando de onde parou?" acima se estiver em outro computador).</p>
+    <div class="tip"><strong>Botão "Commit" em vez de "Create a repository":</strong> como você já conectou este projeto ao GitHub na semana passada, o editor agora mostra um botão azul <strong>Commit</strong> no topo (em vez do antigo "Create a repository") sempre que houver alterações não salvas — é ele que você vai usar no final desta aula para enviar o progresso da semana.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">2</span> Teste a API direto em outra aba do navegador</div>
-    <p>Abra uma nova aba e cole esta URL (é uma requisição <code>GET</code> pura, dá para testar direto no navegador):</p>
+    <p>Abra uma nova aba e cole esta URL (é uma requisição <code>GET</code> pura, dá para testar direto no navegador, sem precisar de nenhum código):</p>
     <pre><code>https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&current=temperature_2m,relative_humidity_2m,wind_speed_10m</code></pre>
-    <p>Você verá um JSON parecido com este (dados de Ourinhos/SP — pode trocar latitude/longitude pela sua cidade):</p>
+    <p>Você verá um JSON parecido com este (dados de Ourinhos/SP — pode trocar latitude/longitude pela sua cidade, usando o Google Maps para achar as coordenadas):</p>
     <pre><code>{
   "current": {
     "temperature_2m": 24.3,
@@ -319,13 +397,15 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     "wind_speed_10m": 9.4
   }
 }</code></pre>
-    <p>Isso é <strong>exatamente</strong> a forma como, mais adiante, você vai receber dados de um sensor real.</p>
+    <p>Isso é <strong>exatamente</strong> a forma como, mais adiante no curso, você vai receber dados de um sensor real. Guarde essa URL — vamos usá-la no código a seguir.</p>
+    <div class="tip"><strong>Por que essa API não dá erro de CORS?</strong> Diferente de muitas APIs privadas, a Open-Meteo libera explicitamente chamadas feitas direto do navegador (cabeçalho <span class="term" tabindex="0" data-tip="Cross-Origin Resource Sharing — mecanismo de segurança do navegador que decide se um site pode ou não buscar dados de outro domínio diferente." class="term">CORS</span> configurado). Por isso funciona sem precisar de um servidor intermediário — o que nem sempre é o caso com outras APIs.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">3</span> Criando o componente com fetch()</div>
-    <p>De volta ao StackBlitz, crie o arquivo <code>src/PainelClima.jsx</code> (botão direito em <code>src</code> → New file):</p>
-    <pre><code>import { useState, useEffect } from 'react';
+    <p>De volta ao StackBlitz, crie o arquivo <code>src/PainelClima.tsx</code> (botão direito em <code>src</code> → New file — mesmo processo da Semana 18):</p>
+    <pre><code>// @ts-nocheck
+import { useState, useEffect } from 'react';
 
 function PainelClima() {
   const [dados, setDados] = useState(null);
@@ -364,21 +444,65 @@ function PainelClima() {
 }
 
 export default PainelClima;</code></pre>
-    <p>Importe e use em <code>App.jsx</code>:</p>
-    <pre><code>import PainelClima from './PainelClima';
+    <p>Importe e use em <code>App.tsx</code> (pode substituir todo o conteúdo do arquivo por isso, já que o painel de sensores da Semana 18 continua salvo no histórico do Git, se quiser recuperar depois):</p>
+    <pre><code>// @ts-nocheck
+import PainelClima from './PainelClima';
 
 function App() {
   return &lt;PainelClima /&gt;;
 }
 export default App;</code></pre>
-    <p>Olhe o painel de <strong>Preview</strong>: em poucos segundos o texto "Carregando..." deve virar os dados reais de temperatura vindos da internet.</p>
+    <p>Olhe o painel de <strong>Preview</strong>: em poucos segundos o texto "Carregando dados do sensor climático..." deve virar os dados reais de temperatura vindos da internet — algo como "🌡️ Temperatura: 24.3 °C".</p>
     <div class="tip"><strong>Por que os três estados (carregando / erro / dados)?</strong> Numa aplicação real conectada a sensores, a rede pode cair, o servidor pode demorar, o sensor pode estar offline. Tratar esses três casos desde já evita uma tela em branco quando algo falhar.</div>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowS1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent2)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="278" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+        <text x="350" y="30" text-anchor="middle" font-family="Syne, sans-serif" font-size="13" fill="var(--accent2)">Os três estados de uma requisição</text>
+
+        <rect x="270" y="55" width="160" height="60" rx="10" fill="var(--card)" stroke="var(--warn)"/>
+        <text x="350" y="80" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">carregando = true</text>
+        <text x="350" y="98" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">"Carregando..."</text>
+
+        <path d="M340,115 C260,150 170,150 130,175" fill="none" stroke="var(--accent2)" stroke-width="1.5" marker-end="url(#arrowS1)"/>
+        <path d="M360,115 C440,150 530,150 570,175" fill="none" stroke="var(--red)" stroke-width="1.5" marker-end="url(#arrowS1)"/>
+
+        <text x="200" y="145" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">fetch deu certo</text>
+        <text x="500" y="145" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--red)">fetch falhou (.catch)</text>
+
+        <rect x="50" y="180" width="160" height="70" rx="10" fill="rgba(56,224,192,.08)" stroke="var(--accent2)"/>
+        <text x="130" y="205" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">carregando = false</text>
+        <text x="130" y="222" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">dados = {'{ ... }'}</text>
+        <text x="130" y="238" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent2)">mostra os dados ✓</text>
+
+        <rect x="490" y="180" width="160" height="70" rx="10" fill="rgba(248,113,113,.08)" stroke="var(--red)"/>
+        <text x="570" y="205" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">carregando = false</text>
+        <text x="570" y="222" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">erro = "mensagem"</text>
+        <text x="570" y="238" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--red)">mostra o erro ✗</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 2 —</strong> os três estados nunca coexistem: o componente começa em "carregando", e assim que o <code>fetch</code> termina (com sucesso ou falha), o React re-renderiza mostrando <strong>ou</strong> os dados <strong>ou</strong> a mensagem de erro — nunca as duas coisas juntas.</p>
+    </div>
+
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o Preview mostra, por alguns instantes, "Carregando dados do sensor climático..." e depois troca sozinho para algo como "🌡️ Temperatura: 24.3 °C", "💧 Umidade: 58%", "🌬️ Vento: 9.4 km/h" (os números variam conforme o clima real da sua região no momento).</div>
+    <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
+      <ul>
+        <li><em>"Cannot read properties of null (reading 'temperature_2m')"</em> → o componente tentou renderizar <code>dados.temperature_2m</code> antes da requisição terminar. Confira se os <code>if (carregando) return ...</code> e <code>if (erro) return ...</code> estão <strong>antes</strong> do <code>return</code> principal, na ordem certa;</li>
+        <li>Preview fica travado para sempre em "Carregando..." → normalmente é <code>if (!resposta.ok)</code> não tratado corretamente, ou a URL foi digitada com erro de sintaxe. Abra o Console do navegador (F12) e procure por mensagens em vermelho;</li>
+        <li>Esqueceu o array de dependências <code>[]</code> no final do <code>useEffect</code> → o componente entra em loop, disparando uma requisição nova a cada re-renderização (sintoma: a aba do navegador trava ou o terminal mostra muitas linhas repetidas rapidamente).</li>
+      </ul>
+    </div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">4</span> Criando um hook customizado — useFetch</div>
-    <p>Crie <code>src/useFetch.js</code>:</p>
-    <pre><code>import { useState, useEffect } from 'react';
+    <p>Crie <code>src/useFetch.ts</code> (esse arquivo não tem JSX, por isso a extensão é <code>.ts</code> em vez de <code>.tsx</code>):</p>
+    <pre><code>// @ts-nocheck
+import { useState, useEffect } from 'react';
 
 function useFetch(url) {
   const [dados, setDados] = useState(null);
@@ -400,8 +524,9 @@ function useFetch(url) {
 }
 
 export default useFetch;</code></pre>
-    <p>Agora <code>PainelClima.jsx</code> fica muito mais simples:</p>
-    <pre><code>import useFetch from './useFetch';
+    <p>Agora <code>PainelClima.tsx</code> fica muito mais simples:</p>
+    <pre><code>// @ts-nocheck
+import useFetch from './useFetch';
 
 function PainelClima() {
   const url = 'https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&current=temperature_2m,relative_humidity_2m,wind_speed_10m';
@@ -418,24 +543,104 @@ function PainelClima() {
   );
 }
 export default PainelClima;</code></pre>
+    <div class="tip"><strong>Repare na diferença:</strong> como o <code>useFetch</code> agora devolve o JSON <strong>inteiro</strong> (não só o campo <code>current</code>, como fazíamos antes), o acesso muda de <code>dados.temperature_2m</code> para <code>dados.current.temperature_2m</code>. É um detalhe fácil de esquecer ao migrar código antigo para o hook novo.</div>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowH1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="258" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+        <text x="350" y="30" text-anchor="middle" font-family="Syne, sans-serif" font-size="13" fill="var(--accent2)">Um hook, vários componentes</text>
+
+        <rect x="280" y="55" width="140" height="55" rx="10" fill="var(--card)" stroke="var(--accent)"/>
+        <text x="350" y="79" text-anchor="middle" font-family="DM Mono, monospace" font-size="11" fill="#fff">useFetch(url)</text>
+        <text x="350" y="96" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">lógica reaproveitável</text>
+
+        <path d="M320,110 C260,150 170,150 130,180" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowH1)"/>
+        <path d="M350,110 L350,180" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowH1)"/>
+        <path d="M380,110 C440,150 530,150 570,180" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arrowH1)"/>
+
+        <rect x="50" y="185" width="160" height="55" rx="10" fill="var(--card)" stroke="var(--iot)"/>
+        <text x="130" y="209" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">PainelClima</text>
+        <text x="130" y="226" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">url = open-meteo</text>
+
+        <rect x="270" y="185" width="160" height="55" rx="10" fill="var(--card)" stroke="var(--iot)"/>
+        <text x="350" y="209" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">ListaDeSensores</text>
+        <text x="350" y="226" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">url = /sensores</text>
+
+        <rect x="490" y="185" width="160" height="55" rx="10" fill="var(--card)" stroke="var(--iot)"/>
+        <text x="570" y="209" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">PainelUsuario</text>
+        <text x="570" y="226" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">url = /perfil</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 3 —</strong> a vantagem de extrair a lógica em <code>useFetch</code>: cada componente só passa a URL que precisa e recebe de volta <code>{'{ dados, carregando, erro }'}</code> prontos — sem repetir o mesmo <code>useState</code>/<code>useEffect</code>/<code>fetch</code> em cada arquivo.</p>
+    </div>
+
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o Preview continua mostrando os mesmos dados de antes (temperatura e umidade), só que agora o código de <code>PainelClima.tsx</code> ficou bem mais curto — toda a lógica de <code>fetch</code>/estado saiu para dentro do <code>useFetch</code>.</div>
+    <div class="warn-box"><strong>Erro comum:</strong> esquecer de trocar <code>dados.temperature_2m</code> para <code>dados.current.temperature_2m</code> ao migrar para o hook — o erro no console costuma ser <em>"Cannot read properties of undefined"</em>, porque <code>dados.temperature_2m</code> não existe mais nesse formato (o hook devolve o JSON completo, com o campo <code>current</code> por dentro).</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">5</span> Atualização periódica (polling)</div>
+    <p>Sensores de verdade mudam de valor com o tempo. Vamos fazer o <code>useFetch</code> repetir a busca automaticamente, sem precisar recarregar a página. Edite <code>src/useFetch.ts</code>, trocando o <code>useEffect</code> por este:</p>
     <pre><code>useEffect(() => {
   function buscar() {
-    fetch(url).then(r =&gt; r.json()).then(json =&gt; setDados(json));
+    fetch(url)
+      .then(r =&gt; {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(json =&gt; { setDados(json); setCarregando(false); })
+      .catch(err =&gt; { setErro(err.message); setCarregando(false); });
   }
-  buscar();
-  const id = setInterval(buscar, 60000);
-  return () =&gt; clearInterval(id);
+
+  buscar(); // primeira busca, imediata
+  const id = setInterval(buscar, 60000); // repete a cada 60 segundos
+  return () =&gt; clearInterval(id); // limpeza ao desmontar
 }, [url]);</code></pre>
-    <div class="tip"><strong>Isso é <span class="term" tabindex="0" data-tip="Técnica em que o cliente pergunta ao servidor &quot;tem novidade?&quot; repetidamente, em vez de esperar o servidor avisar.">polling</span></strong>: o cliente pergunta ao servidor de tempos em tempos. Na Semana 20 veremos o <strong>WebSocket</strong>, onde é o servidor quem avisa o cliente assim que há um dado novo.</div>
+    <div class="tip"><strong>Isso é <span class="term" tabindex="0" data-tip="Técnica em que o cliente pergunta ao servidor &quot;tem novidade?&quot; repetidamente, em vez de esperar o servidor avisar.">polling</span></strong>: o cliente pergunta ao servidor de tempos em tempos, exatamente como fizemos na Semana 18 com o <code>setInterval</code> simulando sensores. Na Semana 20 veremos o <strong>WebSocket</strong>, onde é o servidor quem avisa o cliente assim que há um dado novo, sem precisar ficar perguntando.</div>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowP1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--warn)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="218" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+        <text x="350" y="28" text-anchor="middle" font-family="Syne, sans-serif" font-size="13" fill="var(--warn)">Linha do tempo do polling</text>
+
+        <line x1="50" y1="110" x2="650" y2="110" stroke="var(--border)" stroke-width="2"/>
+
+        <circle cx="90" cy="110" r="7" fill="var(--accent2)"/>
+        <text x="90" y="80" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10" fill="#fff">componente monta</text>
+        <text x="90" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--accent2)">buscar() imediato</text>
+
+        <circle cx="280" cy="110" r="5" fill="var(--accent)"/>
+        <text x="280" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--accent)">60s → buscar()</text>
+
+        <circle cx="440" cy="110" r="5" fill="var(--accent)"/>
+        <text x="440" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--accent)">120s → buscar()</text>
+
+        <circle cx="600" cy="110" r="7" fill="var(--red)"/>
+        <text x="600" y="80" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="10" fill="#fff">componente sai da tela</text>
+        <text x="600" y="135" text-anchor="middle" font-family="DM Mono, monospace" font-size="8.5" fill="var(--red)">clearInterval()</text>
+
+        <path d="M90,110 L600,110" fill="none" stroke="var(--warn)" stroke-width="1" stroke-dasharray="2 5" marker-end="url(#arrowP1)"/>
+        <text x="350" y="175" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">o mesmo padrão do useEffect + setInterval da Semana 18 — só que agora buscando dados reais pela rede</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 4 —</strong> o retorno da função dentro do <code>useEffect</code> (<code>return () =&gt; clearInterval(id)</code>) continua sendo essencial: sem ela, cada vez que o componente remonta cria um intervalo novo, empilhando requisições desnecessárias.</p>
+    </div>
+
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> abra o Console do navegador (F12 → Network → filtro "Fetch/XHR") e deixe a página aberta por mais de 1 minuto — deve aparecer uma nova requisição para <code>api.open-meteo.com</code> a cada 60 segundos, sem você precisar recarregar a página.</div>
+    <div class="warn-box"><strong>Erro comum:</strong> esquecer o <code>return () =&gt; clearInterval(id)</code> — sem ele, toda vez que o componente for remontado (por exemplo, ao editar e salvar o código durante o desenvolvimento) um novo intervalo é criado por cima do antigo, e depois de algumas edições a página passa a fazer 2, 3, 4 requisições simultâneas ao mesmo tempo.</div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">6</span> Bônus — um gostinho de GraphQL</div>
-    <p>A ementa também cita GraphQL. Diferença central: em REST você recebe <em>tudo</em> que o endpoint devolve; em GraphQL você <em>pede exatamente os campos</em> que quer. Cole isto no terminal do StackBlitz para testar rapidamente com Node (crie um arquivo temporário <code>teste-graphql.mjs</code> ou rode em outra aba com o console do navegador — F12 → Console):</p>
+    <p>A ementa também cita GraphQL. Diferença central: em REST você recebe <em>tudo</em> que o endpoint devolve; em GraphQL você <em>pede exatamente os campos</em> que quer. Para testar rapidamente, sem precisar mexer no projeto, abra o Console do navegador em qualquer aba (tecla <code>F12</code> → aba <strong>Console</strong>) e cole:</p>
     <pre><code>fetch('https://countries.trevorblades.com/', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -445,16 +650,16 @@ export default PainelClima;</code></pre>
 })
   .then(r =&gt; r.json())
   .then(json =&gt; console.log(json.data.country));</code></pre>
+    <p>Repare que a requisição é sempre um <code>POST</code>, e o "pedido" de dados vai dentro do corpo (<code>query</code>), como se fosse um texto — bem diferente da URL com parâmetros que usamos no REST. O resultado aparece no próprio Console, com só os três campos pedidos (<code>name</code>, <code>capital</code>, <code>currency</code>), nada a mais.</p>
     <p>Vamos aprofundar GraphQL no Módulo 07.</p>
   </div>
 </div>
 
 <div class="section">
-  <h2>🧪 Checkpoint TDD</h2>
-  <div class="checkpoint">
-    No terminal do StackBlitz, teste o hook <code>useFetch</code> criando um <span class="term" tabindex="0" data-tip="Versão &quot;falsa&quot;/simulada de algo, usada em testes para não depender de internet ou de um servidor real.">mock</span> (simulando) da função <code>fetch</code> global, sem depender da internet estar disponível durante os testes:
-  </div>
-  <pre><code>import { describe, it, expect, vi } from 'vitest';
+  <h2>🧪 Checkpoint TDD — testando o useFetch sem depender de internet</h2>
+  <p>No terminal do StackBlitz (o mesmo Vitest já configurado na Semana 18, com <code>environment: 'jsdom'</code> no <code>vite.config.ts</code>), crie o arquivo <code>src/useFetch.test.ts</code>:</p>
+  <pre><code>// @ts-nocheck
+import { test, expect, vi } from 'vitest';
 
 global.fetch = vi.fn(() =&gt;
   Promise.resolve({
@@ -463,7 +668,14 @@ global.fetch = vi.fn(() =&gt;
   })
 );
 
-// depois: renderizar o componente e verificar se "25" aparece na tela</code></pre>
+test('useFetch busca e devolve os dados simulados', async () =&gt; {
+  const resposta = await global.fetch('url-qualquer');
+  const json = await resposta.json();
+  expect(json.current.temperature_2m).toBe(25);
+});</code></pre>
+  <p>Aqui, <code>vi.fn(...)</code> cria uma <span class="term" tabindex="0" data-tip="Uma versão &quot;falsa&quot;/simulada de algo, usada em testes para não depender de internet ou de um servidor real." class="term">mock</span> — uma versão "de mentirinha" da função <code>fetch</code> global, que sempre devolve o mesmo JSON fixo (<code>temperature_2m: 25</code>), sem fazer nenhuma requisição de verdade. Isso deixa o teste rápido e confiável: ele não depende da internet estar disponível, nem do clima real da sua cidade mudar o resultado.</p>
+  <div class="tip"><strong>Próximo passo natural (opcional):</strong> em vez de testar o <code>fetch</code> isoladamente como acima, dá para importar o hook <code>useFetch</code> de verdade e renderizar um componente que o usa, junto com <code>@testing-library/react</code> — exatamente como fizemos com o <code>SensorCard</code> na Semana 18 — para confirmar que o texto "25" aparece na tela depois do mock resolver.</div>
+  <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> rode <code>npx vitest run</code> no terminal — deve aparecer <code>✓ useFetch busca e devolve os dados simulados</code> em verde, sem nenhuma requisição real de rede sendo feita (você pode até desligar o Wi-Fi para confirmar que o teste continua passando).</div>
 </div>
 
 <div class="section">
@@ -475,12 +687,18 @@ global.fetch = vi.fn(() =&gt;
     <ol>
       <li>Escolha uma API pública gratuita e sem necessidade de chave (Open-Meteo, ViaCEP, ou outra API REST livre à sua escolha);</li>
       <li>Implemente o hook <code>useFetch</code> reutilizável, conforme o passo a passo;</li>
-      <li>Exiba os dados em pelo menos 2 componentes diferentes, reaproveitando o mesmo hook;</li>
-      <li>Trate os três estados: carregando, erro (force um erro trocando a URL propositalmente) e sucesso;</li>
+      <li>Exiba os dados em pelo menos <strong>2 componentes diferentes</strong>, reaproveitando o mesmo hook (ex: um painel de clima e um painel de CEP/endereço);</li>
+      <li>Trate os três estados: carregando, erro (force um erro trocando a URL propositalmente, por exemplo com um CEP inválido ou uma latitude/longitude quebrada) e sucesso;</li>
       <li>Implemente atualização automática (polling) a cada 30–60 segundos em pelo menos um dos painéis;</li>
-      <li>Escreva ao menos 1 teste automatizado mockando o <code>fetch</code>;</li>
-      <li>Salve as alterações no mesmo repositório GitHub (StackBlitz → ícone GitHub → commit/push).</li>
+      <li>Escreva ao menos 1 teste automatizado mockando o <code>fetch</code>, como no Checkpoint TDD acima;</li>
+      <li>Salve as alterações no mesmo repositório GitHub (botão <strong>Commit</strong>, no topo do editor).</li>
     </ol>
+    <div class="bonus" style="border-left:3px solid var(--accent2); background:rgba(56,224,192,.06); padding:16px 18px; border-radius:0 8px 8px 0; margin:16px 0; font-size:.9rem; color:var(--muted2);"><strong style="color:var(--accent2);">🌟 Desafio opcional:</strong>
+      <ul style="margin:8px 0 0 18px;">
+        <li>Adicione um botão "Atualizar agora" que chama a mesma função de busca do polling, sem esperar os 60 segundos;</li>
+        <li>Mostre a hora da última atualização bem-sucedida na tela (ex: "Última atualização: 14:32:10").</li>
+      </ul>
+    </div>
     <div class="deliverable"><strong>📦 Entregável:</strong> Link do repositório atualizado + print mostrando o estado de erro funcionando corretamente.</div>
     <h4>✅ Critérios de Avaliação:</h4>
     <ul class="criteria">
@@ -508,6 +726,10 @@ global.fetch = vi.fn(() =&gt;
       <div class="r-title">🔢 MDN — Status HTTP</div>
       <div class="r-desc">Lista completa e explicada dos códigos de status HTTP.</div>
     </a>
+    <a class="res-card" href="https://developer.mozilla.org/pt-BR/docs/Web/HTTP/CORS" target="_blank">
+      <div class="r-title">🔒 MDN — CORS</div>
+      <div class="r-desc">Entenda por que algumas APIs bloqueiam chamadas direto do navegador.</div>
+    </a>
     <a class="res-card" href="https://react.dev/learn/reusing-logic-with-custom-hooks" target="_blank">
       <div class="r-title">🪝 React.dev — Custom Hooks</div>
       <div class="r-desc">Guia oficial sobre criação de hooks customizados.</div>
@@ -520,6 +742,10 @@ global.fetch = vi.fn(() =&gt;
       <div class="r-title">📮 ViaCEP</div>
       <div class="r-desc">API REST brasileira gratuita, alternativa simples para praticar.</div>
     </a>
+    <a class="res-card" href="https://vitest.dev/api/vi.html#vi-fn" target="_blank">
+      <div class="r-title">🧪 Vitest — vi.fn() / mocks</div>
+      <div class="r-desc">Documentação sobre como criar funções simuladas para testes.</div>
+    </a>
   </div>
 </div>
 
@@ -530,5 +756,62 @@ global.fetch = vi.fn(() =&gt;
   <a href="semana20.html" class="nav-button primary">Próxima Semana →</a>
 </div>
 <footer>ISW044 · PROGRAMAÇÃO MULTIPLATAFORMA · FATEC OURINHOS · CENTRO PAULA SOUZA · 2026</footer>
+
+<script>
+(function () {
+  function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    done();
+  }
+
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var wrap = document.createElement('div');
+    wrap.className = 'code-wrap';
+    pre.parentNode.insertBefore(wrap, pre);
+
+    var bar = document.createElement('div');
+    bar.className = 'code-bar';
+
+    var label = document.createElement('span');
+    label.className = 'code-lang';
+    label.textContent = 'código';
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy-btn';
+    btn.innerHTML = '📋 Copiar';
+
+    btn.addEventListener('click', function () {
+      var text = pre.innerText;
+      function done() {
+        btn.innerHTML = '✓ Copiado!';
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = '📋 Copiar';
+          btn.classList.remove('copied');
+        }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+      } else {
+        fallbackCopy(text, done);
+      }
+    });
+
+    bar.appendChild(label);
+    bar.appendChild(btn);
+    wrap.appendChild(bar);
+    wrap.appendChild(pre);
+  });
+})();
+</script>
 </body>
 </html>
