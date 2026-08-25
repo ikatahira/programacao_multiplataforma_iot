@@ -944,23 +944,47 @@ export default App;</code></pre>
   <div class="step">
     <div class="step-title"><span class="step-num">12</span> Rodando testes com Vitest (no mesmo terminal do navegador)</div>
     <p>Clique na aba <strong>Terminal</strong> na parte inferior do StackBlitz (é um terminal real, dentro do WebContainer) e digite o comando abaixo, que usa o <span class="term" tabindex="0" data-tip="Node Package Manager — o &quot;gerenciador de pacotes&quot; do Node.js, usado para instalar bibliotecas prontas digitando comandos no terminal.">npm</span> para instalar o <span class="term" tabindex="0" data-tip="Ferramenta (test runner) usada para escrever e rodar testes automatizados, integrada nativamente ao Vite.">Vitest</span> e bibliotecas auxiliares de teste:</p>
+    <div class="tip"><strong>Se o seu projeto já está conectado ao GitHub</strong> (depois do passo 11), o editor muda de visual e ganha abas <strong>PROBLEMS / OUTPUT / TERMINAL</strong> na parte inferior, em vez do terminal solto de antes. É a mesma coisa — clique na aba <strong>TERMINAL</strong> (ela já costuma estar selecionada) e digite os comandos normalmente ali dentro. Os arquivos novos (como o <code>SensorCard.test.tsx</code> do passo seguinte) são criados do mesmo jeito, só que agora no painel <strong>EXPLORER</strong> à esquerda em vez do antigo painel FILES.</div>
     <pre><code>npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom</code></pre>
     <p>A instalação pode levar 20-40 segundos (o WebContainer está baixando pacotes reais do npm). Enquanto isso não termina, aparece um cursor piscando no terminal — não digite nada até ele voltar ao prompt normal (<code>$</code>).</p>
+
+    <p>Agora abra o <code>vite.config.ts</code> (na raiz do projeto, no painel de arquivos) e substitua todo o conteúdo por este, adicionando o bloco <code>test</code>:</p>
+    <pre><code>/// &lt;reference types="vitest/config" /&gt;
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+  },
+})</code></pre>
+    <p>Por padrão, o Vitest roda os testes em um ambiente <strong>Node "puro"</strong> — sem <code>document</code>, sem <code>window</code>, sem nada de navegador, porque a maioria dos testes de backend não precisa disso. Como estamos testando um componente <strong>visual</strong>, precisamos simular um navegador: é isso que <code>environment: 'jsdom'</code> faz, usando o pacote <code>jsdom</code> que já instalamos no comando acima. Sem essa configuração, qualquer teste que renderize um componente falha com <code>ReferenceError: document is not defined</code>.</p>
+
     <p>Crie o arquivo <code>src/SensorCard.test.tsx</code> (mesmo processo do passo 7: botão direito em <code>src</code> → New file):</p>
     <pre><code>// @ts-nocheck
+import { test, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
 import SensorCard from './SensorCard';
 
 test('mostra o nome do sensor', () => {
   render(&lt;SensorCard nome="Temperatura" valor={25} unidade="°C" /&gt;);
   expect(screen.getByText('Temperatura')).toBeInTheDocument();
 });</code></pre>
+    <p>Repare nas importações que não existiam nos arquivos anteriores: <code>import { test, expect } from 'vitest'</code> traz as funções que organizam e verificam o teste, e <code>import '@testing-library/jest-dom/vitest'</code> (sem receber nada em uma variável — é só para "ligar" o recurso) habilita o matcher <code>.toBeInTheDocument()</code>, que verifica se um elemento realmente apareceu na tela. Note o sufixo <strong><code>/vitest</code></strong> no segundo import: o pacote <code>@testing-library/jest-dom</code> tem duas versões — uma genérica (pensada para o Jest, que expõe <code>expect</code> como variável global automaticamente) e uma específica para o Vitest, que não depende de globals. Usar a versão sem o sufixo dentro de um projeto Vitest causa erro, então sempre use com <code>/vitest</code> no final aqui no curso.</p>
     <p>Em palavras simples, o teste faz três coisas: <strong>renderiza</strong> o componente <code>SensorCard</code> como se ele estivesse em uma tela real, <strong>procura</strong> na tela renderizada um texto chamado "Temperatura" e depois <strong>verifica</strong> (assert) que esse texto realmente apareceu. Se alguém mudar o componente e o nome do sensor sumir da tela por engano, este teste vai falhar e avisar antes que o erro chegue ao usuário final.</p>
     <p>No terminal, rode:</p>
     <pre><code>npx vitest run</code></pre>
     <p>Vamos aprofundar TDD no Módulo 08 (Semanas 37–39), mas escrever este primeiro teste agora já cria o hábito.</p>
     <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o terminal mostra uma linha verde com "✓ mostra o nome do sensor" e, ao final, um resumo do tipo "1 passed".</div>
-    <div class="warn-box"><strong>Erro comum:</strong> <em>"test is not defined"</em> — normalmente significa que o Vitest ainda não terminou de instalar, ou que o arquivo de teste não está na pasta <code>src</code>. Confira também se o nome do arquivo termina exatamente em <code>.test.tsx</code>.</div>
+    <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
+      <ul>
+        <li><em>"ReferenceError: document is not defined"</em> → falta o bloco <code>test: { environment: 'jsdom' }</code> no <code>vite.config.ts</code> (veja acima) — sem ele, o Vitest tenta rodar o teste sem simular um navegador;</li>
+        <li><em>"ReferenceError: test is not defined"</em> → faltou a linha <code>import { test, expect } from 'vitest';</code> no topo do arquivo. Diferente do Jest, o Vitest não deixa essas funções disponíveis automaticamente sem configuração extra;</li>
+        <li><em>"ReferenceError: expect is not defined"</em>, mesmo já tendo importado <code>expect</code> do <code>vitest</code> → o import do jest-dom está sem o sufixo certo. Troque <code>import '@testing-library/jest-dom';</code> por <code>import '@testing-library/jest-dom/vitest';</code> — a versão genérica do pacote espera um <code>expect</code> global (modelo Jest) que o Vitest não fornece por padrão.</li>
+      </ul>
+    </div>
   </div>
 </div>
 
