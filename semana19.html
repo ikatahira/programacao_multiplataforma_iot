@@ -326,6 +326,64 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <p style="margin-top:8px;">Não lembra o passo a passo completo de configuração do ambiente? Ele está detalhado na <a href="semana18.html">Semana 18</a>.</p>
 </div>
 
+<div class="warn-box">
+  <strong>⚠️ Importante: os comandos podem rodar "sozinhos" ao abrir o projeto</strong>
+  <p style="margin-top:8px;">Ao reabrir o projeto pelo link do GitHub (algo como <code>stackblitz.com/~/github.com/SEU-USUARIO/dashboard-iot-isw044</code>), é <strong>normal</strong> que o terminal já apareça executando <code>npm install &amp;&amp; npm run dev</code> sozinho, e que o painel de prévia à direita já mostre o dashboard funcionando — com valores de Temperatura, Umidade, etc.</p>
+  <p>Isso <strong>não é nada que você fez de errado</strong>, nem quer dizer que a atividade da semana já está pronta. O StackBlitz roda o projeto dentro de um <span class="term" tabindex="0" data-tip="Um Node.js completo rodando dentro do próprio navegador, sem precisar instalar nada na máquina.">WebContainer</span> e, ao detectar o script <code>dev</code> no <code>package.json</code>, ele dispara essa instalação e o servidor de desenvolvimento automaticamente assim que a página termina de carregar — só para você já ver a prévia funcionando, sem precisar digitar nada.</p>
+  <ul>
+    <li>Se os comandos já rodaram sozinhos: ótimo, é só seguir direto para o passo a passo abaixo;</li>
+    <li>Se o terminal ficar vazio ou a prévia não carregar: clique na aba <strong>TERMINAL</strong> (parte de baixo do editor) e digite manualmente <code>npm install &amp;&amp; npm run dev</code>;</li>
+    <li>Os dados que já aparecem na prévia (cards como Temperatura/Umidade) vêm do código já existente no repositório desde a Semana 18 — a atividade desta semana consiste em <strong>estender</strong> esse código com o hook <code>useFetch</code>, não em reescrever tudo do zero.</li>
+  </ul>
+
+  <div class="figure" style="margin-top:18px;">
+    <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowAuto" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="var(--warn)"/>
+        </marker>
+      </defs>
+      <rect x="1" y="1" width="698" height="298" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+
+      <!-- Editor mock -->
+      <rect x="24" y="24" width="360" height="252" rx="10" fill="var(--card)" stroke="var(--border)"/>
+      <rect x="24" y="24" width="360" height="26" rx="10" fill="#0d1120" stroke="var(--border)"/>
+      <circle cx="40" cy="37" r="4" fill="var(--red)"/>
+      <circle cx="54" cy="37" r="4" fill="var(--yellow)"/>
+      <circle cx="68" cy="37" r="4" fill="var(--green)"/>
+      <text x="204" y="41" text-anchor="middle" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">vite.config.ts — StackBlitz</text>
+
+      <text x="38" y="68" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">TERMINAL</text>
+      <rect x="34" y="76" width="340" height="182" rx="6" fill="#0a0d17" stroke="var(--border)"/>
+      <text x="42" y="94" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent2)">~/dashboard-iot-isw044</text>
+      <text x="42" y="110" font-family="DM Mono, monospace" font-size="9.5" fill="#fff">&gt; npm install &amp;&amp; npm run dev</text>
+      <text x="42" y="128" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">added 119 packages in 5s</text>
+      <text x="42" y="146" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">&gt; vite-react-typescript-starter@0.0.0 dev</text>
+      <text x="42" y="160" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">&gt; vite</text>
+      <text x="42" y="182" font-family="DM Mono, monospace" font-size="9" fill="var(--green)">VITE ready in 480 ms</text>
+      <text x="42" y="198" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">➜ Local: http://localhost:5173/</text>
+      <text x="42" y="222" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)" font-style="italic">↳ ninguém digitou isso —</text>
+      <text x="42" y="235" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)" font-style="italic">  o próprio StackBlitz iniciou</text>
+
+      <!-- Arrow -->
+      <path d="M388,150 L416,150" fill="none" stroke="var(--warn)" stroke-width="1.5" marker-end="url(#arrowAuto)"/>
+      <text x="402" y="138" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="var(--warn)">automático</text>
+
+      <!-- Preview mock -->
+      <rect x="420" y="24" width="256" height="252" rx="10" fill="var(--card)" stroke="var(--border)"/>
+      <text x="548" y="46" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">PREVIEW (já rodando)</text>
+
+      <rect x="438" y="66" width="220" height="90" rx="10" fill="#131728" stroke="var(--accent)"/>
+      <text x="548" y="96" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="13" fill="#fff">Temperatura</text>
+      <text x="548" y="128" text-anchor="middle" font-family="DM Mono, monospace" font-size="16" fill="#fff" font-weight="600">14.8 °C</text>
+
+      <rect x="438" y="168" width="220" height="90" rx="10" fill="#131728" stroke="var(--accent2)"/>
+      <text x="548" y="198" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="13" fill="#fff">Umidade</text>
+      <text x="548" y="230" text-anchor="middle" font-family="DM Mono, monospace" font-size="16" fill="#fff" font-weight="600">86.5 %</text>
+    </svg>
+    <p class="figure-caption"><strong>Figura 2 —</strong> exemplo real do que pode aparecer ao reabrir o projeto: o terminal já mostra <code>npm install &amp;&amp; npm run dev</code> em execução (ninguém digitou isso) e o preview à direita já carrega com os cards funcionando — é o WebContainer do StackBlitz inicializando o projeto sozinho, não uma atividade já pronta.</p>
+  </div>
+</div>
 
 <div class="section">
   <h2>🧠 Revisão rápida: REST em uma página</h2>
@@ -383,20 +441,105 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
     <div class="step-title"><span class="step-num">1</span> Reabra seu projeto no StackBlitz</div>
     <p>Acesse <code>stackblitz.com</code>, entre com GitHub e abra o projeto <code>dashboard-iot-isw044</code> criado na Semana 18 (veja o box "Retomando de onde parou?" acima se estiver em outro computador).</p>
     <div class="tip"><strong>Botão "Commit" em vez de "Create a repository":</strong> como você já conectou este projeto ao GitHub na semana passada, o editor agora mostra um botão azul <strong>Commit</strong> no topo (em vez do antigo "Create a repository") sempre que houver alterações não salvas — é ele que você vai usar no final desta aula para enviar o progresso da semana.</div>
+
+    <div class="warn-box">
+      <strong>⚠️ Importante — a tela de "SOURCE CONTROL" tem dois botões parecidos, cuidado com qual clicar</strong>
+      <p style="margin-top:8px;">Ao clicar no ícone de <span class="term" tabindex="0" data-tip="Ícone de ramificação (branch) na barra lateral esquerda do editor, usado para acessar o histórico e enviar commits.">Source Control</span> (barra lateral esquerda), o painel pode mostrar <strong>dois convites diferentes</strong>, e é fácil clicar no errado sem querer:</p>
+      <ul>
+        <li>Um aviso no topo, <strong>"You are currently on the default branch. Create a new branch to commit your changes"</strong>, com o botão azul <strong>Create &amp; Push Branch</strong> — isso cria um <span class="term" tabindex="0" data-tip="Uma cópia paralela do código, usada para testar mudanças sem afetar a versão principal (main) direto.">branch</span> novo, separado do <code>main</code>;</li>
+        <li>Logo abaixo, a seção <strong>SOURCE CONTROL</strong> de verdade, com um campo de mensagem (<em>"Message (Ctrl+Enter to commit on 'main')"</em>) e o botão <strong>Commit &amp; Push</strong> — esse sim envia direto para o <code>main</code>, que é o branch que a sua atividade e a correção esperam.</li>
+      </ul>
+      <p><strong>Para esta disciplina, ignore o convite de criar branch novo.</strong> Use sempre o segundo caminho: escreva uma mensagem curta descrevendo o que mudou (ex: <code>"feat: hook useFetch e painel de clima"</code>) no campo de mensagem e clique em <strong>Commit &amp; Push</strong>. Antes de clicar, confira também a lista <strong>Changes</strong> logo abaixo — ela mostra exatamente quais arquivos serão enviados (ex: <code>vite.config.ts</code>), então dá para conferir se não esqueceu nenhum arquivo importante.</p>
+    </div>
+
+    <div class="figure" style="margin-top:18px;">
+      <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrowSkip" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--muted)"/>
+          </marker>
+          <marker id="arrowUse" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--green)"/>
+          </marker>
+        </defs>
+        <rect x="1" y="1" width="698" height="298" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+
+        <rect x="24" y="24" width="360" height="252" rx="10" fill="var(--card)" stroke="var(--border)"/>
+        <text x="44" y="48" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted)" letter-spacing="1">SOURCE CONTROL</text>
+
+        <!-- branch warning (avoid) -->
+        <rect x="38" y="58" width="330" height="82" rx="8" fill="#1a1520" stroke="var(--muted)" stroke-dasharray="4 3"/>
+        <text x="52" y="78" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">Você está no branch padrão.</text>
+        <text x="52" y="92" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">Crie um novo branch para</text>
+        <text x="52" y="106" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">commitar suas mudanças.</text>
+        <rect x="52" y="114" width="180" height="20" rx="5" fill="var(--muted)" opacity=".35"/>
+        <text x="142" y="128" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="9" fill="var(--bg)">Create &amp; Push Branch</text>
+
+        <text x="240" y="70" text-anchor="end" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)">evite ⤵</text>
+        <path d="M300,66 L340,58" fill="none" stroke="var(--muted)" stroke-width="1.3" marker-end="url(#arrowSkip)"/>
+
+        <!-- real commit box (use) -->
+        <rect x="38" y="150" width="330" height="112" rx="8" fill="#0a0d17" stroke="var(--green)" stroke-width="1.5"/>
+        <text x="52" y="170" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)" font-style="italic">Message (Ctrl+Enter to commit on "main")</text>
+        <rect x="52" y="178" width="200" height="22" rx="5" fill="var(--green)"/>
+        <text x="152" y="193" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="10" fill="#0c0f1a">↑ Commit &amp; Push</text>
+
+        <text x="52" y="222" font-family="DM Mono, monospace" font-size="9" fill="var(--muted2)">Changes</text>
+        <text x="330" y="222" text-anchor="end" font-family="DM Mono, monospace" font-size="9" fill="var(--accent)">1</text>
+        <text x="52" y="240" font-family="DM Mono, monospace" font-size="9" fill="var(--accent2)">vite.config.ts</text>
+        <text x="330" y="240" text-anchor="end" font-family="DM Mono, monospace" font-size="9" fill="var(--yellow)">M</text>
+
+        <text x="316" y="180" text-anchor="end" font-family="DM Mono, monospace" font-size="9" fill="var(--green)">use ⤵</text>
+        <path d="M330,186 L370,186" fill="none" stroke="var(--green)" stroke-width="1.5" marker-end="url(#arrowUse)"/>
+
+        <!-- explanation column -->
+        <rect x="404" y="150" width="272" height="112" rx="10" fill="rgba(34,211,165,.06)" stroke="var(--green)"/>
+        <text x="420" y="174" font-family="Syne, sans-serif" font-size="11" fill="var(--green)" font-weight="700">Faça isto ✓</text>
+        <text x="420" y="196" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">Escreva a mensagem e clique</text>
+        <text x="420" y="210" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">em "Commit &amp; Push" — vai</text>
+        <text x="420" y="224" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">direto para o branch main,</text>
+        <text x="420" y="238" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">que é o esperado na correção.</text>
+
+        <rect x="404" y="58" width="272" height="82" rx="10" fill="rgba(100,116,139,.08)" stroke="var(--muted)" stroke-dasharray="4 3"/>
+        <text x="420" y="82" font-family="Syne, sans-serif" font-size="11" fill="var(--muted2)" font-weight="700">Evite isto ⚠</text>
+        <text x="420" y="104" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted)">"Create &amp; Push Branch" cria</text>
+        <text x="420" y="118" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted)">um branch separado do main —</text>
+        <text x="420" y="132" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted)">desnecessário para esta aula.</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 3 —</strong> o painel de Source Control pode mostrar dois convites parecidos: ignore o "Create &amp; Push Branch" (cria um branch novo) e use sempre o campo de mensagem + <strong>Commit &amp; Push</strong> logo abaixo, que envia direto para o <code>main</code>.</p>
+    </div>
   </div>
 
   <div class="step">
     <div class="step-title"><span class="step-num">2</span> Teste a API direto em outra aba do navegador</div>
-    <p>Abra uma nova aba e cole esta URL (é uma requisição <code>GET</code> pura, dá para testar direto no navegador, sem precisar de nenhum código):</p>
-    <pre><code>https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&current=temperature_2m,relative_humidity_2m,wind_speed_10m</code></pre>
+    <p>Abra uma nova aba e cole esta URL (é uma requisição <code>GET</code> pura, dá para testar direto no navegador, sem precisar de nenhum código) — ou clique direto no link abaixo:</p>
+    <pre><code>https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&amp;current=temperature_2m,relative_humidity_2m,wind_speed_10m</code></pre>
+    <p style="margin-top:-6px;">🔗 <a href="https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&amp;current=temperature_2m,relative_humidity_2m,wind_speed_10m" target="_blank">Abrir esta URL em uma nova aba</a></p>
     <p>Você verá um JSON parecido com este (dados de Ourinhos/SP — pode trocar latitude/longitude pela sua cidade, usando o Google Maps para achar as coordenadas):</p>
     <pre><code>{
+  "latitude": -22.952549,
+  "longitude": -49.885193,
+  "generationtime_ms": 0.053882598876953125,
+  "utc_offset_seconds": 0,
+  "timezone": "GMT",
+  "timezone_abbreviation": "GMT",
+  "elevation": 449.0,
+  "current_units": {
+    "time": "iso8601",
+    "interval": "seconds",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "wind_speed_10m": "km/h"
+  },
   "current": {
-    "temperature_2m": 24.3,
-    "relative_humidity_2m": 58,
-    "wind_speed_10m": 9.4
+    "time": "2026-08-30T23:30",
+    "interval": 900,
+    "temperature_2m": 21.9,
+    "relative_humidity_2m": 97,
+    "wind_speed_10m": 8.8
   }
 }</code></pre>
+    <p>Repare que a resposta real vem com <strong>bem mais campos</strong> do que só o que você pediu: além de <code>current</code> (os valores atuais que você quer), a API também devolve <code>latitude</code>/<code>longitude</code> confirmando a localização, <code>timezone</code>, <code>elevation</code> (altitude do local) e um bloco <code>current_units</code> avisando a unidade de cada campo (<code>°C</code>, <code>%</code>, <code>km/h</code>) — é assim que muitas APIs REST fazem: devolvem o "recurso" pedido junto com metadados extras. No seu código, você vai acessar apenas o que interessa, por exemplo <code>dados.current.temperature_2m</code>.</p>
     <p>Isso é <strong>exatamente</strong> a forma como, mais adiante no curso, você vai receber dados de um sensor real. Guarde essa URL — vamos usá-la no código a seguir.</p>
     <div class="tip"><strong>Por que essa API não dá erro de CORS?</strong> Diferente de muitas APIs privadas, a Open-Meteo libera explicitamente chamadas feitas direto do navegador (cabeçalho <span class="term" tabindex="0" data-tip="Cross-Origin Resource Sharing — mecanismo de segurança do navegador que decide se um site pode ou não buscar dados de outro domínio diferente." class="term">CORS</span> configurado). Por isso funciona sem precisar de um servidor intermediário — o que nem sempre é o caso com outras APIs.</div>
   </div>
@@ -413,7 +556,7 @@ function PainelClima() {
   const [erro, setErro] = useState(null);
 
   useEffect(() => {
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&current=temperature_2m,relative_humidity_2m,wind_speed_10m';
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&amp;current=temperature_2m,relative_humidity_2m,wind_speed_10m';
 
     fetch(url)
       .then(resposta => {
@@ -529,7 +672,7 @@ export default useFetch;</code></pre>
 import useFetch from './useFetch';
 
 function PainelClima() {
-  const url = 'https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&current=temperature_2m,relative_humidity_2m,wind_speed_10m';
+  const url = 'https://api.open-meteo.com/v1/forecast?latitude=-22.97&longitude=-49.87&amp;current=temperature_2m,relative_humidity_2m,wind_speed_10m';
   const { dados, carregando, erro } = useFetch(url);
 
   if (carregando) return &lt;p&gt;Carregando...&lt;/p&gt;;
