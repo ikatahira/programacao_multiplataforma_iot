@@ -631,9 +631,10 @@ export default App;</code></pre>
       <p class="figure-caption"><strong>Figura 2 —</strong> os três estados nunca coexistem: o componente começa em "carregando", e assim que o <code>fetch</code> termina (com sucesso ou falha), o React re-renderiza mostrando <strong>ou</strong> os dados <strong>ou</strong> a mensagem de erro — nunca as duas coisas juntas.</p>
     </div>
 
-    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o Preview mostra, por alguns instantes, "Carregando dados do sensor climático..." e depois troca sozinho para algo como "🌡️ Temperatura: 24.3 °C", "💧 Umidade: 58%", "🌬️ Vento: 9.4 km/h" (os números variam conforme o clima real da sua região no momento).</div>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> o Preview mostra, por alguns instantes, "Carregando dados do sensor climático..." e depois troca sozinho para o painel completo — título "Estação Climática" e algo como "🌡️ Temperatura: 21.6 °C", "💧 Umidade: 97%", "🌬️ Vento: 11.3 km/h" (os números variam conforme o clima real da sua região no momento).</div>
     <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
       <ul>
+        <li><strong>"Erro ao buscar dados: Falha na requisição: 400"</strong> → normalmente é a URL malformada. Confira se o parâmetro está escrito <code>&current=</code> (E comercial normal) e <strong>não</strong> <code>¤t=</code> — esse símbolo de moeda aparece quando um <code>&</code> seguido de "current" é colado de uma fonte que não escapou o caractere corretamente. Reescreva a linha da URL manualmente se precisar, comparando com o exemplo do Passo 2;</li>
         <li><em>"Cannot read properties of null (reading 'temperature_2m')"</em> → o componente tentou renderizar <code>dados.temperature_2m</code> antes da requisição terminar. Confira se os <code>if (carregando) return ...</code> e <code>if (erro) return ...</code> estão <strong>antes</strong> do <code>return</code> principal, na ordem certa;</li>
         <li>Preview fica travado para sempre em "Carregando..." → normalmente é <code>if (!resposta.ok)</code> não tratado corretamente, ou a URL foi digitada com erro de sintaxe. Abra o Console do navegador (F12) e procure por mensagens em vermelho;</li>
         <li>Esqueceu o array de dependências <code>[]</code> no final do <code>useEffect</code> → o componente entra em loop, disparando uma requisição nova a cada re-renderização (sintoma: a aba do navegador trava ou o terminal mostra muitas linhas repetidas rapidamente).</li>
@@ -644,6 +645,7 @@ export default App;</code></pre>
   <div class="step">
     <div class="step-title"><span class="step-num">4</span> Criando um hook customizado — useFetch</div>
     <p>Crie <code>src/useFetch.ts</code> (esse arquivo não tem JSX, por isso a extensão é <code>.ts</code> em vez de <code>.tsx</code>):</p>
+    <div class="tip"><strong>Como criar o arquivo no StackBlitz:</strong> clique com o botão direito na pasta <strong>src</strong> no Explorer (não na raiz do projeto) → <strong>New File</strong> → digite exatamente <code>useFetch.ts</code> (atenção: extensão <code>.ts</code>, não <code>.tsx</code>) → Enter → cole o código abaixo → salve com <strong>Ctrl+S</strong>. Se o arquivo não aparecer na árvore depois, confira se ele não foi criado na pasta errada (fora de <code>src</code>) ou se esqueceu de salvar.</div>
     <pre><code>// @ts-nocheck
 import { useState, useEffect } from 'react';
 
@@ -687,6 +689,53 @@ function PainelClima() {
 }
 export default PainelClima;</code></pre>
     <div class="tip"><strong>Repare na diferença:</strong> como o <code>useFetch</code> agora devolve o JSON <strong>inteiro</strong> (não só o campo <code>current</code>, como fazíamos antes), o acesso muda de <code>dados.temperature_2m</code> para <code>dados.current.temperature_2m</code>. É um detalhe fácil de esquecer ao migrar código antigo para o hook novo.</div>
+
+    <p>Nesse ponto, a estrutura de arquivos dentro de <code>src/</code> deve ter ficado assim — um componente simples (<code>App.tsx</code>) chamando o painel, e o painel usando o hook:</p>
+    <pre><code>src/
+├── App.tsx          → importa e renderiza &lt;PainelClima /&gt;
+├── PainelClima.tsx  → usa o hook useFetch(url) e exibe os dados
+├── useFetch.ts      → a lógica reaproveitável de busca (criada agora)
+└── SensorCard.tsx   → componente da Semana 18 (pode conviver com o novo)</code></pre>
+
+    <div class="tip"><strong>Vite recarrega sozinho ao salvar (Hot Reload):</strong> depois de criar o <code>useFetch.ts</code> e salvar as alterações em <code>PainelClima.tsx</code>, você pode reparar no terminal algo como:
+      <pre style="margin-top:10px;"><code>[vite] vite.config.ts changed, restarting server...
+[vite] server restarted.</code></pre>
+      Isso é o <span class="term" tabindex="0" data-tip="Hot Module Replacement — o Vite detecta o arquivo salvo e atualiza a prévia sozinho, sem precisar recarregar a página manualmente.">Hot Reload</span> do Vite funcionando: qualquer arquivo salvo dentro de <code>src/</code> (ou o próprio <code>vite.config.ts</code>) faz o servidor de desenvolvimento reiniciar ou atualizar a prévia automaticamente. Você não precisa parar o <code>npm run dev</code> e rodar de novo — só salvar o arquivo já é suficiente, e o painel à direita atualiza os valores de Temperatura/Umidade sozinho, como no exemplo abaixo.
+    </div>
+
+    <div class="figure">
+      <svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="698" height="238" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+
+        <!-- files column -->
+        <rect x="20" y="20" width="180" height="200" rx="10" fill="var(--card)" stroke="var(--border)"/>
+        <text x="110" y="42" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)" letter-spacing="1">EXPLORER</text>
+        <text x="34" y="66" font-family="DM Mono, monospace" font-size="9.5" fill="#fff">App.tsx</text>
+        <text x="34" y="86" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent2)">PainelClima.tsx</text>
+        <text x="34" y="106" font-family="DM Mono, monospace" font-size="9.5" fill="var(--accent2)">useFetch.ts</text>
+        <text x="34" y="126" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">SensorCard.tsx</text>
+
+        <!-- terminal column -->
+        <rect x="220" y="20" width="230" height="200" rx="10" fill="#0a0d17" stroke="var(--border)"/>
+        <text x="234" y="42" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)" letter-spacing="1">TERMINAL</text>
+        <text x="234" y="70" font-family="DM Mono, monospace" font-size="9" fill="var(--green)">[vite] vite.config.ts changed,</text>
+        <text x="234" y="84" font-family="DM Mono, monospace" font-size="9" fill="var(--green)">restarting server...</text>
+        <text x="234" y="106" font-family="DM Mono, monospace" font-size="9" fill="var(--green)">[vite] server restarted.</text>
+        <text x="234" y="132" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)" font-style="italic">↳ você não digitou nada —</text>
+        <text x="234" y="146" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted)" font-style="italic">  o Vite reagiu ao salvar o arquivo</text>
+
+        <!-- preview column -->
+        <rect x="470" y="20" width="210" height="200" rx="10" fill="var(--card)" stroke="var(--border)"/>
+        <text x="575" y="42" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)" letter-spacing="1">PREVIEW</text>
+        <rect x="484" y="56" width="182" height="70" rx="9" fill="#131728" stroke="var(--accent)"/>
+        <text x="575" y="82" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">Temperatura</text>
+        <text x="575" y="108" text-anchor="middle" font-family="DM Mono, monospace" font-size="14" fill="#fff" font-weight="600">24.2 °C</text>
+        <rect x="484" y="136" width="182" height="70" rx="9" fill="#131728" stroke="var(--accent2)"/>
+        <text x="575" y="162" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff">Umidade</text>
+        <text x="575" y="188" text-anchor="middle" font-family="DM Mono, monospace" font-size="14" fill="#fff" font-weight="600">58.5 %</text>
+      </svg>
+      <p class="figure-caption"><strong>Figura 4 —</strong> depois de criar <code>useFetch.ts</code> e salvar <code>PainelClima.tsx</code>, o terminal mostra o Vite reiniciando/atualizando sozinho (Hot Reload) e a prévia já reflete os novos dados — sem precisar reiniciar <code>npm run dev</code> manualmente.</p>
+    </div>
 
     <div class="figure">
       <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
