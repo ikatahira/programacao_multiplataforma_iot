@@ -876,6 +876,44 @@ test('useFetch busca e devolve os dados simulados', async () =&gt; {
   expect(json.current.temperature_2m).toBe(25);
 });</code></pre>
   <p>Aqui, <code>vi.fn(...)</code> cria uma <span class="term" tabindex="0" data-tip="Uma versão &quot;falsa&quot;/simulada de algo, usada em testes para não depender de internet ou de um servidor real." class="term">mock</span> — uma versão "de mentirinha" da função <code>fetch</code> global, que sempre devolve o mesmo JSON fixo (<code>temperature_2m: 25</code>), sem fazer nenhuma requisição de verdade. Isso deixa o teste rápido e confiável: ele não depende da internet estar disponível, nem do clima real da sua cidade mudar o resultado.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="698" height="258" rx="14" fill="var(--bg)" stroke="var(--border)"/>
+
+      <rect x="20" y="20" width="200" height="220" rx="10" fill="var(--card)" stroke="var(--border)"/>
+      <text x="120" y="42" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)" letter-spacing="1">EXPLORER</text>
+      <text x="34" y="66" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">App.tsx</text>
+      <text x="34" y="86" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">PainelClima.tsx</text>
+      <text x="34" y="106" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">SensorCard.tsx</text>
+      <text x="34" y="126" font-family="DM Mono, monospace" font-size="9.5" fill="var(--muted2)">useFetch.ts</text>
+      <rect x="26" y="136" width="180" height="20" rx="5" fill="rgba(249,115,22,.15)" stroke="var(--iot)"/>
+      <text x="34" y="150" font-family="DM Mono, monospace" font-size="9.5" fill="var(--iot)" font-weight="600">useFetch.test.ts ★ novo</text>
+
+      <!-- editor mock -->
+      <rect x="240" y="20" width="200" height="220" rx="10" fill="#0a0d17" stroke="var(--border)"/>
+      <text x="340" y="42" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)" letter-spacing="1">useFetch.test.ts</text>
+      <text x="254" y="66" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">global.fetch = vi.fn(() =&gt;</text>
+      <text x="254" y="80" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">  Promise.resolve({'{'}</text>
+      <text x="254" y="94" font-family="DM Mono, monospace" font-size="8.5" fill="var(--accent2)">    temperature_2m: 25</text>
+      <text x="254" y="108" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">  {'}'})</text>
+      <text x="254" y="122" font-family="DM Mono, monospace" font-size="8.5" fill="var(--muted2)">);</text>
+      <text x="254" y="146" font-family="DM Mono, monospace" font-size="8.5" fill="var(--green)">test('useFetch busca...', </text>
+      <text x="254" y="160" font-family="DM Mono, monospace" font-size="8.5" fill="var(--green)">  async () =&gt; { ... });</text>
+
+      <!-- preview mock (untouched, real data) -->
+      <rect x="460" y="20" width="220" height="220" rx="10" fill="var(--card)" stroke="var(--border)"/>
+      <text x="570" y="42" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="var(--muted)" letter-spacing="1">PREVIEW (não muda)</text>
+      <text x="570" y="64" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" fill="#fff" font-weight="700">Estação Climática</text>
+      <text x="480" y="90" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">🌡️ Temperatura: 24 °C</text>
+      <text x="480" y="112" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">💧 Umidade: 75%</text>
+      <text x="480" y="134" font-family="Space Grotesk, sans-serif" font-size="9.5" fill="var(--muted2)">🌬️ Vento: 10.3 km/h</text>
+      <text x="480" y="165" font-family="DM Mono, monospace" font-size="8" fill="var(--muted)" font-style="italic">↳ continua vindo da API</text>
+      <text x="480" y="178" font-family="DM Mono, monospace" font-size="8" fill="var(--muted)" font-style="italic">  real do Open-Meteo</text>
+    </svg>
+    <p class="figure-caption"><strong>Figura 5 —</strong> o arquivo <code>useFetch.test.ts</code> aparece no Explorer junto dos demais, mas o mock de <code>fetch</code> criado nele só existe <strong>dentro do ambiente de teste</strong> (Vitest) — o Preview do app continua rodando normalmente e buscando dados reais da Open-Meteo, sem nenhuma interferência do teste.</p>
+  </div>
+
   <div class="tip"><strong>Próximo passo natural (opcional):</strong> em vez de testar o <code>fetch</code> isoladamente como acima, dá para importar o hook <code>useFetch</code> de verdade e renderizar um componente que o usa, junto com <code>@testing-library/react</code> — exatamente como fizemos com o <code>SensorCard</code> na Semana 18 — para confirmar que o texto "25" aparece na tela depois do mock resolver.</div>
   <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> rode <code>npx vitest run</code> no terminal — deve aparecer <code>✓ useFetch busca e devolve os dados simulados</code> em verde, sem nenhuma requisição real de rede sendo feita (você pode até desligar o Wi-Fi para confirmar que o teste continua passando).</div>
 </div>
