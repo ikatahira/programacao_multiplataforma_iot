@@ -833,6 +833,13 @@ export default PainelClima;</code></pre>
   <div class="step">
     <div class="step-title"><span class="step-num">6</span> Bônus — um gostinho de GraphQL</div>
     <p>A ementa também cita GraphQL. Diferença central: em REST você recebe <em>tudo</em> que o endpoint devolve; em GraphQL você <em>pede exatamente os campos</em> que quer. Para testar rapidamente, sem precisar mexer no projeto, abra o Console do navegador em qualquer aba (tecla <code>F12</code> → aba <strong>Console</strong>) e cole:</p>
+    <div class="tip"><strong>Não achou a aba Console?</strong> Ao pressionar <code>F12</code>, o DevTools às vezes abre direto na aba <strong>Elements/Elementos</strong> (a que mostra o HTML da página), não na Console — são painéis diferentes. Para ir direto ao Console:
+      <ul style="margin:8px 0 0 18px;">
+        <li>Atalho mais rápido: <code>Ctrl+Shift+J</code> (Windows/Linux) ou <code>Cmd+Option+J</code> (Mac) — abre o DevTools já na Console;</li>
+        <li>Ou clique na aba <strong>Console</strong> ao lado de "Elements/Elementos" no topo do DevTools. Se a janela estiver estreita e a aba não aparecer, clique no ícone <code>»</code> (mais ferramentas) no canto direito da barra de abas;</li>
+        <li>Ou, com o DevTools já aberto em qualquer aba, pressione <code>Esc</code> — abre um painel de Console menor na parte de baixo da tela, sem precisar trocar de aba.</li>
+      </ul>
+    </div>
     <pre><code>fetch('https://countries.trevorblades.com/', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -842,7 +849,10 @@ export default PainelClima;</code></pre>
 })
   .then(r =&gt; r.json())
   .then(json =&gt; console.log(json.data.country));</code></pre>
-    <p>Repare que a requisição é sempre um <code>POST</code>, e o "pedido" de dados vai dentro do corpo (<code>query</code>), como se fosse um texto — bem diferente da URL com parâmetros que usamos no REST. O resultado aparece no próprio Console, com só os três campos pedidos (<code>name</code>, <code>capital</code>, <code>currency</code>), nada a mais.</p>
+    <p>Ao apertar <code>Enter</code>, o Console primeiro mostra <code>Promise {'{'}&lt;pending&gt;{'}'}</code> — normal, pois o <code>fetch</code> é assíncrono. Expanda essa linha (ou espere o <code>console.log</code> seguinte aparecer) e o resultado real chega assim:</p>
+    <pre><code>{capital: 'Brasília', currency: 'BRL', name: 'Brazil'}</code></pre>
+    <p>Repare que a requisição é sempre um <code>POST</code>, e o "pedido" de dados vai dentro do corpo (<code>query</code>), como se fosse um texto — bem diferente da URL com parâmetros que usamos no REST. O resultado aparece no próprio Console, com só os três campos pedidos (<code>name</code>, <code>capital</code>, <code>currency</code>), nada a mais — nem <code>continent</code>, <code>population</code> ou qualquer outro campo que o schema de países até tem disponível, mas que você não pediu.</p>
+    <div class="tip"><strong>Mensagens em vermelho no Console (ERR_BLOCKED_BY_RESPONSE, google.com/ccm/...):</strong> se aparecerem várias linhas vermelhas mencionando domínios do Google antes do resultado, pode ignorar — são bloqueios de rastreadores/anúncios de outras abas ou extensões do navegador, sem relação com o código do GraphQL. O que importa é a linha final com o objeto <code>{'{'}capital, currency, name{'}'}</code>.</div>
     <p>Vamos aprofundar GraphQL no Módulo 07.</p>
   </div>
 </div>
