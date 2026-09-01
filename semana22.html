@@ -113,6 +113,27 @@ pre {
 code { font-family:'DM Mono', monospace; background:rgba(79,140,255,.12); color:var(--accent); padding:2px 6px; border-radius:4px; font-size:.85em; }
 pre code { background:none; color:inherit; padding:0; }
 
+/* CODE BLOCK WRAPPER + COPY BUTTON */
+.code-wrap { margin:14px 0; border-radius:10px; overflow:hidden; border:1px solid var(--border); }
+.code-wrap pre { margin:0; border:none; border-radius:0; }
+.code-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  background:#0d1120; padding:7px 14px; border-bottom:1px solid var(--border);
+}
+.code-lang { font-family:'DM Mono', monospace; font-size:.66rem; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.copy-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  background:transparent; border:1px solid var(--border); color:var(--muted2);
+  font-family:'DM Mono', monospace; font-size:.7rem; padding:4px 11px; border-radius:6px;
+  cursor:pointer; transition:.15s;
+}
+.copy-btn:hover { border-color:var(--accent2); color:var(--accent2); }
+.copy-btn.copied { border-color:var(--green); color:var(--green); }
+@media (max-width:640px) {
+  .code-bar { padding:6px 10px; }
+  .copy-btn { font-size:.65rem; padding:3px 8px; }
+}
+
 .tip {
   border-left:3px solid var(--yellow); background:rgba(251,191,36,.06);
   padding:14px 18px; border-radius:0 8px 8px 0; margin:14px 0; font-size:.9rem; color:var(--muted2);
@@ -289,6 +310,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
   <h2>🧠 Por que offline-first em um dashboard IoT?</h2>
   <p>Redes falham — Wi-Fi cai, o sinal oscila, o servidor reinicia. Um dashboard de sensores que simplesmente trava numa tela branca quando a conexão cai é uma péssima experiência.</p>
   <p>Uma <strong>PWA</strong> é uma aplicação web que se comporta como um app nativo: pode ser <strong>instalada</strong> e mantém em cache a última versão da interface e dos últimos dados recebidos. Isso fecha o Módulo 04 conectando de volta com a exigência de "aplicações web responsivas" da ementa — responsivo também é sobre resiliência de rede.</p>
+  <p>Vale reforçar uma diferença antes de começar: <strong>cache de arquivos</strong> (o que o Service Worker faz) e <strong>cache do último dado</strong> (o que faremos manualmente com <code>localStorage</code>) resolvem problemas diferentes — a aula de hoje trata dos dois, e isso vale tanto para o dado simulado quanto para o dado real do DS18B20, se você fez o bônus das Semanas 20–21.</p>
 </div>
 
 <div class="section">
@@ -380,6 +402,26 @@ const [ultimaSalva] = useState(() =&gt; {
   return salvo ? JSON.parse(salvo) : null;
 });</code></pre>
     <p>Assim, mesmo sem internet, o dashboard abre mostrando a <strong>última leitura conhecida</strong> em vez de uma tela vazia.</p>
+
+    <p><strong>Se você fez o bônus de sensor real (DS18B20, Semanas 20–21):</strong> essa mesma técnica funciona para o <code>useSerialSensor.js</code> — só que aqui é ainda mais importante, porque a <span class="term" tabindex="0" data-tip="API do navegador que permite ler/escrever diretamente numa porta serial (USB), sem precisar de servidor.">Web Serial API</span> nunca vai funcionar offline (ela depende do Arduino estar fisicamente plugado e a aba aberta), então persistir a <strong>última</strong> leitura real é a única forma de mostrar algo quando a conexão com o hardware não está disponível:</p>
+    <pre><code>// dentro do useSerialSensor.js, no ponto onde a leitura chega:
+try {
+  const dado = JSON.parse(linha); // ex: { temperatura: 24.31 }
+  if (typeof dado.temperatura === 'number') {
+    const leitura = { temperatura: dado.temperatura, timestamp: new Date().toISOString() };
+    localStorage.setItem('ultimaLeituraReal', JSON.stringify(leitura));
+    setLeitura(leitura);
+  }
+} catch {
+  // linha ainda incompleta ou corrompida — ignora e espera a próxima
+}
+
+// ao iniciar o hook, antes de qualquer conexão:
+const [ultimaSalvaReal] = useState(() =&gt; {
+  const salvo = localStorage.getItem('ultimaLeituraReal');
+  return salvo ? JSON.parse(salvo) : null;
+});</code></pre>
+    <div class="tip"><strong>Importante entender a diferença:</strong> o Service Worker (próximo passo) faz cache de <strong>arquivos</strong> (HTML, JS, CSS, ícones) — ele não guarda dados de WebSocket nem de Web Serial, porque essas são conexões ao vivo, não requisições HTTP que passam pelo <code>fetch</code>. Quem guarda o <strong>último valor</strong> dessas conexões é sempre o <code>localStorage</code>, feito manualmente como acima — são duas camadas de cache complementares, não uma substituindo a outra.</div>
   </div>
 
   <div class="step">
@@ -406,6 +448,7 @@ function useOnlineStatus() {
 
 export default useOnlineStatus;</code></pre>
     <p>Use no Dashboard: <code>{!online &amp;&amp; &lt;div&gt;⚠️ Você está offline — exibindo últimos dados salvos&lt;/div&gt;}</code>.</p>
+    <p>Se você persistiu também a leitura real do DS18B20 no passo anterior, aproveite o mesmo aviso para mostrá-la: <code>{!online &amp;&amp; ultimaSalvaReal &amp;&amp; &lt;p&gt;Última temperatura real conhecida: {ultimaSalvaReal.temperatura} °C&lt;/p&gt;}</code> — o usuário sabe exatamente que aquele número não é ao vivo, mas também não fica olhando pra uma tela vazia.</p>
   </div>
 
   <div class="step">
@@ -453,6 +496,7 @@ npm run preview</code></pre>
       <li>Gere o build de produção e comprove, com print do DevTools, que o Service Worker está ativo e que o app carrega em modo offline;</li>
       <li>Instale o app no navegador e tire um print da janela instalada;</li>
       <li>Escreva pelo menos 1 teste relacionado ao comportamento offline;</li>
+      <li><strong>Bônus (pontuação extra):</strong> se você tem o sensor DS18B20 real (bônus das Semanas 20–21), persista também a última leitura real em <code>localStorage</code> e mostre-a no aviso offline — comprovando que até o dado do hardware físico sobrevive a uma queda de rede;</li>
       <li>Atualize o README do repositório consolidando <strong>todo o Módulo 04</strong>: arquitetura, tecnologias usadas (React, REST, WebSocket, Chart.js, PWA) e instruções completas de execução;</li>
       <li>Salve no GitHub — este repositório fecha o Módulo 04 e será a base para o Módulo 05 (Mobile, Semanas 23–27).</li>
     </ol>
@@ -464,6 +508,7 @@ npm run preview</code></pre>
       <li>Indicador de status online/offline implementado</li>
       <li>App instalável comprovado com print</li>
       <li>README final consolidando todo o módulo de forma clara</li>
+      <li><em>(Bônus)</em> Última leitura real do DS18B20 também persistida e exibida offline</li>
     </ul>
   </div>
 </div>
@@ -502,5 +547,62 @@ npm run preview</code></pre>
   <a href="semana23.html" class="nav-button primary">Próxima Semana →</a>
 </div>
 <footer>ISW044 · PROGRAMAÇÃO MULTIPLATAFORMA · FATEC OURINHOS · CENTRO PAULA SOUZA · 2026</footer>
+
+<script>
+(function () {
+  function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    done();
+  }
+
+  document.querySelectorAll('pre').forEach(function (pre) {
+    var wrap = document.createElement('div');
+    wrap.className = 'code-wrap';
+    pre.parentNode.insertBefore(wrap, pre);
+
+    var bar = document.createElement('div');
+    bar.className = 'code-bar';
+
+    var label = document.createElement('span');
+    label.className = 'code-lang';
+    label.textContent = 'código';
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy-btn';
+    btn.innerHTML = '📋 Copiar';
+
+    btn.addEventListener('click', function () {
+      var text = pre.innerText;
+      function done() {
+        btn.innerHTML = '✓ Copiado!';
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.innerHTML = '📋 Copiar';
+          btn.classList.remove('copied');
+        }, 1600);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text, done); });
+      } else {
+        fallbackCopy(text, done);
+      }
+    });
+
+    bar.appendChild(label);
+    bar.appendChild(btn);
+    wrap.appendChild(bar);
+    wrap.appendChild(pre);
+  });
+})();
+</script>
 </body>
 </html>
