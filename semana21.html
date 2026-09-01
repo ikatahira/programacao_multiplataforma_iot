@@ -255,7 +255,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
 
 <details class="glossario">
-  <summary>📖 Glossário desta semana — clique para expandir (11 termos)</summary>
+  <summary>📖 Glossário desta semana — clique para expandir (12 termos)</summary>
   <div class="glossario-grid">
     <div class="gloss-item"><div class="g-term">arquitetura (de software)</div><div class="g-def">O "desenho" geral de como as partes de um sistema se conectam e se comunicam — ex: sensor → servidor → WebSocket → dashboard.</div></div>
 <div class="gloss-item"><div class="g-term">Chart.js</div><div class="g-def">Uma biblioteca JavaScript popular para desenhar gráficos (linhas, barras, pizza) em páginas web.</div></div>
@@ -268,6 +268,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 <div class="gloss-item"><div class="g-term">mineração de dados em tempo real</div><div class="g-def">Extrair informações úteis (médias, tendências, alertas) de um fluxo contínuo de dados, à medida que eles chegam — em vez de só armazená-los sem análise.</div></div>
 <div class="gloss-item"><div class="g-term">useMemo</div><div class="g-def">Hook do React que guarda em cache (memoriza) o resultado de um cálculo, refazendo-o só quando algo do qual ele depende realmente muda.</div></div>
 <div class="gloss-item"><div class="g-term">escalabilidade horizontal</div><div class="g-def">Aumentar a capacidade de um sistema adicionando mais instâncias/máquinas rodando em paralelo, em vez de deixar uma única máquina mais potente.</div></div>
+<div class="gloss-item"><div class="g-term">Web Serial API</div><div class="g-def">API do navegador que permite ler/escrever diretamente numa porta serial (USB), como a de um Arduino, sem precisar de um servidor no meio.</div></div>
   </div>
   <p class="gloss-tip">💡 No computador, passe o mouse sobre os termos destacados em <span class="term" tabindex="0" data-tip="Assim! Esta é uma nota explicativa.">verde-água tracejado</span> ao longo do texto para ver a explicação rápida sem precisar rolar até aqui.</p>
 </details>
@@ -531,6 +532,112 @@ export default Dashboard;</code></pre>
     <p>Se você já fez o bônus da Semana 20 com o Arduino Uno + fototransistor ("Magnificent Hango"), reaproveite o <code>useSerialSensor</code> aqui: adicione um <code>GraficoSensor</code> alimentado pelo histórico das leituras reais (basta acumular cada <code>leitura</code> recebida num array de estado, do mesmo jeito que fizemos com o WebSocket). Assim seu dashboard final mostra, lado a lado, um gráfico com dados simulados e outro com dados 100% reais vindos de um sensor físico.</p>
     <p>Se sua turma tiver placas <strong>ESP32</strong> disponíveis (materiais de apoio "ESP32 — Missão IoT" no índice do curso) conectadas à mesma rede Wi-Fi, o caminho é diferente do Arduino via USB: o ESP32 enviaria leituras via <code>HTTP POST</code> para uma rota adicionada ao <code>servidor.js</code>, que retransmite via WebSocket para os clientes — isso será formalizado com um broker de verdade (MQTT) no <strong>Módulo 06</strong>.</p>
   </div>
+
+  <div class="step">
+    <div class="step-title"><span class="step-num">9</span> (Opcional) Acoplando o circuito de botões + LEDs + DS18B20</div>
+    <p>Se você montou o circuito extra com <strong>4 botões, 2 LEDs e um sensor de temperatura DS18B20</strong>, dá para acoplar a temperatura real dele nesta mesma tela, do mesmo jeito que o item anterior faz com o fototransistor: reaproveitando a <span class="term" tabindex="0" data-tip="API do navegador que permite ler/escrever diretamente numa porta serial (USB), sem precisar de servidor.">Web Serial API</span> e o mesmo componente <code>GraficoSensor</code> — só muda de onde o dado vem.</p>
+
+    <p><strong>Passo 1 — Fazer o Arduino falar JSON.</strong> O sketch original desse circuito imprime linhas de texto soltas no Monitor Serial, ótimas para depurar mas difíceis de interpretar no navegador. Troque o bloco de <code>Serial.print</code> do final do <code>loop()</code> por uma única linha em JSON:</p>
+    <pre><code>// Substitui os Serial.print de depuração por uma linha JSON,
+// que o navegador consegue interpretar com JSON.parse()
+Serial.print(F("{\"temperatura\":"));
+Serial.print(temperaturaC);
+Serial.print(F(",\"botao1\":")); Serial.print(botao1Pressionado);
+Serial.print(F(",\"botao2\":")); Serial.print(botao2Pressionado);
+Serial.print(F(",\"botao3\":")); Serial.print(botao3Pressionado);
+Serial.print(F(",\"botao4\":")); Serial.print(botao4Pressionado);
+Serial.println(F("}"));</code></pre>
+    <div class="tip"><strong>Dica:</strong> mantenha esse <code>Serial.println</code> dentro do bloco que já roda a cada <code>INTERVALO_LEITURA</code> (1 leitura por segundo) — mandar uma linha por segundo é mais que suficiente para o gráfico e evita encher o buffer serial.</div>
+
+    <p><strong>Passo 2 — Criar um hook no mesmo formato do <code>useSensorStream</code>.</strong> Crie <code>src/useSerialSensor.js</code> retornando exatamente as mesmas chaves (<code>historico</code>, <code>conectado</code>, <code>ultimo</code>, <code>estatisticas</code>) — assim o <code>GraficoSensor</code> não precisa saber se o dado é simulado ou real:</p>
+    <pre><code>import { useState, useRef, useCallback, useMemo } from 'react';
+
+function useSerialSensor(limite = 20) {
+  const [historico, setHistorico] = useState([]);
+  const [conectado, setConectado] = useState(false);
+  const portaRef = useRef(null);
+
+  const conectar = useCallback(async () =&gt; {
+    try {
+      const porta = await navigator.serial.requestPort();
+      await porta.open({ baudRate: 9600 });
+      portaRef.current = porta;
+      setConectado(true);
+
+      const decoder = new TextDecoderStream();
+      porta.readable.pipeTo(decoder.writable);
+      const leitor = decoder.readable.getReader();
+
+      let buffer = '';
+      while (true) {
+        const { value, done } = await leitor.read();
+        if (done) break;
+        buffer += value;
+        let fimDaLinha;
+        while ((fimDaLinha = buffer.indexOf('\n')) &gt;= 0) {
+          const linha = buffer.slice(0, fimDaLinha).trim();
+          buffer = buffer.slice(fimDaLinha + 1);
+          if (!linha) continue;
+          try {
+            const leitura = { timestamp: new Date().toISOString(), ...JSON.parse(linha) };
+            setHistorico(anterior =&gt; [...anterior.slice(-(limite - 1)), leitura]);
+          } catch {
+            // linha ainda incompleta ou corrompida — ignora e espera a próxima
+          }
+        }
+      }
+    } catch (erro) {
+      console.error('Erro ao conectar na porta serial:', erro);
+      setConectado(false);
+    }
+  }, [limite]);
+
+  const estatisticas = useMemo(() =&gt; {
+    function calcular(campo) {
+      const valores = historico.map(h =&gt; h[campo]).filter(v =&gt; typeof v === 'number');
+      if (valores.length === 0) return null;
+      const soma = valores.reduce((acc, v) =&gt; acc + v, 0);
+      return { media: +(soma / valores.length).toFixed(1), minimo: Math.min(...valores), maximo: Math.max(...valores) };
+    }
+    return { temperatura: calcular('temperatura') };
+  }, [historico]);
+
+  return { historico, conectado, conectar, ultimo: historico[historico.length - 1], estatisticas };
+}
+
+export default useSerialSensor;</code></pre>
+
+    <p><strong>Passo 3 — Encaixar no Dashboard.</strong> Adicione mais um <code>GraficoSensor</code> alimentado por esse hook, ao lado dos três já existentes:</p>
+    <pre><code>import useSerialSensor from './useSerialSensor';
+
+function Dashboard() {
+  const { historico, conectado, ultimo, estatisticas } = useSensorStream(20);
+  const real = useSerialSensor(20);
+
+  return (
+    &lt;div style={{ padding: 24 }}&gt;
+      {/* ... cabeçalho e grid dos 3 sensores simulados, igual antes ... */}
+
+      &lt;div style={{ marginTop: 24 }}&gt;
+        {!real.conectado &amp;&amp; (
+          &lt;button onClick={real.conectar}&gt;🔌 Conectar circuito (botões + DS18B20)&lt;/button&gt;
+        )}
+        {real.conectado &amp;&amp; (
+          &lt;GraficoSensor
+            titulo="Temperatura Real (DS18B20)"
+            historico={real.historico}
+            campo="temperatura"
+            cor="#38e0c0"
+            estatisticas={real.estatisticas.temperatura}
+          /&gt;
+        )}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+    <p>Repare que <code>GraficoSensor</code> não foi alterado em nenhuma linha — só passou a receber <code>real.historico</code> em vez de <code>historico</code>. É a mesma separação "de onde o dado vem" × "como é exibido" discutida lá em cima, só que agora com hardware que você mesmo montou.</p>
+    <div class="warn-box"><strong>Atenção:</strong> a Web Serial API só funciona em navegadores baseados em Chromium (Chrome, Edge) e exige HTTPS ou <code>localhost</code> — dentro do StackBlitz normalmente funciona, mas se der erro de permissão, teste rodando o projeto localmente.</div>
+  </div>
 </div>
 
 <div class="section">
@@ -554,7 +661,7 @@ export default Dashboard;</code></pre>
       <li>Adicione um cabeçalho com status de conexão e horário da última atualização;</li>
       <li>Escreva testes para pelo menos 2 componentes (incluindo o caso de histórico vazio);</li>
       <li>Escreva no README a arquitetura do projeto (pode reaproveitar o diagrama desta aula) e print(s) do dashboard em desktop e mobile;</li>
-      <li><strong>Bônus (pontuação extra):</strong> se você fez o bônus da Semana 20, adicione o seletor "Simulado / Sensor Real" mostrando o gráfico com dados do Arduino via Web Serial API;</li>
+      <li><strong>Bônus (pontuação extra):</strong> se você fez o bônus da Semana 20 (fototransistor) e/ou montou o circuito extra de botões + LEDs + DS18B20 desta semana, adicione um botão "Conectar sensor real" mostrando o gráfico correspondente com dados vindos do Arduino via Web Serial API;</li>
       <li>Salve no GitHub.</li>
     </ol>
     <div class="deliverable"><strong>📦 Entregável:</strong> Repositório GitHub completo + prints (desktop e mobile) + README com arquitetura explicada.</div>
