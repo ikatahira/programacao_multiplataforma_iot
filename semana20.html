@@ -299,7 +299,7 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 
 
 <details class="glossario">
-  <summary>📖 Glossário desta semana — clique para expandir (19 termos)</summary>
+  <summary>📖 Glossário desta semana — clique para expandir (20 termos)</summary>
   <div class="glossario-grid">
     <div class="gloss-item"><div class="g-term">WebSocket</div><div class="g-def">Um protocolo que abre uma conexão persistente e bidirecional entre cliente e servidor, permitindo que o servidor envie dados a qualquer momento, sem o cliente precisar pedir.</div></div>
 <div class="gloss-item"><div class="g-term">handshake</div><div class="g-def">O "aperto de mão" inicial entre cliente e servidor para abrir a conexão WebSocket, feito uma única vez no começo.</div></div>
@@ -315,7 +315,8 @@ footer { text-align:center; padding:28px; font-family:'DM Mono', monospace; font
 <div class="gloss-item"><div class="g-term">porta (port)</div><div class="g-def">Um "número de canal" que identifica um serviço específico rodando em um computador/servidor — ex: a porta 8080 do nosso servidor WebSocket.</div></div>
 <div class="gloss-item"><div class="g-term">Web Serial API</div><div class="g-def">Um recurso nativo do Chrome/Edge que permite que uma página web converse diretamente com um dispositivo USB (como um Arduino), sem instalar drivers nem programas.</div></div>
 <div class="gloss-item"><div class="g-term">baud rate</div><div class="g-def">A velocidade de comunicação serial, medida em bits por segundo — o Arduino e o computador precisam usar o mesmo valor (ex: 115200) para se entenderem.</div></div>
-<div class="gloss-item"><div class="g-term">fototransistor</div><div class="g-def">Um componente eletrônico que muda sua resistência elétrica de acordo com a quantidade de luz que recebe — é o "sensor de luz" físico usado no circuito desta aula.</div></div>
+<div class="gloss-item"><div class="g-term">DS18B20</div><div class="g-def">Sensor de temperatura digital que se comunica por um único fio de dados (protocolo OneWire) e já entrega a leitura pronta em graus Celsius, sem precisar calibrar nada.</div></div>
+<div class="gloss-item"><div class="g-term">OneWire / pull-up</div><div class="g-def">OneWire é o protocolo de comunicação de 1 fio usado pelo DS18B20; ele exige um resistor "pull-up" (geralmente 4,7 kΩ) entre o fio de dados e o 5V para o sinal ficar estável quando ninguém está transmitindo.</div></div>
 <div class="gloss-item"><div class="g-term">escalabilidade horizontal</div><div class="g-def">Aumentar a capacidade de um sistema adicionando mais instâncias/máquinas rodando em paralelo, em vez de deixar uma única máquina mais potente.</div></div>
 <div class="gloss-item"><div class="g-term">stateless</div><div class="g-def">Um serviço que não guarda estado/memória entre requisições — cada requisição é independente, o que facilita rodar várias cópias em paralelo.</div></div>
 <div class="gloss-item"><div class="g-term">load balancer</div><div class="g-def">Componente que distribui as requisições/conexões recebidas entre várias instâncias de um mesmo serviço, para nenhuma delas sobrecarregar.</div></div>
@@ -652,51 +653,53 @@ return { ultimaLeitura, historico, conectado };</code></pre>
 
 <div class="section">
   <h2>🔌 Bônus: Conectando um Sensor Real via Web Serial API</h2>
-  <p>Até aqui, o "sensor" era simulado com <code>Math.random()</code>. Se o seu laboratório já tem um <strong>Arduino Uno com um sensor de luz montado</strong>, dá para trocar o dado simulado por um dado <strong>100% real</strong> — e, o melhor, sem instalar absolutamente nada, usando a <span class="term" tabindex="0" data-tip="Recurso nativo do Chrome/Edge que permite que uma página web converse diretamente com um dispositivo USB, sem instalar drivers nem programas.">Web Serial API</span>: um recurso do próprio navegador que lê a porta USB do Arduino diretamente da aba do Chrome/Edge.</p>
+  <p>Até aqui, o "sensor" era simulado com <code>Math.random()</code>. Se você tem um <strong>Arduino Uno com um sensor de temperatura DS18B20 montado</strong>, dá para trocar o dado simulado por um dado <strong>100% real</strong> — e, o melhor, sem instalar absolutamente nada, usando a <span class="term" tabindex="0" data-tip="Recurso nativo do Chrome/Edge que permite que uma página web converse diretamente com um dispositivo USB, sem instalar drivers nem programas.">Web Serial API</span>: um recurso do próprio navegador que lê a porta USB do Arduino diretamente da aba do Chrome/Edge.</p>
 
   <div class="box" style="border-left:3px solid var(--iot);">
-    <strong style="color:#fff;">📦 Projeto de referência: "Magnificent Hango" — Sensor de Luz Ambiente</strong>
-    <p style="margin-top:8px;">Este é um circuito real de exemplo, com Arduino Uno, um <span class="term" tabindex="0" data-tip="Componente que muda sua resistência elétrica de acordo com a quantidade de luz recebida — é o sensor de luz físico deste circuito.">fototransistor</span> (sensor de luz) e um LED indicador. Existem duas montagens possíveis, que invertem a lógica do sinal:</p>
-    <img src="assets/circuito-sensor-luz.png" alt="Dois circuitos no Tinkercad: acima, circuito HIGH ao detectar luz; abaixo, circuito HIGH ao não detectar luz" style="width:100%; border-radius:10px; margin:14px 0; border:1px solid var(--border);">
+    <strong style="color:#fff;">📦 Projeto de referência: Sensor de Temperatura DS18B20</strong>
+    <p style="margin-top:8px;">Circuito real com Arduino Uno e um sensor de temperatura digital <span class="term" tabindex="0" data-tip="Sensor de temperatura digital que se comunica por um único fio de dados (protocolo OneWire) e já entrega a leitura pronta em graus Celsius.">DS18B20</span>, que conversa com o Arduino por um único fio de dados (protocolo <span class="term" tabindex="0" data-tip="Protocolo de comunicação de 1 fio; exige um resistor pull-up entre o fio de dados e o 5V.">OneWire</span>):</p>
     <ul>
-      <li><strong>Circuito 1 — HIGH ao detectar luz:</strong> o pino do sensor vai para nível alto quando há luz incidindo no fototransistor;</li>
-      <li><strong>Circuito 2 — HIGH ao não detectar luz:</strong> a mesma lógica, só que com o fototransistor e o resistor de 10 kΩ trocados de posição no divisor de tensão, invertendo o sinal.</li>
+      <li><strong>VCC</strong> do sensor → <strong>5V</strong> do Arduino;</li>
+      <li><strong>GND</strong> do sensor → <strong>GND</strong> do Arduino;</li>
+      <li><strong>Dados</strong> do sensor → um pino digital (ex: <strong>D11</strong>), com um <strong>resistor pull-up de ~4,7 kΩ</strong> entre esse mesmo fio de dados e o 5V — sem esse resistor a leitura fica instável ou trava em <code>-127°C</code>.</li>
     </ul>
-    <p>Lista de materiais (BOM) do projeto: 2× Arduino Uno R3, 2× LED branco, 2× LED azul, resistores de 180 Ω, 300 Ω e 10 kΩ, e 2× fototransistores. <a href="assets/bom-sensor-luz.csv" target="_blank">📄 baixar bom-sensor-luz.csv</a> · <a href="assets/Magnificent_Hango_esquematico.pdf" target="_blank">📐 baixar esquemático em PDF</a>.</p>
+    <p>Lista de materiais: 1× Arduino Uno R3, 1× sensor DS18B20, 1× resistor de 4,7 kΩ, jumpers e protoboard. Se sua turma já montou esse circuito com botões e LEDs extras (Semana 21, seção de acoplamento), o mesmo Arduino serve aqui — o firmware abaixo usa só a parte do DS18B20.</p>
   </div>
 
   <div class="step">
-    <div class="step-title"><span class="step-num">1</span> Entenda o firmware já gravado no Arduino</div>
-    <p>O sketch abaixo já está preparado para os dois circuitos (a diferença é só um parâmetro). Ele lê o pino digital do sensor a cada 50 ms e imprime o estado pela porta Serial:</p>
-    <pre><code>#define IR_SENSOR 2
-#define LED       3
+    <div class="step-title"><span class="step-num">1</span> Grave (ou confira) o firmware do DS18B20</div>
+    <p>O sketch abaixo lê o DS18B20 a cada 1 segundo e imprime a temperatura em uma linha de <strong>JSON</strong> pela porta Serial — formato fácil de interpretar no navegador com <code>JSON.parse</code>:</p>
+    <pre><code>#include &lt;OneWire.h&gt;
+#include &lt;DallasTemperature.h&gt;
+
+#define PINO_DS18B20 11
+
+OneWire oneWire(PINO_DS18B20);
+DallasTemperature sensores(&amp;oneWire);
 
 void setup() {
-  pinMode(IR_SENSOR, INPUT);
-  pinMode(LED, OUTPUT);
-  Serial.begin(115200);
-}
-
-void print_stateled(const bool beam, const bool inverted) {
-  Serial.print("State[");
-  Serial.print(beam ? "High" : "Low");
-  Serial.print("]");
-  if (inverted) {
-    Serial.println(beam ? "Feixe detectado" : "Feixe interrompido");
-  } else {
-    Serial.println(beam ? "Feixe interrompido" : "Feixe detectado");
-  }
+  Serial.begin(9600);
+  sensores.begin();
 }
 
 void loop() {
-  const bool beamDetected = digitalRead(IR_SENSOR);
-  digitalWrite(LED, beamDetected);
-  print_stateled(beamDetected, 1); // troque para 0 no circuito 2
-  delay(50);
+  sensores.requestTemperatures();
+  float temperaturaC = sensores.getTempCByIndex(0);
+
+  if (temperaturaC == DEVICE_DISCONNECTED_C) {
+    Serial.println(F("{\"erro\":\"DS18B20 nao encontrado\"}"));
+  } else {
+    Serial.print(F("{\"temperatura\":"));
+    Serial.print(temperaturaC);
+    Serial.println(F("}"));
+  }
+
+  delay(1000);
 }</code></pre>
-    <p>Cada linha impressa na Serial fica assim: <code>State[High]Feixe detectado</code> — exatamente o texto que vamos capturar e transformar em dado utilizável no dashboard.</p>
+    <p>Cada linha impressa na Serial fica assim: <code>{"temperatura":24.31}</code> — exatamente o formato que vamos ler e transformar em dado utilizável no dashboard.</p>
+    <div class="tip"><strong>Bibliotecas necessárias:</strong> instale <code>OneWire</code> (Paul Stoffregen) e <code>DallasTemperature</code> (Miles Burton) pelo Gerenciador de Bibliotecas do Arduino IDE antes de gravar o sketch.</div>
     <div class="tip"><strong>Quem grava o programa no Arduino?</strong> Gravar (fazer upload) um sketch exige o Arduino IDE ou o Arduino Web Editor, o que normalmente é preparado com antecedência pelo professor/técnico do laboratório — já que instalar softwares pode exigir permissões que vocês não têm. A parte que <strong>não exige nenhuma instalação</strong>, e que faremos agora, é <em>ler</em> os dados de um Arduino que já está com o programa gravado, usando apenas o navegador.</div>
-    <p>📥 Arquivos completos: <a href="assets/magnificent_hango1.ino" target="_blank">magnificent_hango1.ino</a> (circuito 1) e <a href="assets/magnificent_hango2.ino" target="_blank">magnificent_hango2.ino</a> (circuito 2).</p>
+    <p>📥 Arquivo completo: <a href="assets/sensor_temperatura_ds18b20.ino" target="_blank">sensor_temperatura_ds18b20.ino</a>.</p>
   </div>
 
   <div class="step">
@@ -715,7 +718,7 @@ void loop() {
     <pre><code>// @ts-nocheck
 import { useState, useRef, useCallback } from 'react';
 
-function useSerialSensor(baudRate = 115200) {
+function useSerialSensor(baudRate = 9600) {
   const [leitura, setLeitura] = useState(null);
   const [conectado, setConectado] = useState(false);
   const suportado = 'serial' in navigator;
@@ -743,14 +746,18 @@ function useSerialSensor(baudRate = 115200) {
       while ((indice = buffer.indexOf('\n')) >= 0) {
         const linha = buffer.slice(0, indice).trim();
         buffer = buffer.slice(indice + 1);
+        if (!linha) continue;
 
-        const match = linha.match(/State\[(High|Low)\](.+)/);
-        if (match) {
-          setLeitura({
-            estadoPino: match[1],       // "High" ou "Low"
-            mensagem: match[2].trim(),  // "Feixe detectado" ou "Feixe interrompido"
-            timestamp: new Date().toISOString(),
-          });
+        try {
+          const dado = JSON.parse(linha); // ex: { temperatura: 24.31 }
+          if (typeof dado.temperatura === 'number') {
+            setLeitura({
+              temperatura: dado.temperatura,
+              timestamp: new Date().toISOString(),
+            });
+          }
+        } catch {
+          // linha ainda incompleta ou corrompida — ignora e espera a próxima
         }
       }
     }
@@ -783,8 +790,8 @@ function SensorReal() {
       )}
       {conectado &amp;&amp; leitura &amp;&amp; (
         &lt;&gt;
-          &lt;h2&gt;{leitura.mensagem}&lt;/h2&gt;
-          &lt;small&gt;Pino: {leitura.estadoPino} · {new Date(leitura.timestamp).toLocaleTimeString()}&lt;/small&gt;
+          &lt;h2&gt;🌡️ {leitura.temperatura} °C&lt;/h2&gt;
+          &lt;small&gt;Atualizado às {new Date(leitura.timestamp).toLocaleTimeString()}&lt;/small&gt;
         &lt;/&gt;
       )}
     &lt;/div&gt;
@@ -792,13 +799,14 @@ function SensorReal() {
 }
 
 export default SensorReal;</code></pre>
-    <p>Clique em <strong>"Conectar Arduino"</strong>, escolha a porta na janela que o navegador abrir (algo como "USB Serial Device (COMx)") e cubra/descubra o sensor com a mão: a mensagem deve alternar entre "Feixe detectado" e "Feixe interrompido" em tempo real.</p>
-    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> ao clicar em "Conectar Arduino", o navegador abre uma janela nativa listando as portas USB disponíveis. Depois de escolher a porta certa e clicar em "Connect", o botão desaparece e é substituído pela mensagem do sensor, que muda ao vivo conforme você tampa/destampa o fototransistor com a mão.</div>
+    <p>Clique em <strong>"Conectar Arduino"</strong>, escolha a porta na janela que o navegador abrir (algo como "USB Serial Device (COMx)") e segure o sensor entre os dedos por alguns segundos: o valor deve subir aos poucos, em tempo real.</p>
+    <div class="checkpoint"><strong>✅ Como saber que deu certo:</strong> ao clicar em "Conectar Arduino", o navegador abre uma janela nativa listando as portas USB disponíveis. Depois de escolher a porta certa e clicar em "Connect", o botão desaparece e é substituído pela temperatura, que muda ao vivo — sobe se você esquentar o sensor com os dedos, volta a cair depois de soltar.</div>
     <div class="warn-box"><strong>Erros comuns nesta etapa:</strong>
       <ul>
         <li>Nenhuma porta aparece na janela do navegador → confira se o cabo USB está bem conectado e se é um cabo de <strong>dados</strong> (alguns cabos USB são só de carga, sem os pinos de dados);</li>
         <li>O botão "⚠️ Seu navegador não suporta..." aparece mesmo no Chrome/Edge → confirme se está na <strong>aba separada</strong> do passo 3, e não dentro do iframe do editor do StackBlitz — a Web Serial API é bloqueada dentro de iframes por segurança;</li>
-        <li>Conecta mas a mensagem nunca muda → confira se o parâmetro <code>inverted</code> no firmware (<code>print_stateled(beamDetected, 1)</code>) bate com o circuito físico realmente montado (1 para o Circuito 1, 0 para o Circuito 2).</li>
+        <li>Temperatura aparece travada em <strong>-127°C</strong> (ou a linha chega como <code>{"erro":"DS18B20 nao encontrado"}</code>) → falta o resistor de pull-up entre o fio de dados e o 5V, ou o sensor está ligado no pino errado;</li>
+        <li>Conecta mas a temperatura nunca chega → confira se o <code>baudRate</code> do hook (9600) bate com o <code>Serial.begin(9600)</code> do firmware.</li>
       </ul>
     </div>
   </div>
@@ -829,7 +837,7 @@ export default SensorReal;</code></pre>
       <li>Exiba um histórico das últimas 10–20 leituras de cada sensor (lista simples — gráfico vem na Semana 21);</li>
       <li>Mostre visualmente o status da conexão (conectado/desconectado);</li>
       <li>Documente no README como rodar o projeto (<code>npm install</code> + <code>npm run dev</code> — um único comando, já que servidor e front-end sobem juntos);</li>
-      <li><strong>Bônus (pontuação extra):</strong> se sua turma tiver um Arduino Uno com o sensor de luz "Magnificent Hango" (ou similar) disponível, implemente também o <code>useSerialSensor</code> e conecte via Web Serial API, comparando lado a lado o dado simulado e o dado real;</li>
+      <li><strong>Bônus (pontuação extra):</strong> se você tiver um Arduino Uno com o sensor de temperatura DS18B20 montado, implemente também o <code>useSerialSensor</code> e conecte via Web Serial API, comparando lado a lado o dado simulado e a temperatura real;</li>
       <li>Salve no GitHub (botão <strong>Commit</strong>).</li>
     </ol>
     <div class="deliverable"><strong>📦 Entregável:</strong> Link do repositório GitHub atualizado + vídeo curto (1–2 min) ou GIF mostrando os dados atualizando ao vivo no Preview do StackBlitz.</div>
@@ -864,9 +872,13 @@ export default SensorReal;</code></pre>
       <div class="r-title">🔌 MDN — Web Serial API</div>
       <div class="r-desc">Documentação da API usada para ler o Arduino direto do navegador.</div>
     </a>
-    <a class="res-card" href="assets/Magnificent_Hango_esquematico.pdf" target="_blank">
-      <div class="r-title">📐 Esquemático — Magnificent Hango</div>
-      <div class="r-desc">Diagrama completo do circuito do sensor de luz usado nesta aula.</div>
+    <a class="res-card" href="https://www.analog.com/media/en/technical-documentation/data-sheets/ds18b20.pdf" target="_blank">
+      <div class="r-title">📐 Datasheet — DS18B20</div>
+      <div class="r-desc">Documentação oficial do sensor de temperatura usado nesta aula.</div>
+    </a>
+    <a class="res-card" href="assets/sensor_temperatura_ds18b20.ino" target="_blank">
+      <div class="r-title">📥 Firmware — sensor_temperatura_ds18b20.ino</div>
+      <div class="r-desc">Sketch completo usado no bônus, pronto para gravar no Arduino.</div>
     </a>
     <a class="res-card" href="https://mqtt.org/" target="_blank">
       <div class="r-title">⬡ MQTT.org</div>
