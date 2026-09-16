@@ -99,6 +99,43 @@
   .teoria-block pre{background:#080a12;border:1px solid var(--border);color:#a3f7bf;padding:16px;border-radius:8px;overflow-x:auto;margin:12px 0;font-size:.78rem;line-height:1.6;font-family:'DM Mono',monospace;}
   .example-callout{background:rgba(251,146,60,.07);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:.85rem;color:var(--text);}
   .example-callout .ex-label{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--accent2);letter-spacing:1px;display:block;margin-bottom:4px;}
+
+  @keyframes flowmove { from{ offset-distance:0%; } to{ offset-distance:100%; } }
+  .flowdot{ animation: flowmove 3s linear infinite; offset-rotate:0deg; }
+  .fd1{ offset-path: path('M170,60 L290,132 L135,218 L340,347'); }
+  .fd2{ offset-path: path('M340,60 L340,132 L340,218 L340,347'); }
+  .fd3{ offset-path: path('M510,60 L390,132 L515,218 L340,347'); }
+  @keyframes dbriskpulse{ 0%,100%{ stroke-opacity:1; } 50%{ stroke-opacity:.3; } }
+  #db-box.db-risk #db-rect{ animation: dbriskpulse 1s ease-in-out infinite; stroke:var(--red) !important; }
+  .dist-controls{display:flex;align-items:center;gap:10px;margin:16px 0 8px;font-size:.82rem;color:var(--muted2);flex-wrap:wrap;}
+  .dist-toggle-label{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+  .dist-toggle-track{position:relative;width:34px;height:19px;background:var(--border);border-radius:10px;transition:.2s;flex-shrink:0;display:inline-block;}
+  .dist-toggle-track:has(input:checked){background:var(--accent);}
+  .dist-toggle-track input{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;margin:0;}
+  .dist-toggle-dot{position:absolute;top:2px;left:2px;width:15px;height:15px;background:#fff;border-radius:50%;transition:transform .2s;pointer-events:none;}
+  .dist-toggle-track input:checked ~ .dist-toggle-dot{transform:translateX(15px);}
+  .dist-counters{display:flex;gap:22px;font-size:.82rem;color:var(--muted2);}
+  .dist-counters strong{color:#fff;}
+
+  .lang-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .lang-tab{background:var(--surface);border:1px solid var(--border);color:var(--muted2);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:'Space Grotesk',sans-serif;transition:.2s;}
+  .lang-tab:hover{border-color:var(--accent);color:var(--text);}
+  .lang-tab.active{border-color:var(--accent);color:#fff;background:rgba(244,63,94,.12);}
+  .code-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+  .code-label{font-family:'DM Mono',monospace;font-size:.68rem;margin-bottom:8px;padding:3px 10px;border-radius:6px;display:inline-block;}
+  .code-label.bad{color:var(--red);background:rgba(251,75,75,.1);border:1px solid rgba(251,75,75,.25);}
+  .code-label.good{color:var(--green);background:rgba(34,211,165,.1);border:1px solid rgba(34,211,165,.25);}
+  .code-col pre{background:#080a12;border:1px solid var(--border);color:#a3f7bf;padding:14px;border-radius:8px;overflow-x:auto;font-size:.7rem;line-height:1.6;font-family:'DM Mono',monospace;white-space:pre;margin-top:8px;}
+
+  .race-anim-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;}
+  .race-anim-counter{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;text-align:center;color:#fff;margin-bottom:14px;transition:transform .15s;}
+  .race-anim-counter.pulse{animation:pulse-num .3s;}
+  .race-anim-actors{display:flex;justify-content:center;gap:24px;margin-bottom:14px;}
+  .anim-actor{width:54px;height:54px;border-radius:50%;background:var(--card);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.35rem;transition:.3s;}
+  .anim-actor.active-a{border-color:var(--accent);box-shadow:0 0 16px rgba(244,63,94,.5);transform:scale(1.15);}
+  .anim-actor.active-b{border-color:var(--purple);box-shadow:0 0 16px rgba(167,139,250,.5);transform:scale(1.15);}
+  .anim-actor.bad{border-color:var(--red)!important;box-shadow:0 0 16px rgba(251,75,75,.6)!important;}
+  .race-anim-msg{text-align:center;font-size:.85rem;color:var(--muted2);min-height:42px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;}
   .read-check{display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:14px;border-top:1px dashed var(--border);}
   .read-check input{width:16px;height:16px;accent-color:var(--accent);}
   .read-check label{font-size:.8rem;color:var(--muted2);font-family:'DM Mono',monospace;}
@@ -207,6 +244,8 @@
     .pilar-grid{grid-template-columns:1fr;}
     .match-wrap{grid-template-columns:1fr;}
     .lanes{grid-template-columns:1fr !important;}
+    .code-columns{grid-template-columns:1fr;}
+    .scenario-grid{grid-template-columns:1fr;}
   }
 </style>
 </head>
@@ -330,6 +369,115 @@ class Mutex {
     <div class="read-check">
       <input type="checkbox" id="read-check-1">
       <label for="read-check-1">Marcar como lido — desbloqueia +5 XP</label>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- DIAGRAMA INTERATIVO -->
+  <div class="section-tag">// Visão geral</div>
+  <h2 class="section-title" id="nav-diagrama">🖧 Como Funciona um Sistema Distribuído</h2>
+  <p class="section-desc">Clientes, load balancer, servidores em paralelo e um banco compartilhado — tudo em movimento. Ligue e desligue a trava e observe o que acontece nas gravações.</p>
+
+  <div class="lab-panel">
+    <svg width="100%" viewBox="0 0 680 420" role="img" style="display:block;">
+      <title>Como funciona um sistema distribuído</title>
+      <desc>Clientes enviam requisições a um load balancer que distribui o trabalho entre três servidores rodando em paralelo, todos conectados a um banco de dados compartilhado</desc>
+      <path d="M170,60 L290,132 L135,218 L340,347" fill="none" stroke="var(--border)" stroke-width="1" opacity="0.7"/>
+      <path d="M340,60 L340,132 L340,218 L340,347" fill="none" stroke="var(--border)" stroke-width="1" opacity="0.7"/>
+      <path d="M510,60 L390,132 L515,218 L340,347" fill="none" stroke="var(--border)" stroke-width="1" opacity="0.7"/>
+
+      <circle cx="170" cy="60" r="14" fill="var(--surface)" stroke="var(--muted)" stroke-width="1"/>
+      <circle cx="340" cy="60" r="14" fill="var(--surface)" stroke="var(--muted)" stroke-width="1"/>
+      <circle cx="510" cy="60" r="14" fill="var(--surface)" stroke="var(--muted)" stroke-width="1"/>
+      <text x="170" y="28" text-anchor="middle" fill="var(--muted2)" font-size="11" font-family="DM Mono, monospace">Cliente</text>
+      <text x="340" y="28" text-anchor="middle" fill="var(--muted2)" font-size="11" font-family="DM Mono, monospace">Cliente</text>
+      <text x="510" y="28" text-anchor="middle" fill="var(--muted2)" font-size="11" font-family="DM Mono, monospace">Cliente</text>
+
+      <rect x="240" y="110" width="200" height="44" rx="8" fill="rgba(244,63,94,.12)" stroke="var(--accent)" stroke-width="1"/>
+      <text x="340" y="128" text-anchor="middle" fill="#fff" font-size="13" font-weight="600" font-family="Space Grotesk">Load balancer</text>
+      <text x="340" y="144" text-anchor="middle" fill="var(--muted2)" font-size="11" font-family="DM Mono, monospace">Distribui as requisições</text>
+
+      <g>
+        <rect x="60" y="190" width="150" height="56" rx="8" fill="rgba(167,139,250,.12)" stroke="var(--purple)" stroke-width="1"/>
+        <text x="135" y="212" text-anchor="middle" fill="#fff" font-size="13" font-weight="600" font-family="Space Grotesk">Servidor A</text>
+        <text x="135" y="230" text-anchor="middle" fill="var(--muted2)" font-size="11" font-family="DM Mono, monospace">Processa em paralelo</text>
+      </g>
+      <g>
+        <rect x="265" y="190" width="150" height="56" rx="8" fill="rgba(167,139,250,.12)" stroke="var(--purple)" stroke-width="1"/>
+        <text x="340" y="212" text-anchor="middle" fill="#fff" font-size="13" font-weight="600" font-family="Space Grotesk">Servidor B</text>
+        <text x="340" y="230" text-anchor="middle" fill="var(--muted2)" font-size="11" font-family="DM Mono, monospace">Processa em paralelo</text>
+      </g>
+      <g>
+        <rect x="440" y="190" width="150" height="56" rx="8" fill="rgba(167,139,250,.12)" stroke="var(--purple)" stroke-width="1"/>
+        <text x="515" y="212" text-anchor="middle" fill="#fff" font-size="13" font-weight="600" font-family="Space Grotesk">Servidor C</text>
+        <text x="515" y="230" text-anchor="middle" fill="var(--muted2)" font-size="11" font-family="DM Mono, monospace">Processa em paralelo</text>
+      </g>
+
+      <g id="db-box">
+        <rect id="db-rect" x="210" y="320" width="260" height="54" rx="10" fill="rgba(251,146,60,.12)" stroke="var(--accent2)" stroke-width="1"/>
+        <text x="340" y="340" text-anchor="middle" fill="#fff" font-size="13" font-weight="600" font-family="Space Grotesk">Banco de dados</text>
+        <text x="340" y="358" text-anchor="middle" fill="var(--muted2)" font-size="11" font-family="DM Mono, monospace">Compartilhado entre os servidores</text>
+      </g>
+
+      <circle class="flowdot fd1" r="5" fill="var(--yellow)"/>
+      <circle class="flowdot fd2" r="5" fill="var(--yellow)"/>
+      <circle class="flowdot fd3" r="5" fill="var(--yellow)"/>
+    </svg>
+
+    <div class="dist-controls">
+      <label class="dist-toggle-label">
+        <span class="dist-toggle-track">
+          <input type="checkbox" id="lock-toggle">
+          <span class="dist-toggle-dot"></span>
+        </span>
+        Trava (lock) no banco
+      </label>
+      <span id="lock-status" class="dist-status">— desligada: escritas podem colidir</span>
+    </div>
+    <div class="dist-counters">
+      <span>Gravações confirmadas: <strong id="ok-count">0</strong></span>
+      <span>Perdidas por colisão: <strong id="lost-count" style="color:var(--red)">0</strong></span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CÓDIGO MULTILÍNGUE -->
+  <div class="section-tag">// Na prática</div>
+  <h2 class="section-title" id="nav-codigo">💻 O Mesmo Problema em 3 Linguagens</h2>
+  <p class="section-desc">Troque de linguagem e veja como o mesmo bug de concorrência aparece — e se resolve — em cada uma delas.</p>
+
+  <div class="lab-panel">
+    <div class="lang-tabs">
+      <button class="lang-tab active" data-lang="java">☕ Java</button>
+      <button class="lang-tab" data-lang="python">🐍 Python</button>
+      <button class="lang-tab" data-lang="javascript">🟨 JavaScript</button>
+    </div>
+
+    <div class="code-columns">
+      <div class="code-col">
+        <span class="code-label bad">❌ Sem proteção</span>
+        <pre id="code-unsafe"></pre>
+      </div>
+      <div class="code-col">
+        <span class="code-label good">✅ Com lock</span>
+        <pre id="code-safe"></pre>
+      </div>
+    </div>
+
+    <div class="race-anim-wrap">
+      <p class="lab-sub" style="margin-bottom:14px;">👇 Isso é o que acontece na memória — na prática, em qualquer uma das 3 linguagens acima:</p>
+      <div class="race-anim-counter" id="anim-counter">0</div>
+      <div class="race-anim-actors">
+        <div class="anim-actor" id="anim-actor-a">🅰️</div>
+        <div class="anim-actor" id="anim-actor-b">🅱️</div>
+      </div>
+      <div class="race-anim-msg" id="race-anim-msg">Clique em animar para ver o passo a passo.</div>
+      <div class="lab-actions" style="justify-content:center;">
+        <button class="lab-btn danger" id="btn-anim-unsafe">▶ Animar SEM proteção</button>
+        <button class="lab-btn safe" id="btn-anim-safe">▶ Animar COM lock</button>
+      </div>
     </div>
   </div>
 
@@ -621,6 +769,8 @@ document.getElementById('sound-toggle').addEventListener('click', function(){
 /* ---------- MISSION MAP ---------- */
 const mapNodes = [
   { key:'leitura', ico:'📖', label:'Leitura', target:'#nav-leitura' },
+  { key:'diagrama', ico:'🖧', label:'Visão geral', target:'#nav-diagrama' },
+  { key:'codigo', ico:'💻', label:'Código', target:'#nav-codigo' },
   { key:'concorrencia', ico:'⚡', label:'Concorrência', target:'#nav-concorrencia' },
   { key:'openness', ico:'🔓', label:'Openness', target:'#nav-openness' },
   { key:'escala', ico:'📈', label:'Escala', target:'#nav-escala' },
@@ -698,6 +848,167 @@ function launchConfetti(){
 document.getElementById('read-check-1').addEventListener('change', function(){
   if(this.checked){ addXP(5); sfxCorrect(); markNodeDone('leitura'); showToast('📖 Leitura marcada! +5 XP'); }
 });
+
+/* ---------- DISTRIBUTED SYSTEM DIAGRAM ---------- */
+let distLockOn = false, distOk = 0, distLost = 0, distLastArrival = 0, distSeen = false;
+function updateDistCounters(){
+  document.getElementById('ok-count').textContent = distOk;
+  document.getElementById('lost-count').textContent = distLost;
+}
+function onDistArrive(){
+  const now = performance.now();
+  if(!distLockOn && now - distLastArrival < 260){ distLost++; sfxWrong(); }
+  else { distOk++; sfxCorrect(); }
+  distLastArrival = now;
+  updateDistCounters();
+  if(!distSeen){ distSeen = true; addXP(5); markNodeDone('diagrama'); }
+}
+document.querySelectorAll('.flowdot').forEach(p=> p.addEventListener('animationiteration', onDistArrive));
+function setDistLock(on){
+  distLockOn = on;
+  document.querySelectorAll('.flowdot').forEach((p,i)=>{
+    p.style.animationDelay = on ? (-(i*1))+'s' : (-(i*0.08))+'s';
+  });
+  document.getElementById('db-box').classList.toggle('db-risk', !on);
+  document.getElementById('lock-status').textContent = on ? '— ligada: escritas em fila, nada se perde' : '— desligada: escritas podem colidir';
+}
+document.getElementById('lock-toggle').addEventListener('change', function(){ setDistLock(this.checked); beep(this.checked?700:300,0.1,'sine',0.09); });
+setDistLock(false);
+
+/* ---------- MULTI-LANGUAGE CODE + ANIMATION ---------- */
+const codeSnippets = {
+  java: {
+    unsafe: `class Contador {
+    int valor = 0;
+
+    void incrementar() {
+        int temp = valor;   // 1) le o valor
+        valor = temp + 1;   // 2) escreve de volta
+    }
+}
+
+Thread a = new Thread(() -> incrementar());
+Thread b = new Thread(() -> incrementar());
+a.start();
+b.start();
+// resultado esperado: 2 - mas pode vir 1!`,
+    safe: `class Contador {
+    int valor = 0;
+
+    synchronized void incrementar() {
+        int temp = valor;
+        valor = temp + 1;
+    }
+}
+// "synchronized" garante que so uma
+// thread executa o metodo por vez -
+// o mesmo efeito de um mutex.`
+  },
+  python: {
+    unsafe: `contador = 0
+
+def incrementar():
+    global contador
+    temp = contador      # 1) le o valor
+    contador = temp + 1  # 2) escreve de volta
+
+t1 = threading.Thread(target=incrementar)
+t2 = threading.Thread(target=incrementar)
+t1.start(); t2.start()
+t1.join(); t2.join()
+# resultado esperado: 2 - mas pode vir 1!`,
+    safe: `import threading
+contador = 0
+lock = threading.Lock()
+
+def incrementar():
+    global contador
+    with lock:              # so uma thread
+        temp = contador     # por vez aqui
+        contador = temp + 1 # dentro`
+  },
+  javascript: {
+    unsafe: `let contador = 0;
+
+async function incrementar() {
+  const temp = contador;              // 1) le
+  await new Promise(r => setTimeout(r, 10));
+  contador = temp + 1;                // 2) escreve
+}
+
+await Promise.all([incrementar(), incrementar()]);
+// resultado esperado: 2 - mas pode vir 1!`,
+    safe: `const mutex = new Mutex(); // classe da Semana 16
+
+async function incrementarSeguro() {
+  const unlock = await mutex.lock();
+  const temp = contador;
+  await new Promise(r => setTimeout(r, 10));
+  contador = temp + 1;
+  unlock();
+}`
+  }
+};
+function renderCode(lang){
+  document.getElementById('code-unsafe').textContent = codeSnippets[lang].unsafe;
+  document.getElementById('code-safe').textContent = codeSnippets[lang].safe;
+}
+renderCode('java');
+document.querySelectorAll('.lang-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.lang-tab').forEach(t=> t.classList.remove('active'));
+    tab.classList.add('active');
+    renderCode(tab.dataset.lang);
+    beep(500,0.08,'sine',0.08);
+  });
+});
+
+function animSleep(ms){ return new Promise(r=> setTimeout(r, ms)); }
+async function playStoryboard(steps){
+  const counterEl = document.getElementById('anim-counter');
+  const msgEl = document.getElementById('race-anim-msg');
+  const actorA = document.getElementById('anim-actor-a');
+  const actorB = document.getElementById('anim-actor-b');
+  document.getElementById('btn-anim-unsafe').disabled = true;
+  document.getElementById('btn-anim-safe').disabled = true;
+  counterEl.textContent = '0';
+  actorA.className = 'anim-actor'; actorB.className = 'anim-actor';
+  for(const step of steps){
+    actorA.className = 'anim-actor'; actorB.className = 'anim-actor';
+    if(step.actor === 'A') actorA.classList.add(step.bad ? 'active-a bad' : 'active-a');
+    if(step.actor === 'B') actorB.classList.add(step.bad ? 'active-b bad' : 'active-b');
+    msgEl.textContent = step.text;
+    if(step.counter !== undefined){
+      counterEl.textContent = step.counter;
+      counterEl.classList.remove('pulse'); void counterEl.offsetWidth; counterEl.classList.add('pulse');
+      beep(step.bad ? 220 : 700, 0.12, step.bad ? 'sawtooth' : 'triangle', 0.1);
+    }
+    await animSleep(1300);
+  }
+  actorA.className = 'anim-actor'; actorB.className = 'anim-actor';
+  document.getElementById('btn-anim-unsafe').disabled = false;
+  document.getElementById('btn-anim-safe').disabled = false;
+}
+const unsafeStoryboard = [
+  { actor:'A', text:'🅰️ Thread A lê contador = 0' },
+  { actor:'B', text:'🅱️ Thread B também lê contador = 0 (antes de A escrever!)' },
+  { actor:'A', text:'🅰️ A calcula 0 + 1 e escreve contador = 1', counter:1 },
+  { actor:'B', text:'🅱️ B calcula 0 + 1 (valor antigo!) e escreve contador = 1 — sobrescreve o trabalho de A', counter:1, bad:true },
+  { text:'❌ Resultado final: 1 — deveria ser 2. Um incremento foi perdido!' }
+];
+const safeStoryboard = [
+  { actor:'A', text:'🅰️ A adquire o lock' },
+  { actor:'A', text:'🅰️ A lê contador = 0 e escreve contador = 1', counter:1 },
+  { actor:'A', text:'🅰️ A libera o lock' },
+  { actor:'B', text:'🅱️ B só agora consegue adquirir o lock (estava bloqueado)' },
+  { actor:'B', text:'🅱️ B lê contador = 1 e escreve contador = 2', counter:2 },
+  { actor:'B', text:'🅱️ B libera o lock' },
+  { text:'✅ Resultado final: 2 — correto! Nada foi perdido.' }
+];
+let codeAnimSeen = false;
+function markCodeSeen(){ if(!codeAnimSeen){ codeAnimSeen = true; addXP(5); markNodeDone('codigo'); } }
+document.getElementById('btn-anim-unsafe').addEventListener('click', ()=>{ markCodeSeen(); playStoryboard(unsafeStoryboard); });
+document.getElementById('btn-anim-safe').addEventListener('click', ()=>{ markCodeSeen(); playStoryboard(safeStoryboard); });
 
 /* ---------- GENERIC DRAG & DROP (pointer events) ---------- */
 function makeDraggable(el, dropSelector, onDrop){

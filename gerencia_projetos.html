@@ -76,6 +76,24 @@
   .example-callout{background:rgba(244,63,94,.07);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:.85rem;color:var(--text);}
   .example-callout .ex-label{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--accent2);letter-spacing:1px;display:block;margin-bottom:4px;}
 
+  .lang-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .lang-tab{background:var(--surface);border:1px solid var(--border);color:var(--muted2);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:'Space Grotesk',sans-serif;transition:.2s;}
+  .lang-tab:hover{border-color:var(--accent);color:var(--text);}
+  .lang-tab.active{border-color:var(--accent);color:#fff;background:rgba(167,139,250,.12);}
+
+  .tdd-blocks{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:14px;}
+  .tdd-block{border:2px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--surface);transition:.35s;}
+  .tdd-block.active{transform:scale(1.02);}
+  .tdd-block#tdd-block-red.active{border-color:var(--red);box-shadow:0 0 18px rgba(251,75,75,.25);}
+  .tdd-block#tdd-block-green.active{border-color:var(--green);box-shadow:0 0 18px rgba(34,211,165,.25);}
+  .tdd-block#tdd-block-blue.active{border-color:var(--blue);box-shadow:0 0 18px rgba(79,140,255,.25);}
+  .tdd-block-label{font-family:'DM Mono',monospace;font-size:.68rem;margin-bottom:8px;padding:3px 10px;border-radius:6px;display:inline-block;}
+  .tdd-block-label.red{color:var(--red);background:rgba(251,75,75,.1);border:1px solid rgba(251,75,75,.25);}
+  .tdd-block-label.green{color:var(--green);background:rgba(34,211,165,.1);border:1px solid rgba(34,211,165,.25);}
+  .tdd-block-label.blue{color:var(--blue);background:rgba(79,140,255,.1);border:1px solid rgba(79,140,255,.25);}
+  .tdd-block pre{background:#080a12;border:1px solid var(--border);color:#a3f7bf;padding:12px;border-radius:8px;overflow-x:auto;font-size:.72rem;line-height:1.55;font-family:'DM Mono',monospace;white-space:pre;}
+  .tdd-msg{text-align:center;font-size:.85rem;color:var(--muted2);min-height:36px;margin:8px 0 14px;display:flex;align-items:center;justify-content:center;}
+
   .story-scenario{font-size:.9rem;color:var(--text);line-height:1.7;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;}
   .story-choices{display:grid;gap:8px;margin-bottom:12px;}
   .story-choice{text-align:left;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:8px;cursor:pointer;font-size:.83rem;font-family:'Space Grotesk',sans-serif;transition:.2s;}
@@ -487,6 +505,35 @@
     </div>
   </div>
 
+  <div class="lab-panel">
+    <div class="lab-header">💻 TDD em 3 Linguagens — Red, Green, Refactor</div>
+    <p class="lab-sub">É isso que a dupla faz a cada rodada do Dojo: escreve um teste que falha (🔴), faz o mínimo pra ele passar (🟢), depois limpa o código (🔵). Troque a linguagem e rode o ciclo.</p>
+    <div class="lang-tabs">
+      <button class="lang-tab active" data-lang="java">☕ Java</button>
+      <button class="lang-tab" data-lang="python">🐍 Python</button>
+      <button class="lang-tab" data-lang="javascript">🟨 JavaScript</button>
+    </div>
+
+    <div class="tdd-blocks">
+      <div class="tdd-block" id="tdd-block-red">
+        <div class="tdd-block-label red">🔴 Red — o teste falha</div>
+        <pre id="tdd-code-red"></pre>
+      </div>
+      <div class="tdd-block" id="tdd-block-green">
+        <div class="tdd-block-label green">🟢 Green — o mínimo pra passar</div>
+        <pre id="tdd-code-green"></pre>
+      </div>
+      <div class="tdd-block" id="tdd-block-blue">
+        <div class="tdd-block-label blue">🔵 Refactor — limpa o código</div>
+        <pre id="tdd-code-blue"></pre>
+      </div>
+    </div>
+    <div class="tdd-msg" id="tdd-msg">Clique em rodar para ver o ciclo em ação.</div>
+    <div class="lab-actions" style="justify-content:center;">
+      <button class="lab-btn primary" id="btn-tdd-run">▶ Rodar o ciclo</button>
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <div class="section-tag">// Missão 05</div>
@@ -612,6 +659,7 @@ const mapNodes = [
   { key:'kanban', ico:'📌', label:'Kanban', target:'#nav-kanban' },
   { key:'sprint', ico:'🎯', label:'Sprint', target:'#nav-sprint' },
   { key:'dojo', ico:'🥋', label:'Dojo', target:'#nav-dojo' },
+  { key:'tdd', ico:'💻', label:'TDD', target:'#nav-dojo' },
   { key:'aventureiro', ico:'🗺️', label:'Aventura', target:'#nav-aventureiro' },
   { key:'quiz', ico:'🧠', label:'Quiz', target:'#nav-quiz' },
   { key:'praticante', ico:'🛠️', label:'Prática', target:'#nav-praticante' }
@@ -683,6 +731,98 @@ function launchConfetti(){
 document.getElementById('read-check-1').addEventListener('change', function(){
   if(this.checked){ addXP(5); sfxCorrect(); markNodeDone('leitura'); showToast('📖 Leitura marcada! +5 XP'); }
 });
+
+/* ---------- TDD MULTI-LANGUAGE ---------- */
+const tddSnippets = {
+  java: {
+    red: `@Test
+void deveDizerQueDoisEhPar() {
+    assertTrue(Numeros.ehPar(2));
+}
+// Numeros nem existe ainda -> nao compila.
+// O teste falha. Vermelho.`,
+    green: `class Numeros {
+    static boolean ehPar(int n) {
+        return true; // "gambiarra" so pra passar
+    }
+}
+// Teste passa. Verde - mas incompleto.`,
+    blue: `class Numeros {
+    static boolean ehPar(int n) {
+        return n % 2 == 0; // agora certo de verdade
+    }
+}
+// Testes continuam verdes. Codigo limpo.`
+  },
+  python: {
+    red: `def test_deve_dizer_que_dois_eh_par():
+    assert eh_par(2) == True
+
+# NameError: eh_par nao existe ainda.
+# O teste falha. Vermelho.`,
+    green: `def eh_par(n):
+    return True  # so pra passar o teste
+
+# Teste passa. Verde - mas incompleto.`,
+    blue: `def eh_par(n):
+    return n % 2 == 0
+
+# Testes continuam verdes. Codigo limpo.`
+  },
+  javascript: {
+    red: `test('2 deve ser par', () => {
+  expect(ehPar(2)).toBe(true);
+});
+// ehPar nao existe ainda.
+// O teste falha. Vermelho.`,
+    green: `function ehPar(n) {
+  return true; // so pra passar o teste
+}
+// Teste passa. Verde - mas incompleto.`,
+    blue: `function ehPar(n) {
+  return n % 2 === 0;
+}
+// Testes continuam verdes. Codigo limpo.`
+  }
+};
+function renderTdd(lang){
+  document.getElementById('tdd-code-red').textContent = tddSnippets[lang].red;
+  document.getElementById('tdd-code-green').textContent = tddSnippets[lang].green;
+  document.getElementById('tdd-code-blue').textContent = tddSnippets[lang].blue;
+}
+renderTdd('java');
+document.querySelectorAll('.lang-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.lang-tab').forEach(t=> t.classList.remove('active'));
+    tab.classList.add('active');
+    renderTdd(tab.dataset.lang);
+    beep(500,0.08,'sine',0.08);
+  });
+});
+function tddSleep(ms){ return new Promise(r=> setTimeout(r, ms)); }
+let tddSeen = false;
+async function runTddCycle(){
+  document.getElementById('btn-tdd-run').disabled = true;
+  const blocks = ['red','green','blue'];
+  const msgs = {
+    red:'🔴 Escrevemos o teste primeiro — e ele falha, porque o código ainda não existe.',
+    green:'🟢 Escrevemos o mínimo de código possível só para o teste passar.',
+    blue:'🔵 Com o teste passando, agora limpamos e corrigimos o código de verdade.'
+  };
+  for(const b of blocks){
+    document.querySelectorAll('.tdd-block').forEach(el=> el.classList.remove('active'));
+    const block = document.getElementById('tdd-block-'+b);
+    block.classList.add('active');
+    document.getElementById('tdd-msg').textContent = msgs[b];
+    beep(b==='red'?220:b==='green'?660:880, 0.15, 'triangle', 0.11);
+    await tddSleep(1500);
+  }
+  document.querySelectorAll('.tdd-block').forEach(el=> el.classList.remove('active'));
+  document.getElementById('tdd-msg').textContent = '✅ Ciclo completo! Na próxima rodada do Dojo, a dupla escreve um novo teste e recomeça.';
+  document.getElementById('btn-tdd-run').disabled = false;
+  if(!tddSeen){ tddSeen = true; addXP(5); markNodeDone('tdd'); }
+}
+document.getElementById('btn-tdd-run').addEventListener('click', runTddCycle);
 
 function makeDraggable(el, dropSelector, onDrop){
   el.style.touchAction = 'none';
