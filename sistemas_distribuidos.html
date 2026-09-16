@@ -140,6 +140,30 @@
 
   .glossary-search{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 16px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.88rem;margin-bottom:18px;}
   .glossary-search:focus{outline:none;border-color:var(--accent);}
+
+  .dict-wrap{scroll-margin-top:80px;}
+  .dict-badge{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--accent2);background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.3);padding:6px 14px;border-radius:99px;letter-spacing:1px;margin-bottom:18px;}
+  .dict-title{font-family:'Syne',sans-serif;font-style:italic;font-weight:800;font-size:clamp(2.2rem,7vw,3.6rem);line-height:.98;color:#fff;margin-bottom:18px;}
+  .dict-title-accent{background:linear-gradient(135deg,var(--accent2),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .dict-sub{color:var(--muted2);font-size:.95rem;line-height:1.7;max-width:620px;margin-bottom:26px;}
+  .dict-sub strong{color:var(--text);}
+  .dict-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+  .dict-tab{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.5px;text-transform:uppercase;background:var(--surface);border:1px solid var(--border);color:var(--muted2);padding:11px 20px;border-radius:99px;cursor:pointer;transition:.2s;white-space:nowrap;}
+  .dict-tab:hover{border-color:var(--accent2);color:#fff;}
+  .dict-tab.active{background:linear-gradient(135deg,var(--accent2),#e0791f);border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(251,146,60,.35);}
+  .dict-tab.back{margin-left:auto;background:none;}
+  .dict-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .dict-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 20px;position:relative;overflow:hidden;transition:transform .25s, border-color .25s;}
+  .dict-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--yellow));}
+  .dict-card:hover{transform:translateY(-4px);border-color:rgba(251,146,60,.4);}
+  .dict-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+  .dict-icon{width:42px;height:42px;border-radius:10px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+  .dict-num{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);}
+  .dict-label{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;margin-bottom:8px;}
+  .dict-headline{font-family:'Syne',sans-serif;font-style:italic;font-weight:800;font-size:1.15rem;line-height:1.25;color:var(--accent2);margin-bottom:12px;}
+  .dict-desc{color:var(--muted2);font-size:.83rem;line-height:1.65;}
+  @media(max-width:980px){ .dict-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:560px){ .dict-grid{grid-template-columns:1fr;} .dict-tab.back{margin-left:0;} }
   .glossary-list{display:grid;gap:10px;}
   .term-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;}
   .term-item dt{font-family:'Syne',sans-serif;color:#fff;font-weight:700;font-size:.92rem;margin-bottom:5px;}
@@ -776,42 +800,13 @@ SEM protecao -&gt; contador final = <span class="bad">1</span></div>
 
   <div class="divider"></div>
 
-  <!-- GLOSSÁRIO -->
-  <div class="section-tag">// Consulta rápida</div>
-  <h2 class="section-title" id="nav-glossario">📚 Glossário</h2>
-  <p class="section-desc">Todo termo técnico usado nesta missão, explicado em uma frase. Use a busca pra achar rápido.</p>
-
-  <div class="lab-panel">
-    <input type="text" id="glossary-search" class="glossary-search" placeholder="Buscar um termo... (ex: mutex, CAP, MQTT)">
-    <dl class="glossary-list" id="glossary-list">
-      <div class="term-item"><dt>API (Application Programming Interface)</dt><dd>Interface que permite que dois sistemas diferentes conversem entre si, trocando dados e comandos de forma padronizada.</dd></div>
-      <div class="term-item"><dt>Broker</dt><dd>Um "intermediário" de mensagens: recebe dados de quem publica (ex: um sensor) e entrega pra quem quer receber, sem que os dois precisem se conhecer diretamente. Exemplos: Mosquitto (MQTT), RabbitMQ, Kafka.</dd></div>
-      <div class="term-item"><dt>Cache Distribuído</dt><dd>Cópia de dados usados com frequência, guardada mais perto de quem vai usá-los, para evitar bater direto no banco de dados toda vez.</dd></div>
-      <div class="term-item"><dt>CAP (Teorema CAP)</dt><dd>Regra que diz que um sistema distribuído não consegue garantir ao mesmo tempo Consistência, Disponibilidade e Tolerância a Partições — é preciso escolher qual sacrificar.</dd></div>
-      <div class="term-item"><dt>Codespaces (GitHub Codespaces)</dt><dd>Ambiente de programação completo que roda no navegador, hospedado pelo GitHub, sem precisar instalar nada no computador.</dd></div>
-      <div class="term-item"><dt>Concorrência</dt><dd>Vários processos ou tarefas progredindo dentro do mesmo período de tempo, disputando os mesmos recursos.</dd></div>
-      <div class="term-item"><dt>Condição de Corrida (Race Condition)</dt><dd>Quando duas execuções acessam e alteram o mesmo dado ao mesmo tempo, e o resultado final depende da ordem imprevisível em que isso acontece.</dd></div>
-      <div class="term-item"><dt>Devcontainer</dt><dd>Arquivo de configuração que descreve automaticamente o ambiente de desenvolvimento (linguagens, ferramentas) que o GitHub Codespaces deve montar.</dd></div>
-      <div class="term-item"><dt>Escalabilidade</dt><dd>Capacidade de um sistema continuar funcionando bem mesmo quando o número de usuários, dispositivos ou dados aumenta.</dd></div>
-      <div class="term-item"><dt>Escalabilidade Horizontal (scale out)</dt><dd>Aumentar a capacidade de um sistema adicionando mais máquinas trabalhando juntas.</dd></div>
-      <div class="term-item"><dt>Escalabilidade Vertical (scale up)</dt><dd>Aumentar a capacidade de um sistema dando mais recursos — CPU, memória — a uma única máquina.</dd></div>
-      <div class="term-item"><dt>GitHub Actions</dt><dd>Ferramenta do GitHub que roda comandos automaticamente sempre que algo acontece no repositório, como um push.</dd></div>
-      <div class="term-item"><dt>JSON (JavaScript Object Notation)</dt><dd>Formato de texto simples e aberto para representar dados, usado por praticamente qualquer linguagem de programação.</dd></div>
-      <div class="term-item"><dt>Kafka</dt><dd>Sistema de mensageria de alta escala, feito para lidar com grandes volumes de dados em tempo real entre muitos produtores e consumidores.</dd></div>
-      <div class="term-item"><dt>Lock / Mutex</dt><dd>Mecanismo que garante que apenas uma execução por vez acesse um trecho de código ou dado compartilhado, evitando condição de corrida.</dd></div>
-      <div class="term-item"><dt>MQTT</dt><dd>Protocolo de mensageria leve, muito usado em IoT, onde dispositivos publicam e assinam dados através de um broker.</dd></div>
-      <div class="term-item"><dt>OpenAPI / Swagger</dt><dd>Especificação aberta usada para documentar e descrever como uma API REST funciona.</dd></div>
-      <div class="term-item"><dt>Openness</dt><dd>Característica de um sistema construído sobre padrões abertos e documentados, permitindo que diferentes plataformas se conectem a ele.</dd></div>
-      <div class="term-item"><dt>Paralelismo</dt><dd>Múltiplos núcleos de processador executando instruções literalmente ao mesmo tempo — diferente de concorrência, que pode ocorrer até em um único núcleo.</dd></div>
-      <div class="term-item"><dt>Processo</dt><dd>Unidade independente de execução de um programa, com seu próprio espaço de memória.</dd></div>
-      <div class="term-item"><dt>RabbitMQ</dt><dd>Broker de mensageria que organiza filas de mensagens entre sistemas diferentes.</dd></div>
-      <div class="term-item"><dt>Replicação</dt><dd>Manter cópias dos mesmos dados em vários nós, para garantir que o sistema continue disponível mesmo se um nó falhar.</dd></div>
-      <div class="term-item"><dt>REST</dt><dd>Estilo de arquitetura para construir APIs usando os métodos padrão da web, como GET e POST.</dd></div>
-      <div class="term-item"><dt>Sharding</dt><dd>Dividir os dados entre vários bancos ou nós, cada um responsável por uma parte.</dd></div>
-      <div class="term-item"><dt>Thread</dt><dd>Unidade de execução dentro de um processo, que compartilha memória com as demais threads do mesmo processo — mais leve que um processo, porém mais arriscada.</dd></div>
-      <div class="term-item"><dt>Vendor Lock-in</dt><dd>Dependência excessiva de um único fornecedor de tecnologia, que dificulta trocar de sistema no futuro.</dd></div>
-    </dl>
-    <p class="glossary-empty" id="glossary-empty" style="display:none;">Nenhum termo encontrado. Tenta outra palavra.</p>
+  <!-- DICIONÁRIO -->
+  <div class="dict-wrap" id="nav-glossario">
+    <span class="dict-badge">⚡ TRADUÇÃO ISW044</span>
+    <h2 class="dict-title">DICIONÁRIO<br><span class="dict-title-accent">DA REDE</span></h2>
+    <p class="dict-sub">Esqueça o tecniquês. Aqui a gente traduz os termos chiques pra vida real. Explore os <strong>26 termos fundamentais</strong>.</p>
+    <div class="dict-tabs" id="dict-tabs"></div>
+    <div class="dict-grid" id="dict-grid"></div>
   </div>
 
   <div class="divider"></div>
@@ -1474,18 +1469,79 @@ document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb=>{
   });
 });
 
-/* ---------- GLOSSARY SEARCH ---------- */
-document.getElementById('glossary-search').addEventListener('input', function(){
-  const q = this.value.trim().toLowerCase();
-  const items = document.querySelectorAll('#glossary-list .term-item');
-  let visible = 0;
-  items.forEach(item=>{
-    const match = item.textContent.toLowerCase().includes(q);
-    item.classList.toggle('hidden', !match);
-    if(match) visible++;
+/* ---------- DICIONÁRIO ---------- */
+const dictData = {
+  categories: [
+    { key:'concorrencia', label:'Concorrência' },
+    { key:'openness', label:'Openness' },
+    { key:'escalabilidade', label:'Escalabilidade' },
+    { key:'ferramentas', label:'Ferramentas' }
+  ],
+  terms: [
+    { cat:'concorrencia', icon:'🔀', label:'Concorrência', headline:'Várias tarefas disputando o microfone ao mesmo tempo.', desc:'Vários processos ou tarefas progredindo dentro do mesmo período, competindo pelos mesmos recursos do sistema.' },
+    { cat:'concorrencia', icon:'🧵', label:'Paralelismo', headline:'Dois núcleos, dois trabalhos, ao mesmo tempo de verdade.', desc:'Diferente de concorrência, exige múltiplos núcleos de processador executando instruções literalmente simultâneas.' },
+    { cat:'concorrencia', icon:'⚙️', label:'Processo', headline:'Um programa rodando com a própria casa só pra ele.', desc:'Unidade independente de execução, com seu próprio espaço de memória isolado dos demais.' },
+    { cat:'concorrencia', icon:'🧶', label:'Thread', headline:'Um processo, várias mãos trabalhando na mesma bancada.', desc:'Unidade de execução dentro de um processo, compartilhando memória com as demais threads do mesmo processo.' },
+    { cat:'concorrencia', icon:'💥', label:'Condição de Corrida', headline:'Duas pessoas escrevendo no mesmo caderno ao mesmo tempo.', desc:'Quando duas execuções acessam e alteram o mesmo dado ao mesmo tempo, e o resultado depende de quem "ganha a corrida".' },
+    { cat:'concorrencia', icon:'🔒', label:'Lock / Mutex', headline:'O segurança que só deixa um de cada vez na sala.', desc:'Mecanismo que garante que apenas uma execução por vez acesse um trecho de código ou dado compartilhado.' },
+
+    { cat:'openness', icon:'🔓', label:'Openness', headline:'Construído pra qualquer um plugar e usar, sem pedir licença.', desc:'Sistema baseado em padrões e interfaces abertas e documentadas, permitindo interoperabilidade entre plataformas.' },
+    { cat:'openness', icon:'⛓️', label:'Vendor Lock-in', headline:'A prisão de luxo de um fornecedor só.', desc:'Dependência excessiva de um único fornecedor de tecnologia, que dificulta trocar de sistema no futuro.' },
+    { cat:'openness', icon:'🔌', label:'API', headline:'O cardápio que um sistema oferece pro outro pedir.', desc:'Interface que permite que dois sistemas diferentes conversem entre si, trocando dados e comandos padronizados.' },
+    { cat:'openness', icon:'🗂️', label:'JSON', headline:'O idioma universal que todo sistema entende.', desc:'Formato de texto simples e aberto para representar dados, lido por praticamente qualquer linguagem.' },
+    { cat:'openness', icon:'📡', label:'MQTT', headline:'O carteiro leve que os sensores IoT mais usam.', desc:'Protocolo de mensageria leve, muito usado em IoT, onde dispositivos publicam e assinam dados via broker.' },
+    { cat:'openness', icon:'📄', label:'OpenAPI / Swagger', headline:'O manual de instruções que a API escreve sobre si mesma.', desc:'Especificação aberta usada para documentar e descrever como uma API REST funciona.' },
+    { cat:'openness', icon:'🌐', label:'REST', headline:'As regras de trânsito da web, aplicadas em APIs.', desc:'Estilo de arquitetura para construir APIs usando os métodos padrão da web, como GET e POST.' },
+
+    { cat:'escalabilidade', icon:'📈', label:'Escalabilidade', headline:'Aguentar o tranco quando todo mundo chega de uma vez.', desc:'Capacidade de um sistema continuar funcionando bem mesmo quando usuários, dispositivos ou dados aumentam.' },
+    { cat:'escalabilidade', icon:'➡️', label:'Escalabilidade Horizontal', headline:'Chamar mais gente pra ajudar, em vez de sobrecarregar um só.', desc:'Aumentar a capacidade de um sistema adicionando mais máquinas trabalhando juntas (scale out).' },
+    { cat:'escalabilidade', icon:'⬆️', label:'Escalabilidade Vertical', headline:'Dar academia pra uma única máquina aguentar mais.', desc:'Aumentar a capacidade de um sistema dando mais CPU e memória a uma única máquina (scale up).' },
+    { cat:'escalabilidade', icon:'🧩', label:'Sharding', headline:'Cortar o bolo de dados em pedaços, um por convidado.', desc:'Dividir os dados entre vários bancos ou nós, cada um responsável por uma parte.' },
+    { cat:'escalabilidade', icon:'⚡', label:'Cache Distribuído', headline:'Guardar o lanche mais perto da boca.', desc:'Cópia de dados usados com frequência, guardada mais perto de quem vai usá-los.' },
+    { cat:'escalabilidade', icon:'🪞', label:'Replicação', headline:'Vários espelhos do mesmo dado, por garantia.', desc:'Manter cópias dos mesmos dados em vários nós, garantindo disponibilidade se um nó falhar.' },
+    { cat:'escalabilidade', icon:'⚖️', label:'CAP (Teorema CAP)', headline:'Você só pode escolher duas das três pizzas.', desc:'Um sistema distribuído não garante ao mesmo tempo Consistência, Disponibilidade e Tolerância a Partições.' },
+    { cat:'escalabilidade', icon:'📮', label:'Broker', headline:'O carteiro que entrega mensagem sem os dois se conhecerem.', desc:'Intermediário que recebe dados de quem publica e entrega pra quem quer receber, sem acoplamento direto.' },
+    { cat:'escalabilidade', icon:'🌊', label:'Kafka', headline:'O rio de dados que aguenta enchente.', desc:'Sistema de mensageria de alta escala, feito para lidar com grandes volumes de dados em tempo real.' },
+    { cat:'escalabilidade', icon:'🐇', label:'RabbitMQ', headline:'O organizador de filas mais popular do mercado.', desc:'Broker de mensageria que organiza filas de mensagens entre sistemas diferentes.' },
+
+    { cat:'ferramentas', icon:'💻', label:'Codespaces', headline:'Um computador inteiro, dentro do navegador.', desc:'Ambiente de programação completo do GitHub que roda na nuvem, sem precisar instalar nada.' },
+    { cat:'ferramentas', icon:'📦', label:'Devcontainer', headline:'A receita que monta seu ambiente sozinha.', desc:'Configuração que descreve automaticamente o que o Codespaces deve instalar — linguagens, ferramentas.' },
+    { cat:'ferramentas', icon:'🤖', label:'GitHub Actions', headline:'O robô que trabalha sozinho a cada push.', desc:'Ferramenta do GitHub que roda comandos automaticamente sempre que algo acontece no repositório.' }
+  ]
+};
+let dictActiveCat = dictData.categories[0].key;
+function renderDictTabs(){
+  const wrap = document.getElementById('dict-tabs');
+  wrap.innerHTML = '';
+  dictData.categories.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className = 'dict-tab' + (c.key === dictActiveCat ? ' active' : '');
+    btn.textContent = c.label;
+    btn.addEventListener('click', ()=>{ dictActiveCat = c.key; beep(500,0.07,'sine',0.07); renderDictTabs(); renderDictGrid(); });
+    wrap.appendChild(btn);
   });
-  document.getElementById('glossary-empty').style.display = visible === 0 ? 'block' : 'none';
-});
+  const back = document.createElement('a');
+  back.className = 'dict-tab back';
+  back.href = 'index.html';
+  back.textContent = 'Voltar →';
+  wrap.appendChild(back);
+}
+function renderDictGrid(){
+  const grid = document.getElementById('dict-grid');
+  grid.innerHTML = '';
+  const items = dictData.terms.filter(t=> t.cat === dictActiveCat);
+  items.forEach((t,i)=>{
+    const card = document.createElement('div');
+    card.className = 'dict-card';
+    card.innerHTML = `<div class="dict-card-top"><div class="dict-icon">${t.icon}</div><span class="dict-num">#${String(i+1).padStart(2,'0')}</span></div>
+      <div class="dict-label">${t.label}</div>
+      <div class="dict-headline">${t.headline}</div>
+      <p class="dict-desc">${t.desc}</p>`;
+    grid.appendChild(card);
+  });
+}
+renderDictTabs();
+renderDictGrid();
 
 renderXP();
 </script>

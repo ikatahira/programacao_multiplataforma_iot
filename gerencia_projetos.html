@@ -96,6 +96,30 @@
 
   .glossary-search{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 16px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.88rem;margin-bottom:18px;}
   .glossary-search:focus{outline:none;border-color:var(--accent);}
+
+  .dict-wrap{scroll-margin-top:80px;}
+  .dict-badge{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--accent2);background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);padding:6px 14px;border-radius:99px;letter-spacing:1px;margin-bottom:18px;}
+  .dict-title{font-family:'Syne',sans-serif;font-style:italic;font-weight:800;font-size:clamp(2.2rem,7vw,3.6rem);line-height:.98;color:#fff;margin-bottom:18px;}
+  .dict-title-accent{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .dict-sub{color:var(--muted2);font-size:.95rem;line-height:1.7;max-width:620px;margin-bottom:26px;}
+  .dict-sub strong{color:var(--text);}
+  .dict-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+  .dict-tab{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.5px;text-transform:uppercase;background:var(--surface);border:1px solid var(--border);color:var(--muted2);padding:11px 20px;border-radius:99px;cursor:pointer;transition:.2s;white-space:nowrap;}
+  .dict-tab:hover{border-color:var(--accent);color:#fff;}
+  .dict-tab.active{background:linear-gradient(135deg,var(--accent),#7c3aed);border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(167,139,250,.35);}
+  .dict-tab.back{margin-left:auto;background:none;}
+  .dict-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .dict-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 20px;position:relative;overflow:hidden;transition:transform .25s, border-color .25s;}
+  .dict-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+  .dict-card:hover{transform:translateY(-4px);border-color:rgba(167,139,250,.4);}
+  .dict-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+  .dict-icon{width:42px;height:42px;border-radius:10px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+  .dict-num{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted);}
+  .dict-label{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:1.5px;color:var(--muted2);text-transform:uppercase;margin-bottom:8px;}
+  .dict-headline{font-family:'Syne',sans-serif;font-style:italic;font-weight:800;font-size:1.15rem;line-height:1.25;color:var(--accent);margin-bottom:12px;}
+  .dict-desc{color:var(--muted2);font-size:.83rem;line-height:1.65;}
+  @media(max-width:980px){ .dict-grid{grid-template-columns:repeat(2,1fr);} }
+  @media(max-width:560px){ .dict-grid{grid-template-columns:1fr;} .dict-tab.back{margin-left:0;} }
   .glossary-list{display:grid;gap:10px;}
   .term-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;}
   .term-item dt{font-family:'Syne',sans-serif;color:#fff;font-weight:700;font-size:.92rem;margin-bottom:5px;}
@@ -604,38 +628,13 @@
 
   <div class="divider"></div>
 
-  <!-- GLOSSÁRIO -->
-  <div class="section-tag">// Consulta rápida</div>
-  <h2 class="section-title" id="nav-glossario">📚 Glossário</h2>
-  <p class="section-desc">Todo termo técnico usado nesta missão, explicado em uma frase. Use a busca pra achar rápido.</p>
-
-  <div class="lab-panel">
-    <input type="text" id="glossary-search" class="glossary-search" placeholder="Buscar um termo... (ex: scrum, WIP, TDD)">
-    <dl class="glossary-list" id="glossary-list">
-      <div class="term-item"><dt>Coding Dojo</dt><dd>Prática de aprendizado coletivo de programação em grupo, geralmente sob um tempo limitado, resolvendo um desafio juntos.</dd></div>
-      <div class="term-item"><dt>Daily Scrum</dt><dd>Reunião diária curta (cerca de 15 minutos) onde o time alinha o que foi feito, o que será feito e quais bloqueios existem.</dd></div>
-      <div class="term-item"><dt>Development Team</dt><dd>Equipe multidisciplinar responsável por transformar itens do backlog em software funcional.</dd></div>
-      <div class="term-item"><dt>Gamificação</dt><dd>Uso de elementos de jogos — pontos, níveis, badges, desafios — em contextos que não são jogos, para aumentar engajamento e motivação.</dd></div>
-      <div class="term-item"><dt>GitHub Projects</dt><dd>Ferramenta de quadro Kanban integrada diretamente ao repositório do GitHub.</dd></div>
-      <div class="term-item"><dt>Incremento</dt><dd>A soma de tudo o que foi entregue e está em estado utilizável ao final de uma sprint.</dd></div>
-      <div class="term-item"><dt>Kanban</dt><dd>Método visual de gestão de fluxo de trabalho, baseado em colunas (A Fazer, Em Andamento, Concluído) e limite de tarefas em andamento.</dd></div>
-      <div class="term-item"><dt>Manifesto Ágil</dt><dd>Documento publicado em 2001 que define os quatro valores centrais do desenvolvimento ágil de software.</dd></div>
-      <div class="term-item"><dt>Metodologia Ágil</dt><dd>Abordagem de gestão de projetos baseada em ciclos curtos, entregas contínuas e adaptação constante a mudanças — o oposto do modelo em cascata.</dd></div>
-      <div class="term-item"><dt>Product Backlog</dt><dd>Lista priorizada de tudo o que o produto precisa: funcionalidades, correções, melhorias.</dd></div>
-      <div class="term-item"><dt>Product Owner (PO)</dt><dd>Pessoa que representa o cliente/usuário e prioriza o que o time deve construir.</dd></div>
-      <div class="term-item"><dt>Randori</dt><dd>Formato do Coding Dojo onde duplas se revezam programando em frente ao grupo, trocando de piloto e copiloto a cada rodada.</dd></div>
-      <div class="term-item"><dt>Scrum</dt><dd>Framework ágil que organiza o trabalho em ciclos curtos chamados sprints, com papéis, eventos e artefatos bem definidos.</dd></div>
-      <div class="term-item"><dt>Scrum Master (SM)</dt><dd>Pessoa que facilita o processo Scrum e remove impedimentos do time — não é o "chefe" do grupo.</dd></div>
-      <div class="term-item"><dt>Sprint</dt><dd>Ciclo curto e fixo de trabalho, geralmente de 1 a 4 semanas, no qual o time entrega um incremento do produto.</dd></div>
-      <div class="term-item"><dt>Sprint Backlog</dt><dd>Itens selecionados do Product Backlog para serem feitos durante a sprint atual.</dd></div>
-      <div class="term-item"><dt>Sprint Planning</dt><dd>Reunião no início da sprint para decidir, junto com o time, o que será entregue.</dd></div>
-      <div class="term-item"><dt>Sprint Retrospective</dt><dd>Reunião ao final da sprint onde o time reflete sobre o que funcionou e o que pode melhorar no processo.</dd></div>
-      <div class="term-item"><dt>Sprint Review</dt><dd>Reunião ao final da sprint onde o time apresenta o incremento pronto para quem interessa.</dd></div>
-      <div class="term-item"><dt>Story Points</dt><dd>Unidade usada para estimar o esforço ou a complexidade de um item do backlog, sem usar horas exatas.</dd></div>
-      <div class="term-item"><dt>TDD (Test-Driven Development)</dt><dd>Prática de escrever o teste antes do código, seguindo o ciclo Red (falha), Green (passa) e Refactor (limpa).</dd></div>
-      <div class="term-item"><dt>WIP (Work In Progress)</dt><dd>Quantidade de tarefas em andamento ao mesmo tempo. Limitar o WIP evita que o time (ou uma pessoa) fique sobrecarregado fazendo tudo pela metade.</dd></div>
-    </dl>
-    <p class="glossary-empty" id="glossary-empty" style="display:none;">Nenhum termo encontrado. Tenta outra palavra.</p>
+  <!-- DICIONÁRIO -->
+  <div class="dict-wrap" id="nav-glossario">
+    <span class="dict-badge">⚡ TRADUÇÃO ISW044</span>
+    <h2 class="dict-title">DICIONÁRIO<br><span class="dict-title-accent">DA SPRINT</span></h2>
+    <p class="dict-sub">Esqueça o corporativês. Aqui a gente traduz os termos chiques pra vida real. Explore os <strong>22 termos fundamentais</strong>.</p>
+    <div class="dict-tabs" id="dict-tabs"></div>
+    <div class="dict-grid" id="dict-grid"></div>
   </div>
 
   <div class="divider"></div>
@@ -1266,18 +1265,75 @@ document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb=>{
   });
 });
 
-/* GLOSSARY SEARCH */
-document.getElementById('glossary-search').addEventListener('input', function(){
-  const q = this.value.trim().toLowerCase();
-  const items = document.querySelectorAll('#glossary-list .term-item');
-  let visible = 0;
-  items.forEach(item=>{
-    const match = item.textContent.toLowerCase().includes(q);
-    item.classList.toggle('hidden', !match);
-    if(match) visible++;
+/* ---------- DICIONÁRIO ---------- */
+const dictData = {
+  categories: [
+    { key:'cultura', label:'Cultura Ágil' },
+    { key:'scrum', label:'Scrum' },
+    { key:'kanban', label:'Kanban' },
+    { key:'dojo', label:'Dojo & TDD' }
+  ],
+  terms: [
+    { cat:'cultura', icon:'🏃', label:'Metodologia Ágil', headline:'Trabalhar em pedaços pequenos, em vez de um tijolo só.', desc:'Abordagem baseada em ciclos curtos, entregas contínuas e adaptação constante a mudanças.' },
+    { cat:'cultura', icon:'📜', label:'Manifesto Ágil', headline:'As quatro regras que mudaram como o mundo programa.', desc:'Documento de 2001 que define os quatro valores centrais do desenvolvimento ágil de software.' },
+    { cat:'cultura', icon:'🎮', label:'Gamificação', headline:'Fazer o trabalho chato virar fase de jogo.', desc:'Uso de elementos de jogos — pontos, badges, desafios — em contextos que não são jogos, pra aumentar engajamento.' },
+    { cat:'cultura', icon:'🗂️', label:'GitHub Projects', headline:'O quadro Kanban que já vem junto do código.', desc:'Ferramenta de quadro Kanban integrada diretamente ao repositório do GitHub.' },
+
+    { cat:'scrum', icon:'🏉', label:'Scrum', headline:'O jogo de equipe com regras pra entregar rápido.', desc:'Framework ágil que organiza o trabalho em ciclos curtos chamados sprints, com papéis e eventos definidos.' },
+    { cat:'scrum', icon:'🎯', label:'Product Owner', headline:'Quem decide o que entra no cardápio primeiro.', desc:'Representa o cliente/usuário e prioriza o que o time deve construir.' },
+    { cat:'scrum', icon:'🧭', label:'Scrum Master', headline:'O facilitador que tira pedra do caminho, não o chefe.', desc:'Facilita o processo Scrum e remove impedimentos do time.' },
+    { cat:'scrum', icon:'👥', label:'Development Team', headline:'A galera que transforma ideia em código de verdade.', desc:'Equipe multidisciplinar responsável por transformar itens do backlog em software funcional.' },
+    { cat:'scrum', icon:'⏱️', label:'Sprint', headline:'Um ciclo curto com prazo pra valer.', desc:'Ciclo fixo de trabalho, geralmente de 1 a 4 semanas, no qual o time entrega um incremento do produto.' },
+    { cat:'scrum', icon:'📋', label:'Sprint Planning', headline:'A reunião que decide o que cabe na mochila da sprint.', desc:'Reunião no início da sprint para decidir, junto com o time, o que será entregue.' },
+    { cat:'scrum', icon:'☀️', label:'Daily Scrum', headline:'Quinze minutos por dia pra ninguém se perder.', desc:'Reunião diária curta onde o time alinha o progresso e os bloqueios.' },
+    { cat:'scrum', icon:'🎬', label:'Sprint Review', headline:'A première do que foi construído na sprint.', desc:'Reunião ao final da sprint onde o time apresenta o incremento pronto.' },
+    { cat:'scrum', icon:'🔄', label:'Sprint Retrospective', headline:'O espelho que o time usa pra melhorar sempre.', desc:'Reunião de reflexão sobre o que funcionou e o que pode melhorar no processo.' },
+    { cat:'scrum', icon:'📚', label:'Product Backlog', headline:'A lista de desejos inteira do produto.', desc:'Lista priorizada de tudo o que o produto precisa: funcionalidades, correções, melhorias.' },
+    { cat:'scrum', icon:'✂️', label:'Sprint Backlog', headline:'O pedaço da lista que cabe nesta rodada.', desc:'Itens selecionados do Product Backlog para serem feitos durante a sprint atual.' },
+    { cat:'scrum', icon:'🧱', label:'Incremento', headline:'Cada tijolo pronto e usável que a sprint entrega.', desc:'A soma de tudo o que foi entregue e está em estado utilizável ao final de uma sprint.' },
+    { cat:'scrum', icon:'🃏', label:'Story Points', headline:'A régua sem hora certa pra medir esforço.', desc:'Unidade usada para estimar o esforço ou a complexidade de um item do backlog, sem usar horas exatas.' },
+
+    { cat:'kanban', icon:'📌', label:'Kanban', headline:'O quadro que mostra o trabalho de verdade em movimento.', desc:'Método visual de fluxo de trabalho, baseado em colunas (A Fazer, Em Andamento, Concluído).' },
+    { cat:'kanban', icon:'🚦', label:'WIP (Work In Progress)', headline:'O sinal vermelho pra ninguém abraçar o mundo de uma vez.', desc:'Quantidade de tarefas em andamento ao mesmo tempo; limitar o WIP evita sobrecarga.' },
+
+    { cat:'dojo', icon:'🥋', label:'Coding Dojo', headline:'O treino em grupo pra ficar bom em programar.', desc:'Prática de aprendizado coletivo de programação, resolvendo um desafio juntos, sob tempo limitado.' },
+    { cat:'dojo', icon:'🔁', label:'Randori', headline:'Revezar o teclado pra todo mundo suar a camisa.', desc:'Formato do Coding Dojo onde duplas se revezam programando em frente ao grupo.' },
+    { cat:'dojo', icon:'🧪', label:'TDD', headline:'Escrever o teste antes de saber a resposta.', desc:'Prática de escrever o teste antes do código, seguindo o ciclo Red (falha), Green (passa), Refactor (limpa).' }
+  ]
+};
+let dictActiveCat = dictData.categories[0].key;
+function renderDictTabs(){
+  const wrap = document.getElementById('dict-tabs');
+  wrap.innerHTML = '';
+  dictData.categories.forEach(c=>{
+    const btn = document.createElement('button');
+    btn.className = 'dict-tab' + (c.key === dictActiveCat ? ' active' : '');
+    btn.textContent = c.label;
+    btn.addEventListener('click', ()=>{ dictActiveCat = c.key; beep(500,0.07,'sine',0.07); renderDictTabs(); renderDictGrid(); });
+    wrap.appendChild(btn);
   });
-  document.getElementById('glossary-empty').style.display = visible === 0 ? 'block' : 'none';
-});
+  const back = document.createElement('a');
+  back.className = 'dict-tab back';
+  back.href = 'index.html';
+  back.textContent = 'Voltar →';
+  wrap.appendChild(back);
+}
+function renderDictGrid(){
+  const grid = document.getElementById('dict-grid');
+  grid.innerHTML = '';
+  const items = dictData.terms.filter(t=> t.cat === dictActiveCat);
+  items.forEach((t,i)=>{
+    const card = document.createElement('div');
+    card.className = 'dict-card';
+    card.innerHTML = `<div class="dict-card-top"><div class="dict-icon">${t.icon}</div><span class="dict-num">#${String(i+1).padStart(2,'0')}</span></div>
+      <div class="dict-label">${t.label}</div>
+      <div class="dict-headline">${t.headline}</div>
+      <p class="dict-desc">${t.desc}</p>`;
+    grid.appendChild(card);
+  });
+}
+renderDictTabs();
+renderDictGrid();
 
 renderXP();
 </script>
