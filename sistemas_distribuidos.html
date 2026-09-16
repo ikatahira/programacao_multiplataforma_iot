@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complemento - Sistemas Distribuídos | ISW044</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background: linear-gradient(135deg, #4a1942 0%, #f43f5e 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%); color: white; padding: 40px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .header .module { font-size: 1.2em; opacity: 0.95; margin-bottom: 5px; }
+        .header .week { font-size: 1.1em; opacity: 0.9; }
+        .content { padding: 40px; }
+        .section { margin: 40px 0; }
+        .section h2 { color: #f43f5e; font-size: 2em; margin-bottom: 20px; border-bottom: 3px solid #fb923c; padding-bottom: 10px; }
+        .objetivos { background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); padding: 30px; border-radius: 15px; margin-bottom: 40px; border-left: 5px solid #f43f5e; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .objetivos h2 { color: #f43f5e; margin-bottom: 20px; }
+        .objetivos ul { list-style-position: inside; }
+        .objetivos li { margin: 12px 0; font-size: 1.1em; padding-left: 10px; }
+        .teoria { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .teoria h3 { color: #f43f5e; margin: 25px 0 15px 0; font-size: 1.6em; }
+        .teoria h4 { color: #fb923c; margin: 20px 0 10px 0; font-size: 1.3em; }
+        .teoria p { margin: 15px 0; text-align: justify; line-height: 1.8; }
+        .teoria ul, .teoria ol { margin: 15px 0 15px 30px; }
+        .teoria li { margin: 10px 0; line-height: 1.8; }
+        .teoria strong { color: #f43f5e; font-weight: 600; }
+        .teoria code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; color: #e11d48; }
+        .teoria pre { background: #2d3436; color: #38ef7d; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: .92em; }
+        .pilar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 25px 0; }
+        .pilar-card { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 15px; padding: 25px; border-top: 5px solid #f43f5e; }
+        .pilar-card h4 { color: #be123c; margin-bottom: 10px; font-size: 1.25em; }
+        .pilar-card p { color: #555; margin: 8px 0; text-align: left; }
+        .videos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .video-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s; color: white; }
+        .video-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .video-number { background: rgba(255,255,255,0.3); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em; margin-bottom: 15px; }
+        .video-card h4 { color: white; margin-bottom: 12px; font-size: 1.2em; }
+        .video-card p { color: rgba(255,255,255,0.9); margin: 8px 0; font-size: 0.95em; }
+        .activity-card { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 15px; padding: 30px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border-left: 6px solid #f43f5e; }
+        .activity-card h3 { color: #be123c; margin-bottom: 15px; font-size: 1.5em; }
+        .activity-desc { color: #555; font-size: 1.1em; margin-bottom: 20px; font-style: italic; line-height: 1.6; }
+        .activity-card h4 { color: #f43f5e; margin: 20px 0 12px 0; font-size: 1.2em; }
+        .instructions { background: white; padding: 20px 20px 20px 40px; border-radius: 8px; margin: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .instructions li { margin: 12px 0; line-height: 1.7; }
+        .deliverable { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 18px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #2196f3; }
+        .deliverable strong { color: #1976d2; }
+        .criteria { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 18px 18px 18px 40px; border-radius: 8px; margin: 12px 0; border-left: 5px solid #4caf50; }
+        .criteria li { margin: 10px 0; color: #2e7d32; }
+        .materials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
+        .material-card { background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); transition: transform 0.3s; border-top: 5px solid #f39c12; }
+        .material-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .material-card h4 { color: #d35400; margin-bottom: 12px; font-size: 1.2em; }
+        .material-card p { color: #555; margin: 8px 0; font-size: 0.95em; }
+        .material-link { display: inline-block; margin-top: 15px; padding: 12px 25px; background: #e67e22; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; transition: all 0.3s; }
+        .material-link:hover { background: #d35400; transform: scale(1.05); }
+        .badge-relacionado { display: inline-block; margin-top: 14px; background: rgba(255,255,255,.25); padding: 6px 16px; border-radius: 999px; font-size: .85em; }
+        .navigation { display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); flex-wrap: wrap; gap: 15px; }
+        .nav-button { padding: 15px 30px; background: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 1.05em; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .nav-button:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4); }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .content { padding: 20px; }
+            .videos-grid, .materials-grid, .pilar-grid { grid-template-columns: 1fr; }
+            .navigation { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="module">🧩 Complemento da Ementa · Sistemas Distribuídos</div>
+            <div class="week">Relacionado à Semana 16 — Arquiteturas Multiplataforma</div>
+            <h1>Concorrência, Openness e Escalabilidade</h1>
+            <span class="badge-relacionado">📋 Conteúdo previsto no PPC da disciplina ISW044</span>
+        </div>
+
+        <div class="content">
+            <div class="objetivos">
+                <h2>🎯 Objetivos de Aprendizagem</h2>
+                <ul>
+                    <li>Compreender as características fundamentais dos <strong>Sistemas Distribuídos</strong></li>
+                    <li>Diferenciar concorrência de paralelismo e identificar riscos como condições de corrida</li>
+                    <li>Entender o conceito de <strong>openness</strong> (abertura/interoperabilidade) em arquiteturas de software</li>
+                    <li>Aplicar estratégias de <strong>escalabilidade</strong> vertical e horizontal em sistemas multiplataforma e IoT</li>
+                    <li>Relacionar esses conceitos com os brokers e protocolos já estudados (MQTT, RabbitMQ, Kafka)</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>📚 Conteúdo Teórico</h2>
+                <div class="teoria">
+                    <h3>Introdução: O que é um Sistema Distribuído?</h3>
+                    <p>Um <strong>sistema distribuído</strong> é um conjunto de computadores independentes que se apresenta ao usuário como um único sistema coerente. Em um projeto multiplataforma com IoT — como o projeto integrador desta disciplina — isso é exatamente o que acontece: dispositivos ESP32/Arduino, um backend, um broker de mensageria, um banco de dados e aplicações web/mobile/desktop, todos rodando em máquinas diferentes, precisam se comportar como um sistema único e confiável.</p>
+
+                    <p>Segundo a literatura clássica (Tanenbaum & Van Steen), um sistema distribuído é caracterizado por algumas propriedades centrais — três delas são explicitamente citadas na ementa da disciplina: <strong>concorrência</strong>, <strong>openness</strong> e <strong>escalabilidade</strong>.</p>
+
+                    <div class="pilar-grid">
+                        <div class="pilar-card">
+                            <h4>⚡ Concorrência</h4>
+                            <p>Múltiplos componentes executam e acessam recursos compartilhados <strong>ao mesmo tempo</strong>, sem que um processo precise esperar o outro terminar.</p>
+                        </div>
+                        <div class="pilar-card">
+                            <h4>🔓 Openness</h4>
+                            <p>O sistema é construído sobre <strong>padrões e interfaces abertas</strong>, permitindo que componentes heterogêneos e de fornecedores diferentes se comuniquem.</p>
+                        </div>
+                        <div class="pilar-card">
+                            <h4>📈 Escalabilidade</h4>
+                            <p>O sistema continua funcionando de forma eficiente conforme o número de usuários, dispositivos ou volume de dados <strong>cresce</strong>.</p>
+                        </div>
+                    </div>
+
+                    <h3>1. Concorrência</h3>
+                    <p><strong>Concorrência</strong> é a capacidade de um sistema lidar com múltiplas tarefas progredindo dentro do mesmo intervalo de tempo. É diferente de <strong>paralelismo</strong>, que exige múltiplos núcleos executando instruções literalmente ao mesmo tempo — a concorrência pode ocorrer até em um único núcleo, através de alternância rápida entre tarefas (como faz o event loop do Node.js).</p>
+
+                    <h4>Processos vs. Threads</h4>
+                    <ul>
+                        <li><strong>Processo:</strong> unidade independente de execução, com seu próprio espaço de memória.</li>
+                        <li><strong>Thread:</strong> unidade de execução dentro de um processo, compartilhando memória com as demais threads do mesmo processo — mais leve, porém mais arriscada.</li>
+                    </ul>
+
+                    <h4>Condição de corrida (Race Condition)</h4>
+                    <p>Ocorre quando duas ou mais threads/processos acessam e modificam o mesmo dado compartilhado simultaneamente, e o resultado final depende da ordem imprevisível de execução. É um dos bugs mais difíceis de reproduzir e depurar em sistemas distribuídos — imagine dois sensores IoT tentando gravar no mesmo registro do banco de dados ao mesmo tempo.</p>
+
+                    <p>Estratégias comuns para evitar isso incluem <strong>locks/mutex</strong> (região crítica exclusiva), <strong>semáforos</strong>, filas de mensageria (que serializam o processamento) e modelos <strong>assíncronos não bloqueantes</strong>, como o usado em Node.js.</p>
+
+                    <h4>Exemplo — Concorrência em Node.js (assíncrono)</h4>
+                    <pre>
+// Múltiplas leituras de sensores IoT em paralelo, sem bloquear o event loop
+async function lerTodosSensores(sensores) {
+  const leituras = await Promise.all(
+    sensores.map((sensor) => lerSensor(sensor))
+  );
+  return leituras;
+}
+
+async function lerSensor(sensor) {
+  const resposta = await fetch(`http://broker.local/sensores/${sensor.id}`);
+  return resposta.json();
+}
+                    </pre>
+
+                    <h4>Exemplo — Concorrência em Python (threading vs. multiprocessing)</h4>
+                    <pre>
+import threading
+
+def processar_leitura(id_sensor):
+    print(f"Processando dados do sensor {id_sensor}")
+
+threads = []
+for i in range(5):
+    t = threading.Thread(target=processar_leitura, args=(i,))
+    threads.append(t)
+    t.start()
+
+for t in threads:
+    t.join()  # aguarda todas as threads terminarem
+                    </pre>
+                    <p>Em Python, o <strong>GIL</strong> (Global Interpreter Lock) limita a execução real em paralelo de threads Python puras — por isso, tarefas que exigem muito processamento costumam usar <code>multiprocessing</code> em vez de <code>threading</code>.</p>
+
+                    <h3>2. Openness (Abertura)</h3>
+                    <p>Um sistema é considerado <strong>aberto</strong> quando expõe suas interfaces através de <strong>padrões documentados e independentes de fornecedor</strong>, permitindo que qualquer cliente compatível se conecte a ele — mesmo que tenha sido construído por outra equipe, em outra linguagem.</p>
+
+                    <ul>
+                        <li><strong>Protocolos abertos já usados no curso:</strong> HTTP/REST, MQTT, WebSocket — todos com especificações públicas.</li>
+                        <li><strong>Formatos abertos:</strong> JSON, XML — em vez de formatos binários proprietários.</li>
+                        <li><strong>APIs documentadas:</strong> Swagger/OpenAPI, permitindo que qualquer plataforma (web, mobile, desktop) consuma o mesmo backend.</li>
+                        <li><strong>Interoperabilidade:</strong> um sensor ESP32 publicando em um broker MQTT não precisa "saber" se quem vai consumir aquele dado é um app React Native, um dashboard React ou um app Electron — o protocolo aberto garante essa desacoplagem.</li>
+                    </ul>
+                    <p>O oposto da openness são sistemas <strong>proprietários/fechados</strong>, que travam o desenvolvedor a um único fornecedor (vendor lock-in) e dificultam a integração entre plataformas — exatamente o problema que a disciplina busca evitar ao ensinar múltiplas plataformas integradas por protocolos abertos.</p>
+
+                    <h3>3. Escalabilidade</h3>
+                    <p><strong>Escalabilidade</strong> é a capacidade de um sistema continuar respondendo bem mesmo quando a carga (usuários, dispositivos IoT, volume de mensagens) aumenta.</p>
+
+                    <h4>Escalabilidade Vertical x Horizontal</h4>
+                    <ul>
+                        <li><strong>Vertical (scale up):</strong> aumentar os recursos de uma única máquina (mais CPU, RAM). Simples, mas tem limite físico.</li>
+                        <li><strong>Horizontal (scale out):</strong> adicionar mais máquinas/instâncias trabalhando em conjunto. É a abordagem usada por brokers como Kafka e RabbitMQ em cluster.</li>
+                    </ul>
+
+                    <h4>Técnicas comuns</h4>
+                    <ul>
+                        <li><strong>Load balancing:</strong> distribuir requisições entre várias instâncias do backend.</li>
+                        <li><strong>Sharding/Particionamento:</strong> dividir os dados entre vários bancos/nós (o Kafka, visto no Módulo 6, particiona tópicos justamente por isso).</li>
+                        <li><strong>Cache distribuído:</strong> reduzir a carga no banco de dados principal (Redis, por exemplo).</li>
+                        <li><strong>Replicação:</strong> manter cópias dos dados em múltiplos nós para disponibilidade.</li>
+                    </ul>
+
+                    <h4>Teorema CAP</h4>
+                    <p>Em sistemas distribuídos escaláveis, o Teorema CAP afirma que não é possível garantir simultaneamente <strong>Consistência</strong>, <strong>Disponibilidade</strong> e <strong>Tolerância a Partições</strong> — é preciso escolher trade-offs conforme o caso de uso. Um sistema de monitoramento IoT, por exemplo, geralmente prioriza disponibilidade (receber dados o tempo todo) em detrimento de consistência absoluta e imediata.</p>
+
+                    <h3>Como esses conceitos se conectam ao restante da disciplina</h3>
+                    <ul>
+                        <li>Os <strong>brokers de mensageria</strong> (MQTT, RabbitMQ, Kafka — Módulo 6) resolvem concorrência ao enfileirar mensagens, e escalabilidade ao permitir múltiplos consumidores/produtores.</li>
+                        <li>As <strong>APIs REST/GraphQL</strong> (Módulos 4 e 7) são a materialização prática da openness.</li>
+                        <li>O <strong>banco NoSQL e InfluxDB</strong> (Módulo 7) aplicam sharding/replicação para armazenamento em grande escala.</li>
+                        <li>O <strong>Projeto Integrador</strong> (Semana 40) é, na prática, um sistema distribuído completo: vários dispositivos IoT concorrentes, publicando por protocolo aberto (MQTT), consumidos por um backend escalável.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💪 Atividades Práticas</h2>
+
+                <div class="activity-card">
+                    <h3>🔬 Atividade 1: Simulando Concorrência com Sensores IoT</h3>
+                    <p class="activity-desc">Implemente uma pequena aplicação que simule múltiplos sensores enviando leituras simultaneamente, evidenciando o problema de condição de corrida e sua solução.</p>
+                    <h4>📋 Instruções:</h4>
+                    <ol class="instructions">
+                        <li>Crie uma variável compartilhada (ex.: contador de leituras total)</li>
+                        <li>Simule 10 "sensores" (threads, processos ou promises) escrevendo nessa variável ao mesmo tempo, sem proteção</li>
+                        <li>Rode várias vezes e demonstre que o resultado final varia (a condição de corrida)</li>
+                        <li>Corrija o problema usando lock/mutex (ou uma fila) e demonstre que o resultado passa a ser sempre consistente</li>
+                        <li>Documente a diferença observada antes e depois da correção</li>
+                    </ol>
+                    <div class="deliverable">
+                        <strong>📦 Entregável:</strong> Código-fonte comentado + print/relatório comparando os dois cenários
+                    </div>
+                    <h4>✅ Critérios de Avaliação:</h4>
+                    <ul class="criteria">
+                        <li>Demonstração clara da condição de corrida</li>
+                        <li>Correção funcional aplicada corretamente</li>
+                        <li>Qualidade da explicação técnica</li>
+                    </ul>
+                </div>
+
+                <div class="activity-card">
+                    <h3>🔓 Atividade 2: Auditoria de Openness</h3>
+                    <p class="activity-desc">Analise o projeto integrador (ou outro sistema real) sob a ótica de abertura/interoperabilidade.</p>
+                    <h4>📋 Instruções:</h4>
+                    <ol class="instructions">
+                        <li>Liste todos os protocolos e formatos de dados usados no seu projeto (MQTT, REST, JSON etc.)</li>
+                        <li>Para cada um, indique se é um padrão aberto ou proprietário</li>
+                        <li>Identifique pontos de "vendor lock-in" (dependência de um único fornecedor) se existirem</li>
+                        <li>Proponha alternativas abertas para eventuais pontos fechados</li>
+                    </ol>
+                    <div class="deliverable">
+                        <strong>📦 Entregável:</strong> Relatório curto (1-2 páginas) com a auditoria
+                    </div>
+                    <h4>✅ Critérios de Avaliação:</h4>
+                    <ul class="criteria">
+                        <li>Cobertura completa dos protocolos usados</li>
+                        <li>Justificativa técnica correta sobre abertura</li>
+                        <li>Qualidade das propostas de melhoria</li>
+                    </ul>
+                </div>
+
+                <div class="activity-card">
+                    <h3>📈 Atividade 3: Debate — Teorema CAP e Escalabilidade</h3>
+                    <p class="activity-desc">Discussão em grupo sobre trade-offs de escalabilidade aplicados a um sistema IoT em larga escala.</p>
+                    <h4>📋 Instruções:</h4>
+                    <ol class="instructions">
+                        <li>Forme grupos de 4-5 alunos</li>
+                        <li>Cada grupo recebe um cenário (ex.: 1 milhão de sensores enviando dados por minuto)</li>
+                        <li>Discuta se o sistema deve priorizar Consistência ou Disponibilidade (CAP)</li>
+                        <li>Proponha uma estratégia de escalabilidade horizontal para o cenário</li>
+                        <li>Apresente as conclusões para a turma</li>
+                    </ol>
+                    <div class="deliverable">
+                        <strong>📦 Entregável:</strong> Slide/documento com a decisão do grupo e justificativa
+                    </div>
+                    <h4>✅ Critérios de Avaliação:</h4>
+                    <ul class="criteria">
+                        <li>Coerência técnica da decisão CAP</li>
+                        <li>Viabilidade da estratégia de escalabilidade proposta</li>
+                        <li>Clareza na apresentação</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📖 Materiais Complementares</h2>
+                <div class="materials-grid">
+                    <div class="material-card">
+                        <h4>📚 Distributed Systems (Tanenbaum & Van Steen)</h4>
+                        <p><strong>Tipo:</strong> Livro-texto clássico</p>
+                        <p><strong>Fonte:</strong> distributed-systems.net</p>
+                        <a href="https://www.distributed-systems.net/index.php/books/ds3/" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>🧠 CAP Theorem Explicado</h4>
+                        <p><strong>Tipo:</strong> Artigo técnico</p>
+                        <p><strong>Fonte:</strong> IBM / documentação técnica</p>
+                        <a href="https://www.ibm.com/topics/cap-theorem" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>⚙️ Node.js Event Loop</h4>
+                        <p><strong>Tipo:</strong> Documentação oficial</p>
+                        <p><strong>Fonte:</strong> nodejs.org</p>
+                        <a href="https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>🐍 Python Threading vs Multiprocessing</h4>
+                        <p><strong>Tipo:</strong> Documentação oficial</p>
+                        <p><strong>Fonte:</strong> docs.python.org</p>
+                        <a href="https://docs.python.org/3/library/concurrency.html" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>📄 REST & OpenAPI Specification</h4>
+                        <p><strong>Tipo:</strong> Especificação aberta</p>
+                        <p><strong>Fonte:</strong> swagger.io</p>
+                        <a href="https://swagger.io/specification/" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                    <div class="material-card">
+                        <h4>🏭 Escalabilidade com Kafka</h4>
+                        <p><strong>Tipo:</strong> Documentação técnica</p>
+                        <p><strong>Fonte:</strong> kafka.apache.org</p>
+                        <a href="https://kafka.apache.org/documentation/#design" class="material-link" target="_blank">🔗 Acessar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="semana16.html" class="nav-button">⬅️ S·16 Arquiteturas Multiplataforma</a>
+            <a href="index.html" class="nav-button">🏠 Início</a>
+            <a href="gerencia_projetos.html" class="nav-button">Próximo complemento ➡️</a>
+        </div>
+    </div>
+</body>
+</html>
