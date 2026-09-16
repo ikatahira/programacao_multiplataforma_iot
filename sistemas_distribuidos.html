@@ -16,64 +16,96 @@
   body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
   body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(244,63,94,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,63,94,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
 
-  /* TOPBAR + XP */
-  .topbar{position:sticky;top:0;z-index:200;background:rgba(12,15,26,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:14px 24px;}
+  .topbar{position:sticky;top:0;z-index:200;background:rgba(12,15,26,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;}
   .topbar-row{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
   .topbar-title{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--accent);letter-spacing:2px;white-space:nowrap;}
-  .xp-wrap{flex:1;min-width:160px;}
+  .clock-wrap{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--accent2);background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.25);padding:5px 10px;border-radius:6px;white-space:nowrap;}
+  .xp-wrap{flex:1;min-width:140px;}
   .xp-label{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted2);margin-bottom:4px;display:flex;justify-content:space-between;}
   .xp-track{height:8px;border-radius:99px;background:var(--surface);border:1px solid var(--border);overflow:hidden;}
   .xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s cubic-bezier(.34,1.56,.64,1);}
-  .badges-row{display:flex;gap:8px;}
-  .badge{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--surface);border:1px solid var(--border);opacity:.3;filter:grayscale(1);transition:.3s;cursor:default;}
+  .badges-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .badge{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:var(--surface);border:1px solid var(--border);opacity:.3;filter:grayscale(1);transition:.3s;cursor:default;}
   .badge.unlocked{opacity:1;filter:none;border-color:rgba(244,63,94,.5);box-shadow:0 0 16px rgba(244,63,94,.35);animation:pop .45s;}
   @keyframes pop{0%{transform:scale(.5) rotate(-10deg);}60%{transform:scale(1.25) rotate(6deg);}100%{transform:scale(1) rotate(0);}}
 
-  /* TOAST */
-  .toast{position:fixed;top:80px;right:24px;z-index:500;background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:12px 18px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);transform:translateX(140%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .toast{position:fixed;top:80px;right:24px;z-index:500;background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:12px 18px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);transform:translateX(140%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-width:280px;}
   .toast.show{transform:translateX(0);}
 
-  /* HERO */
-  .hero{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:70px 24px 40px;text-align:center;}
+  .hero{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:60px 24px 36px;text-align:center;}
   .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--accent2);letter-spacing:3px;margin-bottom:16px;}
   .hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3rem);line-height:1.1;margin-bottom:16px;background:linear-gradient(135deg,#fff 30%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
   .hero p{color:var(--muted2);font-size:1rem;line-height:1.7;max-width:640px;margin:0 auto;}
   .hero-link{display:inline-block;margin-top:20px;font-size:.82rem;color:var(--muted2);text-decoration:none;border:1px solid var(--border);padding:8px 18px;border-radius:8px;}
   .hero-link:hover{border-color:var(--accent);color:var(--accent);}
+  .hero-meta{display:flex;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .meta-pill{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted2);border:1px solid var(--border);padding:4px 12px;border-radius:99px;}
 
   .wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 24px;}
-  .divider{height:1px;background:var(--border);margin:50px 0;}
+  .divider{height:1px;background:var(--border);margin:46px 0;}
   .section-tag{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--accent2);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
   .section-title{font-family:'Syne',sans-serif;font-size:1.6rem;color:#fff;margin-bottom:10px;}
-  .section-desc{color:var(--muted2);font-size:.92rem;line-height:1.7;margin-bottom:26px;}
+  .section-desc{color:var(--muted2);font-size:.92rem;line-height:1.7;margin-bottom:24px;}
 
-  /* PILARES */
   .pilar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
   .pilar-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
   .pilar-card .ico{font-size:1.6rem;margin-bottom:8px;}
   .pilar-card h4{font-family:'Syne',sans-serif;color:#fff;font-size:1rem;margin-bottom:8px;}
   .pilar-card p{color:var(--muted2);font-size:.83rem;line-height:1.6;}
 
-  /* LAB PANEL (game shell) */
+  .scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;}
+  .scenario-card{background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:18px;}
+  .sc-tag{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--accent2);margin-bottom:8px;}
+  .scenario-card p{color:var(--muted2);font-size:.82rem;line-height:1.6;}
+  .scenario-card strong{color:var(--text);}
+
+  .bins{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;}
+  .bin{min-height:160px;border:1.5px dashed var(--border);border-radius:12px;padding:14px;transition:.2s;}
+  .bin.hover{border-color:var(--accent);background:rgba(244,63,94,.06);}
+  .bin.limit-hit{animation:shake .4s;}
+  .bin h5{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted2);margin-bottom:10px;text-align:center;text-transform:uppercase;letter-spacing:1px;}
+  .scenario-chip{touch-action:none;user-select:none;background:var(--card);border:1px solid var(--purple);border-radius:9px;padding:10px 12px;font-size:.78rem;color:var(--text);cursor:grab;margin-bottom:8px;line-height:1.5;}
+  .scenario-chip.dragging{box-shadow:0 12px 30px rgba(0,0,0,.5);cursor:grabbing;}
+  .scenario-chip.placed{opacity:0;pointer-events:none;height:0;padding:0;margin:0;overflow:hidden;}
+  .scenario-pool{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+  .scenario-pool .scenario-chip{flex:1;min-width:220px;margin-bottom:0;}
+  .bin .scenario-chip.correct-in-bin{border-color:var(--green);background:rgba(34,211,165,.1);}
+
+  /* THEORY READING */
+  .teoria-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px 28px;margin-bottom:16px;}
+  .teoria-block h3{font-family:'Syne',sans-serif;color:#fff;font-size:1.15rem;margin:18px 0 10px;}
+  .teoria-block h3:first-child{margin-top:0;}
+  .teoria-block h4{color:var(--accent2);font-size:.95rem;margin:14px 0 8px;}
+  .teoria-block p{color:var(--muted2);font-size:.87rem;line-height:1.75;margin-bottom:10px;}
+  .teoria-block ul{margin:8px 0 14px 20px;color:var(--muted2);font-size:.87rem;line-height:1.75;}
+  .teoria-block li{margin-bottom:6px;}
+  .teoria-block strong{color:var(--text);}
+  .teoria-block code{background:var(--surface);border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.82em;color:var(--accent2);}
+  .teoria-block pre{background:#080a12;border:1px solid var(--border);color:#a3f7bf;padding:16px;border-radius:8px;overflow-x:auto;margin:12px 0;font-size:.78rem;line-height:1.6;font-family:'DM Mono',monospace;}
+  .example-callout{background:rgba(251,146,60,.07);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:.85rem;color:var(--text);}
+  .example-callout .ex-label{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--accent2);letter-spacing:1px;display:block;margin-bottom:4px;}
+  .read-check{display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:14px;border-top:1px dashed var(--border);}
+  .read-check input{width:16px;height:16px;accent-color:var(--accent);}
+  .read-check label{font-size:.8rem;color:var(--muted2);font-family:'DM Mono',monospace;}
+
   .lab-panel{background:linear-gradient(180deg,var(--card),var(--surface));border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
   .lab-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
   .lab-header{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;color:#fff;font-size:1.15rem;margin-bottom:6px;}
   .lab-goal{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--accent2);background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.25);display:inline-block;padding:3px 10px;border-radius:6px;margin-bottom:14px;}
-  .lab-panel p.desc{color:var(--muted2);font-size:.87rem;line-height:1.6;margin-bottom:18px;}
+  .lab-sub{font-size:.8rem;color:var(--muted2);margin-bottom:16px;}
 
-  /* GAME 1 — RACE CONDITION */
-  .counter-display{font-family:'Syne',sans-serif;font-size:3.4rem;font-weight:800;text-align:center;color:#fff;margin:10px 0;transition:transform .15s;}
+  .counter-display{font-family:'Syne',sans-serif;font-size:3.2rem;font-weight:800;text-align:center;color:#fff;margin:10px 0;transition:transform .15s;}
   .counter-display.pulse{animation:pulse-num .3s;}
   @keyframes pulse-num{0%{transform:scale(1);}40%{transform:scale(1.25);color:var(--accent2);}100%{transform:scale(1);}}
-  .lanes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
+  .lanes{display:grid;grid-template-columns:repeat(var(--cols,2),1fr);gap:14px;margin-bottom:18px;}
   .lane{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
-  .lane-label{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted2);display:block;margin-bottom:10px;}
-  .dots{display:flex;gap:6px;}
-  .dot{width:16px;height:16px;border-radius:5px;background:var(--border);transition:.25s;}
+  .lane-label{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted2);display:block;margin-bottom:10px;}
+  .dots{display:flex;gap:5px;flex-wrap:wrap;}
+  .dot{width:14px;height:14px;border-radius:4px;background:var(--border);transition:.25s;}
   .dot.active{background:var(--yellow);animation:blink 0.4s infinite alternate;}
   .dot.lit{background:var(--green);}
   @keyframes blink{from{opacity:.4;}to{opacity:1;}}
-  .lab-result{min-height:24px;font-size:.88rem;margin-bottom:16px;padding:10px 14px;border-radius:8px;}
+  .lab-result{min-height:24px;font-size:.87rem;margin-bottom:16px;padding:10px 14px;border-radius:8px;}
   .lab-result.ok{background:rgba(34,211,165,.1);color:var(--green);border:1px solid rgba(34,211,165,.3);}
   .lab-result.bad{background:rgba(251,75,75,.1);color:var(--red);border:1px solid rgba(251,75,75,.3);}
   .lab-actions{display:flex;gap:10px;flex-wrap:wrap;}
@@ -81,9 +113,10 @@
   .lab-btn:disabled{opacity:.4;cursor:not-allowed;}
   .lab-btn.danger{background:linear-gradient(135deg,#ef4444,#f97316);}
   .lab-btn.safe{background:linear-gradient(135deg,#22d3a5,#4f8cff);}
+  .lab-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));}
+  .lab-btn.ghost{background:var(--surface);border:1px solid var(--border);}
   .lab-btn:not(:disabled):hover{transform:translateY(-2px);}
 
-  /* GAME 2 — MATCH */
   .match-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start;}
   .chips{display:flex;flex-direction:column;gap:10px;}
   .chip{touch-action:none;user-select:none;background:var(--surface);border:1px solid var(--accent);color:#fff;font-size:.83rem;font-weight:600;padding:12px 16px;border-radius:9px;cursor:grab;text-align:center;transition:box-shadow .2s;}
@@ -98,23 +131,28 @@
   @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
   .zone .placed-chip{font-weight:700;color:var(--green);font-family:'DM Mono',monospace;font-size:.72rem;white-space:nowrap;}
 
-  /* GAME 3 — PIPELINE */
   .pipeline-source{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;justify-content:center;}
-  .piece{touch-action:none;user-select:none;background:var(--surface);border:1px solid var(--purple);border-radius:10px;padding:12px 14px;font-size:.8rem;font-weight:600;color:#fff;cursor:grab;text-align:center;min-width:120px;}
+  .piece{touch-action:none;user-select:none;background:var(--surface);border:1px solid var(--purple);border-radius:10px;padding:12px 14px;font-size:.78rem;font-weight:600;color:#fff;cursor:grab;text-align:center;min-width:120px;}
   .piece.dragging{box-shadow:0 12px 30px rgba(0,0,0,.5);cursor:grabbing;}
   .piece.placed{opacity:0;pointer-events:none;}
   .slots{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;position:relative;padding:20px 10px;}
-  .slot{width:130px;min-height:68px;border:1.5px dashed var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.75rem;color:var(--muted);padding:6px;transition:.2s;position:relative;}
+  .slot{width:125px;min-height:64px;border:1.5px dashed var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.72rem;color:var(--muted);padding:6px;transition:.2s;position:relative;}
   .slot.hover{border-color:var(--purple);background:rgba(167,139,250,.08);}
   .slot.correct{border-style:solid;border-color:var(--green);color:#fff;font-weight:700;background:rgba(34,211,165,.08);}
   .slot.shake{animation:shake .4s;}
-  .arrow{color:var(--border);font-size:1.3rem;}
-  .flow-msg{text-align:center;margin-top:18px;font-size:.9rem;color:var(--green);min-height:24px;}
+  .arrow{color:var(--border);font-size:1.2rem;}
+  .flow-msg{text-align:center;margin-top:18px;font-size:.88rem;color:var(--green);min-height:24px;}
   .packet{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 12px var(--accent2);top:50%;left:0;transform:translateY(-50%);opacity:0;}
   .packet.run{animation:travel 2.2s linear;}
   @keyframes travel{0%{left:0;opacity:1;}95%{opacity:1;}100%{left:100%;opacity:0;}}
 
-  /* QUIZ */
+  .reflect-box{margin-top:16px;}
+  .reflect-box label{display:block;font-size:.78rem;color:var(--muted2);margin-bottom:8px;font-family:'DM Mono',monospace;}
+  .reflect-box textarea{width:100%;min-height:90px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;resize:vertical;}
+  .reflect-box textarea:focus{outline:none;border-color:var(--accent);}
+  .reflect-status{font-size:.75rem;color:var(--muted);margin-top:6px;}
+  .reflect-status.ok{color:var(--green);}
+
   .quiz-q{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
   .quiz-q.answered-correct{border-color:var(--green);}
   .quiz-q p.q-text{font-weight:600;color:#fff;margin-bottom:14px;font-size:.92rem;}
@@ -127,7 +165,11 @@
   .quiz-explain{margin-top:10px;font-size:.8rem;color:var(--muted2);display:none;}
   .quiz-explain.show{display:block;}
 
-  /* CERTIFICATE */
+  .checklist{display:flex;flex-direction:column;gap:10px;}
+  .checklist-item{display:flex;align-items:flex-start;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 14px;font-size:.84rem;color:var(--muted2);}
+  .checklist-item input{margin-top:3px;width:16px;height:16px;accent-color:var(--green);flex-shrink:0;}
+  .checklist-item.checked{border-color:var(--green);color:var(--text);}
+
   #certificate{display:none;text-align:center;background:radial-gradient(circle at top,rgba(244,63,94,.15),transparent 60%),var(--card);border:1px solid var(--accent);border-radius:18px;padding:50px 30px;position:relative;overflow:hidden;}
   #certificate h2{font-family:'Syne',sans-serif;font-size:1.8rem;margin-bottom:10px;color:#fff;}
   #certificate p{color:var(--muted2);margin-bottom:20px;}
@@ -148,7 +190,7 @@
   @media(max-width:720px){
     .pilar-grid{grid-template-columns:1fr;}
     .match-wrap{grid-template-columns:1fr;}
-    .lanes{grid-template-columns:1fr;}
+    .lanes{grid-template-columns:1fr !important;}
   }
 </style>
 </head>
@@ -157,6 +199,7 @@
 <div class="topbar">
   <div class="topbar-row">
     <span class="topbar-title">ISW044 · MISSÃO</span>
+    <span class="clock-wrap">⏱️ <span id="session-clock">00:00</span> / 50:00</span>
     <div class="xp-wrap">
       <div class="xp-label"><span>XP</span><span id="xp-count">0 / 100</span></div>
       <div class="xp-track"><div class="xp-fill" id="xp-fill"></div></div>
@@ -165,7 +208,10 @@
       <div class="badge" id="badge-concorrencia" title="Mestre da Concorrência">🔀</div>
       <div class="badge" id="badge-openness" title="Arquiteto Aberto">🔓</div>
       <div class="badge" id="badge-escala" title="Engenheiro de Escala">📈</div>
+      <div class="badge" id="badge-detetive" title="Detetive de Sistemas">🕵️</div>
       <div class="badge" id="badge-quiz" title="Sabe Tudo">🧠</div>
+      <div class="badge" id="badge-redator" title="Redator Técnico">✍️</div>
+      <div class="badge" id="badge-praticante" title="Praticante">🛠️</div>
     </div>
   </div>
 </div>
@@ -175,8 +221,14 @@
 <section class="hero">
   <div class="hero-eyebrow">🧩 COMPLEMENTO DA EMENTA · MISSÃO INTERATIVA</div>
   <h1>Sistemas Distribuídos</h1>
-  <p>Concorrência, Openness e Escalabilidade — três conceitos da ementa, três laboratórios interativos. Rode simulações reais, arraste peças e monte a arquitetura. Complete os 4 desafios para desbloquear seu certificado.</p>
+  <p>Concorrência, Openness e Escalabilidade — três conceitos da ementa, uma aula completa em formato de missão. Leia, rode simulações reais, arraste peças, escreva reflexões e feche com um quiz e um mini-projeto.</p>
   <a href="semana16.html" class="hero-link">← relacionado à S·16 Arquiteturas Multiplataforma</a>
+  <div class="hero-meta">
+    <span class="meta-pill">⏱️ ~50 min</span>
+    <span class="meta-pill">🧪 5 laboratórios</span>
+    <span class="meta-pill">🧠 8 perguntas</span>
+    <span class="meta-pill">🏆 7 conquistas</span>
+  </div>
 </section>
 
 <div class="wrap">
@@ -187,18 +239,93 @@
     <div class="pilar-card"><div class="ico">📈</div><h4>Escalabilidade</h4><p>Capacidade de crescer — mais usuários, mais dispositivos, mais dados — sem perder desempenho.</p></div>
   </div>
 
+  <div class="scenario-grid">
+    <div class="scenario-card">
+      <div class="sc-tag">⚡ Concorrência</div>
+      <p>Uma rifa online por engano vende <strong>o mesmo número para duas pessoas</strong> ao mesmo tempo, porque duas compras chegaram no exato mesmo instante e o sistema não travou o registro a tempo.</p>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-tag">🔓 Openness</div>
+      <p>Você manda e-mail do Gmail pra um amigo no Outlook e funciona sem problema — porque e-mail usa um protocolo aberto (SMTP). Já mandar mensagem do WhatsApp pra quem só tem Telegram, não rola: são apps fechados entre si.</p>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-tag">📈 Escalabilidade</div>
+      <p>Em 2022, a venda de ingressos da turnê da Taylor Swift nos EUA derrubou o site da Ticketmaster: milhões de fãs tentaram comprar ao mesmo tempo e a infraestrutura não aguentou o pico de acesso.</p>
+    </div>
+  </div>
+
   <div class="divider"></div>
 
-  <!-- GAME 1 -->
+  <!-- LEITURA -->
+  <div class="section-tag">// Antes de começar</div>
+  <h2 class="section-title">📖 Fundamentos de Sistemas Distribuídos</h2>
+  <p class="section-desc">Leia com calma — os laboratórios a seguir vão testar exatamente o que está aqui.</p>
+
+  <div class="teoria-block">
+    <h3>O que é um sistema distribuído?</h3>
+    <p>Um <strong>sistema distribuído</strong> é um conjunto de computadores independentes que se apresenta ao usuário como um único sistema coerente. No projeto integrador desta disciplina isso é literal: dispositivos ESP32/Arduino, backend, broker de mensageria, banco de dados e apps web/mobile/desktop rodam em máquinas diferentes, mas precisam se comportar como um sistema único e confiável.</p>
+
+    <h4>⚡ Concorrência</h4>
+    <p>É a capacidade de um sistema lidar com múltiplas tarefas progredindo no mesmo intervalo de tempo — diferente de <strong>paralelismo</strong>, que exige múltiplos núcleos executando literalmente ao mesmo tempo. Concorrência pode ocorrer até em um único núcleo, alternando rapidamente entre tarefas (é o que faz o event loop do Node.js).</p>
+    <ul>
+      <li><strong>Processo:</strong> unidade independente de execução, com seu próprio espaço de memória.</li>
+      <li><strong>Thread:</strong> unidade de execução dentro de um processo, compartilhando memória com as demais — mais leve, porém mais arriscada.</li>
+      <li><strong>Condição de corrida (race condition):</strong> ocorre quando duas execuções acessam e modificam o mesmo dado compartilhado ao mesmo tempo, e o resultado passa a depender da ordem imprevisível de execução.</li>
+    </ul>
+    <div class="example-callout"><span class="ex-label">🎯 EXEMPLO REAL</span>Já tentou pegar um cupom de desconto limitado ou comprar um produto em "oferta relâmpago" e a compra deu erro mesmo o produto aparecendo disponível? Provavelmente foi uma condição de corrida: várias pessoas tentaram reservar o mesmo estoque ao mesmo tempo, e o sistema não bloqueou o registro rápido o suficiente.</div>
+    <p>A defesa clássica contra isso é o <strong>lock / mutex</strong>: uma região crítica só pode ser acessada por uma execução de cada vez.</p>
+    <pre>// Mutex simples via encadeamento de Promises (JavaScript)
+class Mutex {
+  constructor(){ this._p = Promise.resolve(); }
+  lock(){
+    let resolveLock;
+    const lockPromise = new Promise(res => resolveLock = res);
+    const willLock = this._p.then(() => resolveLock);
+    this._p = this._p.then(() => lockPromise);
+    return willLock; // retorna a função "unlock"
+  }
+}</pre>
+
+    <h4>🔓 Openness</h4>
+    <p>Um sistema é <strong>aberto</strong> quando expõe suas interfaces através de padrões documentados e independentes de fornecedor, permitindo que qualquer cliente compatível se conecte a ele — mesmo construído por outra equipe, em outra linguagem.</p>
+    <ul>
+      <li><strong>Protocolos abertos:</strong> HTTP/REST, MQTT, WebSocket — todos com especificação pública.</li>
+      <li><strong>Formatos abertos:</strong> JSON, XML — em vez de formatos binários proprietários.</li>
+      <li><strong>APIs documentadas:</strong> OpenAPI/Swagger, permitindo que web, mobile e desktop consumam o mesmo backend.</li>
+    </ul>
+    <p>O oposto disso é o <strong>vendor lock-in</strong>: depender de um único fornecedor, o que trava a evolução do sistema.</p>
+    <div class="example-callout"><span class="ex-label">🎯 EXEMPLO REAL</span>O PIX é aberto: qualquer banco ou fintech (Nubank, Itaú, PicPay...) pode implementar o protocolo e conversar entre si. Já o iMessage da Apple é fechado: só funciona entre iPhones, e por isso quem tem iPhone às vezes vê mensagens de amigos com Android aparecerem em verde, fora do sistema — um exemplo clássico de falta de openness entre plataformas.</div>
+
+    <h4>📈 Escalabilidade</h4>
+    <p>É a capacidade de um sistema continuar respondendo bem mesmo quando a carga cresce (mais usuários, mais sensores, mais dados).</p>
+    <ul>
+      <li><strong>Vertical (scale up):</strong> aumentar os recursos de uma única máquina. Simples, mas com limite físico.</li>
+      <li><strong>Horizontal (scale out):</strong> adicionar mais máquinas trabalhando juntas — é como Kafka e RabbitMQ escalam em cluster.</li>
+      <li><strong>Sharding:</strong> dividir os dados entre vários nós.</li>
+      <li><strong>Cache distribuído:</strong> reduzir a carga no banco principal.</li>
+      <li><strong>Replicação:</strong> manter cópias dos dados em múltiplos nós para disponibilidade.</li>
+    </ul>
+    <p><strong>Teorema CAP:</strong> em sistemas distribuídos não é possível garantir simultaneamente Consistência, Disponibilidade e Tolerância a Partições — é preciso escolher trade-offs. Um sistema de monitoramento IoT, por exemplo, costuma priorizar disponibilidade em vez de consistência absoluta.</p>
+    <div class="example-callout"><span class="ex-label">🎯 EXEMPLO REAL</span>Serviços de streaming e redes sociais reforçam sua infraestrutura em datas de pico previsíveis — estreia de temporada, Black Friday, virada de ano — justamente para evitar quedas. Quando isso falha (como aconteceu com sites de venda de ingressos em lançamentos de shows muito concorridos), o sistema simplesmente não aguenta o volume de acessos simultâneos.</div>
+
+    <div class="read-check">
+      <input type="checkbox" id="read-check-1">
+      <label for="read-check-1">Marcar como lido — desbloqueia +5 XP</label>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- LAB 1 -->
   <div class="section-tag">// Laboratório 01</div>
   <h2 class="section-title">⚡ Simulador de Condição de Corrida</h2>
-  <p class="section-desc">Dois processos incrementam um contador compartilhado, 5 vezes cada. O total esperado é <strong style="color:#fff">10</strong>. Rode sem proteção e veja o que acontece — depois rode com um <em>mutex</em> (lock) e compare.</p>
+  <p class="section-desc">Dois processos incrementam um contador compartilhado, 5 vezes cada. Total esperado: <strong style="color:#fff">10</strong>. Rode sem proteção e depois com um <em>mutex</em> e compare.</p>
 
   <div class="lab-panel">
-    <div class="lab-header">🧪 Contador Compartilhado</div>
+    <div class="lab-header">🧪 Rodada 1 — Contador Compartilhado</div>
     <span class="lab-goal">+15 XP ao rodar as duas simulações</span>
     <div class="counter-display" id="counter-display">0</div>
-    <div class="lanes">
+    <div class="lanes" style="--cols:2">
       <div class="lane"><span class="lane-label">PROCESSO A</span><div class="dots" id="dots-a"></div></div>
       <div class="lane"><span class="lane-label">PROCESSO B</span><div class="dots" id="dots-b"></div></div>
     </div>
@@ -209,22 +336,44 @@
     </div>
   </div>
 
+  <div class="lab-panel">
+    <div class="lab-header">🧪 Rodada 2 — Desafio Avançado (3 processos)</div>
+    <span class="lab-goal">+10 XP ao completar</span>
+    <p class="lab-sub">Agora são <strong>3 processos</strong> incrementando 6 vezes cada. Total esperado: <strong style="color:#fff">18</strong>. A chance de erro é ainda maior sem proteção.</p>
+    <div class="counter-display" id="counter-display-2">0</div>
+    <div class="lanes" style="--cols:3">
+      <div class="lane"><span class="lane-label">PROCESSO A</span><div class="dots" id="dots-a2"></div></div>
+      <div class="lane"><span class="lane-label">PROCESSO B</span><div class="dots" id="dots-b2"></div></div>
+      <div class="lane"><span class="lane-label">PROCESSO C</span><div class="dots" id="dots-c2"></div></div>
+    </div>
+    <div class="lab-result" id="race-result-2">Escolha uma simulação para começar.</div>
+    <div class="lab-actions">
+      <button class="lab-btn danger" id="btn-unsafe-2">▶ Rodar SEM proteção</button>
+      <button class="lab-btn safe" id="btn-safe-2">🔒 Rodar COM Lock (Mutex)</button>
+    </div>
+    <div class="reflect-box">
+      <label>✍️ Reflexão: por que o resultado sem proteção varia a cada execução, mesmo rodando o mesmo código?</label>
+      <textarea id="reflect-1" placeholder="Escreva pelo menos algumas frases..."></textarea>
+      <div class="reflect-status" id="reflect-1-status">Aguardando resposta (mínimo 40 caracteres)</div>
+    </div>
+  </div>
+
   <div class="divider"></div>
 
-  <!-- GAME 2 -->
+  <!-- LAB 2 -->
   <div class="section-tag">// Laboratório 02</div>
   <h2 class="section-title">🔓 Monte o Quebra-Cabeça da Openness</h2>
   <p class="section-desc">Arraste cada termo até sua definição correta.</p>
 
   <div class="lab-panel">
-    <span class="lab-goal">+25 XP ao completar todos os pares</span>
+    <span class="lab-goal">+15 XP ao completar todos os pares</span>
     <div class="match-wrap">
       <div class="chips" id="chips">
-        <div class="chip" draggable="false" data-id="openness">Openness</div>
-        <div class="chip" draggable="false" data-id="lockin">Vendor Lock-in</div>
-        <div class="chip" draggable="false" data-id="mqtt">MQTT</div>
-        <div class="chip" draggable="false" data-id="openapi">OpenAPI / Swagger</div>
-        <div class="chip" draggable="false" data-id="json">JSON</div>
+        <div class="chip" data-id="openness">Openness</div>
+        <div class="chip" data-id="lockin">Vendor Lock-in</div>
+        <div class="chip" data-id="mqtt">MQTT</div>
+        <div class="chip" data-id="openapi">OpenAPI / Swagger</div>
+        <div class="chip" data-id="json">JSON</div>
       </div>
       <div class="zones" id="zones">
         <div class="zone" data-answer="openness">Sistema construído sobre padrões e interfaces abertas e documentadas</div>
@@ -236,20 +385,42 @@
     </div>
   </div>
 
+  <div class="lab-panel">
+    <div class="lab-header">🔓 Rodada 2 — Técnicas de Escalabilidade</div>
+    <span class="lab-goal">+15 XP ao completar todos os pares</span>
+    <div class="match-wrap">
+      <div class="chips" id="chips2">
+        <div class="chip" data-id="sharding">Sharding</div>
+        <div class="chip" data-id="cache">Cache Distribuído</div>
+        <div class="chip" data-id="replicacao">Replicação</div>
+        <div class="chip" data-id="lb2">Load Balancing</div>
+        <div class="chip" data-id="cap">Teorema CAP</div>
+      </div>
+      <div class="zones" id="zones2">
+        <div class="zone" data-answer="sharding">Dividir os dados entre vários nós/bancos para distribuir a carga</div>
+        <div class="zone" data-answer="cache">Guardar dados usados com frequência mais perto do cliente, reduzindo carga no banco principal</div>
+        <div class="zone" data-answer="replicacao">Manter cópias dos mesmos dados em múltiplos nós para garantir disponibilidade</div>
+        <div class="zone" data-answer="lb2">Distribuir requisições entre várias instâncias do backend</div>
+        <div class="zone" data-answer="cap">Impossibilidade de garantir Consistência, Disponibilidade e Tolerância a Partições ao mesmo tempo</div>
+      </div>
+    </div>
+  </div>
+
   <div class="divider"></div>
 
-  <!-- GAME 3 -->
+  <!-- LAB 3 -->
   <div class="section-tag">// Laboratório 03</div>
   <h2 class="section-title">📈 Monte a Arquitetura Escalável</h2>
-  <p class="section-desc">Arraste as peças até o lugar certo, na ordem em que uma requisição percorreria o sistema.</p>
+  <p class="section-desc">Cenário 1: arraste as peças na ordem em que uma requisição percorreria o sistema.</p>
 
   <div class="lab-panel">
-    <span class="lab-goal">+25 XP ao montar a arquitetura correta</span>
+    <div class="lab-header">🏗️ Cenário 1 — Aplicação Web Escalável</div>
+    <span class="lab-goal">+12 XP ao montar corretamente</span>
     <div class="pipeline-source" id="pieces">
       <div class="piece" data-id="cache">🗄️ Cache</div>
       <div class="piece" data-id="db">💾 Banco de Dados</div>
       <div class="piece" data-id="cliente">📱 Cliente</div>
-      <div class="piece" data-id="servidores">🖥️ Servidores (N instâncias)</div>
+      <div class="piece" data-id="servidores">🖥️ Servidores (N)</div>
       <div class="piece" data-id="lb">🔀 Load Balancer</div>
     </div>
     <div class="slots" id="slots">
@@ -267,18 +438,87 @@
     <div class="flow-msg" id="flow-msg"></div>
   </div>
 
+  <div class="lab-panel">
+    <div class="lab-header">🏗️ Cenário 2 — Pipeline de Streaming IoT</div>
+    <span class="lab-goal">+13 XP ao montar corretamente</span>
+    <p class="lab-sub">Agora monte o caminho dos dados de um sensor até o dashboard.</p>
+    <div class="pipeline-source" id="pieces2">
+      <div class="piece" data-id="dashboard">📊 Dashboard</div>
+      <div class="piece" data-id="tsdb">🕒 Banco Time-Series</div>
+      <div class="piece" data-id="sensor">📡 Sensor ESP32</div>
+      <div class="piece" data-id="processamento">⚙️ Serviço de Streaming</div>
+      <div class="piece" data-id="broker">📬 Broker MQTT</div>
+    </div>
+    <div class="slots" id="slots2">
+      <div class="slot" data-answer="sensor">1. Sensor ESP32</div>
+      <span class="arrow">→</span>
+      <div class="slot" data-answer="broker">2. Broker MQTT</div>
+      <span class="arrow">→</span>
+      <div class="slot" data-answer="processamento">3. Streaming</div>
+      <span class="arrow">→</span>
+      <div class="slot" data-answer="tsdb">4. Time-Series DB</div>
+      <span class="arrow">→</span>
+      <div class="slot" data-answer="dashboard">5. Dashboard</div>
+      <div class="packet" id="packet2"></div>
+    </div>
+    <div class="flow-msg" id="flow-msg2"></div>
+  </div>
+
   <div class="divider"></div>
 
   <!-- QUIZ -->
   <div class="section-tag">// Laboratório 04</div>
-  <h2 class="section-title">🧠 Quiz Relâmpago</h2>
-  <p class="section-desc">Responda as 4 perguntas para fechar a missão.</p>
+  <h2 class="section-title">🕵️ Classifique o Cenário</h2>
+  <p class="section-desc">Seis situações do dia a dia. Arraste cada uma até o pilar de Sistemas Distribuídos que ela representa.</p>
+
+  <div class="lab-panel">
+    <span class="lab-goal">+18 XP ao classificar tudo corretamente</span>
+    <div class="scenario-pool" id="scenario-pool">
+      <div class="scenario-chip" data-cat="concorrencia">🎟️ Um app de venda de ingressos vende o mesmo assento para duas pessoas que compraram no mesmo segundo.</div>
+      <div class="scenario-chip" data-cat="escala">📸 O Instagram fica fora do ar durante um evento com milhões de pessoas postando ao mesmo tempo.</div>
+      <div class="scenario-chip" data-cat="openness">📧 Você manda e-mail de uma conta Gmail para uma conta Outlook e a mensagem chega normalmente.</div>
+      <div class="scenario-chip" data-cat="concorrencia">🎮 Em um jogo online, dois jogadores pegam o mesmo item ao mesmo tempo, mas só um consegue efetivamente.</div>
+      <div class="scenario-chip" data-cat="openness">💬 Uma pessoa no WhatsApp não consegue mandar mensagem direto para alguém que só usa Telegram.</div>
+      <div class="scenario-chip" data-cat="escala">🎫 Um site de shows adiciona mais servidores só nos dias de abertura de vendas de ingressos concorridos.</div>
+    </div>
+    <div class="bins">
+      <div class="bin" data-cat="concorrencia"><h5>⚡ Concorrência</h5></div>
+      <div class="bin" data-cat="openness"><h5>🔓 Openness</h5></div>
+      <div class="bin" data-cat="escala"><h5>📈 Escalabilidade</h5></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Laboratório 05</div>
+  <h2 class="section-title">🧠 Quiz</h2>
+  <p class="section-desc">Responda as 8 perguntas para fechar a missão.</p>
 
   <div id="quiz-container"></div>
 
   <div class="divider"></div>
 
-  <!-- CERTIFICATE -->
+  <!-- MINI PROJETO -->
+  <div class="section-tag">// Para fechar</div>
+  <h2 class="section-title">🛠️ Mini-Projeto Prático</h2>
+  <p class="section-desc">Marque o que você já aplicou ou pretende aplicar no Projeto Integrador.</p>
+  <div class="lab-panel">
+    <span class="lab-goal">+15 XP ao marcar os 4 itens</span>
+    <div class="checklist" id="checklist">
+      <label class="checklist-item"><input type="checkbox" data-pts="1"> Implementei (ou testei) um mutex/lock em uma linguagem de minha escolha</label>
+      <label class="checklist-item"><input type="checkbox" data-pts="1"> Identifiquei um exemplo real de vendor lock-in e um exemplo de sistema aberto</label>
+      <label class="checklist-item"><input type="checkbox" data-pts="1"> Desenhei (no papel, Miro ou Excalidraw) uma arquitetura escalável para um cenário IoT</label>
+      <label class="checklist-item"><input type="checkbox" data-pts="1"> Expliquei o Teorema CAP com um exemplo próprio, em voz alta ou por escrito, para um colega</label>
+    </div>
+    <div class="reflect-box">
+      <label>✍️ Registre suas principais descobertas desta missão:</label>
+      <textarea id="reflect-2" placeholder="O que mais te chamou atenção? Onde você já viu esses conceitos na prática?"></textarea>
+      <div class="reflect-status" id="reflect-2-status">Aguardando resposta (mínimo 40 caracteres)</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
   <div id="certificate">
     <h2>🎓 Missão Concluída!</h2>
     <p>Você dominou Concorrência, Openness e Escalabilidade — os pilares de Sistemas Distribuídos da ementa ISW044.</p>
@@ -304,12 +544,21 @@
 </div>
 
 <script>
-/* ---------- STATE / XP / BADGES ---------- */
-const state = { xp:0, badges:{concorrencia:false, openness:false, escala:false, quiz:false} };
+/* ---------- SESSION CLOCK ---------- */
+let elapsedSec = 0;
+setInterval(()=>{
+  elapsedSec++;
+  const m = String(Math.floor(elapsedSec/60)).padStart(2,'0');
+  const s = String(elapsedSec%60).padStart(2,'0');
+  document.getElementById('session-clock').textContent = m+':'+s;
+  if(elapsedSec === 3000) showToast('⏱️ 50 minutos de missão! Você pode continuar revisando ou seguir em frente.');
+}, 1000);
 
+/* ---------- STATE / XP / BADGES ---------- */
+const state = { xp:0, badges:{concorrencia:false, openness:false, escala:false, detetive:false, quiz:false, redator:false, praticante:false} };
 function renderXP(){
   document.getElementById('xp-fill').style.width = state.xp + '%';
-  document.getElementById('xp-count').textContent = state.xp + ' / 100';
+  document.getElementById('xp-count').textContent = Math.round(state.xp) + ' / 100';
 }
 function addXP(n){ state.xp = Math.min(100, state.xp + n); renderXP(); }
 
@@ -318,7 +567,7 @@ function showToast(msg){
   t.textContent = msg;
   t.classList.add('show');
   clearTimeout(t._timer);
-  t._timer = setTimeout(()=> t.classList.remove('show'), 2600);
+  t._timer = setTimeout(()=> t.classList.remove('show'), 2800);
 }
 
 function unlockBadge(key, label, xp){
@@ -345,11 +594,15 @@ function launchConfetti(){
     p.style.left = Math.random()*100 + 'vw';
     p.style.background = colors[Math.floor(Math.random()*colors.length)];
     p.style.animationDuration = (2.5 + Math.random()*2) + 's';
-    p.style.opacity = .8;
     document.body.appendChild(p);
     setTimeout(()=> p.remove(), 5000);
   }
 }
+
+/* ---------- READ CHECK ---------- */
+document.getElementById('read-check-1').addEventListener('change', function(){
+  if(this.checked){ addXP(5); showToast('📖 Leitura marcada! +5 XP'); }
+});
 
 /* ---------- GENERIC DRAG & DROP (pointer events) ---------- */
 function makeDraggable(el, dropSelector, onDrop){
@@ -404,38 +657,15 @@ function makeDraggable(el, dropSelector, onDrop){
   });
 }
 
-/* ---------- GAME 1: RACE CONDITION ---------- */
-function renderDots(containerId){
+/* ---------- LAB 1: RACE CONDITION (ROUND 1) ---------- */
+function renderDots(containerId, n){
   const c = document.getElementById(containerId);
-  c.innerHTML = Array.from({length:5}, ()=> '<span class="dot"></span>').join('');
+  c.innerHTML = Array.from({length:n}, ()=> '<span class="dot"></span>').join('');
 }
-renderDots('dots-a'); renderDots('dots-b');
+renderDots('dots-a',5); renderDots('dots-b',5);
+renderDots('dots-a2',6); renderDots('dots-b2',6); renderDots('dots-c2',6);
 
-let counter = 0, ranUnsafe=false, ranSafe=false;
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-function bumpCounter(){
-  const el = document.getElementById('counter-display');
-  el.textContent = counter;
-  el.classList.remove('pulse'); void el.offsetWidth; el.classList.add('pulse');
-}
-function clearDots(){
-  document.querySelectorAll('#dots-a .dot, #dots-b .dot').forEach(d=> d.className='dot');
-}
-async function runLane(dotsId, incrementFn){
-  const dots = document.getElementById(dotsId).children;
-  for(let i=0;i<5;i++){
-    dots[i].classList.add('active');
-    await incrementFn();
-    dots[i].classList.remove('active');
-    dots[i].classList.add('lit');
-  }
-}
-async function unsafeIncrement(){
-  const temp = counter;
-  await sleep(25 + Math.random()*70);
-  counter = temp + 1;
-  bumpCounter();
-}
 class Mutex {
   constructor(){ this._p = Promise.resolve(); }
   lock(){
@@ -446,106 +676,198 @@ class Mutex {
     return willLock;
   }
 }
-function safeIncrementFactory(mutex){
-  return async function(){
-    const unlock = await mutex.lock();
+
+function makeRaceLab(cfg){
+  // cfg: { counterId, dotsIds, n, btnUnsafeId, btnSafeId, resultId, onBothDone }
+  let counter = 0, ranUnsafe=false, ranSafe=false;
+  function bump(){
+    const el = document.getElementById(cfg.counterId);
+    el.textContent = counter;
+    el.classList.remove('pulse'); void el.offsetWidth; el.classList.add('pulse');
+  }
+  function clearDots(){
+    cfg.dotsIds.forEach(id=> document.querySelectorAll('#'+id+' .dot').forEach(d=> d.className='dot'));
+  }
+  async function runLane(dotsId, incrementFn){
+    const dots = document.getElementById(dotsId).children;
+    for(let i=0;i<cfg.n;i++){
+      dots[i].classList.add('active');
+      await incrementFn();
+      dots[i].classList.remove('active');
+      dots[i].classList.add('lit');
+    }
+  }
+  async function unsafeIncrement(){
     const temp = counter;
     await sleep(25 + Math.random()*70);
     counter = temp + 1;
-    bumpCounter();
-    unlock();
-  };
-}
-
-function setButtonsDisabled(v){
-  document.getElementById('btn-unsafe').disabled = v;
-  document.getElementById('btn-safe').disabled = v;
-}
-function maybeUnlockConcurrency(){
-  if(ranUnsafe && ranSafe) unlockBadge('concorrencia','Mestre da Concorrência', 15);
-}
-
-document.getElementById('btn-unsafe').addEventListener('click', async ()=>{
-  setButtonsDisabled(true);
-  counter = 0; bumpCounter(); clearDots();
-  document.getElementById('race-result').className = 'lab-result';
-  document.getElementById('race-result').textContent = 'Rodando sem proteção...';
-  await Promise.all([ runLane('dots-a', unsafeIncrement), runLane('dots-b', unsafeIncrement) ]);
-  const r = document.getElementById('race-result');
-  if(counter === 10){
-    r.innerHTML = `⚠️ Dessa vez deu <strong>${counter}</strong> — o resultado certo saiu por sorte. Rode de novo, a condição de corrida é imprevisível!`;
-    r.className = 'lab-result';
-  } else {
-    r.innerHTML = `❌ Resultado: <strong>${counter}</strong> — esperado 10! Incrementos foram perdidos por causa da condição de corrida.`;
-    r.className = 'lab-result bad';
+    bump();
   }
-  ranUnsafe = true; maybeUnlockConcurrency();
-  setButtonsDisabled(false);
-});
+  function safeIncrementFactory(mutex){
+    return async function(){
+      const unlock = await mutex.lock();
+      const temp = counter;
+      await sleep(25 + Math.random()*70);
+      counter = temp + 1;
+      bump();
+      unlock();
+    };
+  }
+  function setDisabled(v){
+    document.getElementById(cfg.btnUnsafeId).disabled = v;
+    document.getElementById(cfg.btnSafeId).disabled = v;
+  }
+  function maybeDone(){ if(ranUnsafe && ranSafe && cfg.onBothDone) cfg.onBothDone(); }
+  const expected = cfg.n * cfg.dotsIds.length;
 
-document.getElementById('btn-safe').addEventListener('click', async ()=>{
-  setButtonsDisabled(true);
-  counter = 0; bumpCounter(); clearDots();
-  document.getElementById('race-result').className = 'lab-result';
-  document.getElementById('race-result').textContent = 'Rodando com lock (mutex)...';
-  const mutex = new Mutex();
-  const safeIncrement = safeIncrementFactory(mutex);
-  await Promise.all([ runLane('dots-a', safeIncrement), runLane('dots-b', safeIncrement) ]);
-  const r = document.getElementById('race-result');
-  r.innerHTML = `✅ Resultado: <strong>${counter}</strong> — com o lock, o resultado é sempre correto!`;
-  r.className = 'lab-result ok';
-  ranSafe = true; maybeUnlockConcurrency();
-  setButtonsDisabled(false);
-});
-
-/* ---------- GAME 2: MATCHING ---------- */
-let matchedCount = 0;
-const totalMatches = document.querySelectorAll('#zones .zone').length;
-document.querySelectorAll('#chips .chip').forEach(chip=>{
-  makeDraggable(chip, '.zone', (el, zone)=>{
-    if(zone.classList.contains('correct')) return false;
-    if(zone.dataset.answer === el.dataset.id){
-      zone.classList.add('correct');
-      zone.innerHTML = `<span>✅ ${zone.textContent}</span><span class="placed-chip">${el.textContent}</span>`;
-      el.classList.add('placed');
-      matchedCount++;
-      addXP(5);
-      if(matchedCount === totalMatches) unlockBadge('openness','Arquiteto Aberto', 5);
-      return true;
+  document.getElementById(cfg.btnUnsafeId).addEventListener('click', async ()=>{
+    setDisabled(true);
+    counter = 0; bump(); clearDots();
+    const r = document.getElementById(cfg.resultId);
+    r.className = 'lab-result'; r.textContent = 'Rodando sem proteção...';
+    await Promise.all(cfg.dotsIds.map(id=> runLane(id, unsafeIncrement)));
+    if(counter === expected){
+      r.innerHTML = `⚠️ Dessa vez deu <strong>${counter}</strong> — saiu certo por sorte. Rode de novo!`;
+      r.className = 'lab-result';
     } else {
-      zone.classList.add('shake');
-      setTimeout(()=> zone.classList.remove('shake'), 400);
-      return false;
+      r.innerHTML = `❌ Resultado: <strong>${counter}</strong> — esperado ${expected}! Incrementos perdidos pela condição de corrida.`;
+      r.className = 'lab-result bad';
+    }
+    ranUnsafe = true; maybeDone();
+    setDisabled(false);
+  });
+
+  document.getElementById(cfg.btnSafeId).addEventListener('click', async ()=>{
+    setDisabled(true);
+    counter = 0; bump(); clearDots();
+    const r = document.getElementById(cfg.resultId);
+    r.className = 'lab-result'; r.textContent = 'Rodando com lock (mutex)...';
+    const mutex = new Mutex();
+    const safeIncrement = safeIncrementFactory(mutex);
+    await Promise.all(cfg.dotsIds.map(id=> runLane(id, safeIncrement)));
+    r.innerHTML = `✅ Resultado: <strong>${counter}</strong> — com o lock, o resultado é sempre correto!`;
+    r.className = 'lab-result ok';
+    ranSafe = true; maybeDone();
+    setDisabled(false);
+  });
+}
+
+makeRaceLab({ counterId:'counter-display', dotsIds:['dots-a','dots-b'], n:5,
+  btnUnsafeId:'btn-unsafe', btnSafeId:'btn-safe', resultId:'race-result',
+  onBothDone: ()=> checkRound1() });
+
+makeRaceLab({ counterId:'counter-display-2', dotsIds:['dots-a2','dots-b2','dots-c2'], n:6,
+  btnUnsafeId:'btn-unsafe-2', btnSafeId:'btn-safe-2', resultId:'race-result-2',
+  onBothDone: ()=> checkRound2() });
+
+let round1Done=false, round2Done=false;
+function checkRound1(){ if(!round1Done){ round1Done=true; addXP(15); maybeUnlockConcurrency(); } }
+function checkRound2(){ if(!round2Done){ round2Done=true; addXP(10); maybeUnlockConcurrency(); } }
+function maybeUnlockConcurrency(){ if(round1Done && round2Done) unlockBadge('concorrencia','Mestre da Concorrência', 0); }
+
+/* ---------- REFLECTION BOXES ---------- */
+function watchReflect(textareaId, statusId, minLen, onDone){
+  let done = false;
+  document.getElementById(textareaId).addEventListener('input', function(){
+    const status = document.getElementById(statusId);
+    if(this.value.trim().length >= minLen){
+      status.textContent = '✅ Registrado — obrigado pela reflexão!';
+      status.className = 'reflect-status ok';
+      if(!done){ done = true; onDone(); }
+    } else {
+      status.textContent = `Aguardando resposta (mínimo ${minLen} caracteres) — ${this.value.trim().length}/${minLen}`;
+      status.className = 'reflect-status';
     }
   });
-});
+}
+let reflectCount = 0;
+function maybeUnlockRedator(){
+  reflectCount++;
+  if(reflectCount === 1) addXP(7);
+  if(reflectCount >= 2){ addXP(8); unlockBadge('redator','Redator Técnico', 0); }
+}
+watchReflect('reflect-1','reflect-1-status',40, maybeUnlockRedator);
+watchReflect('reflect-2','reflect-2-status',40, maybeUnlockRedator);
 
-/* ---------- GAME 3: PIPELINE ---------- */
-let placedPieces = 0;
-const totalSlots = document.querySelectorAll('#slots .slot').length;
-document.querySelectorAll('#pieces .piece').forEach(piece=>{
-  makeDraggable(piece, '.slot', (el, slot)=>{
-    if(slot.classList.contains('correct')) return false;
-    if(slot.dataset.answer === el.dataset.id){
-      slot.classList.add('correct');
-      slot.textContent = el.textContent;
-      el.classList.add('placed');
-      placedPieces++;
-      addXP(5);
-      if(placedPieces === totalSlots){
-        unlockBadge('escala','Engenheiro de Escala', 5);
-        document.getElementById('flow-msg').textContent = '🚀 Sistema escalável montado! Observe o pacote de dados percorrendo o pipeline.';
-        const packet = document.getElementById('packet');
-        packet.style.opacity = 1;
-        packet.classList.add('run');
-        setInterval(()=>{
-          packet.classList.remove('run'); void packet.offsetWidth; packet.classList.add('run');
-        }, 2600);
+/* ---------- LAB 2: MATCHING (round 1 + 2) ---------- */
+function setupMatching(chipsSel, zonesSel, badgeKey, badgeLabel, xpTotal, onComplete){
+  let matched = 0;
+  const total = document.querySelectorAll(zonesSel+' .zone').length;
+  document.querySelectorAll(chipsSel+' .chip').forEach(chip=>{
+    makeDraggable(chip, zonesSel+' .zone', (el, zone)=>{
+      if(zone.classList.contains('correct')) return false;
+      if(zone.dataset.answer === el.dataset.id){
+        zone.classList.add('correct');
+        zone.innerHTML = `<span>✅ ${zone.textContent}</span><span class="placed-chip">${el.textContent}</span>`;
+        el.classList.add('placed');
+        matched++;
+        addXP(xpTotal/total);
+        if(matched === total && onComplete) onComplete();
+        return true;
+      } else {
+        zone.classList.add('shake');
+        setTimeout(()=> zone.classList.remove('shake'), 400);
+        return false;
       }
+    });
+  });
+}
+let opennessMatchDone=false, escalaMatchDone=false;
+setupMatching('#chips','#zones','openness','Arquiteto Aberto',15, ()=>{ opennessMatchDone=true; unlockBadge('openness','Arquiteto Aberto',0); });
+setupMatching('#chips2','#zones2','escala','Engenheiro de Escala',15, ()=>{ escalaMatchDone=true; checkEscala(); });
+
+/* ---------- LAB 3: PIPELINES (scenario 1 + 2) ---------- */
+function setupPipeline(piecesSel, slotsSel, packetId, msgId, xpTotal, onComplete){
+  let placed = 0;
+  const total = document.querySelectorAll(slotsSel+' .slot').length;
+  document.querySelectorAll(piecesSel+' .piece').forEach(piece=>{
+    makeDraggable(piece, slotsSel+' .slot', (el, slot)=>{
+      if(slot.classList.contains('correct')) return false;
+      if(slot.dataset.answer === el.dataset.id){
+        slot.classList.add('correct');
+        slot.textContent = el.textContent;
+        el.classList.add('placed');
+        placed++;
+        addXP(xpTotal/total);
+        if(placed === total){
+          document.getElementById(msgId).textContent = '🚀 Pipeline montado! Observe o pacote de dados percorrendo o sistema.';
+          const packet = document.getElementById(packetId);
+          packet.style.opacity = 1;
+          packet.classList.add('run');
+          setInterval(()=>{ packet.classList.remove('run'); void packet.offsetWidth; packet.classList.add('run'); }, 2600);
+          if(onComplete) onComplete();
+        }
+        return true;
+      } else {
+        slot.classList.add('shake');
+        setTimeout(()=> slot.classList.remove('shake'), 400);
+        return false;
+      }
+    });
+  });
+}
+let pipe1Done=false, pipe2Done=false;
+setupPipeline('#pieces','#slots','packet','flow-msg',12, ()=>{ pipe1Done=true; checkEscala(); });
+setupPipeline('#pieces2','#slots2','packet2','flow-msg2',13, ()=>{ pipe2Done=true; checkEscala(); });
+function checkEscala(){ if(escalaMatchDone && pipe1Done && pipe2Done) unlockBadge('escala','Engenheiro de Escala', 0); }
+
+/* ---------- LAB 4: CLASSIFY SCENARIOS ---------- */
+let classifiedCount = 0;
+const totalScenarios = document.querySelectorAll('#scenario-pool .scenario-chip').length;
+document.querySelectorAll('#scenario-pool .scenario-chip').forEach(chip=>{
+  makeDraggable(chip, '.bin', (el, bin)=>{
+    if(bin.dataset.cat === el.dataset.cat){
+      bin.appendChild(el);
+      el.classList.add('correct-in-bin');
+      el.style.opacity = 1; el.style.pointerEvents = 'none';
+      classifiedCount++;
+      addXP(18/totalScenarios);
+      if(classifiedCount === totalScenarios) unlockBadge('detetive','Detetive de Sistemas', 0);
       return true;
     } else {
-      slot.classList.add('shake');
-      setTimeout(()=> slot.classList.remove('shake'), 400);
+      bin.classList.add('limit-hit');
+      showToast('❌ Não é bem esse pilar... tente outro!');
+      setTimeout(()=> bin.classList.remove('limit-hit'), 400);
       return false;
     }
   });
@@ -555,16 +877,28 @@ document.querySelectorAll('#pieces .piece').forEach(piece=>{
 const quizData = [
   { q:'Duas threads leem o mesmo valor antes de qualquer uma escrever o novo valor. Isso é um exemplo de:',
     opts:['Escalabilidade horizontal','Condição de corrida (race condition)','Openness','Sharding'],
-    correct:1, explain:'Quando múltiplas execuções concorrentes acessam o mesmo dado sem sincronização, o resultado passa a depender da ordem imprevisível de execução — isso é uma condição de corrida.' },
+    correct:1, explain:'Quando execuções concorrentes acessam o mesmo dado sem sincronização, o resultado depende da ordem imprevisível de execução — condição de corrida.' },
   { q:'Qual técnica é usada para evitar condições de corrida?',
     opts:['Load balancing','Cache distribuído','Lock / Mutex','Sharding'],
-    correct:2, explain:'Um lock (mutex) garante que apenas uma execução por vez acesse a região crítica do código, serializando o acesso ao dado compartilhado.' },
+    correct:2, explain:'Um lock (mutex) garante que apenas uma execução por vez acesse a região crítica do código.' },
   { q:'O que caracteriza um sistema como "aberto" (openness)?',
     opts:['Usar apenas um fornecedor de nuvem','Basear-se em padrões e interfaces documentadas e públicas','Ter código-fonte fechado','Não expor nenhuma API'],
-    correct:1, explain:'Openness significa construir sobre padrões públicos (como MQTT, REST, JSON), permitindo que qualquer cliente compatível se conecte ao sistema.' },
+    correct:1, explain:'Openness significa construir sobre padrões públicos (MQTT, REST, JSON), permitindo interoperabilidade.' },
   { q:'Adicionar mais servidores para dividir a carga entre eles é um exemplo de:',
     opts:['Escalabilidade vertical','Escalabilidade horizontal','Vendor lock-in','Concorrência'],
-    correct:1, explain:'Escalabilidade horizontal (scale out) significa adicionar mais máquinas trabalhando em conjunto, em vez de aumentar os recursos de uma única máquina (escalabilidade vertical).' }
+    correct:1, explain:'Escalabilidade horizontal (scale out) significa adicionar mais máquinas trabalhando em conjunto.' },
+  { q:'O Teorema CAP afirma que um sistema distribuído não pode garantir simultaneamente:',
+    opts:['Velocidade, Custo e Segurança','Consistência, Disponibilidade e Tolerância a Partições','Concorrência, Openness e Escalabilidade','Backup, Cache e Réplica'],
+    correct:1, explain:'CAP = Consistência, Disponibilidade (Availability) e Tolerância a Partições — só é possível garantir duas ao mesmo tempo.' },
+  { q:'Dividir os dados entre vários bancos/nós, cada um responsável por uma parte, é:',
+    opts:['Sharding','Vendor lock-in','Mutex','Load Balancing'],
+    correct:0, explain:'Sharding é o particionamento dos dados entre múltiplos nós, técnica de escalabilidade horizontal.' },
+  { q:'Manter cópias dos mesmos dados em vários nós, para garantir disponibilidade, chama-se:',
+    opts:['Cache','Replicação','Thread','Broker'],
+    correct:1, explain:'Replicação mantém cópias redundantes dos dados em múltiplos nós.' },
+  { q:'Um sistema que depende de um único fornecedor de nuvem e não pode migrar facilmente sofre de:',
+    opts:['Escalabilidade vertical','Concorrência','Vendor lock-in','Sharding'],
+    correct:2, explain:'Vendor lock-in é a dependência excessiva de um único fornecedor, o oposto de openness.' }
 ];
 let quizCorrectCount = 0;
 const quizContainer = document.getElementById('quiz-container');
@@ -575,7 +909,6 @@ quizData.forEach((item, qi)=>{
     <div class="quiz-opts">${item.opts.map((o,oi)=>`<button class="quiz-opt" data-oi="${oi}">${o}</button>`).join('')}</div>
     <p class="quiz-explain"></p>`;
   quizContainer.appendChild(box);
-
   box.querySelectorAll('.quiz-opt').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       if(box.classList.contains('answered-correct')) return;
@@ -588,14 +921,24 @@ quizData.forEach((item, qi)=>{
         explainEl.textContent = '✅ ' + item.explain;
         explainEl.classList.add('show');
         quizCorrectCount++;
-        addXP(6);
-        if(quizCorrectCount === quizData.length) unlockBadge('quiz','Sabe Tudo', 1);
+        addXP(30/quizData.length);
+        if(quizCorrectCount === quizData.length) unlockBadge('quiz','Sabe Tudo', 0);
       } else {
         btn.classList.add('wrong');
         explainEl.textContent = '❌ Tente novamente.';
         explainEl.classList.add('show');
       }
     });
+  });
+});
+
+/* ---------- CHECKLIST ---------- */
+document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb=>{
+  cb.addEventListener('change', function(){
+    this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    const allChecked = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]')).every(c=> c.checked);
+    if(this.checked) addXP(15/4);
+    if(allChecked) unlockBadge('praticante','Praticante', 0);
   });
 });
 

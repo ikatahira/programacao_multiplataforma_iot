@@ -16,33 +16,36 @@
   body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
   body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(167,139,250,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(167,139,250,.05) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
 
-  .topbar{position:sticky;top:0;z-index:200;background:rgba(12,15,26,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:14px 24px;}
+  .topbar{position:sticky;top:0;z-index:200;background:rgba(12,15,26,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 24px;}
   .topbar-row{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
   .topbar-title{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--accent);letter-spacing:2px;white-space:nowrap;}
-  .xp-wrap{flex:1;min-width:160px;}
+  .clock-wrap{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--accent2);background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);padding:5px 10px;border-radius:6px;white-space:nowrap;}
+  .xp-wrap{flex:1;min-width:140px;}
   .xp-label{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted2);margin-bottom:4px;display:flex;justify-content:space-between;}
   .xp-track{height:8px;border-radius:99px;background:var(--surface);border:1px solid var(--border);overflow:hidden;}
   .xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s cubic-bezier(.34,1.56,.64,1);}
-  .badges-row{display:flex;gap:8px;}
-  .badge{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--surface);border:1px solid var(--border);opacity:.3;filter:grayscale(1);transition:.3s;cursor:default;}
+  .badges-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .badge{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:var(--surface);border:1px solid var(--border);opacity:.3;filter:grayscale(1);transition:.3s;cursor:default;}
   .badge.unlocked{opacity:1;filter:none;border-color:rgba(167,139,250,.55);box-shadow:0 0 16px rgba(167,139,250,.35);animation:pop .45s;}
   @keyframes pop{0%{transform:scale(.5) rotate(-10deg);}60%{transform:scale(1.25) rotate(6deg);}100%{transform:scale(1) rotate(0);}}
 
-  .toast{position:fixed;top:80px;right:24px;z-index:500;background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:12px 18px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);transform:translateX(140%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .toast{position:fixed;top:80px;right:24px;z-index:500;background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:12px 18px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);transform:translateX(140%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-width:280px;}
   .toast.show{transform:translateX(0);}
 
-  .hero{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:70px 24px 40px;text-align:center;}
+  .hero{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:60px 24px 36px;text-align:center;}
   .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--accent2);letter-spacing:3px;margin-bottom:16px;}
   .hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3rem);line-height:1.1;margin-bottom:16px;background:linear-gradient(135deg,#fff 30%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
   .hero p{color:var(--muted2);font-size:1rem;line-height:1.7;max-width:640px;margin:0 auto;}
   .hero-link{display:inline-block;margin-top:20px;font-size:.82rem;color:var(--muted2);text-decoration:none;border:1px solid var(--border);padding:8px 18px;border-radius:8px;}
   .hero-link:hover{border-color:var(--accent);color:var(--accent);}
+  .hero-meta{display:flex;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .meta-pill{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted2);border:1px solid var(--border);padding:4px 12px;border-radius:99px;}
 
   .wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 24px;}
-  .divider{height:1px;background:var(--border);margin:50px 0;}
+  .divider{height:1px;background:var(--border);margin:46px 0;}
   .section-tag{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--accent2);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
   .section-title{font-family:'Syne',sans-serif;font-size:1.6rem;color:#fff;margin-bottom:10px;}
-  .section-desc{color:var(--muted2);font-size:.92rem;line-height:1.7;margin-bottom:26px;}
+  .section-desc{color:var(--muted2);font-size:.92rem;line-height:1.7;margin-bottom:24px;}
 
   .pilar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
   .pilar-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
@@ -50,10 +53,42 @@
   .pilar-card h4{font-family:'Syne',sans-serif;color:#fff;font-size:1rem;margin-bottom:8px;}
   .pilar-card p{color:var(--muted2);font-size:.83rem;line-height:1.6;}
 
+  .scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;}
+  .scenario-card{background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:18px;}
+  .sc-tag{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--accent2);margin-bottom:8px;}
+  .scenario-card p{color:var(--muted2);font-size:.82rem;line-height:1.6;}
+  .scenario-card strong{color:var(--text);}
+  .example-callout{background:rgba(244,63,94,.07);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:.85rem;color:var(--text);}
+  .example-callout .ex-label{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--accent2);letter-spacing:1px;display:block;margin-bottom:4px;}
+
+  .story-scenario{font-size:.9rem;color:var(--text);line-height:1.7;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .story-choices{display:grid;gap:8px;margin-bottom:12px;}
+  .story-choice{text-align:left;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:8px;cursor:pointer;font-size:.83rem;font-family:'Space Grotesk',sans-serif;transition:.2s;}
+  .story-choice:hover:not(:disabled){border-color:var(--accent);}
+  .story-choice.picked-good{border-color:var(--green);background:rgba(34,211,165,.1);}
+  .story-choice.picked-bad{border-color:var(--yellow);background:rgba(251,191,36,.08);}
+  .story-choice:disabled{cursor:default;opacity:.75;}
+  .story-feedback{font-size:.84rem;color:var(--muted2);background:var(--surface);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:14px;}
+  .story-feedback.good{border-left-color:var(--green);}
+  .story-progress{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted2);margin-bottom:10px;}
+
+  .teoria-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px 28px;margin-bottom:16px;}
+  .teoria-block h3{font-family:'Syne',sans-serif;color:#fff;font-size:1.15rem;margin:18px 0 10px;}
+  .teoria-block h3:first-child{margin-top:0;}
+  .teoria-block h4{color:var(--accent2);font-size:.95rem;margin:14px 0 8px;}
+  .teoria-block p{color:var(--muted2);font-size:.87rem;line-height:1.75;margin-bottom:10px;}
+  .teoria-block ul{margin:8px 0 14px 20px;color:var(--muted2);font-size:.87rem;line-height:1.75;}
+  .teoria-block li{margin-bottom:6px;}
+  .teoria-block strong{color:var(--text);}
+  .read-check{display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:14px;border-top:1px dashed var(--border);}
+  .read-check input{width:16px;height:16px;accent-color:var(--accent);}
+  .read-check label{font-size:.8rem;color:var(--muted2);font-family:'DM Mono',monospace;}
+
   .lab-panel{background:linear-gradient(180deg,var(--card),var(--surface));border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
   .lab-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
   .lab-header{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;color:#fff;font-size:1.15rem;margin-bottom:6px;}
   .lab-goal{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--accent2);background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);display:inline-block;padding:3px 10px;border-radius:6px;margin-bottom:14px;}
+  .lab-sub{font-size:.8rem;color:var(--muted2);margin-bottom:16px;}
 
   .match-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start;}
   .chips{display:flex;flex-direction:column;gap:10px;}
@@ -101,6 +136,15 @@
   .dojo-status{text-align:center;font-size:.9rem;color:var(--muted2);margin-bottom:10px;}
   .dojo-timer{text-align:center;font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:#fff;margin-bottom:14px;}
   .dojo-rounds{text-align:center;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted2);margin-bottom:16px;}
+  .dojo-config{display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:16px;font-size:.8rem;color:var(--muted2);}
+  .dojo-config select{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:6px;font-family:'Space Grotesk',sans-serif;font-size:.8rem;}
+
+  .reflect-box{margin-top:16px;}
+  .reflect-box label{display:block;font-size:.78rem;color:var(--muted2);margin-bottom:8px;font-family:'DM Mono',monospace;}
+  .reflect-box textarea{width:100%;min-height:90px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.85rem;resize:vertical;}
+  .reflect-box textarea:focus{outline:none;border-color:var(--accent);}
+  .reflect-status{font-size:.75rem;color:var(--muted);margin-top:6px;}
+  .reflect-status.ok{color:var(--green);}
 
   .quiz-q{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
   .quiz-q.answered-correct{border-color:var(--green);}
@@ -113,6 +157,11 @@
   .quiz-opt:disabled{cursor:default;}
   .quiz-explain{margin-top:10px;font-size:.8rem;color:var(--muted2);display:none;}
   .quiz-explain.show{display:block;}
+
+  .checklist{display:flex;flex-direction:column;gap:10px;}
+  .checklist-item{display:flex;align-items:flex-start;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 14px;font-size:.84rem;color:var(--muted2);}
+  .checklist-item input{margin-top:3px;width:16px;height:16px;accent-color:var(--green);flex-shrink:0;}
+  .checklist-item.checked{border-color:var(--green);color:var(--text);}
 
   #certificate{display:none;text-align:center;background:radial-gradient(circle at top,rgba(167,139,250,.18),transparent 60%),var(--card);border:1px solid var(--accent);border-radius:18px;padding:50px 30px;position:relative;overflow:hidden;}
   #certificate h2{font-family:'Syne',sans-serif;font-size:1.8rem;margin-bottom:10px;color:#fff;}
@@ -149,16 +198,20 @@
 <div class="topbar">
   <div class="topbar-row">
     <span class="topbar-title">ISW044 · MISSÃO</span>
+    <span class="clock-wrap">⏱️ <span id="session-clock">00:00</span> / 50:00</span>
     <div class="xp-wrap">
       <div class="xp-label"><span>XP</span><span id="xp-count">0 / 100</span></div>
       <div class="xp-track"><div class="xp-fill" id="xp-fill"></div></div>
     </div>
     <div class="badges-row">
-      <div class="badge" id="badge-scrum" title="Especialista em Papéis Scrum">🎭</div>
+      <div class="badge" id="badge-scrum" title="Especialista em Scrum">🎭</div>
       <div class="badge" id="badge-kanban" title="Mestre do Fluxo">📌</div>
       <div class="badge" id="badge-sprint" title="Planejador de Sprint">🎯</div>
       <div class="badge" id="badge-dojo" title="Faixa Preta do Dojo">🥋</div>
+      <div class="badge" id="badge-aventureiro" title="Scrum Master de Verdade">🗺️</div>
       <div class="badge" id="badge-quiz" title="Sabe Tudo">🧠</div>
+      <div class="badge" id="badge-redator" title="Redator Técnico">✍️</div>
+      <div class="badge" id="badge-praticante" title="Praticante">🛠️</div>
     </div>
   </div>
 </div>
@@ -168,8 +221,14 @@
 <section class="hero">
   <div class="hero-eyebrow">🧩 COMPLEMENTO DA EMENTA · MISSÃO INTERATIVA</div>
   <h1>Gerência de Projetos</h1>
-  <p>Scrum, Kanban, Gamificação e Coding Dojo — arraste, monte e complete os 5 desafios para desbloquear seu certificado de gerente de projetos ágil.</p>
+  <p>Scrum, Kanban, Gamificação e Coding Dojo — uma aula completa em formato de missão. Leia, arraste, monte quadros, planeje sprints, participe do Randori e feche com quiz e mini-projeto.</p>
   <a href="semana13.html" class="hero-link">← relacionado à S·13 Metodologias e Ambiente</a>
+  <div class="hero-meta">
+    <span class="meta-pill">⏱️ ~50 min</span>
+    <span class="meta-pill">🧪 6 laboratórios</span>
+    <span class="meta-pill">🧠 8 perguntas</span>
+    <span class="meta-pill">🏆 8 conquistas</span>
+  </div>
 </section>
 
 <div class="wrap">
@@ -180,6 +239,64 @@
     <div class="pilar-card"><div class="ico">🥋</div><h4>Coding Dojo</h4><p>Prática coletiva de programação com TDD, revezando piloto e copiloto no formato Randori.</p></div>
   </div>
 
+  <div class="scenario-grid">
+    <div class="scenario-card">
+      <div class="sc-tag">🏃 Isso já é sua vida</div>
+      <p>Aquele trabalho em grupo da faculdade onde alguém cria um grupo de WhatsApp, divide as partes e cobra prazo? Isso é gerência de projeto na prática — só que sem o nome bonito.</p>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-tag">🏢 Empresas de verdade</div>
+      <p>Nubank, iFood e Magazine Luiza organizam seus times de tecnologia com Scrum e Kanban. O Spotify até criou o próprio jeito de trabalhar em squads, inspirado nesses métodos.</p>
+    </div>
+    <div class="scenario-card">
+      <div class="sc-tag">📌 Você já usa Kanban</div>
+      <p>Se você já organizou tarefas em um quadro do Trello, Notion ou até um quadro branco com post-its "a fazer / fazendo / feito" — parabéns, você já praticou Kanban sem saber.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Antes de começar</div>
+  <h2 class="section-title">📖 Fundamentos de Gerência Ágil de Projetos</h2>
+  <p class="section-desc">Leia com calma — os laboratórios a seguir vão testar exatamente o que está aqui.</p>
+
+  <div class="teoria-block">
+    <h3>Por que gerência de projetos importa</h3>
+    <p>Desenvolver software multiplataforma envolve times, prazos e integrações complexas entre frontend, backend e dispositivos IoT. Sem uma forma organizada de planejar, acompanhar e entregar o trabalho, mesmo um bom código pode resultar em um projeto atrasado ou mal comunicado. É esse o papel da <strong>gerência de projetos</strong>, citada no objetivo geral da ementa.</p>
+
+    <h4>📜 O Manifesto Ágil</h4>
+    <p>Publicado em 2001, estabelece quatro valores centrais: <strong>indivíduos e interações</strong> mais que processos e ferramentas; <strong>software em funcionamento</strong> mais que documentação abrangente; <strong>colaboração com o cliente</strong> mais que negociação de contratos; <strong>responder a mudanças</strong> mais que seguir um plano fixo. Esses valores deram origem a frameworks como Scrum, Kanban e XP.</p>
+
+    <h4>🏃 Scrum</h4>
+    <p>Organiza o trabalho em ciclos curtos chamados <strong>Sprints</strong> (1 a 4 semanas), com papéis, eventos e artefatos definidos:</p>
+    <ul>
+      <li><strong>Product Owner:</strong> representa o cliente/usuário, prioriza o backlog.</li>
+      <li><strong>Scrum Master:</strong> facilita o processo, remove impedimentos.</li>
+      <li><strong>Development Team:</strong> transforma itens do backlog em incrementos funcionais.</li>
+      <li><strong>Sprint Planning:</strong> reunião no início da sprint para definir o que será entregue.</li>
+      <li><strong>Daily Scrum:</strong> reunião diária curta de alinhamento.</li>
+      <li><strong>Sprint Review:</strong> apresentação do incremento pronto.</li>
+      <li><strong>Sprint Retrospective:</strong> reflexão do time sobre o que pode melhorar.</li>
+    </ul>
+    <div class="example-callout"><span class="ex-label">🎯 EXEMPLO REAL</span>Pensa no Projeto Integrador da Semana 40: o professor é o Product Owner (ele prioriza o que a turma deve entregar), o grupo é o Development Team, e alguém do grupo pode assumir o papel de Scrum Master, organizando as reuniões e destravando problemas — sem ser o "chefe" do grupo.</div>
+
+    <h4>📌 Kanban</h4>
+    <p>Método visual baseado em um quadro dividido em colunas que representam os estágios do trabalho. Diferente do Scrum, o fluxo é contínuo, sem sprints fixas — o foco está em limitar o <strong>WIP</strong> (Work In Progress) para evitar sobrecarga da equipe.</p>
+    <div class="example-callout"><span class="ex-label">🎯 EXEMPLO REAL</span>Sabe quando você abre 10 abas de estudo ao mesmo tempo, começa tudo e não termina nada? É exatamente o problema que o limite de WIP resolve: forçar você (ou o time) a terminar o que já começou antes de abrir mais uma frente de trabalho.</div>
+
+    <h4>🎮 Gamificação</h4>
+    <p>Uso de elementos de jogos (pontos, níveis, badges, desafios) em contextos que não são jogos, para aumentar engajamento — exatamente o que esta página está fazendo com você agora.</p>
+
+    <h4>🥋 Coding Dojo</h4>
+    <p>Prática de aprendizado coletivo de programação. No formato <strong>Randori</strong>, um "piloto" e um "copiloto" programam juntos por alguns minutos; a cada rodada, o piloto vira plateia e outra dupla assume, geralmente aplicando <strong>TDD</strong> (Red, Green, Refactor).</p>
+    <div class="example-callout"><span class="ex-label">🎯 EXEMPLO REAL</span>É basicamente o formato de "mob programming" que empresas como a Thoughtworks popularizaram, e que aparece em encontros de programadores (meetups) e bootcamps como forma de aprender resolvendo problemas em grupo, sob pressão de tempo, em vez de assistir uma aula passiva.</div>
+
+    <div class="read-check">
+      <input type="checkbox" id="read-check-1">
+      <label for="read-check-1">Marcar como lido — desbloqueia +5 XP</label>
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <div class="section-tag">// Missão 01</div>
@@ -187,7 +304,7 @@
   <p class="section-desc">Arraste cada termo até sua definição correta.</p>
 
   <div class="lab-panel">
-    <span class="lab-goal">+20 XP ao completar todos os pares</span>
+    <span class="lab-goal">+15 XP ao completar todos os pares</span>
     <div class="match-wrap">
       <div class="chips" id="chips">
         <div class="chip" data-id="po">Product Owner</div>
@@ -208,13 +325,33 @@
     </div>
   </div>
 
+  <div class="lab-panel">
+    <div class="lab-header">🎭 Rodada 2 — Eventos do Scrum</div>
+    <span class="lab-goal">+10 XP ao completar todos os pares</span>
+    <div class="match-wrap">
+      <div class="chips" id="chips2">
+        <div class="chip" data-id="planning">Sprint Planning</div>
+        <div class="chip" data-id="daily">Daily Scrum</div>
+        <div class="chip" data-id="review">Sprint Review</div>
+        <div class="chip" data-id="retro">Sprint Retrospective</div>
+      </div>
+      <div class="zones" id="zones2">
+        <div class="zone" data-answer="planning">Reunião no início da sprint para definir o que será entregue</div>
+        <div class="zone" data-answer="daily">Reunião diária curta de alinhamento sobre o progresso e bloqueios</div>
+        <div class="zone" data-answer="review">Apresentação do incremento pronto ao final da sprint</div>
+        <div class="zone" data-answer="retro">Reflexão do time sobre o que funcionou e o que pode melhorar</div>
+      </div>
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <div class="section-tag">// Missão 02</div>
   <h2 class="section-title">📌 Quadro Kanban Interativo</h2>
-  <p class="section-desc">Arraste as tarefas entre as colunas até levar todas para "Concluído". A coluna "Em Andamento" tem <strong style="color:#fff">limite de WIP = 2</strong> — respeite o limite!</p>
+  <p class="section-desc">Arraste as tarefas entre as colunas até levar todas para "Concluído". A coluna "Em Andamento" tem <strong style="color:#fff">limite de WIP = 2</strong>.</p>
 
   <div class="lab-panel">
+    <div class="lab-header">📌 Sprint A — Backend & IoT</div>
     <span class="lab-goal">+20 XP ao mover todas as tarefas para Concluído</span>
     <div class="kanban-board">
       <div class="kanban-col" id="col-todo" data-col="todo">
@@ -235,14 +372,37 @@
     </div>
   </div>
 
+  <div class="lab-panel">
+    <div class="lab-header">📌 Sprint B — Frontend & Mobile (WIP = 3)</div>
+    <span class="lab-goal">+15 XP ao mover todas as tarefas para Concluído</span>
+    <p class="lab-sub">Time maior nesta sprint: agora o limite de WIP em "Em Andamento" é 3.</p>
+    <div class="kanban-board">
+      <div class="kanban-col" id="col-todo-b" data-col="todo-b">
+        <h5>A Fazer <span class="count" id="count-todo-b">5</span></h5>
+        <div class="kanban-card" data-col="todo-b">Tela de perfil do usuário</div>
+        <div class="kanban-card" data-col="todo-b">Notificações push</div>
+        <div class="kanban-card" data-col="todo-b">Modo offline (PWA)</div>
+        <div class="kanban-card" data-col="todo-b">Gráfico de histórico de sensores</div>
+        <div class="kanban-card" data-col="todo-b">Testes E2E do app mobile</div>
+      </div>
+      <div class="kanban-col" id="col-doing-b" data-col="doing-b" data-max="3">
+        <h5>Em Andamento <span class="count" id="count-doing-b">0/3</span></h5>
+      </div>
+      <div class="kanban-col" id="col-done-b" data-col="done-b">
+        <h5>Concluído <span class="count" id="count-done-b">0</span></h5>
+      </div>
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <div class="section-tag">// Missão 03</div>
   <h2 class="section-title">🎯 Planeje a Sprint</h2>
-  <p class="section-desc">A equipe tem capacidade para <strong style="color:#fff">15 pontos</strong> nesta sprint. Arraste os itens do backlog sem ultrapassar a capacidade.</p>
+  <p class="section-desc">Arraste os itens do backlog sem ultrapassar a capacidade da equipe.</p>
 
   <div class="lab-panel">
-    <span class="lab-goal">+20 XP ao preencher pelo menos 12 dos 15 pontos</span>
+    <div class="lab-header">🎯 Sprint 1 — Capacidade: 15 pts</div>
+    <span class="lab-goal">+15 XP ao preencher pelo menos 12 dos 15 pontos</span>
     <div class="sprint-capacity">
       <div class="cap-label"><span>Capacidade da Sprint</span><span id="cap-count">0 / 15 pts</span></div>
       <div class="cap-track"><div class="cap-fill" id="cap-fill"></div></div>
@@ -258,14 +418,46 @@
     <div class="sprint-zone" id="sprint-zone"></div>
   </div>
 
+  <div class="lab-panel">
+    <div class="lab-header">🎯 Sprint 2 — Capacidade: 20 pts</div>
+    <span class="lab-goal">+15 XP ao preencher pelo menos 16 dos 20 pontos</span>
+    <p class="lab-sub">A equipe ganhou velocidade — agora a capacidade é maior.</p>
+    <div class="sprint-capacity">
+      <div class="cap-label"><span>Capacidade da Sprint</span><span id="cap-count-2">0 / 20 pts</span></div>
+      <div class="cap-track"><div class="cap-fill" id="cap-fill-2"></div></div>
+    </div>
+    <div class="backlog-items" id="backlog-2">
+      <div class="story-card" data-pts="5">Relatórios em PDF<span class="pts">5 pts</span></div>
+      <div class="story-card" data-pts="3">Filtro de sensores<span class="pts">3 pts</span></div>
+      <div class="story-card" data-pts="8">Autenticação OAuth<span class="pts">8 pts</span></div>
+      <div class="story-card" data-pts="2">Dark mode<span class="pts">2 pts</span></div>
+      <div class="story-card" data-pts="6">Exportar dados CSV<span class="pts">6 pts</span></div>
+      <div class="story-card" data-pts="4">Alertas em tempo real<span class="pts">4 pts</span></div>
+    </div>
+    <div class="sprint-zone" id="sprint-zone-2"></div>
+    <div class="reflect-box">
+      <label>✍️ Reflexão: por que é arriscado uma equipe se comprometer além da sua capacidade real de entrega?</label>
+      <textarea id="reflect-1" placeholder="Escreva pelo menos algumas frases..."></textarea>
+      <div class="reflect-status" id="reflect-1-status">Aguardando resposta (mínimo 40 caracteres)</div>
+    </div>
+  </div>
+
   <div class="divider"></div>
 
   <div class="section-tag">// Missão 04</div>
   <h2 class="section-title">🥋 Coding Dojo — Randori</h2>
-  <p class="section-desc">No formato Randori, piloto e copiloto se revezam a cada rodada. Inicie a simulação e observe o rodízio da dupla em tempo real.</p>
+  <p class="section-desc">Piloto e copiloto se revezam a cada rodada. Escolha a duração e inicie a simulação.</p>
 
   <div class="lab-panel">
     <span class="lab-goal">+20 XP ao completar uma rodada completa de revezamento</span>
+    <div class="dojo-config">
+      <label for="dojo-duration">Duração de cada rodada:</label>
+      <select id="dojo-duration">
+        <option value="4">Demonstração (4s)</option>
+        <option value="30">Rápido (30s)</option>
+        <option value="60">Realista (1 min)</option>
+      </select>
+    </div>
     <div class="dojo-status" id="dojo-status">Pressione iniciar para começar o Randori</div>
     <div class="dojo-timer" id="dojo-timer">04</div>
     <div class="dojo-ring" id="dojo-ring"></div>
@@ -279,10 +471,42 @@
   <div class="divider"></div>
 
   <div class="section-tag">// Missão 05</div>
-  <h2 class="section-title">🧠 Quiz Relâmpago</h2>
-  <p class="section-desc">Responda as 4 perguntas para fechar a missão.</p>
+  <h2 class="section-title">🗺️ Aventura: Você é o Scrum Master</h2>
+  <p class="section-desc">Três decisões reais que qualquer grupo de faculdade enfrenta. Escolha e veja o que aconteceria.</p>
+
+  <div class="lab-panel">
+    <span class="lab-goal">+15 XP ao completar as 3 decisões</span>
+    <div class="story-progress" id="story-progress">Cenário 1 de 3</div>
+    <div id="story-content"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Missão 06</div>
+  <h2 class="section-title">🧠 Quiz</h2>
+  <p class="section-desc">Responda as 8 perguntas para fechar a missão.</p>
 
   <div id="quiz-container"></div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Para fechar</div>
+  <h2 class="section-title">🛠️ Mini-Projeto Prático</h2>
+  <p class="section-desc">Marque o que você já aplicou ou pretende aplicar no Projeto Integrador.</p>
+  <div class="lab-panel">
+    <span class="lab-goal">+15 XP ao marcar os 4 itens</span>
+    <div class="checklist" id="checklist">
+      <label class="checklist-item"><input type="checkbox"> Montei o Product Backlog do meu Projeto Integrador com user stories</label>
+      <label class="checklist-item"><input type="checkbox"> Criei um quadro Kanban real (GitHub Projects ou Trello) para o meu projeto</label>
+      <label class="checklist-item"><input type="checkbox"> Planejei pelo menos uma sprint com capacidade estimada em pontos</label>
+      <label class="checklist-item"><input type="checkbox"> Participei (ou combinei) de uma sessão de Coding Dojo com colegas</label>
+    </div>
+    <div class="reflect-box">
+      <label>✍️ Registre suas principais descobertas desta missão:</label>
+      <textarea id="reflect-2" placeholder="O que mais te chamou atenção? Onde você já viu esses conceitos na prática?"></textarea>
+      <div class="reflect-status" id="reflect-2-status">Aguardando resposta (mínimo 40 caracteres)</div>
+    </div>
+  </div>
 
   <div class="divider"></div>
 
@@ -311,17 +535,26 @@
 </div>
 
 <script>
-const state = { xp:0, badges:{scrum:false, kanban:false, sprint:false, dojo:false, quiz:false} };
+let elapsedSec = 0;
+setInterval(()=>{
+  elapsedSec++;
+  const m = String(Math.floor(elapsedSec/60)).padStart(2,'0');
+  const s = String(elapsedSec%60).padStart(2,'0');
+  document.getElementById('session-clock').textContent = m+':'+s;
+  if(elapsedSec === 3000) showToast('⏱️ 50 minutos de missão! Você pode continuar revisando ou seguir em frente.');
+}, 1000);
+
+const state = { xp:0, badges:{scrum:false, kanban:false, sprint:false, dojo:false, aventureiro:false, quiz:false, redator:false, praticante:false} };
 function renderXP(){
   document.getElementById('xp-fill').style.width = state.xp + '%';
-  document.getElementById('xp-count').textContent = state.xp + ' / 100';
+  document.getElementById('xp-count').textContent = Math.round(state.xp) + ' / 100';
 }
 function addXP(n){ state.xp = Math.min(100, state.xp + n); renderXP(); }
 function showToast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   clearTimeout(t._timer);
-  t._timer = setTimeout(()=> t.classList.remove('show'), 2600);
+  t._timer = setTimeout(()=> t.classList.remove('show'), 2800);
 }
 function unlockBadge(key, label, xp){
   if(state.badges[key]) return;
@@ -349,6 +582,10 @@ function launchConfetti(){
     setTimeout(()=> p.remove(), 5000);
   }
 }
+
+document.getElementById('read-check-1').addEventListener('change', function(){
+  if(this.checked){ addXP(5); showToast('📖 Leitura marcada! +5 XP'); }
+});
 
 function makeDraggable(el, dropSelector, onDrop){
   el.style.touchAction = 'none';
@@ -402,86 +639,105 @@ function makeDraggable(el, dropSelector, onDrop){
   });
 }
 
-/* GAME 1 */
-let matchedCount = 0;
-const totalMatches = document.querySelectorAll('#zones .zone').length;
-document.querySelectorAll('#chips .chip').forEach(chip=>{
-  makeDraggable(chip, '.zone', (el, zone)=>{
-    if(zone.classList.contains('correct')) return false;
-    if(zone.dataset.answer === el.dataset.id){
-      zone.classList.add('correct');
-      zone.innerHTML = `<span>✅ ${zone.textContent}</span><span class="placed-chip">${el.textContent}</span>`;
-      el.classList.add('placed');
-      matchedCount++;
-      addXP(3.3);
-      if(matchedCount === totalMatches) unlockBadge('scrum','Especialista em Papéis Scrum', 0.2);
+/* MATCHING (round1 + round2) */
+function setupMatching(chipsSel, zonesSel, xpTotal, onComplete){
+  let matched = 0;
+  const total = document.querySelectorAll(zonesSel+' .zone').length;
+  document.querySelectorAll(chipsSel+' .chip').forEach(chip=>{
+    makeDraggable(chip, zonesSel+' .zone', (el, zone)=>{
+      if(zone.classList.contains('correct')) return false;
+      if(zone.dataset.answer === el.dataset.id){
+        zone.classList.add('correct');
+        zone.innerHTML = `<span>✅ ${zone.textContent}</span><span class="placed-chip">${el.textContent}</span>`;
+        el.classList.add('placed');
+        matched++;
+        addXP(xpTotal/total);
+        if(matched === total && onComplete) onComplete();
+        return true;
+      } else {
+        zone.classList.add('shake');
+        setTimeout(()=> zone.classList.remove('shake'), 400);
+        return false;
+      }
+    });
+  });
+}
+let scrumRolesDone=false, scrumEventsDone=false;
+setupMatching('#chips','#zones',15, ()=>{ scrumRolesDone=true; checkScrum(); });
+setupMatching('#chips2','#zones2',10, ()=>{ scrumEventsDone=true; checkScrum(); });
+function checkScrum(){ if(scrumRolesDone && scrumEventsDone) unlockBadge('scrum','Especialista em Scrum', 0); }
+
+/* KANBAN (board A + board B) */
+function setupKanban(prefix, total, xpTotal, onComplete){
+  function updateCounts(){
+    document.getElementById('count-todo'+prefix).textContent = document.querySelectorAll('#col-todo'+prefix+' .kanban-card').length;
+    const doingCol = document.getElementById('col-doing'+prefix);
+    const max = doingCol.dataset.max;
+    document.getElementById('count-doing'+prefix).textContent = document.querySelectorAll('#col-doing'+prefix+' .kanban-card').length + '/' + max;
+    document.getElementById('count-done'+prefix).textContent = document.querySelectorAll('#col-done'+prefix+' .kanban-card').length;
+  }
+  document.querySelectorAll('#col-todo'+prefix+' .kanban-card, #col-doing'+prefix+' .kanban-card, #col-done'+prefix+' .kanban-card').forEach(card=>{
+    makeDraggable(card, '.kanban-col', (el, col)=>{
+      if(!col.id.endsWith(prefix)) return false;
+      const max = col.dataset.max ? parseInt(col.dataset.max) : null;
+      const current = col.querySelectorAll('.kanban-card').length;
+      if(max !== null && current >= max){
+        col.classList.add('limit-hit');
+        showToast('🚫 Limite de WIP atingido!');
+        setTimeout(()=> col.classList.remove('limit-hit'), 400);
+        return false;
+      }
+      col.appendChild(el);
+      updateCounts();
+      if(document.querySelectorAll('#col-done'+prefix+' .kanban-card').length === total){
+        addXP(xpTotal);
+        if(onComplete) onComplete();
+      }
       return true;
-    } else {
-      zone.classList.add('shake');
-      setTimeout(()=> zone.classList.remove('shake'), 400);
-      return false;
-    }
+    });
   });
-});
-
-/* GAME 2 */
-function updateKanbanCounts(){
-  document.getElementById('count-todo').textContent = document.querySelectorAll('#col-todo .kanban-card').length;
-  document.getElementById('count-doing').textContent = document.querySelectorAll('#col-doing .kanban-card').length + '/2';
-  document.getElementById('count-done').textContent = document.querySelectorAll('#col-done .kanban-card').length;
+  updateCounts();
 }
-function attachKanbanDrag(card){
-  makeDraggable(card, '.kanban-col', (el, col)=>{
-    const max = col.dataset.max ? parseInt(col.dataset.max) : null;
-    const current = col.querySelectorAll('.kanban-card').length;
-    if(max !== null && current >= max){
-      col.classList.add('limit-hit');
-      showToast('🚫 Limite de WIP atingido na coluna Em Andamento!');
-      setTimeout(()=> col.classList.remove('limit-hit'), 400);
-      return false;
-    }
-    col.appendChild(el);
-    el.dataset.col = col.dataset.col;
-    updateKanbanCounts();
-    if(document.querySelectorAll('#col-done .kanban-card').length === 6){
-      unlockBadge('kanban','Mestre do Fluxo', 20);
-    }
-    return true;
+let kanbanADone=false, kanbanBDone=false;
+setupKanban('', 6, 20, ()=>{ kanbanADone=true; checkKanban(); });
+setupKanban('-b', 5, 15, ()=>{ kanbanBDone=true; checkKanban(); });
+function checkKanban(){ if(kanbanADone && kanbanBDone) unlockBadge('kanban','Mestre do Fluxo', 0); }
+
+/* SPRINT PLANNING (sprint 1 + sprint 2) */
+function setupSprint(backlogSel, zoneSel, capId, fillId, capacity, threshold, xpTotal, onComplete){
+  let total = 0;
+  function updateBar(){
+    const pct = Math.min(100, (total/capacity)*100);
+    document.getElementById(fillId).style.width = pct + '%';
+    document.getElementById(capId).textContent = total + ' / ' + capacity + ' pts';
+  }
+  document.querySelectorAll(backlogSel+' .story-card').forEach(card=>{
+    makeDraggable(card, zoneSel, (el, zone)=>{
+      const pts = parseInt(el.dataset.pts);
+      if(total + pts > capacity){
+        zone.classList.add('shake');
+        showToast('⚠️ Isso ultrapassaria a capacidade da sprint!');
+        setTimeout(()=> zone.classList.remove('shake'), 400);
+        return false;
+      }
+      total += pts;
+      updateBar();
+      const mini = document.createElement('div');
+      mini.className = 'mini-card';
+      mini.textContent = el.textContent;
+      zone.appendChild(mini);
+      el.classList.add('placed');
+      if(total >= threshold && onComplete) onComplete();
+      return true;
+    });
   });
 }
-document.querySelectorAll('.kanban-card').forEach(attachKanbanDrag);
-updateKanbanCounts();
+let sprint1Done=false, sprint2Done=false;
+setupSprint('#backlog','#sprint-zone','cap-count','cap-fill',15,12,15, ()=>{ if(!sprint1Done){sprint1Done=true; addXP(15); checkSprint();} });
+setupSprint('#backlog-2','#sprint-zone-2','cap-count-2','cap-fill-2',20,16,15, ()=>{ if(!sprint2Done){sprint2Done=true; addXP(15); checkSprint();} });
+function checkSprint(){ if(sprint1Done && sprint2Done) unlockBadge('sprint','Planejador de Sprint', 0); }
 
-/* GAME 3 */
-const SPRINT_CAPACITY = 15;
-let sprintTotal = 0;
-function updateCapacityBar(){
-  const pct = Math.min(100, (sprintTotal/SPRINT_CAPACITY)*100);
-  document.getElementById('cap-fill').style.width = pct + '%';
-  document.getElementById('cap-count').textContent = sprintTotal + ' / ' + SPRINT_CAPACITY + ' pts';
-}
-document.querySelectorAll('#backlog .story-card').forEach(card=>{
-  makeDraggable(card, '#sprint-zone', (el, zone)=>{
-    const pts = parseInt(el.dataset.pts);
-    if(sprintTotal + pts > SPRINT_CAPACITY){
-      zone.classList.add('shake');
-      showToast('⚠️ Isso ultrapassaria a capacidade da sprint!');
-      setTimeout(()=> zone.classList.remove('shake'), 400);
-      return false;
-    }
-    sprintTotal += pts;
-    updateCapacityBar();
-    const mini = document.createElement('div');
-    mini.className = 'mini-card';
-    mini.textContent = el.textContent;
-    zone.appendChild(mini);
-    el.classList.add('placed');
-    if(sprintTotal >= 12) unlockBadge('sprint','Planejador de Sprint', 20);
-    return true;
-  });
-});
-
-/* GAME 4 */
+/* CODING DOJO */
 const dojoAvatars = ['🧑‍💻','👩‍💻','🧑‍🎨','👨‍🔬','🧑‍🚀','👩‍🔧'];
 const ring = document.getElementById('dojo-ring');
 dojoAvatars.forEach((emoji, i)=>{
@@ -491,7 +747,7 @@ dojoAvatars.forEach((emoji, i)=>{
   av.innerHTML = emoji + '<span class="role-tag"></span>';
   ring.appendChild(av);
 });
-let dojoRound = 0, dojoTimerVal = 4, dojoInterval = null, dojoRunning = false;
+let dojoRound = 0, dojoTimerVal = 4, dojoInterval = null, dojoRunning = false, dojoRoundLen = 4;
 const TOTAL_ROUNDS = 6;
 function setRoles(pilotIdx, copilotIdx){
   dojoAvatars.forEach((_, i)=>{
@@ -504,9 +760,13 @@ function setRoles(pilotIdx, copilotIdx){
   document.getElementById('av-'+copilotIdx).classList.add('copilot');
   document.getElementById('av-'+copilotIdx).querySelector('.role-tag').textContent = 'Copiloto';
 }
+function fmtTime(sec){
+  if(sec >= 60) return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
+  return String(sec).padStart(2,'0');
+}
 function dojoTick(){
   dojoTimerVal--;
-  document.getElementById('dojo-timer').textContent = String(dojoTimerVal).padStart(2,'0');
+  document.getElementById('dojo-timer').textContent = fmtTime(dojoTimerVal);
   if(dojoTimerVal <= 0){
     dojoRound++;
     document.getElementById('dojo-rounds').textContent = `Rodada ${dojoRound} / ${TOTAL_ROUNDS}`;
@@ -520,29 +780,32 @@ function dojoTick(){
     const copilot = (dojoRound+1) % dojoAvatars.length;
     setRoles(pilot, copilot);
     document.getElementById('dojo-status').textContent = `Rodada ${dojoRound+1}: revezando a dupla...`;
-    dojoTimerVal = 4;
+    dojoTimerVal = dojoRoundLen;
   }
 }
 function startDojo(){
   if(dojoRunning) return;
+  dojoRoundLen = parseInt(document.getElementById('dojo-duration').value);
   dojoRunning = true;
-  dojoRound = 0; dojoTimerVal = 4;
+  dojoRound = 0; dojoTimerVal = dojoRoundLen;
   document.getElementById('dojo-rounds').textContent = `Rodada 0 / ${TOTAL_ROUNDS}`;
   setRoles(0,1);
   document.getElementById('dojo-status').textContent = 'Rodada 1: Piloto e Copiloto programando juntos...';
-  document.getElementById('dojo-timer').textContent = '04';
+  document.getElementById('dojo-timer').textContent = fmtTime(dojoRoundLen);
   document.getElementById('btn-dojo-start').disabled = true;
+  document.getElementById('dojo-duration').disabled = true;
   dojoInterval = setInterval(dojoTick, 1000);
 }
 function stopDojo(){
   dojoRunning = false;
   clearInterval(dojoInterval);
   document.getElementById('btn-dojo-start').disabled = false;
+  document.getElementById('dojo-duration').disabled = false;
 }
 function resetDojo(){
   stopDojo();
-  dojoRound = 0; dojoTimerVal = 4;
-  document.getElementById('dojo-timer').textContent = '04';
+  dojoRound = 0; dojoTimerVal = dojoRoundLen;
+  document.getElementById('dojo-timer').textContent = fmtTime(dojoRoundLen);
   document.getElementById('dojo-rounds').textContent = `Rodada 0 / ${TOTAL_ROUNDS}`;
   document.getElementById('dojo-status').textContent = 'Pressione iniciar para começar o Randori';
   dojoAvatars.forEach((_, i)=>{
@@ -554,20 +817,118 @@ function resetDojo(){
 document.getElementById('btn-dojo-start').addEventListener('click', startDojo);
 document.getElementById('btn-dojo-reset').addEventListener('click', resetDojo);
 
+/* ---------- STORY ADVENTURE ---------- */
+const storyData = [
+  {
+    scenario: 'Faltam 2 semanas para a entrega do Projeto Integrador e um colega do grupo sumiu — não responde mais no WhatsApp. Você é o Scrum Master. O que você faz?',
+    choices: [
+      { text:'Assumo as tarefas dele sozinho, sem falar nada pro grupo', good:false, feedback:'⚠️ Isso sobrecarrega você e quebra a ideia de time autogerenciável. O Scrum Master facilita — ele não absorve o trabalho de todo mundo sozinho.' },
+      { text:'Levo o problema pra próxima Daily e replanejamos juntos quem assume o quê', good:true, feedback:'✅ Correto! O Scrum Master remove impedimentos e facilita a comunicação — ele ajuda o time a se reorganizar, não resolve tudo sozinho.' },
+      { text:'Não falo nada e só espero ele voltar', good:false, feedback:'⚠️ Esperar sem agir coloca a entrega em risco. Impedimentos devem ser levantados e tratados o quanto antes.' }
+    ]
+  },
+  {
+    scenario: 'No meio da sprint, o professor (Product Owner) pede pra vocês mudarem uma funcionalidade que já estava quase pronta. O que fazer?',
+    choices: [
+      { text:'Paramos tudo e implementamos a mudança na hora', good:false, feedback:'⚠️ Mudar o escopo no meio da sprint sem replanejar quebra o compromisso do time e gera retrabalho descontrolado.' },
+      { text:'Anotamos o pedido no Product Backlog e priorizamos na próxima sprint', good:true, feedback:'✅ Correto! O ideal é proteger a sprint em andamento e tratar mudanças de escopo no próximo planejamento — a não ser que seja realmente urgente.' },
+      { text:'Ignoramos o pedido do professor', good:false, feedback:'⚠️ O Product Owner define prioridades — ignorar não é solução, o certo é negociar quando ele entra no fluxo de trabalho.' }
+    ]
+  },
+  {
+    scenario: 'Você percebe que todo mundo do grupo está com 3 ou 4 tarefas "Em andamento" ao mesmo tempo no quadro, e nada fica pronto.',
+    choices: [
+      { text:'Deixo assim — quanto mais tarefas em andamento, mais rápido o time termina', good:false, feedback:'⚠️ Multitarefa excessiva na prática deixa tudo mais lento. É exatamente o problema que o limite de WIP resolve.' },
+      { text:'Proponho um limite de WIP por pessoa — no máximo 1 ou 2 tarefas em andamento por vez', good:true, feedback:'✅ Correto! Limitar o WIP força o time a terminar antes de começar outra coisa, aumentando o fluxo real de entregas.' },
+      { text:'Crio mais colunas no quadro', good:false, feedback:'⚠️ Mais colunas não resolve a sobrecarga — o problema é a quantidade de tarefas simultâneas, não a organização visual.' }
+    ]
+  }
+];
+let storyIndex = 0, storyGoodChoices = 0;
+function renderStory(){
+  const container = document.getElementById('story-content');
+  document.getElementById('story-progress').textContent = `Cenário ${storyIndex+1} de ${storyData.length}`;
+  if(storyIndex >= storyData.length){
+    container.innerHTML = `<div class="story-feedback good">🏁 Aventura concluída! Você tomou ${storyGoodChoices} de ${storyData.length} decisões alinhadas com boas práticas ágeis.</div>`;
+    addXP(15);
+    unlockBadge('aventureiro','Scrum Master de Verdade', 0);
+    return;
+  }
+  const step = storyData[storyIndex];
+  container.innerHTML = `<div class="story-scenario">${step.scenario}</div>
+    <div class="story-choices">${step.choices.map((c,ci)=>`<button class="story-choice" data-ci="${ci}">${c.text}</button>`).join('')}</div>`;
+  container.querySelectorAll('.story-choice').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const ci = parseInt(btn.dataset.ci);
+      const choice = step.choices[ci];
+      container.querySelectorAll('.story-choice').forEach(b=> b.disabled = true);
+      btn.classList.add(choice.good ? 'picked-good' : 'picked-bad');
+      if(choice.good) storyGoodChoices++;
+      const fb = document.createElement('div');
+      fb.className = 'story-feedback' + (choice.good ? ' good' : '');
+      fb.textContent = choice.feedback;
+      container.appendChild(fb);
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'lab-btn primary';
+      nextBtn.style.marginTop = '10px';
+      nextBtn.textContent = storyIndex < storyData.length-1 ? 'Continuar →' : 'Ver resultado →';
+      nextBtn.addEventListener('click', ()=>{ storyIndex++; renderStory(); });
+      container.appendChild(nextBtn);
+    });
+  });
+}
+renderStory();
+
+/* REFLECTIONS */
+function watchReflect(textareaId, statusId, minLen, onDone){
+  let done = false;
+  document.getElementById(textareaId).addEventListener('input', function(){
+    const status = document.getElementById(statusId);
+    if(this.value.trim().length >= minLen){
+      status.textContent = '✅ Registrado — obrigado pela reflexão!';
+      status.className = 'reflect-status ok';
+      if(!done){ done = true; onDone(); }
+    } else {
+      status.textContent = `Aguardando resposta (mínimo ${minLen} caracteres) — ${this.value.trim().length}/${minLen}`;
+      status.className = 'reflect-status';
+    }
+  });
+}
+let reflectCount = 0;
+function maybeUnlockRedator(){
+  reflectCount++;
+  if(reflectCount === 1) addXP(7);
+  if(reflectCount >= 2){ addXP(8); unlockBadge('redator','Redator Técnico', 0); }
+}
+watchReflect('reflect-1','reflect-1-status',40, maybeUnlockRedator);
+watchReflect('reflect-2','reflect-2-status',40, maybeUnlockRedator);
+
 /* QUIZ */
 const quizData = [
   { q:'Quem prioriza o Product Backlog no Scrum?',
     opts:['Scrum Master','Development Team','Product Owner','Stakeholder externo'],
-    correct:2, explain:'O Product Owner representa o cliente/usuário e é responsável por priorizar o Product Backlog.' },
+    correct:2, explain:'O Product Owner representa o cliente/usuário e prioriza o Product Backlog.' },
   { q:'O que é o "WIP limit" no Kanban?',
     opts:['O tempo máximo de uma sprint','O número máximo de tarefas em andamento por coluna','O orçamento do projeto','A quantidade de desenvolvedores no time'],
-    correct:1, explain:'WIP (Work In Progress) limit define quantas tarefas podem estar em andamento ao mesmo tempo em uma coluna, evitando sobrecarga.' },
+    correct:1, explain:'WIP limit define quantas tarefas podem estar em andamento ao mesmo tempo em uma coluna.' },
   { q:'No Coding Dojo, o formato "Randori" se caracteriza por:',
     opts:['Um único programador trabalhando sozinho','Revezamento de piloto e copiloto em rodadas curtas','Uma prova individual de programação','Planejamento de sprint em grupo'],
-    correct:1, explain:'No Randori, duplas se revezam programando junto ao público, trocando de piloto/copiloto a cada rodada curta.' },
+    correct:1, explain:'No Randori, duplas se revezam programando junto ao público, trocando de piloto/copiloto a cada rodada.' },
   { q:'Gamificação em contextos de aprendizagem/projetos serve principalmente para:',
     opts:['Substituir toda a documentação técnica','Aumentar engajamento e motivação com elementos de jogo','Eliminar a necessidade de testes','Reduzir o tempo de reuniões'],
-    correct:1, explain:'Gamificação usa pontos, badges e desafios para tornar o processo mais engajador e motivador, sem substituir as práticas técnicas.' }
+    correct:1, explain:'Gamificação usa pontos, badges e desafios para tornar o processo mais engajador.' },
+  { q:'Qual dos quatro valores faz parte do Manifesto Ágil?',
+    opts:['Documentação extensa acima de tudo','Seguir o plano original a qualquer custo','Indivíduos e interações mais que processos e ferramentas','Contratos rígidos acima da colaboração'],
+    correct:2, explain:'O Manifesto Ágil valoriza indivíduos e interações mais que processos e ferramentas.' },
+  { q:'A Sprint Retrospective serve para:',
+    opts:['Apresentar o incremento pronto ao cliente','Definir o que será entregue na próxima sprint','O time refletir sobre o que funcionou e o que pode melhorar','Corrigir bugs críticos em produção'],
+    correct:2, explain:'A Retrospective é o momento do time refletir sobre o próprio processo de trabalho.' },
+  { q:'Se a equipe aceita mais pontos de história do que sua capacidade real permite, o risco é:',
+    opts:['Sobrar tempo na sprint','Entregar tudo antes do prazo','Não concluir os itens planejados, comprometendo a entrega','Reduzir o WIP automaticamente'],
+    correct:2, explain:'Superestimar a capacidade leva a compromissos que não podem ser cumpridos dentro da sprint.' },
+  { q:'No Coding Dojo, a prática de escrever o teste antes do código está associada a qual técnica?',
+    opts:['Kanban','TDD (Test-Driven Development)','Sprint Planning','Vendor lock-in'],
+    correct:1, explain:'O Coding Dojo costuma aplicar TDD: escrever o teste antes da implementação (Red, Green, Refactor).' }
 ];
 let quizCorrectCount = 0;
 const quizContainer = document.getElementById('quiz-container');
@@ -590,7 +951,7 @@ quizData.forEach((item, qi)=>{
         explainEl.textContent = '✅ ' + item.explain;
         explainEl.classList.add('show');
         quizCorrectCount++;
-        addXP(5);
+        addXP(30/quizData.length);
         if(quizCorrectCount === quizData.length) unlockBadge('quiz','Sabe Tudo', 0);
       } else {
         btn.classList.add('wrong');
@@ -598,6 +959,16 @@ quizData.forEach((item, qi)=>{
         explainEl.classList.add('show');
       }
     });
+  });
+});
+
+/* CHECKLIST */
+document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb=>{
+  cb.addEventListener('change', function(){
+    this.closest('.checklist-item').classList.toggle('checked', this.checked);
+    const allChecked = Array.from(document.querySelectorAll('#checklist input[type="checkbox"]')).every(c=> c.checked);
+    if(this.checked) addXP(15/4);
+    if(allChecked) unlockBadge('praticante','Praticante', 0);
   });
 });
 
