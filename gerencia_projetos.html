@@ -94,6 +94,15 @@
   .tdd-block pre{background:#080a12;border:1px solid var(--border);color:#a3f7bf;padding:12px;border-radius:8px;overflow-x:auto;font-size:.72rem;line-height:1.55;font-family:'DM Mono',monospace;white-space:pre;}
   .tdd-msg{text-align:center;font-size:.85rem;color:var(--muted2);min-height:36px;margin:8px 0 14px;display:flex;align-items:center;justify-content:center;}
 
+  .glossary-search{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 16px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.88rem;margin-bottom:18px;}
+  .glossary-search:focus{outline:none;border-color:var(--accent);}
+  .glossary-list{display:grid;gap:10px;}
+  .term-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;}
+  .term-item dt{font-family:'Syne',sans-serif;color:#fff;font-weight:700;font-size:.92rem;margin-bottom:5px;}
+  .term-item dd{color:var(--muted2);font-size:.84rem;line-height:1.65;}
+  .term-item.hidden{display:none;}
+  .glossary-empty{text-align:center;color:var(--muted);font-size:.85rem;padding:20px 0;}
+
   .story-scenario{font-size:.9rem;color:var(--text);line-height:1.7;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;}
   .story-choices{display:grid;gap:8px;margin-bottom:12px;}
   .story-choice{text-align:left;background:var(--card);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:8px;cursor:pointer;font-size:.83rem;font-family:'Space Grotesk',sans-serif;transition:.2s;}
@@ -593,6 +602,44 @@
     <div class="material-card"><h4>🥋 Coding Dojo</h4><a href="https://codingdojo.org/" target="_blank">Acessar →</a></div>
   </div>
 
+  <div class="divider"></div>
+
+  <!-- GLOSSÁRIO -->
+  <div class="section-tag">// Consulta rápida</div>
+  <h2 class="section-title" id="nav-glossario">📚 Glossário</h2>
+  <p class="section-desc">Todo termo técnico usado nesta missão, explicado em uma frase. Use a busca pra achar rápido.</p>
+
+  <div class="lab-panel">
+    <input type="text" id="glossary-search" class="glossary-search" placeholder="Buscar um termo... (ex: scrum, WIP, TDD)">
+    <dl class="glossary-list" id="glossary-list">
+      <div class="term-item"><dt>Coding Dojo</dt><dd>Prática de aprendizado coletivo de programação em grupo, geralmente sob um tempo limitado, resolvendo um desafio juntos.</dd></div>
+      <div class="term-item"><dt>Daily Scrum</dt><dd>Reunião diária curta (cerca de 15 minutos) onde o time alinha o que foi feito, o que será feito e quais bloqueios existem.</dd></div>
+      <div class="term-item"><dt>Development Team</dt><dd>Equipe multidisciplinar responsável por transformar itens do backlog em software funcional.</dd></div>
+      <div class="term-item"><dt>Gamificação</dt><dd>Uso de elementos de jogos — pontos, níveis, badges, desafios — em contextos que não são jogos, para aumentar engajamento e motivação.</dd></div>
+      <div class="term-item"><dt>GitHub Projects</dt><dd>Ferramenta de quadro Kanban integrada diretamente ao repositório do GitHub.</dd></div>
+      <div class="term-item"><dt>Incremento</dt><dd>A soma de tudo o que foi entregue e está em estado utilizável ao final de uma sprint.</dd></div>
+      <div class="term-item"><dt>Kanban</dt><dd>Método visual de gestão de fluxo de trabalho, baseado em colunas (A Fazer, Em Andamento, Concluído) e limite de tarefas em andamento.</dd></div>
+      <div class="term-item"><dt>Manifesto Ágil</dt><dd>Documento publicado em 2001 que define os quatro valores centrais do desenvolvimento ágil de software.</dd></div>
+      <div class="term-item"><dt>Metodologia Ágil</dt><dd>Abordagem de gestão de projetos baseada em ciclos curtos, entregas contínuas e adaptação constante a mudanças — o oposto do modelo em cascata.</dd></div>
+      <div class="term-item"><dt>Product Backlog</dt><dd>Lista priorizada de tudo o que o produto precisa: funcionalidades, correções, melhorias.</dd></div>
+      <div class="term-item"><dt>Product Owner (PO)</dt><dd>Pessoa que representa o cliente/usuário e prioriza o que o time deve construir.</dd></div>
+      <div class="term-item"><dt>Randori</dt><dd>Formato do Coding Dojo onde duplas se revezam programando em frente ao grupo, trocando de piloto e copiloto a cada rodada.</dd></div>
+      <div class="term-item"><dt>Scrum</dt><dd>Framework ágil que organiza o trabalho em ciclos curtos chamados sprints, com papéis, eventos e artefatos bem definidos.</dd></div>
+      <div class="term-item"><dt>Scrum Master (SM)</dt><dd>Pessoa que facilita o processo Scrum e remove impedimentos do time — não é o "chefe" do grupo.</dd></div>
+      <div class="term-item"><dt>Sprint</dt><dd>Ciclo curto e fixo de trabalho, geralmente de 1 a 4 semanas, no qual o time entrega um incremento do produto.</dd></div>
+      <div class="term-item"><dt>Sprint Backlog</dt><dd>Itens selecionados do Product Backlog para serem feitos durante a sprint atual.</dd></div>
+      <div class="term-item"><dt>Sprint Planning</dt><dd>Reunião no início da sprint para decidir, junto com o time, o que será entregue.</dd></div>
+      <div class="term-item"><dt>Sprint Retrospective</dt><dd>Reunião ao final da sprint onde o time reflete sobre o que funcionou e o que pode melhorar no processo.</dd></div>
+      <div class="term-item"><dt>Sprint Review</dt><dd>Reunião ao final da sprint onde o time apresenta o incremento pronto para quem interessa.</dd></div>
+      <div class="term-item"><dt>Story Points</dt><dd>Unidade usada para estimar o esforço ou a complexidade de um item do backlog, sem usar horas exatas.</dd></div>
+      <div class="term-item"><dt>TDD (Test-Driven Development)</dt><dd>Prática de escrever o teste antes do código, seguindo o ciclo Red (falha), Green (passa) e Refactor (limpa).</dd></div>
+      <div class="term-item"><dt>WIP (Work In Progress)</dt><dd>Quantidade de tarefas em andamento ao mesmo tempo. Limitar o WIP evita que o time (ou uma pessoa) fique sobrecarregado fazendo tudo pela metade.</dd></div>
+    </dl>
+    <p class="glossary-empty" id="glossary-empty" style="display:none;">Nenhum termo encontrado. Tenta outra palavra.</p>
+  </div>
+
+  <div class="divider"></div>
+
   <div class="navigation">
     <a href="semana13.html" class="nav-button ghost">⬅️ S·13 Metodologias e Ambiente</a>
     <a href="index.html" class="nav-button ghost">🏠 Início</a>
@@ -662,7 +709,8 @@ const mapNodes = [
   { key:'tdd', ico:'💻', label:'TDD', target:'#nav-dojo' },
   { key:'aventureiro', ico:'🗺️', label:'Aventura', target:'#nav-aventureiro' },
   { key:'quiz', ico:'🧠', label:'Quiz', target:'#nav-quiz' },
-  { key:'praticante', ico:'🛠️', label:'Prática', target:'#nav-praticante' }
+  { key:'praticante', ico:'🛠️', label:'Prática', target:'#nav-praticante' },
+  { key:'glossario', ico:'📚', label:'Glossário', target:'#nav-glossario' }
 ];
 const doneNodes = {};
 function buildMissionMap(){
@@ -1216,6 +1264,19 @@ document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb=>{
     if(this.checked){ addXP(15/4); sfxCorrect(); }
     if(allChecked) unlockBadge('praticante','Praticante', 0);
   });
+});
+
+/* GLOSSARY SEARCH */
+document.getElementById('glossary-search').addEventListener('input', function(){
+  const q = this.value.trim().toLowerCase();
+  const items = document.querySelectorAll('#glossary-list .term-item');
+  let visible = 0;
+  items.forEach(item=>{
+    const match = item.textContent.toLowerCase().includes(q);
+    item.classList.toggle('hidden', !match);
+    if(match) visible++;
+  });
+  document.getElementById('glossary-empty').style.display = visible === 0 ? 'block' : 'none';
 });
 
 renderXP();

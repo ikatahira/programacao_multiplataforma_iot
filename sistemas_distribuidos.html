@@ -137,6 +137,15 @@
   .repo-callout{background:rgba(34,211,165,.06);border:1px solid rgba(34,211,165,.25);border-radius:12px;padding:18px 20px;font-size:.84rem;color:var(--text);line-height:1.8;margin-top:14px;}
   .repo-callout strong{color:var(--green);}
   .repo-callout code{background:var(--surface);border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-family:'DM Mono',monospace;font-size:.82em;color:var(--accent2);}
+
+  .glossary-search{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 16px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:.88rem;margin-bottom:18px;}
+  .glossary-search:focus{outline:none;border-color:var(--accent);}
+  .glossary-list{display:grid;gap:10px;}
+  .term-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;}
+  .term-item dt{font-family:'Syne',sans-serif;color:#fff;font-weight:700;font-size:.92rem;margin-bottom:5px;}
+  .term-item dd{color:var(--muted2);font-size:.84rem;line-height:1.65;}
+  .term-item.hidden{display:none;}
+  .glossary-empty{text-align:center;color:var(--muted);font-size:.85rem;padding:20px 0;}
   .race-anim-counter{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;text-align:center;color:#fff;margin-bottom:14px;transition:transform .15s;}
   .race-anim-counter.pulse{animation:pulse-num .3s;}
   .race-anim-actors{display:flex;justify-content:center;gap:24px;margin-bottom:14px;}
@@ -765,6 +774,48 @@ SEM protecao -&gt; contador final = <span class="bad">1</span></div>
     <div class="material-card"><h4>📄 OpenAPI Specification</h4><a href="https://swagger.io/specification/" target="_blank">Acessar →</a></div>
   </div>
 
+  <div class="divider"></div>
+
+  <!-- GLOSSÁRIO -->
+  <div class="section-tag">// Consulta rápida</div>
+  <h2 class="section-title" id="nav-glossario">📚 Glossário</h2>
+  <p class="section-desc">Todo termo técnico usado nesta missão, explicado em uma frase. Use a busca pra achar rápido.</p>
+
+  <div class="lab-panel">
+    <input type="text" id="glossary-search" class="glossary-search" placeholder="Buscar um termo... (ex: mutex, CAP, MQTT)">
+    <dl class="glossary-list" id="glossary-list">
+      <div class="term-item"><dt>API (Application Programming Interface)</dt><dd>Interface que permite que dois sistemas diferentes conversem entre si, trocando dados e comandos de forma padronizada.</dd></div>
+      <div class="term-item"><dt>Broker</dt><dd>Um "intermediário" de mensagens: recebe dados de quem publica (ex: um sensor) e entrega pra quem quer receber, sem que os dois precisem se conhecer diretamente. Exemplos: Mosquitto (MQTT), RabbitMQ, Kafka.</dd></div>
+      <div class="term-item"><dt>Cache Distribuído</dt><dd>Cópia de dados usados com frequência, guardada mais perto de quem vai usá-los, para evitar bater direto no banco de dados toda vez.</dd></div>
+      <div class="term-item"><dt>CAP (Teorema CAP)</dt><dd>Regra que diz que um sistema distribuído não consegue garantir ao mesmo tempo Consistência, Disponibilidade e Tolerância a Partições — é preciso escolher qual sacrificar.</dd></div>
+      <div class="term-item"><dt>Codespaces (GitHub Codespaces)</dt><dd>Ambiente de programação completo que roda no navegador, hospedado pelo GitHub, sem precisar instalar nada no computador.</dd></div>
+      <div class="term-item"><dt>Concorrência</dt><dd>Vários processos ou tarefas progredindo dentro do mesmo período de tempo, disputando os mesmos recursos.</dd></div>
+      <div class="term-item"><dt>Condição de Corrida (Race Condition)</dt><dd>Quando duas execuções acessam e alteram o mesmo dado ao mesmo tempo, e o resultado final depende da ordem imprevisível em que isso acontece.</dd></div>
+      <div class="term-item"><dt>Devcontainer</dt><dd>Arquivo de configuração que descreve automaticamente o ambiente de desenvolvimento (linguagens, ferramentas) que o GitHub Codespaces deve montar.</dd></div>
+      <div class="term-item"><dt>Escalabilidade</dt><dd>Capacidade de um sistema continuar funcionando bem mesmo quando o número de usuários, dispositivos ou dados aumenta.</dd></div>
+      <div class="term-item"><dt>Escalabilidade Horizontal (scale out)</dt><dd>Aumentar a capacidade de um sistema adicionando mais máquinas trabalhando juntas.</dd></div>
+      <div class="term-item"><dt>Escalabilidade Vertical (scale up)</dt><dd>Aumentar a capacidade de um sistema dando mais recursos — CPU, memória — a uma única máquina.</dd></div>
+      <div class="term-item"><dt>GitHub Actions</dt><dd>Ferramenta do GitHub que roda comandos automaticamente sempre que algo acontece no repositório, como um push.</dd></div>
+      <div class="term-item"><dt>JSON (JavaScript Object Notation)</dt><dd>Formato de texto simples e aberto para representar dados, usado por praticamente qualquer linguagem de programação.</dd></div>
+      <div class="term-item"><dt>Kafka</dt><dd>Sistema de mensageria de alta escala, feito para lidar com grandes volumes de dados em tempo real entre muitos produtores e consumidores.</dd></div>
+      <div class="term-item"><dt>Lock / Mutex</dt><dd>Mecanismo que garante que apenas uma execução por vez acesse um trecho de código ou dado compartilhado, evitando condição de corrida.</dd></div>
+      <div class="term-item"><dt>MQTT</dt><dd>Protocolo de mensageria leve, muito usado em IoT, onde dispositivos publicam e assinam dados através de um broker.</dd></div>
+      <div class="term-item"><dt>OpenAPI / Swagger</dt><dd>Especificação aberta usada para documentar e descrever como uma API REST funciona.</dd></div>
+      <div class="term-item"><dt>Openness</dt><dd>Característica de um sistema construído sobre padrões abertos e documentados, permitindo que diferentes plataformas se conectem a ele.</dd></div>
+      <div class="term-item"><dt>Paralelismo</dt><dd>Múltiplos núcleos de processador executando instruções literalmente ao mesmo tempo — diferente de concorrência, que pode ocorrer até em um único núcleo.</dd></div>
+      <div class="term-item"><dt>Processo</dt><dd>Unidade independente de execução de um programa, com seu próprio espaço de memória.</dd></div>
+      <div class="term-item"><dt>RabbitMQ</dt><dd>Broker de mensageria que organiza filas de mensagens entre sistemas diferentes.</dd></div>
+      <div class="term-item"><dt>Replicação</dt><dd>Manter cópias dos mesmos dados em vários nós, para garantir que o sistema continue disponível mesmo se um nó falhar.</dd></div>
+      <div class="term-item"><dt>REST</dt><dd>Estilo de arquitetura para construir APIs usando os métodos padrão da web, como GET e POST.</dd></div>
+      <div class="term-item"><dt>Sharding</dt><dd>Dividir os dados entre vários bancos ou nós, cada um responsável por uma parte.</dd></div>
+      <div class="term-item"><dt>Thread</dt><dd>Unidade de execução dentro de um processo, que compartilha memória com as demais threads do mesmo processo — mais leve que um processo, porém mais arriscada.</dd></div>
+      <div class="term-item"><dt>Vendor Lock-in</dt><dd>Dependência excessiva de um único fornecedor de tecnologia, que dificulta trocar de sistema no futuro.</dd></div>
+    </dl>
+    <p class="glossary-empty" id="glossary-empty" style="display:none;">Nenhum termo encontrado. Tenta outra palavra.</p>
+  </div>
+
+  <div class="divider"></div>
+
   <div class="navigation">
     <a href="semana16.html" class="nav-button ghost">⬅️ S·16 Arquiteturas Multiplataforma</a>
     <a href="index.html" class="nav-button ghost">🏠 Início</a>
@@ -839,7 +890,8 @@ const mapNodes = [
   { key:'escala', ico:'📈', label:'Escala', target:'#nav-escala' },
   { key:'detetive', ico:'🕵️', label:'Detetive', target:'#nav-detetive' },
   { key:'quiz', ico:'🧠', label:'Quiz', target:'#nav-quiz' },
-  { key:'praticante', ico:'🛠️', label:'Prática', target:'#nav-praticante' }
+  { key:'praticante', ico:'🛠️', label:'Prática', target:'#nav-praticante' },
+  { key:'glossario', ico:'📚', label:'Glossário', target:'#nav-glossario' }
 ];
 const doneNodes = {};
 function buildMissionMap(){
@@ -1420,6 +1472,19 @@ document.querySelectorAll('#checklist input[type="checkbox"]').forEach(cb=>{
     if(this.checked){ addXP(15/4); sfxCorrect(); }
     if(allChecked) unlockBadge('praticante','Praticante', 0);
   });
+});
+
+/* ---------- GLOSSARY SEARCH ---------- */
+document.getElementById('glossary-search').addEventListener('input', function(){
+  const q = this.value.trim().toLowerCase();
+  const items = document.querySelectorAll('#glossary-list .term-item');
+  let visible = 0;
+  items.forEach(item=>{
+    const match = item.textContent.toLowerCase().includes(q);
+    item.classList.toggle('hidden', !match);
+    if(match) visible++;
+  });
+  document.getElementById('glossary-empty').style.display = visible === 0 ? 'block' : 'none';
 });
 
 renderXP();
