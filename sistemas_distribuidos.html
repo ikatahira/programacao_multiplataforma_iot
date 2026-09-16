@@ -1,322 +1,605 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complemento - Sistemas Distribuídos | ISW044</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background: linear-gradient(135deg, #4a1942 0%, #f43f5e 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%); color: white; padding: 40px; text-align: center; }
-        .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        .header .module { font-size: 1.2em; opacity: 0.95; margin-bottom: 5px; }
-        .header .week { font-size: 1.1em; opacity: 0.9; }
-        .content { padding: 40px; }
-        .section { margin: 40px 0; }
-        .section h2 { color: #f43f5e; font-size: 2em; margin-bottom: 20px; border-bottom: 3px solid #fb923c; padding-bottom: 10px; }
-        .objetivos { background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); padding: 30px; border-radius: 15px; margin-bottom: 40px; border-left: 5px solid #f43f5e; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .objetivos h2 { color: #f43f5e; margin-bottom: 20px; }
-        .objetivos ul { list-style-position: inside; }
-        .objetivos li { margin: 12px 0; font-size: 1.1em; padding-left: 10px; }
-        .teoria { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .teoria h3 { color: #f43f5e; margin: 25px 0 15px 0; font-size: 1.6em; }
-        .teoria h4 { color: #fb923c; margin: 20px 0 10px 0; font-size: 1.3em; }
-        .teoria p { margin: 15px 0; text-align: justify; line-height: 1.8; }
-        .teoria ul, .teoria ol { margin: 15px 0 15px 30px; }
-        .teoria li { margin: 10px 0; line-height: 1.8; }
-        .teoria strong { color: #f43f5e; font-weight: 600; }
-        .teoria code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; color: #e11d48; }
-        .teoria pre { background: #2d3436; color: #38ef7d; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 20px 0; font-size: .92em; }
-        .pilar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 25px 0; }
-        .pilar-card { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 15px; padding: 25px; border-top: 5px solid #f43f5e; }
-        .pilar-card h4 { color: #be123c; margin-bottom: 10px; font-size: 1.25em; }
-        .pilar-card p { color: #555; margin: 8px 0; text-align: left; }
-        .videos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .video-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s; color: white; }
-        .video-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
-        .video-number { background: rgba(255,255,255,0.3); color: white; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em; margin-bottom: 15px; }
-        .video-card h4 { color: white; margin-bottom: 12px; font-size: 1.2em; }
-        .video-card p { color: rgba(255,255,255,0.9); margin: 8px 0; font-size: 0.95em; }
-        .activity-card { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 15px; padding: 30px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border-left: 6px solid #f43f5e; }
-        .activity-card h3 { color: #be123c; margin-bottom: 15px; font-size: 1.5em; }
-        .activity-desc { color: #555; font-size: 1.1em; margin-bottom: 20px; font-style: italic; line-height: 1.6; }
-        .activity-card h4 { color: #f43f5e; margin: 20px 0 12px 0; font-size: 1.2em; }
-        .instructions { background: white; padding: 20px 20px 20px 40px; border-radius: 8px; margin: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .instructions li { margin: 12px 0; line-height: 1.7; }
-        .deliverable { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 18px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #2196f3; }
-        .deliverable strong { color: #1976d2; }
-        .criteria { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 18px 18px 18px 40px; border-radius: 8px; margin: 12px 0; border-left: 5px solid #4caf50; }
-        .criteria li { margin: 10px 0; color: #2e7d32; }
-        .materials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .material-card { background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); transition: transform 0.3s; border-top: 5px solid #f39c12; }
-        .material-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .material-card h4 { color: #d35400; margin-bottom: 12px; font-size: 1.2em; }
-        .material-card p { color: #555; margin: 8px 0; font-size: 0.95em; }
-        .material-link { display: inline-block; margin-top: 15px; padding: 12px 25px; background: #e67e22; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; transition: all 0.3s; }
-        .material-link:hover { background: #d35400; transform: scale(1.05); }
-        .badge-relacionado { display: inline-block; margin-top: 14px; background: rgba(255,255,255,.25); padding: 6px 16px; border-radius: 999px; font-size: .85em; }
-        .navigation { display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); flex-wrap: wrap; gap: 15px; }
-        .nav-button { padding: 15px 30px; background: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 1.05em; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .nav-button:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4); }
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.8em; }
-            .content { padding: 20px; }
-            .videos-grid, .materials-grid, .pilar-grid { grid-template-columns: 1fr; }
-            .navigation { flex-direction: column; gap: 15px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missão: Sistemas Distribuídos | ISW044</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0f1a; --surface:#131728; --card:#181d2f; --border:#222843;
+    --accent:#f43f5e; --accent2:#fb923c; --text:#e2e8f0; --muted:#64748b; --muted2:#94a3b8;
+    --green:#22d3a5; --red:#fb4b4b; --yellow:#fbbf24; --purple:#a78bfa;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(244,63,94,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(244,63,94,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+
+  /* TOPBAR + XP */
+  .topbar{position:sticky;top:0;z-index:200;background:rgba(12,15,26,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:14px 24px;}
+  .topbar-row{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .topbar-title{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--accent);letter-spacing:2px;white-space:nowrap;}
+  .xp-wrap{flex:1;min-width:160px;}
+  .xp-label{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted2);margin-bottom:4px;display:flex;justify-content:space-between;}
+  .xp-track{height:8px;border-radius:99px;background:var(--surface);border:1px solid var(--border);overflow:hidden;}
+  .xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s cubic-bezier(.34,1.56,.64,1);}
+  .badges-row{display:flex;gap:8px;}
+  .badge{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--surface);border:1px solid var(--border);opacity:.3;filter:grayscale(1);transition:.3s;cursor:default;}
+  .badge.unlocked{opacity:1;filter:none;border-color:rgba(244,63,94,.5);box-shadow:0 0 16px rgba(244,63,94,.35);animation:pop .45s;}
+  @keyframes pop{0%{transform:scale(.5) rotate(-10deg);}60%{transform:scale(1.25) rotate(6deg);}100%{transform:scale(1) rotate(0);}}
+
+  /* TOAST */
+  .toast{position:fixed;top:80px;right:24px;z-index:500;background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:12px 18px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);transform:translateX(140%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .toast.show{transform:translateX(0);}
+
+  /* HERO */
+  .hero{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:70px 24px 40px;text-align:center;}
+  .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--accent2);letter-spacing:3px;margin-bottom:16px;}
+  .hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3rem);line-height:1.1;margin-bottom:16px;background:linear-gradient(135deg,#fff 30%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .hero p{color:var(--muted2);font-size:1rem;line-height:1.7;max-width:640px;margin:0 auto;}
+  .hero-link{display:inline-block;margin-top:20px;font-size:.82rem;color:var(--muted2);text-decoration:none;border:1px solid var(--border);padding:8px 18px;border-radius:8px;}
+  .hero-link:hover{border-color:var(--accent);color:var(--accent);}
+
+  .wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 24px;}
+  .divider{height:1px;background:var(--border);margin:50px 0;}
+  .section-tag{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--accent2);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+  .section-title{font-family:'Syne',sans-serif;font-size:1.6rem;color:#fff;margin-bottom:10px;}
+  .section-desc{color:var(--muted2);font-size:.92rem;line-height:1.7;margin-bottom:26px;}
+
+  /* PILARES */
+  .pilar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .pilar-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
+  .pilar-card .ico{font-size:1.6rem;margin-bottom:8px;}
+  .pilar-card h4{font-family:'Syne',sans-serif;color:#fff;font-size:1rem;margin-bottom:8px;}
+  .pilar-card p{color:var(--muted2);font-size:.83rem;line-height:1.6;}
+
+  /* LAB PANEL (game shell) */
+  .lab-panel{background:linear-gradient(180deg,var(--card),var(--surface));border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
+  .lab-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+  .lab-header{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;color:#fff;font-size:1.15rem;margin-bottom:6px;}
+  .lab-goal{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--accent2);background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.25);display:inline-block;padding:3px 10px;border-radius:6px;margin-bottom:14px;}
+  .lab-panel p.desc{color:var(--muted2);font-size:.87rem;line-height:1.6;margin-bottom:18px;}
+
+  /* GAME 1 — RACE CONDITION */
+  .counter-display{font-family:'Syne',sans-serif;font-size:3.4rem;font-weight:800;text-align:center;color:#fff;margin:10px 0;transition:transform .15s;}
+  .counter-display.pulse{animation:pulse-num .3s;}
+  @keyframes pulse-num{0%{transform:scale(1);}40%{transform:scale(1.25);color:var(--accent2);}100%{transform:scale(1);}}
+  .lanes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
+  .lane{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
+  .lane-label{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted2);display:block;margin-bottom:10px;}
+  .dots{display:flex;gap:6px;}
+  .dot{width:16px;height:16px;border-radius:5px;background:var(--border);transition:.25s;}
+  .dot.active{background:var(--yellow);animation:blink 0.4s infinite alternate;}
+  .dot.lit{background:var(--green);}
+  @keyframes blink{from{opacity:.4;}to{opacity:1;}}
+  .lab-result{min-height:24px;font-size:.88rem;margin-bottom:16px;padding:10px 14px;border-radius:8px;}
+  .lab-result.ok{background:rgba(34,211,165,.1);color:var(--green);border:1px solid rgba(34,211,165,.3);}
+  .lab-result.bad{background:rgba(251,75,75,.1);color:var(--red);border:1px solid rgba(251,75,75,.3);}
+  .lab-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  .lab-btn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.85rem;padding:11px 20px;border-radius:8px;border:none;cursor:pointer;transition:.2s;color:#fff;}
+  .lab-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .lab-btn.danger{background:linear-gradient(135deg,#ef4444,#f97316);}
+  .lab-btn.safe{background:linear-gradient(135deg,#22d3a5,#4f8cff);}
+  .lab-btn:not(:disabled):hover{transform:translateY(-2px);}
+
+  /* GAME 2 — MATCH */
+  .match-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start;}
+  .chips{display:flex;flex-direction:column;gap:10px;}
+  .chip{touch-action:none;user-select:none;background:var(--surface);border:1px solid var(--accent);color:#fff;font-size:.83rem;font-weight:600;padding:12px 16px;border-radius:9px;cursor:grab;text-align:center;transition:box-shadow .2s;}
+  .chip.dragging{box-shadow:0 12px 30px rgba(0,0,0,.5);cursor:grabbing;}
+  .chip.placed{opacity:0;pointer-events:none;height:0;padding:0;margin:0;overflow:hidden;}
+  .drag-placeholder{border:1.5px dashed var(--border);border-radius:9px;}
+  .zones{display:flex;flex-direction:column;gap:10px;}
+  .zone{min-height:56px;border:1.5px dashed var(--border);border-radius:9px;padding:10px 14px;font-size:.82rem;color:var(--muted2);display:flex;align-items:center;gap:10px;transition:.2s;}
+  .zone.hover{border-color:var(--accent);background:rgba(244,63,94,.06);}
+  .zone.correct{border-style:solid;border-color:var(--green);background:rgba(34,211,165,.08);color:var(--text);}
+  .zone.shake{animation:shake .4s;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+  .zone .placed-chip{font-weight:700;color:var(--green);font-family:'DM Mono',monospace;font-size:.72rem;white-space:nowrap;}
+
+  /* GAME 3 — PIPELINE */
+  .pipeline-source{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;justify-content:center;}
+  .piece{touch-action:none;user-select:none;background:var(--surface);border:1px solid var(--purple);border-radius:10px;padding:12px 14px;font-size:.8rem;font-weight:600;color:#fff;cursor:grab;text-align:center;min-width:120px;}
+  .piece.dragging{box-shadow:0 12px 30px rgba(0,0,0,.5);cursor:grabbing;}
+  .piece.placed{opacity:0;pointer-events:none;}
+  .slots{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;position:relative;padding:20px 10px;}
+  .slot{width:130px;min-height:68px;border:1.5px dashed var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.75rem;color:var(--muted);padding:6px;transition:.2s;position:relative;}
+  .slot.hover{border-color:var(--purple);background:rgba(167,139,250,.08);}
+  .slot.correct{border-style:solid;border-color:var(--green);color:#fff;font-weight:700;background:rgba(34,211,165,.08);}
+  .slot.shake{animation:shake .4s;}
+  .arrow{color:var(--border);font-size:1.3rem;}
+  .flow-msg{text-align:center;margin-top:18px;font-size:.9rem;color:var(--green);min-height:24px;}
+  .packet{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 12px var(--accent2);top:50%;left:0;transform:translateY(-50%);opacity:0;}
+  .packet.run{animation:travel 2.2s linear;}
+  @keyframes travel{0%{left:0;opacity:1;}95%{opacity:1;}100%{left:100%;opacity:0;}}
+
+  /* QUIZ */
+  .quiz-q{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
+  .quiz-q.answered-correct{border-color:var(--green);}
+  .quiz-q p.q-text{font-weight:600;color:#fff;margin-bottom:14px;font-size:.92rem;}
+  .quiz-opts{display:grid;gap:8px;}
+  .quiz-opt{text-align:left;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;cursor:pointer;font-size:.83rem;font-family:'Space Grotesk',sans-serif;transition:.2s;}
+  .quiz-opt:hover{border-color:var(--accent);}
+  .quiz-opt.correct{border-color:var(--green);background:rgba(34,211,165,.1);}
+  .quiz-opt.wrong{border-color:var(--red);background:rgba(251,75,75,.1);}
+  .quiz-opt:disabled{cursor:default;}
+  .quiz-explain{margin-top:10px;font-size:.8rem;color:var(--muted2);display:none;}
+  .quiz-explain.show{display:block;}
+
+  /* CERTIFICATE */
+  #certificate{display:none;text-align:center;background:radial-gradient(circle at top,rgba(244,63,94,.15),transparent 60%),var(--card);border:1px solid var(--accent);border-radius:18px;padding:50px 30px;position:relative;overflow:hidden;}
+  #certificate h2{font-family:'Syne',sans-serif;font-size:1.8rem;margin-bottom:10px;color:#fff;}
+  #certificate p{color:var(--muted2);margin-bottom:20px;}
+  .confetti-piece{position:fixed;top:-10px;width:8px;height:14px;z-index:400;pointer-events:none;animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(540deg);}}
+
+  .materials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+  .material-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+  .material-card h4{color:#fff;font-size:.88rem;margin-bottom:8px;}
+  .material-card a{color:var(--accent2);font-size:.78rem;text-decoration:none;}
+  .material-card a:hover{text-decoration:underline;}
+
+  .navigation{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:30px 0;}
+  .nav-button{padding:13px 22px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-decoration:none;font-weight:600;font-size:.85rem;transition:.2s;}
+  .nav-button:hover{transform:translateY(-2px);}
+  .nav-button.ghost{background:var(--surface);border:1px solid var(--border);}
+
+  @media(max-width:720px){
+    .pilar-grid{grid-template-columns:1fr;}
+    .match-wrap{grid-template-columns:1fr;}
+    .lanes{grid-template-columns:1fr;}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="module">🧩 Complemento da Ementa · Sistemas Distribuídos</div>
-            <div class="week">Relacionado à Semana 16 — Arquiteturas Multiplataforma</div>
-            <h1>Concorrência, Openness e Escalabilidade</h1>
-            <span class="badge-relacionado">📋 Conteúdo previsto no PPC da disciplina ISW044</span>
-        </div>
 
-        <div class="content">
-            <div class="objetivos">
-                <h2>🎯 Objetivos de Aprendizagem</h2>
-                <ul>
-                    <li>Compreender as características fundamentais dos <strong>Sistemas Distribuídos</strong></li>
-                    <li>Diferenciar concorrência de paralelismo e identificar riscos como condições de corrida</li>
-                    <li>Entender o conceito de <strong>openness</strong> (abertura/interoperabilidade) em arquiteturas de software</li>
-                    <li>Aplicar estratégias de <strong>escalabilidade</strong> vertical e horizontal em sistemas multiplataforma e IoT</li>
-                    <li>Relacionar esses conceitos com os brokers e protocolos já estudados (MQTT, RabbitMQ, Kafka)</li>
-                </ul>
-            </div>
-
-            <div class="section">
-                <h2>📚 Conteúdo Teórico</h2>
-                <div class="teoria">
-                    <h3>Introdução: O que é um Sistema Distribuído?</h3>
-                    <p>Um <strong>sistema distribuído</strong> é um conjunto de computadores independentes que se apresenta ao usuário como um único sistema coerente. Em um projeto multiplataforma com IoT — como o projeto integrador desta disciplina — isso é exatamente o que acontece: dispositivos ESP32/Arduino, um backend, um broker de mensageria, um banco de dados e aplicações web/mobile/desktop, todos rodando em máquinas diferentes, precisam se comportar como um sistema único e confiável.</p>
-
-                    <p>Segundo a literatura clássica (Tanenbaum & Van Steen), um sistema distribuído é caracterizado por algumas propriedades centrais — três delas são explicitamente citadas na ementa da disciplina: <strong>concorrência</strong>, <strong>openness</strong> e <strong>escalabilidade</strong>.</p>
-
-                    <div class="pilar-grid">
-                        <div class="pilar-card">
-                            <h4>⚡ Concorrência</h4>
-                            <p>Múltiplos componentes executam e acessam recursos compartilhados <strong>ao mesmo tempo</strong>, sem que um processo precise esperar o outro terminar.</p>
-                        </div>
-                        <div class="pilar-card">
-                            <h4>🔓 Openness</h4>
-                            <p>O sistema é construído sobre <strong>padrões e interfaces abertas</strong>, permitindo que componentes heterogêneos e de fornecedores diferentes se comuniquem.</p>
-                        </div>
-                        <div class="pilar-card">
-                            <h4>📈 Escalabilidade</h4>
-                            <p>O sistema continua funcionando de forma eficiente conforme o número de usuários, dispositivos ou volume de dados <strong>cresce</strong>.</p>
-                        </div>
-                    </div>
-
-                    <h3>1. Concorrência</h3>
-                    <p><strong>Concorrência</strong> é a capacidade de um sistema lidar com múltiplas tarefas progredindo dentro do mesmo intervalo de tempo. É diferente de <strong>paralelismo</strong>, que exige múltiplos núcleos executando instruções literalmente ao mesmo tempo — a concorrência pode ocorrer até em um único núcleo, através de alternância rápida entre tarefas (como faz o event loop do Node.js).</p>
-
-                    <h4>Processos vs. Threads</h4>
-                    <ul>
-                        <li><strong>Processo:</strong> unidade independente de execução, com seu próprio espaço de memória.</li>
-                        <li><strong>Thread:</strong> unidade de execução dentro de um processo, compartilhando memória com as demais threads do mesmo processo — mais leve, porém mais arriscada.</li>
-                    </ul>
-
-                    <h4>Condição de corrida (Race Condition)</h4>
-                    <p>Ocorre quando duas ou mais threads/processos acessam e modificam o mesmo dado compartilhado simultaneamente, e o resultado final depende da ordem imprevisível de execução. É um dos bugs mais difíceis de reproduzir e depurar em sistemas distribuídos — imagine dois sensores IoT tentando gravar no mesmo registro do banco de dados ao mesmo tempo.</p>
-
-                    <p>Estratégias comuns para evitar isso incluem <strong>locks/mutex</strong> (região crítica exclusiva), <strong>semáforos</strong>, filas de mensageria (que serializam o processamento) e modelos <strong>assíncronos não bloqueantes</strong>, como o usado em Node.js.</p>
-
-                    <h4>Exemplo — Concorrência em Node.js (assíncrono)</h4>
-                    <pre>
-// Múltiplas leituras de sensores IoT em paralelo, sem bloquear o event loop
-async function lerTodosSensores(sensores) {
-  const leituras = await Promise.all(
-    sensores.map((sensor) => lerSensor(sensor))
-  );
-  return leituras;
-}
-
-async function lerSensor(sensor) {
-  const resposta = await fetch(`http://broker.local/sensores/${sensor.id}`);
-  return resposta.json();
-}
-                    </pre>
-
-                    <h4>Exemplo — Concorrência em Python (threading vs. multiprocessing)</h4>
-                    <pre>
-import threading
-
-def processar_leitura(id_sensor):
-    print(f"Processando dados do sensor {id_sensor}")
-
-threads = []
-for i in range(5):
-    t = threading.Thread(target=processar_leitura, args=(i,))
-    threads.append(t)
-    t.start()
-
-for t in threads:
-    t.join()  # aguarda todas as threads terminarem
-                    </pre>
-                    <p>Em Python, o <strong>GIL</strong> (Global Interpreter Lock) limita a execução real em paralelo de threads Python puras — por isso, tarefas que exigem muito processamento costumam usar <code>multiprocessing</code> em vez de <code>threading</code>.</p>
-
-                    <h3>2. Openness (Abertura)</h3>
-                    <p>Um sistema é considerado <strong>aberto</strong> quando expõe suas interfaces através de <strong>padrões documentados e independentes de fornecedor</strong>, permitindo que qualquer cliente compatível se conecte a ele — mesmo que tenha sido construído por outra equipe, em outra linguagem.</p>
-
-                    <ul>
-                        <li><strong>Protocolos abertos já usados no curso:</strong> HTTP/REST, MQTT, WebSocket — todos com especificações públicas.</li>
-                        <li><strong>Formatos abertos:</strong> JSON, XML — em vez de formatos binários proprietários.</li>
-                        <li><strong>APIs documentadas:</strong> Swagger/OpenAPI, permitindo que qualquer plataforma (web, mobile, desktop) consuma o mesmo backend.</li>
-                        <li><strong>Interoperabilidade:</strong> um sensor ESP32 publicando em um broker MQTT não precisa "saber" se quem vai consumir aquele dado é um app React Native, um dashboard React ou um app Electron — o protocolo aberto garante essa desacoplagem.</li>
-                    </ul>
-                    <p>O oposto da openness são sistemas <strong>proprietários/fechados</strong>, que travam o desenvolvedor a um único fornecedor (vendor lock-in) e dificultam a integração entre plataformas — exatamente o problema que a disciplina busca evitar ao ensinar múltiplas plataformas integradas por protocolos abertos.</p>
-
-                    <h3>3. Escalabilidade</h3>
-                    <p><strong>Escalabilidade</strong> é a capacidade de um sistema continuar respondendo bem mesmo quando a carga (usuários, dispositivos IoT, volume de mensagens) aumenta.</p>
-
-                    <h4>Escalabilidade Vertical x Horizontal</h4>
-                    <ul>
-                        <li><strong>Vertical (scale up):</strong> aumentar os recursos de uma única máquina (mais CPU, RAM). Simples, mas tem limite físico.</li>
-                        <li><strong>Horizontal (scale out):</strong> adicionar mais máquinas/instâncias trabalhando em conjunto. É a abordagem usada por brokers como Kafka e RabbitMQ em cluster.</li>
-                    </ul>
-
-                    <h4>Técnicas comuns</h4>
-                    <ul>
-                        <li><strong>Load balancing:</strong> distribuir requisições entre várias instâncias do backend.</li>
-                        <li><strong>Sharding/Particionamento:</strong> dividir os dados entre vários bancos/nós (o Kafka, visto no Módulo 6, particiona tópicos justamente por isso).</li>
-                        <li><strong>Cache distribuído:</strong> reduzir a carga no banco de dados principal (Redis, por exemplo).</li>
-                        <li><strong>Replicação:</strong> manter cópias dos dados em múltiplos nós para disponibilidade.</li>
-                    </ul>
-
-                    <h4>Teorema CAP</h4>
-                    <p>Em sistemas distribuídos escaláveis, o Teorema CAP afirma que não é possível garantir simultaneamente <strong>Consistência</strong>, <strong>Disponibilidade</strong> e <strong>Tolerância a Partições</strong> — é preciso escolher trade-offs conforme o caso de uso. Um sistema de monitoramento IoT, por exemplo, geralmente prioriza disponibilidade (receber dados o tempo todo) em detrimento de consistência absoluta e imediata.</p>
-
-                    <h3>Como esses conceitos se conectam ao restante da disciplina</h3>
-                    <ul>
-                        <li>Os <strong>brokers de mensageria</strong> (MQTT, RabbitMQ, Kafka — Módulo 6) resolvem concorrência ao enfileirar mensagens, e escalabilidade ao permitir múltiplos consumidores/produtores.</li>
-                        <li>As <strong>APIs REST/GraphQL</strong> (Módulos 4 e 7) são a materialização prática da openness.</li>
-                        <li>O <strong>banco NoSQL e InfluxDB</strong> (Módulo 7) aplicam sharding/replicação para armazenamento em grande escala.</li>
-                        <li>O <strong>Projeto Integrador</strong> (Semana 40) é, na prática, um sistema distribuído completo: vários dispositivos IoT concorrentes, publicando por protocolo aberto (MQTT), consumidos por um backend escalável.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>💪 Atividades Práticas</h2>
-
-                <div class="activity-card">
-                    <h3>🔬 Atividade 1: Simulando Concorrência com Sensores IoT</h3>
-                    <p class="activity-desc">Implemente uma pequena aplicação que simule múltiplos sensores enviando leituras simultaneamente, evidenciando o problema de condição de corrida e sua solução.</p>
-                    <h4>📋 Instruções:</h4>
-                    <ol class="instructions">
-                        <li>Crie uma variável compartilhada (ex.: contador de leituras total)</li>
-                        <li>Simule 10 "sensores" (threads, processos ou promises) escrevendo nessa variável ao mesmo tempo, sem proteção</li>
-                        <li>Rode várias vezes e demonstre que o resultado final varia (a condição de corrida)</li>
-                        <li>Corrija o problema usando lock/mutex (ou uma fila) e demonstre que o resultado passa a ser sempre consistente</li>
-                        <li>Documente a diferença observada antes e depois da correção</li>
-                    </ol>
-                    <div class="deliverable">
-                        <strong>📦 Entregável:</strong> Código-fonte comentado + print/relatório comparando os dois cenários
-                    </div>
-                    <h4>✅ Critérios de Avaliação:</h4>
-                    <ul class="criteria">
-                        <li>Demonstração clara da condição de corrida</li>
-                        <li>Correção funcional aplicada corretamente</li>
-                        <li>Qualidade da explicação técnica</li>
-                    </ul>
-                </div>
-
-                <div class="activity-card">
-                    <h3>🔓 Atividade 2: Auditoria de Openness</h3>
-                    <p class="activity-desc">Analise o projeto integrador (ou outro sistema real) sob a ótica de abertura/interoperabilidade.</p>
-                    <h4>📋 Instruções:</h4>
-                    <ol class="instructions">
-                        <li>Liste todos os protocolos e formatos de dados usados no seu projeto (MQTT, REST, JSON etc.)</li>
-                        <li>Para cada um, indique se é um padrão aberto ou proprietário</li>
-                        <li>Identifique pontos de "vendor lock-in" (dependência de um único fornecedor) se existirem</li>
-                        <li>Proponha alternativas abertas para eventuais pontos fechados</li>
-                    </ol>
-                    <div class="deliverable">
-                        <strong>📦 Entregável:</strong> Relatório curto (1-2 páginas) com a auditoria
-                    </div>
-                    <h4>✅ Critérios de Avaliação:</h4>
-                    <ul class="criteria">
-                        <li>Cobertura completa dos protocolos usados</li>
-                        <li>Justificativa técnica correta sobre abertura</li>
-                        <li>Qualidade das propostas de melhoria</li>
-                    </ul>
-                </div>
-
-                <div class="activity-card">
-                    <h3>📈 Atividade 3: Debate — Teorema CAP e Escalabilidade</h3>
-                    <p class="activity-desc">Discussão em grupo sobre trade-offs de escalabilidade aplicados a um sistema IoT em larga escala.</p>
-                    <h4>📋 Instruções:</h4>
-                    <ol class="instructions">
-                        <li>Forme grupos de 4-5 alunos</li>
-                        <li>Cada grupo recebe um cenário (ex.: 1 milhão de sensores enviando dados por minuto)</li>
-                        <li>Discuta se o sistema deve priorizar Consistência ou Disponibilidade (CAP)</li>
-                        <li>Proponha uma estratégia de escalabilidade horizontal para o cenário</li>
-                        <li>Apresente as conclusões para a turma</li>
-                    </ol>
-                    <div class="deliverable">
-                        <strong>📦 Entregável:</strong> Slide/documento com a decisão do grupo e justificativa
-                    </div>
-                    <h4>✅ Critérios de Avaliação:</h4>
-                    <ul class="criteria">
-                        <li>Coerência técnica da decisão CAP</li>
-                        <li>Viabilidade da estratégia de escalabilidade proposta</li>
-                        <li>Clareza na apresentação</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>📖 Materiais Complementares</h2>
-                <div class="materials-grid">
-                    <div class="material-card">
-                        <h4>📚 Distributed Systems (Tanenbaum & Van Steen)</h4>
-                        <p><strong>Tipo:</strong> Livro-texto clássico</p>
-                        <p><strong>Fonte:</strong> distributed-systems.net</p>
-                        <a href="https://www.distributed-systems.net/index.php/books/ds3/" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>🧠 CAP Theorem Explicado</h4>
-                        <p><strong>Tipo:</strong> Artigo técnico</p>
-                        <p><strong>Fonte:</strong> IBM / documentação técnica</p>
-                        <a href="https://www.ibm.com/topics/cap-theorem" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>⚙️ Node.js Event Loop</h4>
-                        <p><strong>Tipo:</strong> Documentação oficial</p>
-                        <p><strong>Fonte:</strong> nodejs.org</p>
-                        <a href="https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>🐍 Python Threading vs Multiprocessing</h4>
-                        <p><strong>Tipo:</strong> Documentação oficial</p>
-                        <p><strong>Fonte:</strong> docs.python.org</p>
-                        <a href="https://docs.python.org/3/library/concurrency.html" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>📄 REST & OpenAPI Specification</h4>
-                        <p><strong>Tipo:</strong> Especificação aberta</p>
-                        <p><strong>Fonte:</strong> swagger.io</p>
-                        <a href="https://swagger.io/specification/" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>🏭 Escalabilidade com Kafka</h4>
-                        <p><strong>Tipo:</strong> Documentação técnica</p>
-                        <p><strong>Fonte:</strong> kafka.apache.org</p>
-                        <a href="https://kafka.apache.org/documentation/#design" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="navigation">
-            <a href="semana16.html" class="nav-button">⬅️ S·16 Arquiteturas Multiplataforma</a>
-            <a href="index.html" class="nav-button">🏠 Início</a>
-            <a href="gerencia_projetos.html" class="nav-button">Próximo complemento ➡️</a>
-        </div>
+<div class="topbar">
+  <div class="topbar-row">
+    <span class="topbar-title">ISW044 · MISSÃO</span>
+    <div class="xp-wrap">
+      <div class="xp-label"><span>XP</span><span id="xp-count">0 / 100</span></div>
+      <div class="xp-track"><div class="xp-fill" id="xp-fill"></div></div>
     </div>
+    <div class="badges-row">
+      <div class="badge" id="badge-concorrencia" title="Mestre da Concorrência">🔀</div>
+      <div class="badge" id="badge-openness" title="Arquiteto Aberto">🔓</div>
+      <div class="badge" id="badge-escala" title="Engenheiro de Escala">📈</div>
+      <div class="badge" id="badge-quiz" title="Sabe Tudo">🧠</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<section class="hero">
+  <div class="hero-eyebrow">🧩 COMPLEMENTO DA EMENTA · MISSÃO INTERATIVA</div>
+  <h1>Sistemas Distribuídos</h1>
+  <p>Concorrência, Openness e Escalabilidade — três conceitos da ementa, três laboratórios interativos. Rode simulações reais, arraste peças e monte a arquitetura. Complete os 4 desafios para desbloquear seu certificado.</p>
+  <a href="semana16.html" class="hero-link">← relacionado à S·16 Arquiteturas Multiplataforma</a>
+</section>
+
+<div class="wrap">
+
+  <div class="pilar-grid">
+    <div class="pilar-card"><div class="ico">⚡</div><h4>Concorrência</h4><p>Múltiplos processos acessando recursos compartilhados ao mesmo tempo, com risco de condição de corrida.</p></div>
+    <div class="pilar-card"><div class="ico">🔓</div><h4>Openness</h4><p>Sistemas construídos sobre padrões abertos, permitindo interoperabilidade entre plataformas.</p></div>
+    <div class="pilar-card"><div class="ico">📈</div><h4>Escalabilidade</h4><p>Capacidade de crescer — mais usuários, mais dispositivos, mais dados — sem perder desempenho.</p></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GAME 1 -->
+  <div class="section-tag">// Laboratório 01</div>
+  <h2 class="section-title">⚡ Simulador de Condição de Corrida</h2>
+  <p class="section-desc">Dois processos incrementam um contador compartilhado, 5 vezes cada. O total esperado é <strong style="color:#fff">10</strong>. Rode sem proteção e veja o que acontece — depois rode com um <em>mutex</em> (lock) e compare.</p>
+
+  <div class="lab-panel">
+    <div class="lab-header">🧪 Contador Compartilhado</div>
+    <span class="lab-goal">+15 XP ao rodar as duas simulações</span>
+    <div class="counter-display" id="counter-display">0</div>
+    <div class="lanes">
+      <div class="lane"><span class="lane-label">PROCESSO A</span><div class="dots" id="dots-a"></div></div>
+      <div class="lane"><span class="lane-label">PROCESSO B</span><div class="dots" id="dots-b"></div></div>
+    </div>
+    <div class="lab-result" id="race-result">Escolha uma simulação para começar.</div>
+    <div class="lab-actions">
+      <button class="lab-btn danger" id="btn-unsafe">▶ Rodar SEM proteção</button>
+      <button class="lab-btn safe" id="btn-safe">🔒 Rodar COM Lock (Mutex)</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GAME 2 -->
+  <div class="section-tag">// Laboratório 02</div>
+  <h2 class="section-title">🔓 Monte o Quebra-Cabeça da Openness</h2>
+  <p class="section-desc">Arraste cada termo até sua definição correta.</p>
+
+  <div class="lab-panel">
+    <span class="lab-goal">+25 XP ao completar todos os pares</span>
+    <div class="match-wrap">
+      <div class="chips" id="chips">
+        <div class="chip" draggable="false" data-id="openness">Openness</div>
+        <div class="chip" draggable="false" data-id="lockin">Vendor Lock-in</div>
+        <div class="chip" draggable="false" data-id="mqtt">MQTT</div>
+        <div class="chip" draggable="false" data-id="openapi">OpenAPI / Swagger</div>
+        <div class="chip" draggable="false" data-id="json">JSON</div>
+      </div>
+      <div class="zones" id="zones">
+        <div class="zone" data-answer="openness">Sistema construído sobre padrões e interfaces abertas e documentadas</div>
+        <div class="zone" data-answer="lockin">Dependência de um único fornecedor, que dificulta a troca de tecnologia</div>
+        <div class="zone" data-answer="mqtt">Protocolo de mensageria leve e aberto, muito usado em IoT</div>
+        <div class="zone" data-answer="openapi">Especificação aberta para documentar e descrever APIs REST</div>
+        <div class="zone" data-answer="json">Formato de dados aberto, legível por humanos e por máquinas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GAME 3 -->
+  <div class="section-tag">// Laboratório 03</div>
+  <h2 class="section-title">📈 Monte a Arquitetura Escalável</h2>
+  <p class="section-desc">Arraste as peças até o lugar certo, na ordem em que uma requisição percorreria o sistema.</p>
+
+  <div class="lab-panel">
+    <span class="lab-goal">+25 XP ao montar a arquitetura correta</span>
+    <div class="pipeline-source" id="pieces">
+      <div class="piece" data-id="cache">🗄️ Cache</div>
+      <div class="piece" data-id="db">💾 Banco de Dados</div>
+      <div class="piece" data-id="cliente">📱 Cliente</div>
+      <div class="piece" data-id="servidores">🖥️ Servidores (N instâncias)</div>
+      <div class="piece" data-id="lb">🔀 Load Balancer</div>
+    </div>
+    <div class="slots" id="slots">
+      <div class="slot" data-answer="cliente">1. Cliente</div>
+      <span class="arrow">→</span>
+      <div class="slot" data-answer="lb">2. Load Balancer</div>
+      <span class="arrow">→</span>
+      <div class="slot" data-answer="servidores">3. Servidores</div>
+      <span class="arrow">→</span>
+      <div class="slot" data-answer="cache">4. Cache</div>
+      <span class="arrow">→</span>
+      <div class="slot" data-answer="db">5. Banco de Dados</div>
+      <div class="packet" id="packet"></div>
+    </div>
+    <div class="flow-msg" id="flow-msg"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- QUIZ -->
+  <div class="section-tag">// Laboratório 04</div>
+  <h2 class="section-title">🧠 Quiz Relâmpago</h2>
+  <p class="section-desc">Responda as 4 perguntas para fechar a missão.</p>
+
+  <div id="quiz-container"></div>
+
+  <div class="divider"></div>
+
+  <!-- CERTIFICATE -->
+  <div id="certificate">
+    <h2>🎓 Missão Concluída!</h2>
+    <p>Você dominou Concorrência, Openness e Escalabilidade — os pilares de Sistemas Distribuídos da ementa ISW044.</p>
+    <a href="index.html" class="nav-button">🏠 Voltar ao Início</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Para se aprofundar</div>
+  <h2 class="section-title">📖 Materiais Complementares</h2>
+  <div class="materials-grid" style="margin-bottom:20px;">
+    <div class="material-card"><h4>📚 Distributed Systems (Tanenbaum)</h4><a href="https://www.distributed-systems.net/index.php/books/ds3/" target="_blank">Acessar →</a></div>
+    <div class="material-card"><h4>🧠 CAP Theorem Explicado</h4><a href="https://www.ibm.com/topics/cap-theorem" target="_blank">Acessar →</a></div>
+    <div class="material-card"><h4>⚙️ Node.js Event Loop</h4><a href="https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick" target="_blank">Acessar →</a></div>
+    <div class="material-card"><h4>📄 OpenAPI Specification</h4><a href="https://swagger.io/specification/" target="_blank">Acessar →</a></div>
+  </div>
+
+  <div class="navigation">
+    <a href="semana16.html" class="nav-button ghost">⬅️ S·16 Arquiteturas Multiplataforma</a>
+    <a href="index.html" class="nav-button ghost">🏠 Início</a>
+    <a href="gerencia_projetos.html" class="nav-button">Próxima missão ➡️</a>
+  </div>
+</div>
+
+<script>
+/* ---------- STATE / XP / BADGES ---------- */
+const state = { xp:0, badges:{concorrencia:false, openness:false, escala:false, quiz:false} };
+
+function renderXP(){
+  document.getElementById('xp-fill').style.width = state.xp + '%';
+  document.getElementById('xp-count').textContent = state.xp + ' / 100';
+}
+function addXP(n){ state.xp = Math.min(100, state.xp + n); renderXP(); }
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.classList.remove('show'), 2600);
+}
+
+function unlockBadge(key, label, xp){
+  if(state.badges[key]) return;
+  state.badges[key] = true;
+  document.getElementById('badge-'+key).classList.add('unlocked');
+  addXP(xp);
+  showToast('🏆 Conquista desbloqueada: ' + label);
+  if(Object.values(state.badges).every(Boolean)) revealCertificate();
+}
+
+function revealCertificate(){
+  const cert = document.getElementById('certificate');
+  cert.style.display = 'block';
+  cert.scrollIntoView({behavior:'smooth', block:'center'});
+  launchConfetti();
+}
+
+function launchConfetti(){
+  const colors = ['#f43f5e','#fb923c','#22d3a5','#a78bfa','#fbbf24'];
+  for(let i=0;i<50;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (2.5 + Math.random()*2) + 's';
+    p.style.opacity = .8;
+    document.body.appendChild(p);
+    setTimeout(()=> p.remove(), 5000);
+  }
+}
+
+/* ---------- GENERIC DRAG & DROP (pointer events) ---------- */
+function makeDraggable(el, dropSelector, onDrop){
+  el.style.touchAction = 'none';
+  el.addEventListener('pointerdown', (e)=>{
+    if(el.classList.contains('placed')) return;
+    const rect = el.getBoundingClientRect();
+    const shiftX = e.clientX - rect.left;
+    const shiftY = e.clientY - rect.top;
+    const placeholder = document.createElement('div');
+    placeholder.className = 'drag-placeholder';
+    placeholder.style.width = rect.width+'px';
+    placeholder.style.height = rect.height+'px';
+    el.parentElement.insertBefore(placeholder, el);
+    document.body.appendChild(el);
+    el.style.position='fixed'; el.style.zIndex=1000; el.style.width=rect.width+'px';
+    el.classList.add('dragging');
+    el.setPointerCapture(e.pointerId);
+
+    function moveAt(x,y){ el.style.left=(x-shiftX)+'px'; el.style.top=(y-shiftY)+'px'; }
+    moveAt(e.clientX, e.clientY);
+
+    let lastZone = null;
+    function onMove(ev){
+      moveAt(ev.clientX, ev.clientY);
+      el.hidden = true;
+      const under = document.elementFromPoint(ev.clientX, ev.clientY);
+      el.hidden = false;
+      const zone = under ? under.closest(dropSelector) : null;
+      if(lastZone && lastZone !== zone) lastZone.classList.remove('hover');
+      if(zone) zone.classList.add('hover');
+      lastZone = zone;
+    }
+    el.addEventListener('pointermove', onMove);
+
+    function onUp(ev){
+      el.removeEventListener('pointermove', onMove);
+      el.releasePointerCapture(ev.pointerId);
+      el.classList.remove('dragging');
+      el.style.position=''; el.style.zIndex=''; el.style.left=''; el.style.top=''; el.style.width='';
+      if(lastZone) lastZone.classList.remove('hover');
+      el.hidden = true;
+      const under = document.elementFromPoint(ev.clientX, ev.clientY);
+      el.hidden = false;
+      const zone = under ? under.closest(dropSelector) : null;
+      const placed = zone ? onDrop(el, zone) : false;
+      if(!placed){ placeholder.replaceWith(el); }
+      else { placeholder.remove(); }
+      el.removeEventListener('pointerup', onUp);
+    }
+    el.addEventListener('pointerup', onUp);
+  });
+}
+
+/* ---------- GAME 1: RACE CONDITION ---------- */
+function renderDots(containerId){
+  const c = document.getElementById(containerId);
+  c.innerHTML = Array.from({length:5}, ()=> '<span class="dot"></span>').join('');
+}
+renderDots('dots-a'); renderDots('dots-b');
+
+let counter = 0, ranUnsafe=false, ranSafe=false;
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function bumpCounter(){
+  const el = document.getElementById('counter-display');
+  el.textContent = counter;
+  el.classList.remove('pulse'); void el.offsetWidth; el.classList.add('pulse');
+}
+function clearDots(){
+  document.querySelectorAll('#dots-a .dot, #dots-b .dot').forEach(d=> d.className='dot');
+}
+async function runLane(dotsId, incrementFn){
+  const dots = document.getElementById(dotsId).children;
+  for(let i=0;i<5;i++){
+    dots[i].classList.add('active');
+    await incrementFn();
+    dots[i].classList.remove('active');
+    dots[i].classList.add('lit');
+  }
+}
+async function unsafeIncrement(){
+  const temp = counter;
+  await sleep(25 + Math.random()*70);
+  counter = temp + 1;
+  bumpCounter();
+}
+class Mutex {
+  constructor(){ this._p = Promise.resolve(); }
+  lock(){
+    let resolveLock;
+    const lockPromise = new Promise(res => resolveLock = res);
+    const willLock = this._p.then(()=> resolveLock);
+    this._p = this._p.then(()=> lockPromise);
+    return willLock;
+  }
+}
+function safeIncrementFactory(mutex){
+  return async function(){
+    const unlock = await mutex.lock();
+    const temp = counter;
+    await sleep(25 + Math.random()*70);
+    counter = temp + 1;
+    bumpCounter();
+    unlock();
+  };
+}
+
+function setButtonsDisabled(v){
+  document.getElementById('btn-unsafe').disabled = v;
+  document.getElementById('btn-safe').disabled = v;
+}
+function maybeUnlockConcurrency(){
+  if(ranUnsafe && ranSafe) unlockBadge('concorrencia','Mestre da Concorrência', 15);
+}
+
+document.getElementById('btn-unsafe').addEventListener('click', async ()=>{
+  setButtonsDisabled(true);
+  counter = 0; bumpCounter(); clearDots();
+  document.getElementById('race-result').className = 'lab-result';
+  document.getElementById('race-result').textContent = 'Rodando sem proteção...';
+  await Promise.all([ runLane('dots-a', unsafeIncrement), runLane('dots-b', unsafeIncrement) ]);
+  const r = document.getElementById('race-result');
+  if(counter === 10){
+    r.innerHTML = `⚠️ Dessa vez deu <strong>${counter}</strong> — o resultado certo saiu por sorte. Rode de novo, a condição de corrida é imprevisível!`;
+    r.className = 'lab-result';
+  } else {
+    r.innerHTML = `❌ Resultado: <strong>${counter}</strong> — esperado 10! Incrementos foram perdidos por causa da condição de corrida.`;
+    r.className = 'lab-result bad';
+  }
+  ranUnsafe = true; maybeUnlockConcurrency();
+  setButtonsDisabled(false);
+});
+
+document.getElementById('btn-safe').addEventListener('click', async ()=>{
+  setButtonsDisabled(true);
+  counter = 0; bumpCounter(); clearDots();
+  document.getElementById('race-result').className = 'lab-result';
+  document.getElementById('race-result').textContent = 'Rodando com lock (mutex)...';
+  const mutex = new Mutex();
+  const safeIncrement = safeIncrementFactory(mutex);
+  await Promise.all([ runLane('dots-a', safeIncrement), runLane('dots-b', safeIncrement) ]);
+  const r = document.getElementById('race-result');
+  r.innerHTML = `✅ Resultado: <strong>${counter}</strong> — com o lock, o resultado é sempre correto!`;
+  r.className = 'lab-result ok';
+  ranSafe = true; maybeUnlockConcurrency();
+  setButtonsDisabled(false);
+});
+
+/* ---------- GAME 2: MATCHING ---------- */
+let matchedCount = 0;
+const totalMatches = document.querySelectorAll('#zones .zone').length;
+document.querySelectorAll('#chips .chip').forEach(chip=>{
+  makeDraggable(chip, '.zone', (el, zone)=>{
+    if(zone.classList.contains('correct')) return false;
+    if(zone.dataset.answer === el.dataset.id){
+      zone.classList.add('correct');
+      zone.innerHTML = `<span>✅ ${zone.textContent}</span><span class="placed-chip">${el.textContent}</span>`;
+      el.classList.add('placed');
+      matchedCount++;
+      addXP(5);
+      if(matchedCount === totalMatches) unlockBadge('openness','Arquiteto Aberto', 5);
+      return true;
+    } else {
+      zone.classList.add('shake');
+      setTimeout(()=> zone.classList.remove('shake'), 400);
+      return false;
+    }
+  });
+});
+
+/* ---------- GAME 3: PIPELINE ---------- */
+let placedPieces = 0;
+const totalSlots = document.querySelectorAll('#slots .slot').length;
+document.querySelectorAll('#pieces .piece').forEach(piece=>{
+  makeDraggable(piece, '.slot', (el, slot)=>{
+    if(slot.classList.contains('correct')) return false;
+    if(slot.dataset.answer === el.dataset.id){
+      slot.classList.add('correct');
+      slot.textContent = el.textContent;
+      el.classList.add('placed');
+      placedPieces++;
+      addXP(5);
+      if(placedPieces === totalSlots){
+        unlockBadge('escala','Engenheiro de Escala', 5);
+        document.getElementById('flow-msg').textContent = '🚀 Sistema escalável montado! Observe o pacote de dados percorrendo o pipeline.';
+        const packet = document.getElementById('packet');
+        packet.style.opacity = 1;
+        packet.classList.add('run');
+        setInterval(()=>{
+          packet.classList.remove('run'); void packet.offsetWidth; packet.classList.add('run');
+        }, 2600);
+      }
+      return true;
+    } else {
+      slot.classList.add('shake');
+      setTimeout(()=> slot.classList.remove('shake'), 400);
+      return false;
+    }
+  });
+});
+
+/* ---------- QUIZ ---------- */
+const quizData = [
+  { q:'Duas threads leem o mesmo valor antes de qualquer uma escrever o novo valor. Isso é um exemplo de:',
+    opts:['Escalabilidade horizontal','Condição de corrida (race condition)','Openness','Sharding'],
+    correct:1, explain:'Quando múltiplas execuções concorrentes acessam o mesmo dado sem sincronização, o resultado passa a depender da ordem imprevisível de execução — isso é uma condição de corrida.' },
+  { q:'Qual técnica é usada para evitar condições de corrida?',
+    opts:['Load balancing','Cache distribuído','Lock / Mutex','Sharding'],
+    correct:2, explain:'Um lock (mutex) garante que apenas uma execução por vez acesse a região crítica do código, serializando o acesso ao dado compartilhado.' },
+  { q:'O que caracteriza um sistema como "aberto" (openness)?',
+    opts:['Usar apenas um fornecedor de nuvem','Basear-se em padrões e interfaces documentadas e públicas','Ter código-fonte fechado','Não expor nenhuma API'],
+    correct:1, explain:'Openness significa construir sobre padrões públicos (como MQTT, REST, JSON), permitindo que qualquer cliente compatível se conecte ao sistema.' },
+  { q:'Adicionar mais servidores para dividir a carga entre eles é um exemplo de:',
+    opts:['Escalabilidade vertical','Escalabilidade horizontal','Vendor lock-in','Concorrência'],
+    correct:1, explain:'Escalabilidade horizontal (scale out) significa adicionar mais máquinas trabalhando em conjunto, em vez de aumentar os recursos de uma única máquina (escalabilidade vertical).' }
+];
+let quizCorrectCount = 0;
+const quizContainer = document.getElementById('quiz-container');
+quizData.forEach((item, qi)=>{
+  const box = document.createElement('div');
+  box.className = 'quiz-q';
+  box.innerHTML = `<p class="q-text">${qi+1}. ${item.q}</p>
+    <div class="quiz-opts">${item.opts.map((o,oi)=>`<button class="quiz-opt" data-oi="${oi}">${o}</button>`).join('')}</div>
+    <p class="quiz-explain"></p>`;
+  quizContainer.appendChild(box);
+
+  box.querySelectorAll('.quiz-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(box.classList.contains('answered-correct')) return;
+      const oi = parseInt(btn.dataset.oi);
+      const explainEl = box.querySelector('.quiz-explain');
+      if(oi === item.correct){
+        btn.classList.add('correct');
+        box.querySelectorAll('.quiz-opt').forEach(b=> b.disabled = true);
+        box.classList.add('answered-correct');
+        explainEl.textContent = '✅ ' + item.explain;
+        explainEl.classList.add('show');
+        quizCorrectCount++;
+        addXP(6);
+        if(quizCorrectCount === quizData.length) unlockBadge('quiz','Sabe Tudo', 1);
+      } else {
+        btn.classList.add('wrong');
+        explainEl.textContent = '❌ Tente novamente.';
+        explainEl.classList.add('show');
+      }
+    });
+  });
+});
+
+renderXP();
+</script>
 </body>
 </html>

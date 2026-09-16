@@ -1,310 +1,607 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complemento - Gerência de Projetos | ISW044</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background: linear-gradient(135deg, #2e1065 0%, #a78bfa 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #f43f5e 0%, #a78bfa 100%); color: white; padding: 40px; text-align: center; }
-        .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        .header .module { font-size: 1.2em; opacity: 0.95; margin-bottom: 5px; }
-        .header .week { font-size: 1.1em; opacity: 0.9; }
-        .content { padding: 40px; }
-        .section { margin: 40px 0; }
-        .section h2 { color: #7c3aed; font-size: 2em; margin-bottom: 20px; border-bottom: 3px solid #a78bfa; padding-bottom: 10px; }
-        .objetivos { background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); padding: 30px; border-radius: 15px; margin-bottom: 40px; border-left: 5px solid #7c3aed; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .objetivos h2 { color: #7c3aed; margin-bottom: 20px; }
-        .objetivos ul { list-style-position: inside; }
-        .objetivos li { margin: 12px 0; font-size: 1.1em; padding-left: 10px; }
-        .teoria { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .teoria h3 { color: #7c3aed; margin: 25px 0 15px 0; font-size: 1.6em; }
-        .teoria h4 { color: #f43f5e; margin: 20px 0 10px 0; font-size: 1.3em; }
-        .teoria p { margin: 15px 0; text-align: justify; line-height: 1.8; }
-        .teoria ul, .teoria ol { margin: 15px 0 15px 30px; }
-        .teoria li { margin: 10px 0; line-height: 1.8; }
-        .teoria strong { color: #7c3aed; font-weight: 600; }
-        .teoria code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; color: #e11d48; }
-        .pilar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin: 25px 0; }
-        .pilar-card { background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); border-radius: 15px; padding: 25px; border-top: 5px solid #7c3aed; }
-        .pilar-card h4 { color: #5b21b6; margin-bottom: 10px; font-size: 1.25em; }
-        .pilar-card p { color: #555; margin: 8px 0; text-align: left; }
-        .kanban-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
-        .kanban-col { background: #f8f9fb; border-radius: 10px; padding: 16px; border-top: 4px solid #7c3aed; }
-        .kanban-col h5 { color: #5b21b6; margin-bottom: 10px; font-size: .95em; text-transform: uppercase; letter-spacing: 1px; }
-        .kanban-card { background: white; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; font-size: .88em; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
-        .activity-card { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); border-radius: 15px; padding: 30px; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border-left: 6px solid #7c3aed; }
-        .activity-card h3 { color: #5b21b6; margin-bottom: 15px; font-size: 1.5em; }
-        .activity-desc { color: #555; font-size: 1.1em; margin-bottom: 20px; font-style: italic; line-height: 1.6; }
-        .activity-card h4 { color: #7c3aed; margin: 20px 0 12px 0; font-size: 1.2em; }
-        .instructions { background: white; padding: 20px 20px 20px 40px; border-radius: 8px; margin: 12px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .instructions li { margin: 12px 0; line-height: 1.7; }
-        .deliverable { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 18px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #2196f3; }
-        .deliverable strong { color: #1976d2; }
-        .criteria { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 18px 18px 18px 40px; border-radius: 8px; margin: 12px 0; border-left: 5px solid #4caf50; }
-        .criteria li { margin: 10px 0; color: #2e7d32; }
-        .materials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .material-card { background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); border-radius: 15px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); transition: transform 0.3s; border-top: 5px solid #f39c12; }
-        .material-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .material-card h4 { color: #d35400; margin-bottom: 12px; font-size: 1.2em; }
-        .material-card p { color: #555; margin: 8px 0; font-size: 0.95em; }
-        .material-link { display: inline-block; margin-top: 15px; padding: 12px 25px; background: #e67e22; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; transition: all 0.3s; }
-        .material-link:hover { background: #d35400; transform: scale(1.05); }
-        .badge-relacionado { display: inline-block; margin-top: 14px; background: rgba(255,255,255,.25); padding: 6px 16px; border-radius: 999px; font-size: .85em; }
-        .navigation { display: flex; justify-content: space-between; align-items: center; padding: 30px 40px; background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); flex-wrap: wrap; gap: 15px; }
-        .nav-button { padding: 15px 30px; background: linear-gradient(135deg, #7c3aed 0%, #f43f5e 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: bold; font-size: 1.05em; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .nav-button:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4); }
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.8em; }
-            .content { padding: 20px; }
-            .videos-grid, .materials-grid, .pilar-grid { grid-template-columns: 1fr; }
-            .kanban-board { grid-template-columns: 1fr; }
-            .navigation { flex-direction: column; gap: 15px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missão: Gerência de Projetos | ISW044</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0f1a; --surface:#131728; --card:#181d2f; --border:#222843;
+    --accent:#a78bfa; --accent2:#f43f5e; --text:#e2e8f0; --muted:#64748b; --muted2:#94a3b8;
+    --green:#22d3a5; --red:#fb4b4b; --yellow:#fbbf24; --blue:#4f8cff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(167,139,250,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(167,139,250,.05) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+
+  .topbar{position:sticky;top:0;z-index:200;background:rgba(12,15,26,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:14px 24px;}
+  .topbar-row{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .topbar-title{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--accent);letter-spacing:2px;white-space:nowrap;}
+  .xp-wrap{flex:1;min-width:160px;}
+  .xp-label{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted2);margin-bottom:4px;display:flex;justify-content:space-between;}
+  .xp-track{height:8px;border-radius:99px;background:var(--surface);border:1px solid var(--border);overflow:hidden;}
+  .xp-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s cubic-bezier(.34,1.56,.64,1);}
+  .badges-row{display:flex;gap:8px;}
+  .badge{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--surface);border:1px solid var(--border);opacity:.3;filter:grayscale(1);transition:.3s;cursor:default;}
+  .badge.unlocked{opacity:1;filter:none;border-color:rgba(167,139,250,.55);box-shadow:0 0 16px rgba(167,139,250,.35);animation:pop .45s;}
+  @keyframes pop{0%{transform:scale(.5) rotate(-10deg);}60%{transform:scale(1.25) rotate(6deg);}100%{transform:scale(1) rotate(0);}}
+
+  .toast{position:fixed;top:80px;right:24px;z-index:500;background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:12px 18px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.5);transform:translateX(140%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
+  .toast.show{transform:translateX(0);}
+
+  .hero{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:70px 24px 40px;text-align:center;}
+  .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--accent2);letter-spacing:3px;margin-bottom:16px;}
+  .hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3rem);line-height:1.1;margin-bottom:16px;background:linear-gradient(135deg,#fff 30%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .hero p{color:var(--muted2);font-size:1rem;line-height:1.7;max-width:640px;margin:0 auto;}
+  .hero-link{display:inline-block;margin-top:20px;font-size:.82rem;color:var(--muted2);text-decoration:none;border:1px solid var(--border);padding:8px 18px;border-radius:8px;}
+  .hero-link:hover{border-color:var(--accent);color:var(--accent);}
+
+  .wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 24px;}
+  .divider{height:1px;background:var(--border);margin:50px 0;}
+  .section-tag{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--accent2);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+  .section-title{font-family:'Syne',sans-serif;font-size:1.6rem;color:#fff;margin-bottom:10px;}
+  .section-desc{color:var(--muted2);font-size:.92rem;line-height:1.7;margin-bottom:26px;}
+
+  .pilar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .pilar-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
+  .pilar-card .ico{font-size:1.6rem;margin-bottom:8px;}
+  .pilar-card h4{font-family:'Syne',sans-serif;color:#fff;font-size:1rem;margin-bottom:8px;}
+  .pilar-card p{color:var(--muted2);font-size:.83rem;line-height:1.6;}
+
+  .lab-panel{background:linear-gradient(180deg,var(--card),var(--surface));border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
+  .lab-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+  .lab-header{display:flex;align-items:center;gap:10px;font-family:'Syne',sans-serif;color:#fff;font-size:1.15rem;margin-bottom:6px;}
+  .lab-goal{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--accent2);background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);display:inline-block;padding:3px 10px;border-radius:6px;margin-bottom:14px;}
+
+  .match-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start;}
+  .chips{display:flex;flex-direction:column;gap:10px;}
+  .chip{touch-action:none;user-select:none;background:var(--surface);border:1px solid var(--accent);color:#fff;font-size:.83rem;font-weight:600;padding:12px 16px;border-radius:9px;cursor:grab;text-align:center;transition:box-shadow .2s;}
+  .chip.dragging{box-shadow:0 12px 30px rgba(0,0,0,.5);cursor:grabbing;}
+  .chip.placed{opacity:0;pointer-events:none;height:0;padding:0;margin:0;overflow:hidden;}
+  .drag-placeholder{border:1.5px dashed var(--border);border-radius:9px;}
+  .zones{display:flex;flex-direction:column;gap:10px;}
+  .zone{min-height:56px;border:1.5px dashed var(--border);border-radius:9px;padding:10px 14px;font-size:.82rem;color:var(--muted2);display:flex;align-items:center;gap:10px;transition:.2s;}
+  .zone.hover{border-color:var(--accent);background:rgba(167,139,250,.07);}
+  .zone.correct{border-style:solid;border-color:var(--green);background:rgba(34,211,165,.08);color:var(--text);}
+  .zone.shake{animation:shake .4s;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+  .zone .placed-chip{font-weight:700;color:var(--green);font-family:'DM Mono',monospace;font-size:.72rem;white-space:nowrap;}
+
+  .kanban-board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .kanban-col{background:var(--surface);border:1.5px dashed var(--border);border-radius:12px;padding:14px;min-height:220px;transition:.2s;}
+  .kanban-col.hover{border-color:var(--accent);background:rgba(167,139,250,.06);}
+  .kanban-col.limit-hit{animation:shake .4s;}
+  .kanban-col h5{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted2);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;display:flex;justify-content:space-between;}
+  .kanban-col h5 .count{color:var(--accent2);}
+  .kanban-card{touch-action:none;user-select:none;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.8rem;margin-bottom:8px;cursor:grab;transition:box-shadow .2s;}
+  .kanban-card.dragging{box-shadow:0 12px 30px rgba(0,0,0,.5);cursor:grabbing;}
+  .kanban-card.placed{display:none;}
+
+  .sprint-capacity{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:16px;}
+  .cap-label{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--muted2);margin-bottom:6px;}
+  .cap-track{height:10px;border-radius:99px;background:var(--card);overflow:hidden;border:1px solid var(--border);}
+  .cap-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .4s ease;}
+  .backlog-items{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;justify-content:center;}
+  .story-card{touch-action:none;user-select:none;background:var(--surface);border:1px solid var(--accent);border-radius:9px;padding:10px 14px;font-size:.8rem;font-weight:600;color:#fff;cursor:grab;text-align:center;min-width:130px;}
+  .story-card.dragging{box-shadow:0 12px 30px rgba(0,0,0,.5);cursor:grabbing;}
+  .story-card.placed{opacity:0;pointer-events:none;}
+  .story-card .pts{display:block;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--accent2);margin-top:4px;}
+  .sprint-zone{min-height:100px;border:1.5px dashed var(--border);border-radius:10px;padding:14px;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;transition:.2s;}
+  .sprint-zone.hover{border-color:var(--accent);background:rgba(167,139,250,.07);}
+  .sprint-zone.shake{animation:shake .4s;}
+  .sprint-zone .mini-card{background:rgba(34,211,165,.12);border:1px solid var(--green);color:var(--text);border-radius:7px;padding:6px 10px;font-size:.75rem;}
+
+  .dojo-ring{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin:20px 0;}
+  .avatar{width:52px;height:52px;border-radius:50%;background:var(--surface);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:.3s;position:relative;}
+  .avatar.pilot{border-color:var(--accent2);box-shadow:0 0 18px rgba(244,63,94,.5);transform:scale(1.15);}
+  .avatar.copilot{border-color:var(--accent);box-shadow:0 0 14px rgba(167,139,250,.4);}
+  .avatar .role-tag{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted2);white-space:nowrap;}
+  .dojo-status{text-align:center;font-size:.9rem;color:var(--muted2);margin-bottom:10px;}
+  .dojo-timer{text-align:center;font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:#fff;margin-bottom:14px;}
+  .dojo-rounds{text-align:center;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted2);margin-bottom:16px;}
+
+  .quiz-q{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px;}
+  .quiz-q.answered-correct{border-color:var(--green);}
+  .quiz-q p.q-text{font-weight:600;color:#fff;margin-bottom:14px;font-size:.92rem;}
+  .quiz-opts{display:grid;gap:8px;}
+  .quiz-opt{text-align:left;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:8px;cursor:pointer;font-size:.83rem;font-family:'Space Grotesk',sans-serif;transition:.2s;}
+  .quiz-opt:hover{border-color:var(--accent);}
+  .quiz-opt.correct{border-color:var(--green);background:rgba(34,211,165,.1);}
+  .quiz-opt.wrong{border-color:var(--red);background:rgba(251,75,75,.1);}
+  .quiz-opt:disabled{cursor:default;}
+  .quiz-explain{margin-top:10px;font-size:.8rem;color:var(--muted2);display:none;}
+  .quiz-explain.show{display:block;}
+
+  #certificate{display:none;text-align:center;background:radial-gradient(circle at top,rgba(167,139,250,.18),transparent 60%),var(--card);border:1px solid var(--accent);border-radius:18px;padding:50px 30px;position:relative;overflow:hidden;}
+  #certificate h2{font-family:'Syne',sans-serif;font-size:1.8rem;margin-bottom:10px;color:#fff;}
+  #certificate p{color:var(--muted2);margin-bottom:20px;}
+  .confetti-piece{position:fixed;top:-10px;width:8px;height:14px;z-index:400;pointer-events:none;animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(540deg);}}
+
+  .lab-btn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.85rem;padding:11px 20px;border-radius:8px;border:none;cursor:pointer;transition:.2s;color:#fff;}
+  .lab-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .lab-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));}
+  .lab-btn.ghost{background:var(--surface);border:1px solid var(--border);}
+  .lab-btn:not(:disabled):hover{transform:translateY(-2px);}
+
+  .materials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+  .material-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+  .material-card h4{color:#fff;font-size:.88rem;margin-bottom:8px;}
+  .material-card a{color:var(--accent2);font-size:.78rem;text-decoration:none;}
+  .material-card a:hover{text-decoration:underline;}
+
+  .navigation{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:30px 0;}
+  .nav-button{padding:13px 22px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;text-decoration:none;font-weight:600;font-size:.85rem;transition:.2s;}
+  .nav-button:hover{transform:translateY(-2px);}
+  .nav-button.ghost{background:var(--surface);border:1px solid var(--border);}
+
+  @media(max-width:720px){
+    .pilar-grid{grid-template-columns:1fr;}
+    .match-wrap{grid-template-columns:1fr;}
+    .kanban-board{grid-template-columns:1fr;}
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="module">🧩 Complemento da Ementa · Gerência de Projetos</div>
-            <div class="week">Relacionado à Semana 13 — Metodologias e Ambiente de Desenvolvimento</div>
-            <h1>Metodologias Ágeis, Scrum, Kanban e Coding Dojo</h1>
-            <span class="badge-relacionado">📋 Conteúdo previsto no Objetivo Geral da disciplina ISW044</span>
-        </div>
 
-        <div class="content">
-            <div class="objetivos">
-                <h2>🎯 Objetivos de Aprendizagem</h2>
-                <ul>
-                    <li>Compreender os fundamentos da <strong>gerência de projetos de software</strong></li>
-                    <li>Aplicar os princípios do <strong>Manifesto Ágil</strong> em projetos multiplataforma</li>
-                    <li>Conduzir um projeto com <strong>Scrum</strong> (papéis, eventos e artefatos)</li>
-                    <li>Organizar o fluxo de trabalho com um quadro <strong>Kanban</strong></li>
-                    <li>Entender como <strong>gamificação</strong> e <strong>Coding Dojo</strong> apoiam o aprendizado e a prática em equipe</li>
-                    <li>Planejar o Projeto Integrador (Semana 40) usando essas ferramentas</li>
-                </ul>
-            </div>
-
-            <div class="section">
-                <h2>📚 Conteúdo Teórico</h2>
-                <div class="teoria">
-                    <h3>Introdução: Por que gerência de projetos importa</h3>
-                    <p>Desenvolver software multiplataforma envolve times, prazos e integrações complexas entre frontend, backend e dispositivos IoT. Sem uma forma organizada de planejar, acompanhar e entregar o trabalho, mesmo um bom código técnico pode resultar em um projeto atrasado, mal escopado ou sem comunicação entre a equipe. É exatamente esse o papel da <strong>gerência de projetos</strong>, citada no objetivo geral da ementa da disciplina.</p>
-
-                    <p>O gerenciamento tradicional (cascata) planeja tudo antecipadamente e executa em fases sequenciais rígidas. Já as <strong>metodologias ágeis</strong> — o foco desta aula — trabalham em ciclos curtos e iterativos, entregando valor continuamente e se adaptando a mudanças.</p>
-
-                    <h3>1. O Manifesto Ágil</h3>
-                    <p>Publicado em 2001, o Manifesto para Desenvolvimento Ágil de Software estabelece quatro valores centrais:</p>
-                    <ul>
-                        <li><strong>Indivíduos e interações</strong> mais que processos e ferramentas</li>
-                        <li><strong>Software em funcionamento</strong> mais que documentação abrangente</li>
-                        <li><strong>Colaboração com o cliente</strong> mais que negociação de contratos</li>
-                        <li><strong>Responder a mudanças</strong> mais que seguir um plano fixo</li>
-                    </ul>
-                    <p>Esses valores deram origem a frameworks como Scrum, Kanban, XP (Extreme Programming) — os dois primeiros detalhados a seguir.</p>
-
-                    <h3>2. Scrum</h3>
-                    <p>O <strong>Scrum</strong> organiza o trabalho em ciclos curtos chamados <strong>Sprints</strong> (geralmente de 1 a 4 semanas), com papéis, eventos e artefatos bem definidos.</p>
-
-                    <div class="pilar-grid">
-                        <div class="pilar-card">
-                            <h4>👤 Product Owner</h4>
-                            <p>Representa o cliente/usuário. Prioriza o que deve ser feito através do Backlog do Produto.</p>
-                        </div>
-                        <div class="pilar-card">
-                            <h4>🧭 Scrum Master</h4>
-                            <p>Facilita o processo, remove impedimentos e garante que o time siga o framework.</p>
-                        </div>
-                        <div class="pilar-card">
-                            <h4>👥 Development Team</h4>
-                            <p>Equipe multidisciplinar responsável por transformar itens do backlog em incrementos funcionais.</p>
-                        </div>
-                    </div>
-
-                    <h4>Eventos do Scrum</h4>
-                    <ul>
-                        <li><strong>Sprint Planning:</strong> reunião no início da sprint para definir o que será entregue.</li>
-                        <li><strong>Daily Scrum:</strong> reunião diária de ~15 min ("o que fiz ontem, o que farei hoje, quais bloqueios eu tenho").</li>
-                        <li><strong>Sprint Review:</strong> apresentação do incremento pronto ao final da sprint.</li>
-                        <li><strong>Sprint Retrospective:</strong> reflexão do time sobre o que funcionou e o que pode melhorar.</li>
-                    </ul>
-
-                    <h4>Artefatos</h4>
-                    <ul>
-                        <li><strong>Product Backlog:</strong> lista priorizada de tudo que o produto precisa (funcionalidades, correções, melhorias)</li>
-                        <li><strong>Sprint Backlog:</strong> itens selecionados do backlog para a sprint atual</li>
-                        <li><strong>Incremento:</strong> a soma de todos os itens concluídos, em estado utilizável</li>
-                    </ul>
-
-                    <h3>3. Kanban</h3>
-                    <p>O <strong>Kanban</strong> é um método visual de gestão de fluxo de trabalho, baseado em um quadro dividido em colunas que representam os estágios do trabalho. Diferente do Scrum, não trabalha com sprints fixas — o fluxo é contínuo, e o foco está em limitar o <strong>WIP</strong> (Work In Progress / trabalho em andamento) para evitar sobrecarga da equipe.</p>
-
-                    <div class="kanban-board">
-                        <div class="kanban-col">
-                            <h5>📋 A Fazer</h5>
-                            <div class="kanban-card">Configurar broker MQTT</div>
-                            <div class="kanban-card">Criar tela de login (mobile)</div>
-                        </div>
-                        <div class="kanban-col">
-                            <h5>⚙️ Em Andamento <em>(WIP: 2)</em></h5>
-                            <div class="kanban-card">Endpoint REST de sensores</div>
-                            <div class="kanban-card">Dashboard React — gráfico</div>
-                        </div>
-                        <div class="kanban-col">
-                            <h5>✅ Concluído</h5>
-                            <div class="kanban-card">Setup do ESP32 e Wi-Fi</div>
-                            <div class="kanban-card">Testes unitários da API</div>
-                        </div>
-                    </div>
-
-                    <h4>Scrum x Kanban — quando usar cada um?</h4>
-                    <ul>
-                        <li><strong>Scrum:</strong> bom para projetos com entregas planejadas em ciclos (ex.: o Projeto Integrador da Semana 40, com entregas parciais até a apresentação final).</li>
-                        <li><strong>Kanban:</strong> bom para fluxo contínuo de manutenção/suporte, ou para equipes pequenas que preferem simplicidade sem cerimônias fixas.</li>
-                    </ul>
-
-                    <h3>4. Gamificação aplicada a projetos e ao ensino</h3>
-                    <p><strong>Gamificação</strong> é o uso de elementos de jogos (pontos, níveis, badges, rankings, desafios) em contextos que não são jogos, para aumentar engajamento e motivação. Na disciplina, isso aparece como forma de tornar o aprendizado de programação multiplataforma mais dinâmico — por exemplo, badges por semana concluída, pontuação por desafios extras resolvidos, ou rankings colaborativos entre equipes no projeto integrador.</p>
-                    <p>Em times reais de desenvolvimento, gamificação também é usada para incentivar boas práticas: cobertura de testes, revisão de código (code review) e cumprimento de prazos.</p>
-
-                    <h3>5. Coding Dojo</h3>
-                    <p>O <strong>Coding Dojo</strong> é uma prática de aprendizado coletivo de programação, onde um grupo resolve um problema de código junto, em um ambiente colaborativo e sem julgamento — focado em aprender fazendo. O formato mais comum é o <strong>Randori</strong>:</p>
-                    <ul>
-                        <li>Um "piloto" e um "copiloto" programam juntos em frente ao grupo (pair programming ao vivo)</li>
-                        <li>A cada rodada (5-10 min), o piloto vira plateia e outra dupla assume</li>
-                        <li>O problema costuma ser resolvido com <strong>TDD</strong> (Red, Green, Refactor — já estudado no Módulo 8), reforçando a prática de escrever o teste antes do código</li>
-                        <li>Todo o grupo participa ativamente, sugerindo abordagens e discutindo soluções</li>
-                    </ul>
-                    <p>O Coding Dojo combina, na prática, três elementos já vistos na ementa: <strong>gerência de projetos colaborativa</strong>, <strong>TDD</strong> e <strong>gamificação</strong> (já que costuma ser estruturado como um desafio em grupo com tempo limitado).</p>
-
-                    <h3>Ferramentas de apoio</h3>
-                    <ul>
-                        <li><strong>GitHub Projects</strong> — quadro Kanban integrado ao repositório, ideal para o projeto da disciplina</li>
-                        <li><strong>Trello</strong> — quadro Kanban simples e visual</li>
-                        <li><strong>Jira</strong> — ferramenta profissional de Scrum/Kanban usada amplamente no mercado</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>💪 Atividades Práticas</h2>
-
-                <div class="activity-card">
-                    <h3>📝 Atividade 1: Backlog do Projeto Integrador</h3>
-                    <p class="activity-desc">Monte o Product Backlog do seu Projeto Integrador (Semana 40) usando os princípios do Scrum.</p>
-                    <h4>📋 Instruções:</h4>
-                    <ol class="instructions">
-                        <li>Liste todas as funcionalidades necessárias (IoT, backend/broker, web, mobile)</li>
-                        <li>Escreva cada item como uma User Story ("Como [usuário], quero [funcionalidade], para [benefício]")</li>
-                        <li>Priorize os itens (Alta / Média / Baixa)</li>
-                        <li>Divida o backlog em pelo menos 2 sprints até a apresentação final</li>
-                    </ol>
-                    <div class="deliverable">
-                        <strong>📦 Entregável:</strong> Backlog documentado (planilha ou GitHub Projects) + print das sprints planejadas
-                    </div>
-                    <h4>✅ Critérios de Avaliação:</h4>
-                    <ul class="criteria">
-                        <li>User stories bem escritas e completas</li>
-                        <li>Priorização coerente com o escopo do projeto</li>
-                        <li>Distribuição realista entre as sprints</li>
-                    </ul>
-                </div>
-
-                <div class="activity-card">
-                    <h3>📌 Atividade 2: Quadro Kanban no GitHub Projects</h3>
-                    <p class="activity-desc">Configure um quadro Kanban real para acompanhar o desenvolvimento da equipe.</p>
-                    <h4>📋 Instruções:</h4>
-                    <ol class="instructions">
-                        <li>Crie um board no GitHub Projects vinculado ao repositório do projeto</li>
-                        <li>Defina as colunas: A Fazer, Em Andamento, Em Revisão, Concluído</li>
-                        <li>Defina um limite de WIP para a coluna "Em Andamento"</li>
-                        <li>Migre os itens do backlog da Atividade 1 para o quadro</li>
-                        <li>Atualize o quadro conforme a equipe avança no projeto ao longo do semestre</li>
-                    </ol>
-                    <div class="deliverable">
-                        <strong>📦 Entregável:</strong> Link do board + print do quadro em uso
-                    </div>
-                    <h4>✅ Critérios de Avaliação:</h4>
-                    <ul class="criteria">
-                        <li>Board configurado corretamente</li>
-                        <li>Uso consistente ao longo do desenvolvimento</li>
-                        <li>Limite de WIP respeitado</li>
-                    </ul>
-                </div>
-
-                <div class="activity-card">
-                    <h3>🥋 Atividade 3: Coding Dojo em Grupo (Randori + TDD)</h3>
-                    <p class="activity-desc">Participe de uma sessão de Coding Dojo resolvendo um pequeno desafio de código coletivamente, aplicando TDD.</p>
-                    <h4>📋 Instruções:</h4>
-                    <ol class="instructions">
-                        <li>Forme grupos de 5-6 alunos</li>
-                        <li>Escolha um desafio simples (ex.: validar dados de um sensor, converter unidades de temperatura)</li>
-                        <li>Siga o formato Randori: piloto + copiloto por 5-7 minutos, depois troca</li>
-                        <li>Escreva sempre o teste antes do código (Red, Green, Refactor)</li>
-                        <li>Ao final, discuta em grupo o que foi aprendido com a dinâmica</li>
-                    </ol>
-                    <div class="deliverable">
-                        <strong>📦 Entregável:</strong> Código-fonte final da sessão + breve relato da experiência do grupo
-                    </div>
-                    <h4>✅ Critérios de Avaliação:</h4>
-                    <ul class="criteria">
-                        <li>Participação de todos os membros como piloto/copiloto</li>
-                        <li>Ciclo TDD respeitado (teste antes do código)</li>
-                        <li>Qualidade da reflexão final sobre a dinâmica</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2>📖 Materiais Complementares</h2>
-                <div class="materials-grid">
-                    <div class="material-card">
-                        <h4>📜 Manifesto Ágil (original)</h4>
-                        <p><strong>Tipo:</strong> Documento fundador</p>
-                        <p><strong>Fonte:</strong> agilemanifesto.org</p>
-                        <a href="https://agilemanifesto.org/iso/ptbr/manifesto.html" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>📘 Scrum Guide Oficial</h4>
-                        <p><strong>Tipo:</strong> Guia oficial</p>
-                        <p><strong>Fonte:</strong> scrumguides.org</p>
-                        <a href="https://scrumguides.org/" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>📊 Introdução ao Kanban</h4>
-                        <p><strong>Tipo:</strong> Guia introdutório</p>
-                        <p><strong>Fonte:</strong> Atlassian</p>
-                        <a href="https://www.atlassian.com/br/agile/kanban" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>🥋 Coding Dojo — Conceito e Formato</h4>
-                        <p><strong>Tipo:</strong> Artigo / comunidade</p>
-                        <p><strong>Fonte:</strong> codingdojo.org</p>
-                        <a href="https://codingdojo.org/" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>🗂️ GitHub Projects — Documentação</h4>
-                        <p><strong>Tipo:</strong> Documentação oficial</p>
-                        <p><strong>Fonte:</strong> docs.github.com</p>
-                        <a href="https://docs.github.com/pt/issues/planning-and-tracking-with-projects" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                    <div class="material-card">
-                        <h4>🎮 Gamificação na Educação</h4>
-                        <p><strong>Tipo:</strong> Artigo</p>
-                        <p><strong>Fonte:</strong> Material de apoio didático</p>
-                        <a href="#" class="material-link" target="_blank">🔗 Acessar</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="navigation">
-            <a href="semana13.html" class="nav-button">⬅️ S·13 Metodologias e Ambiente</a>
-            <a href="index.html" class="nav-button">🏠 Início</a>
-            <a href="sistemas_distribuidos.html" class="nav-button">Próximo complemento ➡️</a>
-        </div>
+<div class="topbar">
+  <div class="topbar-row">
+    <span class="topbar-title">ISW044 · MISSÃO</span>
+    <div class="xp-wrap">
+      <div class="xp-label"><span>XP</span><span id="xp-count">0 / 100</span></div>
+      <div class="xp-track"><div class="xp-fill" id="xp-fill"></div></div>
     </div>
+    <div class="badges-row">
+      <div class="badge" id="badge-scrum" title="Especialista em Papéis Scrum">🎭</div>
+      <div class="badge" id="badge-kanban" title="Mestre do Fluxo">📌</div>
+      <div class="badge" id="badge-sprint" title="Planejador de Sprint">🎯</div>
+      <div class="badge" id="badge-dojo" title="Faixa Preta do Dojo">🥋</div>
+      <div class="badge" id="badge-quiz" title="Sabe Tudo">🧠</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<section class="hero">
+  <div class="hero-eyebrow">🧩 COMPLEMENTO DA EMENTA · MISSÃO INTERATIVA</div>
+  <h1>Gerência de Projetos</h1>
+  <p>Scrum, Kanban, Gamificação e Coding Dojo — arraste, monte e complete os 5 desafios para desbloquear seu certificado de gerente de projetos ágil.</p>
+  <a href="semana13.html" class="hero-link">← relacionado à S·13 Metodologias e Ambiente</a>
+</section>
+
+<div class="wrap">
+
+  <div class="pilar-grid">
+    <div class="pilar-card"><div class="ico">🏃</div><h4>Scrum</h4><p>Ciclos curtos (sprints), papéis e cerimônias bem definidas para organizar o trabalho em equipe.</p></div>
+    <div class="pilar-card"><div class="ico">📌</div><h4>Kanban</h4><p>Fluxo contínuo de trabalho visualizado em quadro, com limites de WIP para evitar sobrecarga.</p></div>
+    <div class="pilar-card"><div class="ico">🥋</div><h4>Coding Dojo</h4><p>Prática coletiva de programação com TDD, revezando piloto e copiloto no formato Randori.</p></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Missão 01</div>
+  <h2 class="section-title">🎭 Papéis e Artefatos do Scrum</h2>
+  <p class="section-desc">Arraste cada termo até sua definição correta.</p>
+
+  <div class="lab-panel">
+    <span class="lab-goal">+20 XP ao completar todos os pares</span>
+    <div class="match-wrap">
+      <div class="chips" id="chips">
+        <div class="chip" data-id="po">Product Owner</div>
+        <div class="chip" data-id="sm">Scrum Master</div>
+        <div class="chip" data-id="dev">Development Team</div>
+        <div class="chip" data-id="pb">Product Backlog</div>
+        <div class="chip" data-id="sb">Sprint Backlog</div>
+        <div class="chip" data-id="inc">Incremento</div>
+      </div>
+      <div class="zones" id="zones">
+        <div class="zone" data-answer="po">Representa o cliente/usuário e prioriza o que deve ser feito</div>
+        <div class="zone" data-answer="sm">Facilita o processo e remove impedimentos do time</div>
+        <div class="zone" data-answer="dev">Equipe multidisciplinar que transforma itens do backlog em software funcional</div>
+        <div class="zone" data-answer="pb">Lista priorizada de tudo o que o produto precisa</div>
+        <div class="zone" data-answer="sb">Itens selecionados do backlog para a sprint atual</div>
+        <div class="zone" data-answer="inc">Soma de todos os itens concluídos, em estado utilizável</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Missão 02</div>
+  <h2 class="section-title">📌 Quadro Kanban Interativo</h2>
+  <p class="section-desc">Arraste as tarefas entre as colunas até levar todas para "Concluído". A coluna "Em Andamento" tem <strong style="color:#fff">limite de WIP = 2</strong> — respeite o limite!</p>
+
+  <div class="lab-panel">
+    <span class="lab-goal">+20 XP ao mover todas as tarefas para Concluído</span>
+    <div class="kanban-board">
+      <div class="kanban-col" id="col-todo" data-col="todo">
+        <h5>A Fazer <span class="count" id="count-todo">6</span></h5>
+        <div class="kanban-card" data-col="todo">Configurar broker MQTT</div>
+        <div class="kanban-card" data-col="todo">Criar tela de login (mobile)</div>
+        <div class="kanban-card" data-col="todo">Endpoint REST de sensores</div>
+        <div class="kanban-card" data-col="todo">Dashboard React — gráfico</div>
+        <div class="kanban-card" data-col="todo">Testes unitários da API</div>
+        <div class="kanban-card" data-col="todo">Setup do ESP32 e Wi-Fi</div>
+      </div>
+      <div class="kanban-col" id="col-doing" data-col="doing" data-max="2">
+        <h5>Em Andamento <span class="count" id="count-doing">0/2</span></h5>
+      </div>
+      <div class="kanban-col" id="col-done" data-col="done">
+        <h5>Concluído <span class="count" id="count-done">0</span></h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Missão 03</div>
+  <h2 class="section-title">🎯 Planeje a Sprint</h2>
+  <p class="section-desc">A equipe tem capacidade para <strong style="color:#fff">15 pontos</strong> nesta sprint. Arraste os itens do backlog sem ultrapassar a capacidade.</p>
+
+  <div class="lab-panel">
+    <span class="lab-goal">+20 XP ao preencher pelo menos 12 dos 15 pontos</span>
+    <div class="sprint-capacity">
+      <div class="cap-label"><span>Capacidade da Sprint</span><span id="cap-count">0 / 15 pts</span></div>
+      <div class="cap-track"><div class="cap-fill" id="cap-fill"></div></div>
+    </div>
+    <div class="backlog-items" id="backlog">
+      <div class="story-card" data-pts="3">Tela de cadastro<span class="pts">3 pts</span></div>
+      <div class="story-card" data-pts="5">Dashboard de sensores<span class="pts">5 pts</span></div>
+      <div class="story-card" data-pts="2">Ajuste de layout<span class="pts">2 pts</span></div>
+      <div class="story-card" data-pts="4">Integração MQTT<span class="pts">4 pts</span></div>
+      <div class="story-card" data-pts="8">App mobile completo<span class="pts">8 pts</span></div>
+      <div class="story-card" data-pts="1">Correção de bug<span class="pts">1 pt</span></div>
+    </div>
+    <div class="sprint-zone" id="sprint-zone"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Missão 04</div>
+  <h2 class="section-title">🥋 Coding Dojo — Randori</h2>
+  <p class="section-desc">No formato Randori, piloto e copiloto se revezam a cada rodada. Inicie a simulação e observe o rodízio da dupla em tempo real.</p>
+
+  <div class="lab-panel">
+    <span class="lab-goal">+20 XP ao completar uma rodada completa de revezamento</span>
+    <div class="dojo-status" id="dojo-status">Pressione iniciar para começar o Randori</div>
+    <div class="dojo-timer" id="dojo-timer">04</div>
+    <div class="dojo-ring" id="dojo-ring"></div>
+    <div class="dojo-rounds" id="dojo-rounds">Rodada 0 / 6</div>
+    <div class="lab-actions" style="display:flex;gap:10px;justify-content:center;">
+      <button class="lab-btn primary" id="btn-dojo-start">▶ Iniciar Randori</button>
+      <button class="lab-btn ghost" id="btn-dojo-reset">↺ Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Missão 05</div>
+  <h2 class="section-title">🧠 Quiz Relâmpago</h2>
+  <p class="section-desc">Responda as 4 perguntas para fechar a missão.</p>
+
+  <div id="quiz-container"></div>
+
+  <div class="divider"></div>
+
+  <div id="certificate">
+    <h2>🎓 Missão Concluída!</h2>
+    <p>Você dominou Scrum, Kanban, Gamificação e Coding Dojo — a gerência de projetos citada no objetivo geral da ementa ISW044.</p>
+    <a href="index.html" class="nav-button">🏠 Voltar ao Início</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-tag">// Para se aprofundar</div>
+  <h2 class="section-title">📖 Materiais Complementares</h2>
+  <div class="materials-grid" style="margin-bottom:20px;">
+    <div class="material-card"><h4>📜 Manifesto Ágil</h4><a href="https://agilemanifesto.org/iso/ptbr/manifesto.html" target="_blank">Acessar →</a></div>
+    <div class="material-card"><h4>📘 Scrum Guide Oficial</h4><a href="https://scrumguides.org/" target="_blank">Acessar →</a></div>
+    <div class="material-card"><h4>📊 Introdução ao Kanban</h4><a href="https://www.atlassian.com/br/agile/kanban" target="_blank">Acessar →</a></div>
+    <div class="material-card"><h4>🥋 Coding Dojo</h4><a href="https://codingdojo.org/" target="_blank">Acessar →</a></div>
+  </div>
+
+  <div class="navigation">
+    <a href="semana13.html" class="nav-button ghost">⬅️ S·13 Metodologias e Ambiente</a>
+    <a href="index.html" class="nav-button ghost">🏠 Início</a>
+    <a href="sistemas_distribuidos.html" class="nav-button">Próxima missão ➡️</a>
+  </div>
+</div>
+
+<script>
+const state = { xp:0, badges:{scrum:false, kanban:false, sprint:false, dojo:false, quiz:false} };
+function renderXP(){
+  document.getElementById('xp-fill').style.width = state.xp + '%';
+  document.getElementById('xp-count').textContent = state.xp + ' / 100';
+}
+function addXP(n){ state.xp = Math.min(100, state.xp + n); renderXP(); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.classList.remove('show'), 2600);
+}
+function unlockBadge(key, label, xp){
+  if(state.badges[key]) return;
+  state.badges[key] = true;
+  document.getElementById('badge-'+key).classList.add('unlocked');
+  addXP(xp);
+  showToast('🏆 Conquista desbloqueada: ' + label);
+  if(Object.values(state.badges).every(Boolean)) revealCertificate();
+}
+function revealCertificate(){
+  const cert = document.getElementById('certificate');
+  cert.style.display = 'block';
+  cert.scrollIntoView({behavior:'smooth', block:'center'});
+  launchConfetti();
+}
+function launchConfetti(){
+  const colors = ['#a78bfa','#f43f5e','#22d3a5','#4f8cff','#fbbf24'];
+  for(let i=0;i<50;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (2.5 + Math.random()*2) + 's';
+    document.body.appendChild(p);
+    setTimeout(()=> p.remove(), 5000);
+  }
+}
+
+function makeDraggable(el, dropSelector, onDrop){
+  el.style.touchAction = 'none';
+  el.addEventListener('pointerdown', (e)=>{
+    if(el.classList.contains('placed')) return;
+    const rect = el.getBoundingClientRect();
+    const shiftX = e.clientX - rect.left;
+    const shiftY = e.clientY - rect.top;
+    const placeholder = document.createElement('div');
+    placeholder.className = 'drag-placeholder';
+    placeholder.style.width = rect.width+'px';
+    placeholder.style.height = rect.height+'px';
+    el.parentElement.insertBefore(placeholder, el);
+    document.body.appendChild(el);
+    el.style.position='fixed'; el.style.zIndex=1000; el.style.width=rect.width+'px';
+    el.classList.add('dragging');
+    el.setPointerCapture(e.pointerId);
+
+    function moveAt(x,y){ el.style.left=(x-shiftX)+'px'; el.style.top=(y-shiftY)+'px'; }
+    moveAt(e.clientX, e.clientY);
+
+    let lastZone = null;
+    function onMove(ev){
+      moveAt(ev.clientX, ev.clientY);
+      el.hidden = true;
+      const under = document.elementFromPoint(ev.clientX, ev.clientY);
+      el.hidden = false;
+      const zone = under ? under.closest(dropSelector) : null;
+      if(lastZone && lastZone !== zone) lastZone.classList.remove('hover');
+      if(zone) zone.classList.add('hover');
+      lastZone = zone;
+    }
+    el.addEventListener('pointermove', onMove);
+
+    function onUp(ev){
+      el.removeEventListener('pointermove', onMove);
+      el.releasePointerCapture(ev.pointerId);
+      el.classList.remove('dragging');
+      el.style.position=''; el.style.zIndex=''; el.style.left=''; el.style.top=''; el.style.width='';
+      if(lastZone) lastZone.classList.remove('hover');
+      el.hidden = true;
+      const under = document.elementFromPoint(ev.clientX, ev.clientY);
+      el.hidden = false;
+      const zone = under ? under.closest(dropSelector) : null;
+      const placed = zone ? onDrop(el, zone) : false;
+      if(!placed){ placeholder.replaceWith(el); }
+      else { placeholder.remove(); }
+      el.removeEventListener('pointerup', onUp);
+    }
+    el.addEventListener('pointerup', onUp);
+  });
+}
+
+/* GAME 1 */
+let matchedCount = 0;
+const totalMatches = document.querySelectorAll('#zones .zone').length;
+document.querySelectorAll('#chips .chip').forEach(chip=>{
+  makeDraggable(chip, '.zone', (el, zone)=>{
+    if(zone.classList.contains('correct')) return false;
+    if(zone.dataset.answer === el.dataset.id){
+      zone.classList.add('correct');
+      zone.innerHTML = `<span>✅ ${zone.textContent}</span><span class="placed-chip">${el.textContent}</span>`;
+      el.classList.add('placed');
+      matchedCount++;
+      addXP(3.3);
+      if(matchedCount === totalMatches) unlockBadge('scrum','Especialista em Papéis Scrum', 0.2);
+      return true;
+    } else {
+      zone.classList.add('shake');
+      setTimeout(()=> zone.classList.remove('shake'), 400);
+      return false;
+    }
+  });
+});
+
+/* GAME 2 */
+function updateKanbanCounts(){
+  document.getElementById('count-todo').textContent = document.querySelectorAll('#col-todo .kanban-card').length;
+  document.getElementById('count-doing').textContent = document.querySelectorAll('#col-doing .kanban-card').length + '/2';
+  document.getElementById('count-done').textContent = document.querySelectorAll('#col-done .kanban-card').length;
+}
+function attachKanbanDrag(card){
+  makeDraggable(card, '.kanban-col', (el, col)=>{
+    const max = col.dataset.max ? parseInt(col.dataset.max) : null;
+    const current = col.querySelectorAll('.kanban-card').length;
+    if(max !== null && current >= max){
+      col.classList.add('limit-hit');
+      showToast('🚫 Limite de WIP atingido na coluna Em Andamento!');
+      setTimeout(()=> col.classList.remove('limit-hit'), 400);
+      return false;
+    }
+    col.appendChild(el);
+    el.dataset.col = col.dataset.col;
+    updateKanbanCounts();
+    if(document.querySelectorAll('#col-done .kanban-card').length === 6){
+      unlockBadge('kanban','Mestre do Fluxo', 20);
+    }
+    return true;
+  });
+}
+document.querySelectorAll('.kanban-card').forEach(attachKanbanDrag);
+updateKanbanCounts();
+
+/* GAME 3 */
+const SPRINT_CAPACITY = 15;
+let sprintTotal = 0;
+function updateCapacityBar(){
+  const pct = Math.min(100, (sprintTotal/SPRINT_CAPACITY)*100);
+  document.getElementById('cap-fill').style.width = pct + '%';
+  document.getElementById('cap-count').textContent = sprintTotal + ' / ' + SPRINT_CAPACITY + ' pts';
+}
+document.querySelectorAll('#backlog .story-card').forEach(card=>{
+  makeDraggable(card, '#sprint-zone', (el, zone)=>{
+    const pts = parseInt(el.dataset.pts);
+    if(sprintTotal + pts > SPRINT_CAPACITY){
+      zone.classList.add('shake');
+      showToast('⚠️ Isso ultrapassaria a capacidade da sprint!');
+      setTimeout(()=> zone.classList.remove('shake'), 400);
+      return false;
+    }
+    sprintTotal += pts;
+    updateCapacityBar();
+    const mini = document.createElement('div');
+    mini.className = 'mini-card';
+    mini.textContent = el.textContent;
+    zone.appendChild(mini);
+    el.classList.add('placed');
+    if(sprintTotal >= 12) unlockBadge('sprint','Planejador de Sprint', 20);
+    return true;
+  });
+});
+
+/* GAME 4 */
+const dojoAvatars = ['🧑‍💻','👩‍💻','🧑‍🎨','👨‍🔬','🧑‍🚀','👩‍🔧'];
+const ring = document.getElementById('dojo-ring');
+dojoAvatars.forEach((emoji, i)=>{
+  const av = document.createElement('div');
+  av.className = 'avatar';
+  av.id = 'av-'+i;
+  av.innerHTML = emoji + '<span class="role-tag"></span>';
+  ring.appendChild(av);
+});
+let dojoRound = 0, dojoTimerVal = 4, dojoInterval = null, dojoRunning = false;
+const TOTAL_ROUNDS = 6;
+function setRoles(pilotIdx, copilotIdx){
+  dojoAvatars.forEach((_, i)=>{
+    const av = document.getElementById('av-'+i);
+    av.classList.remove('pilot','copilot');
+    av.querySelector('.role-tag').textContent = '';
+  });
+  document.getElementById('av-'+pilotIdx).classList.add('pilot');
+  document.getElementById('av-'+pilotIdx).querySelector('.role-tag').textContent = 'Piloto';
+  document.getElementById('av-'+copilotIdx).classList.add('copilot');
+  document.getElementById('av-'+copilotIdx).querySelector('.role-tag').textContent = 'Copiloto';
+}
+function dojoTick(){
+  dojoTimerVal--;
+  document.getElementById('dojo-timer').textContent = String(dojoTimerVal).padStart(2,'0');
+  if(dojoTimerVal <= 0){
+    dojoRound++;
+    document.getElementById('dojo-rounds').textContent = `Rodada ${dojoRound} / ${TOTAL_ROUNDS}`;
+    if(dojoRound >= TOTAL_ROUNDS){
+      stopDojo();
+      document.getElementById('dojo-status').textContent = '✅ Revezamento completo! A equipe toda participou.';
+      unlockBadge('dojo','Faixa Preta do Dojo', 20);
+      return;
+    }
+    const pilot = dojoRound % dojoAvatars.length;
+    const copilot = (dojoRound+1) % dojoAvatars.length;
+    setRoles(pilot, copilot);
+    document.getElementById('dojo-status').textContent = `Rodada ${dojoRound+1}: revezando a dupla...`;
+    dojoTimerVal = 4;
+  }
+}
+function startDojo(){
+  if(dojoRunning) return;
+  dojoRunning = true;
+  dojoRound = 0; dojoTimerVal = 4;
+  document.getElementById('dojo-rounds').textContent = `Rodada 0 / ${TOTAL_ROUNDS}`;
+  setRoles(0,1);
+  document.getElementById('dojo-status').textContent = 'Rodada 1: Piloto e Copiloto programando juntos...';
+  document.getElementById('dojo-timer').textContent = '04';
+  document.getElementById('btn-dojo-start').disabled = true;
+  dojoInterval = setInterval(dojoTick, 1000);
+}
+function stopDojo(){
+  dojoRunning = false;
+  clearInterval(dojoInterval);
+  document.getElementById('btn-dojo-start').disabled = false;
+}
+function resetDojo(){
+  stopDojo();
+  dojoRound = 0; dojoTimerVal = 4;
+  document.getElementById('dojo-timer').textContent = '04';
+  document.getElementById('dojo-rounds').textContent = `Rodada 0 / ${TOTAL_ROUNDS}`;
+  document.getElementById('dojo-status').textContent = 'Pressione iniciar para começar o Randori';
+  dojoAvatars.forEach((_, i)=>{
+    const av = document.getElementById('av-'+i);
+    av.classList.remove('pilot','copilot');
+    av.querySelector('.role-tag').textContent = '';
+  });
+}
+document.getElementById('btn-dojo-start').addEventListener('click', startDojo);
+document.getElementById('btn-dojo-reset').addEventListener('click', resetDojo);
+
+/* QUIZ */
+const quizData = [
+  { q:'Quem prioriza o Product Backlog no Scrum?',
+    opts:['Scrum Master','Development Team','Product Owner','Stakeholder externo'],
+    correct:2, explain:'O Product Owner representa o cliente/usuário e é responsável por priorizar o Product Backlog.' },
+  { q:'O que é o "WIP limit" no Kanban?',
+    opts:['O tempo máximo de uma sprint','O número máximo de tarefas em andamento por coluna','O orçamento do projeto','A quantidade de desenvolvedores no time'],
+    correct:1, explain:'WIP (Work In Progress) limit define quantas tarefas podem estar em andamento ao mesmo tempo em uma coluna, evitando sobrecarga.' },
+  { q:'No Coding Dojo, o formato "Randori" se caracteriza por:',
+    opts:['Um único programador trabalhando sozinho','Revezamento de piloto e copiloto em rodadas curtas','Uma prova individual de programação','Planejamento de sprint em grupo'],
+    correct:1, explain:'No Randori, duplas se revezam programando junto ao público, trocando de piloto/copiloto a cada rodada curta.' },
+  { q:'Gamificação em contextos de aprendizagem/projetos serve principalmente para:',
+    opts:['Substituir toda a documentação técnica','Aumentar engajamento e motivação com elementos de jogo','Eliminar a necessidade de testes','Reduzir o tempo de reuniões'],
+    correct:1, explain:'Gamificação usa pontos, badges e desafios para tornar o processo mais engajador e motivador, sem substituir as práticas técnicas.' }
+];
+let quizCorrectCount = 0;
+const quizContainer = document.getElementById('quiz-container');
+quizData.forEach((item, qi)=>{
+  const box = document.createElement('div');
+  box.className = 'quiz-q';
+  box.innerHTML = `<p class="q-text">${qi+1}. ${item.q}</p>
+    <div class="quiz-opts">${item.opts.map((o,oi)=>`<button class="quiz-opt" data-oi="${oi}">${o}</button>`).join('')}</div>
+    <p class="quiz-explain"></p>`;
+  quizContainer.appendChild(box);
+  box.querySelectorAll('.quiz-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(box.classList.contains('answered-correct')) return;
+      const oi = parseInt(btn.dataset.oi);
+      const explainEl = box.querySelector('.quiz-explain');
+      if(oi === item.correct){
+        btn.classList.add('correct');
+        box.querySelectorAll('.quiz-opt').forEach(b=> b.disabled = true);
+        box.classList.add('answered-correct');
+        explainEl.textContent = '✅ ' + item.explain;
+        explainEl.classList.add('show');
+        quizCorrectCount++;
+        addXP(5);
+        if(quizCorrectCount === quizData.length) unlockBadge('quiz','Sabe Tudo', 0);
+      } else {
+        btn.classList.add('wrong');
+        explainEl.textContent = '❌ Tente novamente.';
+        explainEl.classList.add('show');
+      }
+    });
+  });
+});
+
+renderXP();
+</script>
 </body>
 </html>
